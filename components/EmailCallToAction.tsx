@@ -7,8 +7,6 @@ interface EmailCallToActionProps {
 }
 
 export default function EmailCallToAction(props: EmailCallToActionProps){
-
-    console.log(props)
     return (
         <div style={{ backgroundColor: props?.background_color?.hex ?? "rgb(63 98 18)" }} className='flex h-52 items-center justify-center gap-5 text-white'>
             <div className="text-center w-3/5">
