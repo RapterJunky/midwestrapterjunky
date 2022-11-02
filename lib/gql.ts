@@ -7,7 +7,7 @@ interface FetchOptions {
     preview?: boolean
 }
 
-export async function GQLFetch(query: string, { variables, preview }: FetchOptions = {}) {
+export async function GQLFetch<T extends Object>(query: string, { variables, preview }: FetchOptions = {}): Promise<T> {
     
     const client = new GraphQLClient(`${DATO_CMS}${preview ? "preview" : ""}`,{
         headers: {

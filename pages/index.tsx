@@ -10,26 +10,54 @@ const query = `
 query HomePage {
   home {
     bodyContent {
+      ... on UpcomingeventswithimageRecord {
+        events {
+          eventLink {
+            dateFrom
+            dateTo
+            title
+            id
+          }
+          bgImage {
+            url
+            alt
+          }
+        }
+        _modelApiKey
+      }
       ... on CarouselRecord {
-        id
         images {
           url
           alt
         }
+        _modelApiKey
       }
       ... on UpcomingeventRecord {
-        id
-      }
-      ... on EmailCallToActionRecord {
-        id
-        callToActionMessage {
-          blocks
-          links
-          value
+        event {
+          description {
+            blocks
+            links
+            value
+          }
+        }
+        textColor {
+          hex
         }
         backgroundColor {
           hex
         }
+        _modelApiKey
+      }
+      ... on EmailCallToActionRecord {
+        callToActionMessage {
+          value
+          links
+          blocks
+        }
+        backgroundColor {
+          hex
+        }
+        _modelApiKey
       }
     }
     metatags {

@@ -7,3 +7,7 @@ body, #__next {
   margin: 0;
   height: 100vh;
 }
+
+.bg-opacity {
+  --tw-bg-opacity: 0.5
+}

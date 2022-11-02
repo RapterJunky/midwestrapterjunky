@@ -1,6 +1,6 @@
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import Footer from "../components/Footer";
-import Navbar, { NavProps } from "../components/Navbar";
+import Footer from "../../components/Footer";
+import Navbar, { NavProps } from "../../components/Navbar";
 
 interface EventsProps extends NavProps {}
 

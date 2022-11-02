@@ -28,7 +28,7 @@ export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
                                 <HiX className="text-4xl text-gray-50"/>
                             </button>
                             <div className="relative object-contain h-28 w-28">
-                                <Image src="/raptor-junkies-logo_250px_300x.avif" alt="raptor junkies"/>
+                                <Image src="/raptor-junkies-logo_250px_300x.avif" alt="raptor junkies" fill/>
                             </div>
                         </div>
                         <ul className="[&>:not(:last-child)]:border-b">
