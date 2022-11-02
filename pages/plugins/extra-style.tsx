@@ -48,13 +48,11 @@ export default function ExtraStylePlugin() {
         },
     });
 
-    if(loading || !ctx.current) return (
-        <div className="text-3xl">Loading...</div>
-    );
+    if(loading || !ctx.current) return null;
 
     return (
         <Canvas ctx={ctx.current}>
-            Hello, This is the Extra Style plugin!
+            This plugin offers no settings.
         </Canvas>
     );
 }

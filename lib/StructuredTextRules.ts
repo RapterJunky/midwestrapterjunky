@@ -16,7 +16,7 @@ export const markRules = [
 export const rules = [
     renderNodeRule(isHeading,({ adapter: { renderNode }, node, children, key  })=>{
         return renderNode(
-            "heading",
+            `h${node.level}`,
             { key, className: node.style },
             children
         );

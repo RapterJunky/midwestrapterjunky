@@ -24,15 +24,3 @@ export async function GQLFetch<T extends Object>(query: string, { variables, pre
 
     return request.data;
 }
-
-export const NavbarFragment = `
-    navbar {
-        bgColor {
-        hex
-        }
-        pageLinks {
-        title
-        link
-        }
-    }
-`;

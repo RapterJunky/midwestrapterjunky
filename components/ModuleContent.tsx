@@ -1,5 +1,7 @@
 import Carousel from "./Carousel";
 import EmailCallToAction from "./EmailCallToAction";
+import FeaturedShopItems from "./FeaturedShopItems";
+import TestimonialAndShare from "./TestimonialAndShare";
 import UpcomingEvent from "./UpcomingEvent";
 import UpcomingEvents from "./UpcomingEvents";
 
@@ -11,6 +13,8 @@ export default function ModuleContent(props: ModuleContentProps) {
     return (
         <>{props.data.map((value,i)=>{
             switch (value._modelApiKey) {
+                case "featuredshop":
+                    return <FeaturedShopItems items={value?.items ?? []} />
                 case "upcomingeventswithimage":
                     return <UpcomingEvents key={i} events={value?.events ?? []}/>;
                 case "carousel":
@@ -19,6 +23,8 @@ export default function ModuleContent(props: ModuleContentProps) {
                     return <UpcomingEvent key={i} textColor={value?.textColor} backgroundColor={value?.backgroundColor} data={value.event.description}/>;
                 case  "email_call_to_action":
                     return <EmailCallToAction background_color={value?.backgroundColor} data={value?.callToActionMessage ?? {}} key={i} />
+                case "testimonial_and_share":
+                    return <TestimonialAndShare {...value as any} key={i} />
                 default:
                     return null;
             }

@@ -1,86 +1,15 @@
 import type { NextPage, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import Head from 'next/head';
-import { GQLFetch, NavbarFragment } from '../lib/gql';
+import { GQLFetch } from '../lib/gql';
 import Navbar from '../components/Navbar';
 import Script from 'next/script';
 import ModuleContent from '../components/ModuleContent';
 import Footer from '../components/Footer';
-
-const query = `
-query HomePage {
-  home {
-    bodyContent {
-      ... on UpcomingeventswithimageRecord {
-        events {
-          eventLink {
-            dateFrom
-            dateTo
-            title
-            id
-          }
-          bgImage {
-            url
-            alt
-          }
-        }
-        _modelApiKey
-      }
-      ... on CarouselRecord {
-        images {
-          url
-          alt
-        }
-        _modelApiKey
-      }
-      ... on UpcomingeventRecord {
-        event {
-          description {
-            blocks
-            links
-            value
-          }
-        }
-        textColor {
-          hex
-        }
-        backgroundColor {
-          hex
-        }
-        _modelApiKey
-      }
-      ... on EmailCallToActionRecord {
-        callToActionMessage {
-          value
-          links
-          blocks
-        }
-        backgroundColor {
-          hex
-        }
-        _modelApiKey
-      }
-    }
-    metatags {
-      description
-      title
-      twitterCard
-      image {
-        alt
-        author
-        url
-        title
-        smartTags
-        tags
-      }
-    }
-  }
-  ${NavbarFragment}
-}`;
-
+import HomePageQuery from '../gql/queries/home';
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<any>> {
 
-  const data = await GQLFetch(query, { preview: context.preview });
+  const data = await GQLFetch(HomePageQuery, { preview: context.preview });
 
   return {
     props: {

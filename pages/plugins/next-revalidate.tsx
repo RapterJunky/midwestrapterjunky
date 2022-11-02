@@ -19,11 +19,11 @@ export default function NextRevaildate(){
         },
     });
 
-    if(loading || !ctx.current ) return null;
+    if(loading || !ctx.current) return null;
 
     return (
         <Canvas ctx={ctx.current}>
-            Next Revaildate Page Plugin
+            This plugin offers no settings.
         </Canvas>
     );
 }

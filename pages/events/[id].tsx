@@ -6,6 +6,8 @@ import Footer from "../../components/Footer";
 import Navbar, { NavProps } from "../../components/Navbar";
 import { GQLFetch } from '../../lib/gql';
 import { formatTime, formatTimeUser } from "../../lib/timeFormat";
+import EventPageQuery from '../../gql/queries/event';
+import EventsQuery from '../../gql/queries/events';
 
 interface EventPageProps extends NavProps {
     dateTo: string;
@@ -25,48 +27,7 @@ interface EventPageProps extends NavProps {
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<EventPageProps>> => {
 
-    const data = await GQLFetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(`
-        query GetEvent($eq: ItemId = "") {
-            navbar {
-                bgColor {
-                  hex
-                }
-                pageLinks {
-                  link
-                  title
-                }
-            }
-            event(filter: {id: {eq: $eq}}) {
-                dateTo
-                dateFrom
-                updatedAt
-                title
-                location {
-                    latitude
-                    longitude
-                }
-                links {
-                    link
-                    title
-                }
-                id
-                description {
-                    blocks
-                    links
-                    value
-                }
-                gallery {
-                    url
-                    alt
-                }
-                _seoMetaTags {
-                    attributes
-                    content
-                    tag
-                }
-            }
-        }
-    `,{ 
+    const data = await GQLFetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(EventPageQuery,{ 
         variables: { 
             eq: ctx.params?.id ?? "" 
         }, 
@@ -78,15 +39,9 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     }
 }
 
-export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult> {
+export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult<{ id: string; }>> {
 
-    const data = await GQLFetch<{ allEvents: {id: string;}[] }>(`
-        query GetEvents {
-            allEvents(orderBy: _createdAt_DESC, first: "20") {
-                id
-            }
-        }
-    `);
+    const data = await GQLFetch<{ allEvents: {id: string;}[] }>(EventsQuery);
 
     const paths = data.allEvents.map(value=>({
         params: { id: value.id }

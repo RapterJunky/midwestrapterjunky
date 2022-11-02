@@ -25,7 +25,7 @@ export function useDatocms(props?: Partial<FullConnectParameters>){
             setLoading(true);
 
         }
-    },[]);
+    },[props]);
 
     return {
         ctx: ref,
