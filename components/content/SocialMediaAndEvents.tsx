@@ -11,7 +11,7 @@ export default function SocialMediaAndEvents(props: SocialMediaAndEventsProps){
                 <div className='h-96 flex flex-col items-start justify-center pl-36 gap-3 flex-grow'>
                     <div className="flex flex-col gap-2 text-red-700">
                         <h2 className='text-5xl font-bold'>The ultimate Raptor Experience starts here....</h2>
-                        <p className='text-2xl'>Here's your chance to take your raptor out in its natural habitat.</p>
+                        <p className='text-2xl'>Here&apos;s your chance to take your raptor out in its natural habitat.</p>
                     </div>
                     <Button link href="/events" color={{ primary: "bg-red-700", foucs: "focus:bg-red-800", active: "active:bg-red-800", hover: "hover:bg-red-800" }}>SEE ALL EVENTS</Button>
                 </div>
