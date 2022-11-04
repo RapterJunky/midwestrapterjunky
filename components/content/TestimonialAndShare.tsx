@@ -1,8 +1,8 @@
 import { StructuredText } from "react-datocms";
 import { Parallax, Background } from 'react-parallax';
 import { HiStar } from 'react-icons/hi';
-import Button from './Button';
-import { markRules } from '../lib/StructuredTextRules';
+import Button from '../Button';
+import { markRules } from '../../lib/StructuredTextRules';
 
 interface TestimonialAndShareProps { 
     description: any;

@@ -1,5 +1,5 @@
 import { StructuredText } from "react-datocms";
-import { markRules } from '../lib/StructuredTextRules';
+import { markRules } from '../../lib/StructuredTextRules';
 
 interface UpcomingEventProps {
     data: any;

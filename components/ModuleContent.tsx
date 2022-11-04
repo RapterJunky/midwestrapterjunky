@@ -1,9 +1,9 @@
-import Carousel from "./Carousel";
-import EmailCallToAction from "./EmailCallToAction";
-import FeaturedShopItems from "./FeaturedShopItems";
-import TestimonialAndShare from "./TestimonialAndShare";
-import UpcomingEvent from "./UpcomingEvent";
-import UpcomingEvents from "./UpcomingEvents";
+import Carousel from "./content/Carousel";
+import EmailCallToAction from "./content/EmailCallToAction";
+import FeaturedShopItems from "./content/FeaturedShopItems";
+import TestimonialAndShare from "./content/TestimonialAndShare";
+import UpcomingEvent from "./content/UpcomingEvent";
+import UpcomingEvents from "./content/UpcomingEvents";
 
 interface ModuleContentProps {
     data: { _modelApiKey: string; [key: string]: any; }[]
@@ -14,7 +14,7 @@ export default function ModuleContent(props: ModuleContentProps) {
         <>{props.data.map((value,i)=>{
             switch (value._modelApiKey) {
                 case "featuredshop":
-                    return <FeaturedShopItems items={value?.items ?? []} />
+                    return <FeaturedShopItems key={i} items={value?.items ?? []} />
                 case "upcomingeventswithimage":
                     return <UpcomingEvents key={i} events={value?.events ?? []}/>;
                 case "carousel":

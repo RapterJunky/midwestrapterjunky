@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Button from './Button';
-import { formatTime } from '../lib/timeFormat';
+import Button from '../Button';
+import { formatTime } from '../../lib/timeFormat';
 
 interface UpcomingEventsProps {
     events: {

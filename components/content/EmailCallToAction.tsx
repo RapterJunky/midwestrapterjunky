@@ -1,7 +1,7 @@
 import { StructuredText } from 'react-datocms';
 import { HiOutlineChevronRight} from 'react-icons/hi';
 
-import { rules } from '../lib/StructuredTextRules';
+import { rules } from '../../lib/StructuredTextRules';
 
 interface EmailCallToActionProps {
     data: any

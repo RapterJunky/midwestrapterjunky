@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Transition } from '@headlessui/react';
 import { useState } from "react";
 import { HiMenu, HiX } from 'react-icons/hi';
 
@@ -20,8 +21,13 @@ export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
     const [showNav,setShowNav] = useState<boolean>(false);
     return (
         <nav className={`flex top-0 z-50 w-full justify-between content-center bg-opacity-95 bg-gray-50 px-6 py-2 ${fixed ? "fixed" : ""}`}>
-            { showNav ? (
-                <aside className="w-full absolute top-0 left-0 h-screen flex z-30 transition-all">
+            <Transition show={showNav} as="aside" className="w-full absolute top-0 left-0 h-screen flex z-50"
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="-translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="-translate-x-full">
                     <nav className="opacity-100 h-full w-3/4 flex flex-col bg-zinc-800">
                         <div className="relative flex justify-center pt-2 pb-2">
                             <button className="absolute right-4 top-4" onClick={()=>setShowNav(false)}>
@@ -42,8 +48,7 @@ export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
                         </ul>
                     </nav>
                     <div className="w-1/4 opacity-50 bg-gray-700"></div>
-                </aside>
-            ) : null }
+            </Transition>
             <div>
                 <Image src="/raptor-junkies-logo_250px_150x.webp" alt="site logo" width={80} height={60}/>
             </div>
