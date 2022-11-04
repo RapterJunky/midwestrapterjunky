@@ -8,7 +8,7 @@ interface ImageGalleryProps {
 
 export default function ImageGallery(props: ImageGalleryProps){
     return (
-        <div>
+        <div className="h-96">
             <h1>{props.heading}</h1>
             <div className="flex flex-wrap">
                 <div className="relative w-1/4 flex-grow">

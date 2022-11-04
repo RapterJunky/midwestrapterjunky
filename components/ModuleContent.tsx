@@ -1,9 +1,13 @@
+import AdvertBlock from "./content/AdvertBlock";
 import Carousel from "./content/Carousel";
 import EmailCallToAction from "./content/EmailCallToAction";
 import FeaturedShopItems from "./content/FeaturedShopItems";
+import ImageGallery from "./content/ImageGallery";
+import SocialLinks from "./content/SocialLinks";
 import TestimonialAndShare from "./content/TestimonialAndShare";
 import UpcomingEvent from "./content/UpcomingEvent";
 import UpcomingEvents from "./content/UpcomingEvents";
+import VideoWithLinks from "./content/VideoWithLink";
 
 interface ModuleContentProps {
     data: { _modelApiKey: string; [key: string]: any; }[]
@@ -13,6 +17,10 @@ export default function ModuleContent(props: ModuleContentProps) {
     return (
         <>{props.data.map((value,i)=>{
             switch (value._modelApiKey) {
+                case "videowithlink":
+                    return (<VideoWithLinks key={i} {...value as any}/>);
+                case "image_gallery":
+                    return <ImageGallery key={i} {...value as any}/>
                 case "featuredshop":
                     return <FeaturedShopItems key={i} items={value?.items ?? []} />
                 case "upcomingeventswithimage":
@@ -25,6 +33,10 @@ export default function ModuleContent(props: ModuleContentProps) {
                     return <EmailCallToAction background_color={value?.backgroundColor} data={value?.callToActionMessage ?? {}} key={i} />
                 case "testimonial_and_share":
                     return <TestimonialAndShare {...value as any} key={i} />
+                case "social_links_block":
+                    return <SocialLinks key={i} {...value as any}/>
+                case "advert_block":
+                    return <AdvertBlock key={i} {...value as any}/>
                 default:
                     return null;
             }

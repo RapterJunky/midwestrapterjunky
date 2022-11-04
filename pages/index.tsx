@@ -6,7 +6,6 @@ import Script from 'next/script';
 import ModuleContent from '../components/ModuleContent';
 import Footer from '../components/Footer';
 import HomePageQuery from '../gql/queries/home';
-import SocialMediaAndEvents from '../components/content/SocialMediaAndEvents';
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<any>> {
 
@@ -31,7 +30,6 @@ const Home: NextPage = ({ navbar, home }: any) => {
       </header>
       <main>
         <ModuleContent data={home.bodyContent}/>
-        <SocialMediaAndEvents/>
       </main>
       <Footer/>
       <Script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js" strategy="afterInteractive"/>

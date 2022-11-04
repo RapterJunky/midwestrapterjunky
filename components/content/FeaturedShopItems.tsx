@@ -7,7 +7,7 @@ interface FeatureShopItems {
 
 export default function FeaturedShopItems(props: FeatureShopItems){
     return (
-        <section className="">
+        <section className="flex flex-col h-96 bg-zinc-100">
             <div>
 
             </div>
