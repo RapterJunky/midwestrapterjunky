@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["www.datocms-assets.com"]
+    domains: [
+      "www.datocms-assets.com",
+      "cdn.shopify.com"
+    ]
   },
   async redirects () {
     return [{

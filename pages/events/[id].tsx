@@ -4,7 +4,7 @@ import Link from "next/link";
 import { renderMetaTags, StructuredText } from 'react-datocms';
 import Footer from "../../components/Footer";
 import Navbar, { NavProps } from "../../components/Navbar";
-import { GQLFetch } from '../../lib/gql';
+import { DATOCMS_Fetch } from '../../lib/gql';
 import { formatTime, formatTimeUser } from "../../lib/timeFormat";
 import EventPageQuery from '../../gql/queries/event';
 import EventsQuery from '../../gql/queries/events';
@@ -27,7 +27,7 @@ interface EventPageProps extends NavProps {
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<EventPageProps>> => {
 
-    const data = await GQLFetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(EventPageQuery,{ 
+    const data = await DATOCMS_Fetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(EventPageQuery,{ 
         variables: { 
             eq: ctx.params?.id ?? "" 
         }, 
@@ -41,7 +41,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 
 export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult<{ id: string; }>> {
 
-    const data = await GQLFetch<{ allEvents: {id: string;}[] }>(EventsQuery);
+    const data = await DATOCMS_Fetch<{ allEvents: {id: string;}[] }>(EventsQuery);
 
     const paths = data.allEvents.map(value=>({
         params: { id: value.id }
