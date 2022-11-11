@@ -1,6 +1,13 @@
 import Navbar from "../fragments/Navbar";
 export default `
     query GetEvent($eq: ItemId = "") {
+        _site {
+            faviconMetaTags {
+              attributes
+              content
+              tag
+            }
+        }
         navbar {
             ...NavbarRecordFragment
         }

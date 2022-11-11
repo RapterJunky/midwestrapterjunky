@@ -1,5 +1,8 @@
 import { Canvas } from 'datocms-react-ui';
 import { useDatocms } from '../../lib/hooks/useDatoCms';
+import render from '../../components/plugins/render';
+
+import { type RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 
 export default function NextRevaildate(){
     const { ctx, loading } = useDatocms({
@@ -17,9 +20,15 @@ export default function NextRevaildate(){
                 }
             ];
         },
+        renderFieldExtension(fieldExtensionId: string, ctx: RenderFieldExtensionCtx) {
+            return render(
+            <Canvas ctx={ctx}>
+                <h1 className='text-bold text-xl'>Path: {ctx.field.attributes.default_value as string}</h1>
+            </Canvas>);
+        }
     });
 
-    if(loading || !ctx.current) return null;
+    if(!ctx.current) return null;
 
     return (
         <Canvas ctx={ctx.current}>

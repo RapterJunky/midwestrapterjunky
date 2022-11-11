@@ -12,6 +12,13 @@ import VideoWithLink from '../fragments/VideoWithLink';
 
 export default `
     query HomePage { 
+        _site {
+            faviconMetaTags {
+              attributes
+              content
+              tag
+            }
+        }
         home {
             bodyContent {
                 ...CRFragment
@@ -25,18 +32,10 @@ export default `
                 ...IGFragment
                 ...VWLFragment
             }
-            metatags {
-                description
-                title
-                twitterCard
-                image {
-                alt
-                author
-                url
-                title
-                smartTags
-                    tags
-                }
+            _seoMetaTags {
+                attributes
+                content
+                tag
             }
         }
         navbar {

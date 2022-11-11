@@ -2,7 +2,16 @@ import { useId } from "react";
 import Image from 'next/image';
 
 interface CarouselProps {
-    images: {url: string; alt: string; }[]
+    images: {
+        url: string; 
+        alt: string; 
+        blurUpThumb: string;
+        customData: {
+            heading?: string;
+            subheading?: string;
+        } | null
+    
+    }[]
 }
 
 export default function Carousel(props: CarouselProps){
@@ -18,10 +27,10 @@ export default function Carousel(props: CarouselProps){
             <div className="carousel-inner relative w-full overflow-hidden h-full">
                 {props.images.map((value,i)=>(
                     <div key={i} className={"carousel-item relative float-left w-full h-full" + (i === 0 ? " active" : "")}>
-                        <Image fill src={value.url} className="block w-full h-full" alt={value.alt}/>
+                        <Image blurDataURL={value.blurUpThumb} fill src={value.url} className="block w-full h-full object-cover" alt={value.alt ?? "Carousel Image"}/>
                         <div className="carousel-caption hidden md:block absolute text-center">
-                            <h5 className="text-xl">First slide label</h5>
-                            <p>Some representative placeholder content for the first slide.</p>
+                            <h5 className="text-xl font-bold">{value.customData?.heading ?? ""}</h5>
+                            <p>{value.customData?.subheading ?? ""}</p>
                         </div>
                     </div>
                 ))}

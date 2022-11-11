@@ -1,15 +1,28 @@
 import type { NextPage, GetStaticPropsContext, GetStaticPropsResult } from 'next';
+import type { SeoOrFaviconTag, OgMetaAttributes } from 'react-datocms';
 import Head from 'next/head';
-import { DATOCMS_Fetch, Shopify_Fetch } from '../lib/gql';
-import Navbar from '../components/Navbar';
 import Script from 'next/script';
+import { renderMetaTags } from "react-datocms";
+import { DATOCMS_Fetch, Shopify_Fetch } from '../lib/gql';
+import Navbar, { type NavProps } from '../components/Navbar';
 import ModuleContent from '../components/ModuleContent';
 import Footer from '../components/Footer';
 import HomePageQuery from '../gql/queries/home';
 
-export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<any>> {
+interface HomeContent extends NavProps {
+  _site: {
+    faviconMetaTags: SeoOrFaviconTag[];
+  }
+  home: {
+    _seoMetaTags: SeoOrFaviconTag[];
+    bodyContent:  { _modelApiKey: string; [key: string]: any; }[]
+  }
+}
 
-  const data = await DATOCMS_Fetch<{ home: { bodyContent: { _modelApiKey: string; [key: string]: any; }[] } }>(HomePageQuery, { preview: context.preview });
+
+export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<HomeContent>> {
+
+  const data = await DATOCMS_Fetch<HomeContent>(HomePageQuery, { preview: context.preview });
 
   // right now this only handles one featured shop content.
   const shopIdx = data.home.bodyContent.findIndex(value=>value._modelApiKey === "featuredshop");
@@ -52,12 +65,14 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   }
 }
 
-const Home: NextPage = ({ navbar, home }: any) => {
+const Home: NextPage<HomeContent> = ({ navbar, home, _site}) => {
    return (
     <>
       <Head>
-        <title>{home.metatags.title}</title>
-        <meta name="description" content={home.metatags.description} />
+          {renderMetaTags([
+            ...home._seoMetaTags.filter(value=>(value.attributes as OgMetaAttributes | null)?.property !== "article:modified_time"),
+            ..._site.faviconMetaTags
+          ])}
       </Head>
       <header>
         <Navbar {...navbar}/>
