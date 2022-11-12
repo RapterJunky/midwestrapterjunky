@@ -22,10 +22,7 @@ export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
     const ref = useRef<HTMLElement>(null);
 
     const onScroll = () => {
-        if(!ref.current) return;
-
-        console.log(window.scrollY);
-
+        if(!ref.current || !fixed) return;
         if(window.scrollY > 0) {
             ref.current.classList.remove("bg-opacity-0");
             ref.current.classList.add("bg-opacity-100");
