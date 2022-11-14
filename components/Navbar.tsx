@@ -12,17 +12,23 @@ export interface NavProps {
 
 
 interface NavbarProps {
-    fixed?: boolean;
+    mode: "fade-scroll" | "only-scroll" | "none"
     bgColor?: string;
     pageLinks: { title: string; link: string }[];
 }
 
-export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
+const navbarMode = {
+    "fade-scroll": "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out",
+    "only-scroll": "fixed bg-opacity-100 text-black",
+    "none": "text-black bg-opacity-100"
+}
+
+export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarProps){
     const [showNav,setShowNav] = useState<boolean>(false);
     const ref = useRef<HTMLElement>(null);
 
     const onScroll = () => {
-        if(!ref.current || !fixed) return;
+        if(!ref.current || mode !== "fade-scroll") return;
         if(window.scrollY > 0) {
             ref.current.classList.remove("bg-opacity-0");
             ref.current.classList.add("bg-opacity-100");
@@ -43,7 +49,7 @@ export default function Navbar({ fixed = true, pageLinks = [] }: NavbarProps){
 
 
     return (
-        <nav ref={ref} className={`flex-row-reverse md:flex-row flex top-0 z-50 w-full justify-between content-center bg-gray-50 px-6 py-2 ${fixed ? "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out" : ""}`}>
+        <nav ref={ref} className={`flex-row-reverse md:flex-row flex top-0 z-50 w-full justify-between content-center bg-gray-50 px-6 py-2 ${navbarMode[mode] ?? ""}`}>
             <Transition show={showNav} as="aside" className="w-full absolute top-0 left-0 h-screen flex z-50"
                 enter="transition ease-in-out duration-300 transform"
                 enterFrom="-translate-x-full"

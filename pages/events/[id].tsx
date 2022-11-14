@@ -63,7 +63,7 @@ export default function EventPage(props: EventPageProps){
             <Head>
                 {renderMetaTags(props?._seoMetaTags ?? [])}
             </Head>
-            <Navbar pageLinks={props.navbar.pageLinks} fixed={false}/>
+            <Navbar pageLinks={props.navbar.pageLinks} mode="none"/>
             <main className="container mx-auto h-full">
                 <header className="p-4 bg-gray-400 mt-5">
                     <h1 className="text-white font-bold text-4xl">{props.title} | {formatTime(props.dateFrom,props.dateTo)}</h1>

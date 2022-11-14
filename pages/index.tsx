@@ -75,7 +75,7 @@ const Home: NextPage<HomeContent> = ({ navbar, home, _site}) => {
           ])}
       </Head>
       <header>
-        <Navbar {...navbar}/>
+        <Navbar {...navbar} mode="fade-scroll"/>
       </header>
       <main>
         <ModuleContent data={home.bodyContent}/>
