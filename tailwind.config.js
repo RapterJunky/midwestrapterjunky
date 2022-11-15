@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        "30": "7.5rem"/*120px*/
+      },
       spacing: {
         "1/7": "14.26%"
       },
@@ -16,6 +19,8 @@ module.exports = {
     },
   },
   plugins: [
-    require('tw-elements/dist/plugin')
+    require('tw-elements/dist/plugin'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography')
   ],
 }

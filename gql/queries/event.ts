@@ -16,6 +16,7 @@ export default `
             dateFrom
             updatedAt
             title
+            shopItem
             location {
                 latitude
                 longitude

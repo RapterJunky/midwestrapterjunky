@@ -16,3 +16,7 @@ export const formatTime = (from: string, to: string): string => {
 export const formatTimeUser = (date: string) => {
     return moment(date).format("MMM DD YYYY - hh::mmA");
 }
+
+export const formatUserDate = (date: string) => {
+    return moment(date).format("MMM DD YYYY");
+}

@@ -79,7 +79,7 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarP
                     <div className="w-1/4 opacity-50 bg-gray-700"></div>
             </Transition>
             <div className="mx-auto md:mx-0">
-                <Image src="/new_logo.webp" alt="site logo" width={65} height={65} className="h-16 w-16 md:h-full md:w-full"/>
+                <Image src="/new_logo.webp" alt="site logo" width={65} height={65} className="object-cover object-center"/>
             </div>
             <div className="flex lg:hidden">
                 <button className="active:transform active:translate-x-1 active:translate-y-1" onClick={()=>setShowNav(!showNav)}>

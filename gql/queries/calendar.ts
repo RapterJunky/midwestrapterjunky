@@ -8,6 +8,13 @@ export default `
               tag
             }
         }
+        calendar {
+            _seoMetaTags {
+              attributes
+              content
+              tag
+            }
+          }
         navbar {
             ...NavbarRecordFragment
         }
