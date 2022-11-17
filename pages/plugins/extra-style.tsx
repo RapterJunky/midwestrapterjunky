@@ -1,8 +1,8 @@
 import { Canvas } from 'datocms-react-ui';
-import { useDatocms } from '../../lib/hooks/useDatoCms';
+import { useDatoCMSPlugin } from '../../lib/hooks/useDatoCms';
 
 export default function ExtraStylePlugin() {
-    const { ctx, loading } = useDatocms({
+    const { data } = useDatoCMSPlugin({
         customMarksForStructuredTextField(field, ctx) {
             return [
                 {
@@ -48,11 +48,14 @@ export default function ExtraStylePlugin() {
         },
     });
 
-    if(loading || !ctx.current) return null;
-
-    return (
-        <Canvas ctx={ctx.current}>
-            This plugin offers no settings.
-        </Canvas>
-    );
+    switch (data.page) {
+        case "renderConfigScreen":
+            return (
+                <Canvas ctx={data.ctx}>
+                    This plugin offers no settings.
+                </Canvas>
+            );
+        default:
+            return null;
+    }
 }
