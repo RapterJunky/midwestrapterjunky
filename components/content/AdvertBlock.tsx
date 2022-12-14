@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Color } from "../../lib/types";
 
 interface AdvertBlockProps {
     headingleft: string;
@@ -6,9 +7,7 @@ interface AdvertBlockProps {
     link: string;
     headingright: string;
     textright: string;
-    bgcolor: {
-        hex: string;
-    }
+    bgcolor: Color;
 }
 
 export default function AdvertBlock(props: AdvertBlockProps){

@@ -5,11 +5,12 @@ import { renderMetaTags, StructuredText, SeoOrFaviconTag } from 'react-datocms';
 import Footer from "../../components/Footer";
 import Navbar, { NavProps } from "../../components/Navbar";
 import { DATOCMS_Fetch } from '../../lib/gql';
-import { formatTime, formatTimeUser, formatUserDate } from "../../lib/timeFormat";
+import { formatTime, formatTimeUser, formatUserDate } from "../../lib/utils/timeFormat";
 import EventPageQuery from '../../gql/queries/event';
 import EventsQuery from '../../gql/queries/events';
 import { markRules } from "../../lib/StructuredTextRules";
 import Button from "../../components/Button";
+import prisma from "../../lib/prisma";
 
 interface EventPageProps extends NavProps {
     dateTo: string;
@@ -28,14 +29,65 @@ interface EventPageProps extends NavProps {
     shoptItem: string | null;
 }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<EventPageProps>> => {
+const getPages = async () => {
+    const data = await DATOCMS_Fetch<{ allEvents: {id: string; slug: string; }[] }>(EventsQuery);
 
+    const paths = data.allEvents.map(value=>({
+        params: { id: value.slug }
+    }));
+
+    await prisma.cache.upsert({
+        create: {
+            key: "event-pages",
+            data: data.allEvents,
+            isDirty: false
+        },
+        update: {
+            data: data.allEvents,
+            isDirty: false
+        },
+        where: {
+            key: "event-pages"
+        }
+    });
+
+    return {paths, events: data.allEvents };
+}
+
+const getPage = async (id: string = "", preview: boolean = false) => {
     const data = await DATOCMS_Fetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(EventPageQuery,{ 
         variables: { 
-            eq: ctx.params?.id ?? "" 
+            eq: id 
         }, 
-        preview: ctx.preview 
+        preview 
     });
+    return data;
+}
+
+export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<EventPageProps>> => {
+    if(ctx.preview) {
+        const data = await getPage(ctx.params?.id as string,ctx.preview);
+        return {
+            props: { ...data.event, navbar: data.navbar }
+        }
+    }
+
+    let pages = await prisma.cache.findUnique({ where: { key: "event-pages" } });
+
+    let content = pages?.data as { id: string; slug: string; }[] | undefined;
+
+    if(!pages || !content || pages.isDirty) {
+        const {events} = await getPages();
+        content = events;
+    }
+
+    if(content.findIndex(value=>value.slug === ctx.params?.id) === -1) {
+        return {
+            notFound: true
+        }
+    }
+
+    const data = await getPage(ctx.params?.id as string,ctx.preview);
 
     return {
         props: { ...data.event, navbar: data.navbar }
@@ -43,16 +95,10 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 }
 
 export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult<{ id: string; }>> {
-
-    const data = await DATOCMS_Fetch<{ allEvents: {id: string;}[] }>(EventsQuery);
-
-    const paths = data.allEvents.map(value=>({
-        params: { id: value.id }
-    }));
-
+    const {paths} = await getPages();
     return {
         paths,
-        fallback: false
+        fallback: "blocking"
     }
 }
 

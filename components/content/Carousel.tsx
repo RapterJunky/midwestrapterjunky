@@ -1,17 +1,14 @@
 import { useId } from "react";
 import Image from 'next/image';
+import type { ResponsiveImage } from "../../lib/types";
 
 interface CarouselProps {
-    images: {
-        url: string; 
-        alt: string; 
-        blurUpThumb: string;
+    images: (ResponsiveImage & {
         customData: {
             heading?: string;
             subheading?: string;
         } | null
-    
-    }[]
+    })[]
 }
 
 export default function Carousel(props: CarouselProps){
@@ -27,7 +24,7 @@ export default function Carousel(props: CarouselProps){
             <div className="carousel-inner relative w-full overflow-hidden h-full">
                 {props.images.map((value,i)=>(
                     <div key={i} className={"carousel-item relative float-left w-full h-full" + (i === 0 ? " active" : "")}>
-                        <Image blurDataURL={value.blurUpThumb} fill src={value.url} className="block w-full h-full object-cover" alt={value.alt ?? "Carousel Image"}/>
+                        <Image blurDataURL={value.blurUpThumb} fill src={value.responsiveImage.src} className="block w-full h-full object-cover" alt={value.responsiveImage?.alt ?? "Carousel Image"}/>
                         <div className="carousel-caption hidden md:block absolute text-center">
                             <h5 className="text-xl font-bold">{value.customData?.heading ?? ""}</h5>
                             <p>{value.customData?.subheading ?? ""}</p>

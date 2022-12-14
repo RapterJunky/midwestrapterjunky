@@ -1,6 +1,6 @@
 import Navbar from "../fragments/Navbar";
 export default `
-    query GetEvent($eq: ItemId = "") {
+    query GetEvent($eq: String = "") {
         _site {
             faviconMetaTags {
               attributes
@@ -11,7 +11,7 @@ export default `
         navbar {
             ...NavbarRecordFragment
         }
-        event(filter: {id: {eq: $eq}}) {
+        event(filter: {slug: {eq: $eq}}) {
             dateTo
             dateFrom
             updatedAt

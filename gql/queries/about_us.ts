@@ -1,5 +1,6 @@
 import Navbar from '../fragments/Navbar';
 import EmailCallToActionFragment from '../fragments/EmailCallToAction';
+import CustomHtmlSectionFragment from '../fragments/CustomHtmlSection';
 import SiteTags from '../fragments/SiteTags';
 
 export default `
@@ -42,10 +43,12 @@ query AboutUsQuery {
       }
       footerContent {
         ...ECTAFragment
+        ...CHSFragment
       }
     }
   }
   ${SiteTags}
   ${EmailCallToActionFragment}
+  ${CustomHtmlSectionFragment}
   ${Navbar}
 `;

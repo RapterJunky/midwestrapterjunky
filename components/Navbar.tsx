@@ -1,20 +1,23 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Transition } from '@headlessui/react';
 import { useEffect, useRef, useState } from "react";
 import { HiMenu, HiX } from 'react-icons/hi';
+import IconLink from "./IconLink";
+import type { Color, LinkWithIcon, ResponsiveImage } from '../lib/types';
 
 export interface NavProps {
     navbar: {
-        pageLinks: { title: string; link: string }[];
+        bgColor: Color;
+        pageLinks: LinkWithIcon[];
+        logo: ResponsiveImage;
     }
 }
 
-
 interface NavbarProps {
     mode: "fade-scroll" | "only-scroll" | "none"
-    bgColor?: string;
-    pageLinks: { title: string; link: string }[];
+    bgColor?: Color;
+    pageLinks: LinkWithIcon[];
+    logo: ResponsiveImage
 }
 
 const navbarMode = {
@@ -23,7 +26,9 @@ const navbarMode = {
     "none": "text-black bg-opacity-100"
 }
 
-export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarProps){
+
+
+export default function Navbar({ mode = "fade-scroll", pageLinks = [], logo }: NavbarProps){
     const [showNav,setShowNav] = useState<boolean>(false);
     const ref = useRef<HTMLElement>(null);
 
@@ -63,15 +68,13 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarP
                                 <HiX className="text-4xl text-gray-50"/>
                             </button>
                             <div className="relative object-contain h-28 w-28">
-                                <Image src="/new_logo.webp" alt="raptor junkies" fill/>
+                                <Image blurDataURL={logo?.blurUpThumb ?? ""} src={logo?.responsiveImage?.src ?? "/new_logo.webp"} alt={logo?.responsiveImage?.alt ?? "site logo"} sizes={logo?.responsiveImage?.sizes ?? "100vw"} fill className="object-cover object-center"/>
                             </div>
                         </div>
                         <ul className="[&>:not(:last-child)]:border-b">
                             {pageLinks.map((value,i)=>(
                                 <li key={i} className="flex">
-                                    <Link href={value.link} className="text-white pt-5 pb-5 pr-4 pl-4 w-full">
-                                        {value.title}
-                                    </Link>
+                                    <IconLink className="text-white pt-5 pb-5 pr-4 pl-4 w-full flex items-center gap-1" key={i} {...value}/>
                                 </li>
                             ))}
                         </ul>
@@ -79,7 +82,7 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarP
                     <div className="w-1/4 opacity-50 bg-gray-700"></div>
             </Transition>
             <div className="mx-auto md:mx-0">
-                <Image src="/new_logo.webp" alt="site logo" width={65} height={65} className="object-cover object-center"/>
+                <Image src={logo?.responsiveImage?.src ?? "/new_logo.webp"} alt={logo?.responsiveImage?.alt ?? "site logo"} sizes={logo?.responsiveImage?.sizes ?? "100vw"} blurDataURL={logo?.blurUpThumb ?? ""} width={65} height={65} className="object-cover object-center"/>
             </div>
             <div className="flex lg:hidden">
                 <button className="active:transform active:translate-x-1 active:translate-y-1" onClick={()=>setShowNav(!showNav)}>
@@ -88,9 +91,7 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [] }: NavbarP
             </div>
             <div className="justify-between items-center content-center hidden lg:flex">
                 {pageLinks.map((value,i)=>(
-                    <Link href={value.link} key={i} className="text-sm uppercase font-bold not-italic px-2 hover:opacity-60">
-                        {value.title}
-                    </Link>
+                    <IconLink className="text-sm uppercase font-bold not-italic px-2 hover:opacity-60 flex items-center gap-1" key={i} {...value}/>
                 ))}
             </div>
         </nav>

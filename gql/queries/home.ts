@@ -9,6 +9,7 @@ import AdvertBlock from '../fragments/AdvertBlock';
 import SocialLinks from '../fragments/SocialLinks';
 import ImageGallery from '../fragments/ImageGallery';
 import VideoWithLink from '../fragments/VideoWithLink';
+import CustomHtmlSection from '../fragments/CustomHtmlSection';
 
 export default `
     query HomePage { 
@@ -31,6 +32,7 @@ export default `
                 ...SLFragment
                 ...IGFragment
                 ...VWLFragment
+                ...CHSFragment
             }
             _seoMetaTags {
                 attributes
@@ -47,6 +49,7 @@ ${EmailCallToActionFragment}
 ${TestimonialAndShare}
 ${UpcomingEvent}
 ${UpcomingEventsWithImage}
+${CustomHtmlSection}
 ${FeaturedShop}
 ${AdvertBlock}
 ${SocialLinks}

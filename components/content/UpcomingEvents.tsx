@@ -1,13 +1,14 @@
-import Link from 'next/link';
 import Button from '../Button';
-import { formatTime } from '../../lib/timeFormat';
+import { formatTime } from '../../lib/utils/timeFormat';
 
 interface UpcomingEventsProps {
     events: {
+        linkTitle: string;
         eventLink: {
             dateFrom: string;
             dateTo: string;
             title: string;
+            slug: string;
             id: string;
         }
         bgImage: {
@@ -27,7 +28,7 @@ export default function UpcomingEvents(props: UpcomingEventsProps){
                     </div>
                     <div className="p-2 absolute top-0 h-full w-full flex flex-col justify-center items-center gap-5 bg-gray-900 bg-opacity md:opacity-0 hover:opacity-100 transition-opacity duration-150 ease-in-out">
                         <h2 className="text-white font-semibold text-xl text-center">{event.eventLink.title} {formatTime(event.eventLink.dateFrom,event.eventLink.dateTo)}</h2>
-                        <Button href={`/events/${event.eventLink.id}`} link>BUY A TICKET</Button>
+                        <Button href={`/events/${event.eventLink.slug}`} link>{event?.linkTitle ?? "VIEW EVENT"}</Button>
                     </div>
                 </div>
             ))}

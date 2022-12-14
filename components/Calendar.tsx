@@ -134,7 +134,7 @@ export default function Calendar(props: CalenderProps){
                                     </div>
                                     <div style={{height: "80px"}} className="overflow-y-auto mt-1">
                                         {props.data.filter((value)=>vaildEvents(value,day)).map((event,i)=>(
-                                            <Link href={{ pathname: "/events/[id]", query: { id: event.id } }} key={i} className="block px-2 py-1 rounded-lg mt-1 overflow-hidden border border-red-200 text-red-800 bg-red-100">
+                                            <Link href={{ pathname: "/events/[id]", query: { id: event.slug } }} key={i} className="block px-2 py-1 rounded-lg mt-1 overflow-hidden border border-red-200 text-red-800 bg-red-100">
                                                 <p className="text-sm truncate leading-tight">{event.title}</p>
                                             </Link>
                                         ))}

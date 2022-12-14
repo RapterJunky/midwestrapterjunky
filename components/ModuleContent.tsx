@@ -1,3 +1,4 @@
+import type { ModulerContent } from "../lib/types";
 import AdvertBlock from "./content/AdvertBlock";
 import Carousel from "./content/Carousel";
 import EmailCallToAction from "./content/EmailCallToAction";
@@ -8,9 +9,10 @@ import TestimonialAndShare from "./content/TestimonialAndShare";
 import UpcomingEvent from "./content/UpcomingEvent";
 import UpcomingEvents from "./content/UpcomingEvents";
 import VideoWithLinks from "./content/VideoWithLink";
+import HtmlSection from "./content/HtmlSection";
 
 interface ModuleContentProps {
-    data: { _modelApiKey: string; [key: string]: any; }[]
+    data: ModulerContent[]
 }
 
 export default function ModuleContent(props: ModuleContentProps) { 
@@ -37,6 +39,8 @@ export default function ModuleContent(props: ModuleContentProps) {
                     return <SocialLinks key={i} {...value as any}/>
                 case "advert_block":
                     return <AdvertBlock key={i} {...value as any}/>
+                case "custom_html_section":
+                    return <HtmlSection key={i} {...value as any}/>
                 default:
                     return null;
             }

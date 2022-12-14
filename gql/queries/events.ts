@@ -1,7 +1,8 @@
 export default `
     query GetEvents {
-        allEvents(orderBy: _createdAt_DESC, first: "20") {
+        allEvents(orderBy: dateFrom_DESC) {
             id
+            slug
         }
     }
 `;

@@ -15,10 +15,10 @@ export async function DATOCMS_Fetch<T extends Object>(query: string, opts?: Fetc
         }
     });
 }
-export async function Shopify_Fetch<T extends Object>(query: string, opts?: FetchOptions): Promise<T> {
-    return GQLFetch<T>(`https://${process.env.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,query,opts,{
+export async function Shopify_Fetch<T extends Object>(query: string, args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string;  }, opts?: FetchOptions): Promise<T> {
+    return GQLFetch<T>(`https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,query,opts,{
         headers: {
-            'X-Shopify-Storefront-Access-Token': process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN as string
+            'X-Shopify-Storefront-Access-Token': args.SHOPIFY_STOREFRONT_ACCESS_TOKEN
         }
     });
 }

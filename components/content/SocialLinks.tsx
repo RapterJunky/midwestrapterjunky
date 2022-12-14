@@ -1,17 +1,10 @@
 import Link from 'next/link';
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaQuestion  } from 'react-icons/fa';
+import * as FAIcons from 'react-icons/fa';
+import type { Color, Icon } from '../../lib/types';
 
 interface SocialLinksProps {
-    sociallinks: { logo: string; link: string; }[]
+    sociallinks: { iconColor: Color | null;  logo: Icon; link: string; }[]
 }
-
-const logos = {
-    facebook: <FaFacebook className="text-blue-700"/>,
-    instagram: <FaInstagram className="text-amber-400"/>,
-    youtube: <FaYoutube className="text-red-600"/>,
-    twitter: <FaTwitter className="text-cyan-400"/>,
-    unkown: <FaQuestion/>
-};
 
 export default function SocialLinks(props: SocialLinksProps){
     return (
@@ -19,11 +12,17 @@ export default function SocialLinks(props: SocialLinksProps){
                 <div className="social bg-zinc-700 flex flex-col items-center justify-center w-full py-8">
                     <h3 className="text-2xl text-white font-bold">Find us on</h3>
                     <div className='flex flex-wrap gap-5 text-9xl text-[10rem] text-white py-4 justify-center'>
-                        {props.sociallinks.map((value,i)=>(
-                            <Link href={value.link} key={i}>
-                                { (logos as any)[value?.logo] ?? logos.unkown }
-                            </Link>
-                        ))}
+                        {props.sociallinks.map((value,i)=>{
+                            const name = value.logo.iconName.replace(/(\b\w)/g, letter => letter.toUpperCase()).replace("-","");
+
+                            const Icon = (FAIcons as any)[`Fa${name}`] ?? FAIcons.FaQuestion;
+
+                            return (
+                                <Link href={value.link} key={i}>
+                                    <Icon style={{ color: value.iconColor?.hex ?? "white" }}/>
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
             </div>

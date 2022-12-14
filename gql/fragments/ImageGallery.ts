@@ -4,12 +4,12 @@ fragment IGFragment on ImageGalleryRecord {
     heading
     displayHeading
     images {
-      url
-      alt
-      height
-      width
       responsiveImage {
         sizes
+        alt
+        src
+        height
+        width
       }
       blurUpThumb
     }

@@ -2,6 +2,7 @@ export default `
 fragment TASFragment on TestimonialAndShareRecord {
     _modelApiKey
     buttonlink
+    linkTitle
     description {
       blocks
       links

@@ -1,10 +1,11 @@
 import { StructuredText } from "react-datocms";
 import { markRules } from '../../lib/StructuredTextRules';
+import type { Color, StructuredContent } from "../../lib/types";
 
 interface UpcomingEventProps {
-    data: any;
-    backgroundColor?: { hex: string };
-    textColor?: { hex: string }
+    data: StructuredContent;
+    backgroundColor?:  Color;
+    textColor?: Color;
 }
 
 export default function UpcomingEvent(props: UpcomingEventProps){

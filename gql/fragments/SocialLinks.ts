@@ -4,6 +4,9 @@ fragment SLFragment on SocialLinksBlockRecord {
     sociallinks {
       logo
       link
+      iconColor {
+        hex
+      }
     }
 }
 `;

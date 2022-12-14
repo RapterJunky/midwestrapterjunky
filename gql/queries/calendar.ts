@@ -1,6 +1,6 @@
 import Navbar from '../fragments/Navbar';
 export default `
-    query CalendarQuery($first: IntType = "5") {
+    query CalendarQuery($date: DateTime, $first: IntType) {
         _site {
             faviconMetaTags {
               attributes
@@ -18,11 +18,12 @@ export default `
         navbar {
             ...NavbarRecordFragment
         }
-        allEvents(first: $first) {
+        allEvents(filter: { dateFrom: { gt: $date } }, first: $first, orderBy: dateFrom_ASC) {
             id
             dateTo
             dateFrom
             title
+            slug
         }
     }
 ${Navbar}

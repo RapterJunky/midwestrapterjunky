@@ -1,18 +1,25 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Head from "next/head";
 import { renderMetaTags, type SeoOrFaviconTag } from 'react-datocms';
+import moment from "moment";
 
 import Footer from "../components/Footer";
-import Navbar, { NavProps } from "../components/Navbar";
+import Navbar, { type NavProps } from "../components/Navbar";
 import { DATOCMS_Fetch } from "../lib/gql";
 import Query from '../gql/queries/calendar';
-import Head from "next/head";
 import Calendar from "../components/Calendar";
 
 interface CalendarProps extends NavProps {
     _site: {
         faviconMetaTags: SeoOrFaviconTag[];
     };
-    allEvents: any[];
+    allEvents: {
+        id: string;
+        slug: string;
+        title: string;
+        dateForm: string;
+        dateTo: string;
+    }[];
     calendar: {
         _seoMetaTags: SeoOrFaviconTag[]
     }
@@ -23,12 +30,15 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     const data = await DATOCMS_Fetch<CalendarProps>(Query,{ 
         preview: ctx.preview, 
         variables: {
-            first: 20
+            first: 20,
+            date: moment().subtract(1,"months").toISOString()
         } 
     });
-
+    
     return {
-        props: data
+        props: data,
+        // 12 hours
+        revalidate: 43200
     }
 }
 
