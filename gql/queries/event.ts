@@ -12,34 +12,43 @@ export default `
             ...NavbarRecordFragment
         }
         event(filter: {slug: {eq: $eq}}) {
-            dateTo
-            dateFrom
-            updatedAt
-            title
-            shopItem
-            location {
-                latitude
-                longitude
-            }
-            links {
-                link
-                title
-            }
-            id
-            description {
-                blocks
-                links
-                value
-            }
-            gallery {
-                url
-                alt
-            }
             _seoMetaTags {
                 attributes
                 content
                 tag
             }
+            updatedAt
+            dateTo
+            dateFrom
+            title
+            id
+            slug
+            extraLocationDetails
+            description {
+                blocks
+                links
+                value
+            }
+            links {
+                title
+                link
+                useIcon
+                icon
+                iconPosition
+            }
+            gallery {
+                responsiveImage {
+                  sizes
+                  alt
+                  src
+                }
+                blurUpThumb
+            }
+            location {
+                latitude
+                longitude
+            }
+            shopItemLink
         }
     }
 ${Navbar}

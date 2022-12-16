@@ -1,5 +1,4 @@
 import { randomBytes, createCipheriv, createDecipheriv } from 'crypto';
-import { ArrayKey } from 'react-hook-form/dist/types/path/common';
 import prisma from './prisma';
 
 const ALGORITHM = 'aes-256-ctr';
@@ -42,17 +41,28 @@ export const getKeys = async <T extends ReadonlyArray<string>>(keys: T): Promise
     return settings.map(setting=>({ key: setting.key, value: decrypt(setting.value) })).reduce((pre,cur): ObjectFromList<T> =>({ ...pre, [cur.key]: cur.value }),{} as ObjectFromList<T>);
 }
 
-export const addKeys = async (values: { key: string; value: string; }[], method: "UPDATE" | "CREATE") => {
+export const addKeys = async (values: { key: string; value: string; }[]) => {
 
-    const settings = values.map(setting=>({ key: setting.key, value: encrypt(setting.value) }));
-
-    if(method === "CREATE") {
-        return prisma.settings.createMany({
-            data: settings,
-        });
-    }
-
-    return prisma.settings.updateMany({
-        data: settings
+    const settings = values.map(setting=>{
+        const value = encrypt(setting.value);
+        return prisma.settings.upsert({
+            where: {
+                key: setting.key
+            },
+            create: {
+                key: setting.key,
+                value
+            },
+            update: {
+                value
+            }
+        })
+        
     });
+
+    const changes = await Promise.all(settings)
+
+    return {
+        count: changes.length
+    }
 }

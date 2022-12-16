@@ -229,11 +229,8 @@ export function useDatoCMSPlugin(props: Partial<PluginSettings>){
 
             pluginLoaded.current = true;
         }
-
         if(!pluginLoaded.current) init();
     },[]);
 
-    return {
-        data
-    }
+    return data;
 }

@@ -8,11 +8,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
         switch (req.method) {
             case "POST":{
-                const request = await addKeys(req.body,"CREATE");
+                if(!Array.isArray(req.body)) throw createHttpError.BadRequest();
+                const request = await addKeys(req.body);
                 return res.status(201).json(request);
             }
             case "PATCH":{
-                const request = await addKeys(req.body,"UPDATE");
+                if(!Array.isArray(req.body)) throw createHttpError.BadRequest();
+                const request = await addKeys(req.body);
                 return res.status(202).json(request);
             }
             case "GET":{

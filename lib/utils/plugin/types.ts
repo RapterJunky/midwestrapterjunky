@@ -7,8 +7,9 @@ export type VaildConfig = {
     storefrontAccessToken: string;
     autoApplyToFieldsWithApiKey: string;
     freeStoreApiKey: string;
-    useOnlyStore: null | "shopify" | "freewebstore"
-    paramsVersion: '4'
+    keyToken: string;
+    useOnlyStore: "null" | "shopify" | "freewebstore"
+    paramsVersion: '6'
 }
 
 export interface FreewebstoreProduct {
@@ -70,7 +71,7 @@ export interface Freewebstore {
 export type Config = VaildConfig | FirstInstallationParamerters;
 
 export function isVaildConfig(params: Config): params is VaildConfig {
-    return params && 'paramsVersion' in params && params.paramsVersion === '4';
+    return params && 'paramsVersion' in params && params.paramsVersion === '6';
 }
 
 export function normalizeConfig(params: Config): VaildConfig {
@@ -81,12 +82,13 @@ export function normalizeConfig(params: Config): VaildConfig {
     const freestoreDomain = "freestoreDomain" in params;
 
     return {
-        paramsVersion: '4',
+        paramsVersion: '6',
         freestoreDomain: freestoreDomain ? (params as any)?.freestoreDomain : "",
         storefrontAccessToken: accessToken ? (params as any)?.storefrontAccessToken : '078bc5caa0ddebfa89cccb4a1baa1f5c',
         shopifyDomain: domain ? (params as any)?.shopifyDomain : 'graphql',
         freeStoreApiKey: '',
-        useOnlyStore: null,
+        useOnlyStore: "null",
+        keyToken: '',
         autoApplyToFieldsWithApiKey: '',
     }
 }

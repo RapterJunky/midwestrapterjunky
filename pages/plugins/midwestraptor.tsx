@@ -11,7 +11,7 @@ import "datocms-react-ui/styles.css";
 const FIELD_EXTENSION_ID = 'shopProduct';
 
 const MidwestRaptor: NextPage<any> = () => {
-    const { data } = useDatoCMSPlugin({
+    const {id,page,ctx} = useDatoCMSPlugin({
         renderConfigScreen: true,
         renderFieldExtension: true,
         renderModal: true,
@@ -63,13 +63,13 @@ const MidwestRaptor: NextPage<any> = () => {
         },
     });
 
-    switch (data.page) {
+    switch (page) {
         case "renderConfigScreen":
-            return <ConfigScreen ctx={data.ctx}/>;
+            return <ConfigScreen ctx={ctx}/>;
         case "renderFieldExtension":
-            return <ShopFieldExtension ctx={data.ctx}/>;
+            return <ShopFieldExtension ctx={ctx}/>;
         case "renderModal":
-            if(data.id === "browseProducts") return <BrowseProductsModel ctx={data.ctx}/>;
+            if(id === "browseProducts") return <BrowseProductsModel ctx={ctx}/>;
             return null;
         default:
             return null;

@@ -1,4 +1,4 @@
-export default [
+const rules = [
     {
         icon: "text-height",
         id: 'text-xs',
@@ -36,3 +36,5 @@ export default [
         }
     }
 ];
+
+export default rules;

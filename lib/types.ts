@@ -12,13 +12,15 @@ export type LinkWithIcon = {
     useIcon: null | boolean; 
 }
 
-export type ResponsiveImage<E> = {
+type Image = {
+    src: string;
+    sizes: string;
+    alt: string | null
+};
+
+export type ResponsiveImage<E = never> = {
     blurUpThumb: string;
-    responsiveImage: {
-      src: string;
-      sizes: string;
-      alt: string | null
-    } & E
+    responsiveImage: [E] extends [never] ? Image: Image & E;
 }
 
 export type ModulerContent = { _modelApiKey: string; [key: string]: any; };

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Transition } from '@headlessui/react';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { HiMenu, HiX } from 'react-icons/hi';
 import IconLink from "./IconLink";
 import type { Color, LinkWithIcon, ResponsiveImage } from '../lib/types';
@@ -31,8 +31,7 @@ const navbarMode = {
 export default function Navbar({ mode = "fade-scroll", pageLinks = [], logo }: NavbarProps){
     const [showNav,setShowNav] = useState<boolean>(false);
     const ref = useRef<HTMLElement>(null);
-
-    const onScroll = () => {
+    const onScroll = useCallback(()=>{
         if(!ref.current || mode !== "fade-scroll") return;
         if(window.scrollY > 0) {
             ref.current.classList.remove("bg-opacity-0");
@@ -43,14 +42,14 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [], logo }: N
             ref.current.classList.remove("bg-opacity-100");
             ref.current.classList.remove("text-black");
         }
-    };
+    },[mode]);
 
     useEffect(()=>{
         window.addEventListener("scroll",onScroll);
         return () => {
             window.removeEventListener("scroll",onScroll);
         };
-    },[]);
+    },[onScroll]);
 
 
     return (

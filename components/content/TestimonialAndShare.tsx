@@ -3,14 +3,12 @@ import { Parallax, Background } from 'react-parallax';
 import { HiStar } from 'react-icons/hi';
 import Button from '../Button';
 import { markRules } from '../../lib/StructuredTextRules';
-import type { Color } from "../../lib/types";
+import type { Color, ResponsiveImage, StructuredContent } from "../../lib/types";
+import Image from "next/image";
 
 interface TestimonialAndShareProps { 
-    description: any;
-    bgImage: {
-        url: string;
-        alt: string;
-    }
+    description: StructuredContent;
+    bgImage: ResponsiveImage
     linkTitle: string;
     bgColor: Color
     buttonlink: string;
@@ -45,8 +43,8 @@ export default function TestimonialAndShare(props: TestimonialAndShareProps){
                 </div>
             </div>
             <Parallax className="h-screen">
-                <Background className="h-screen w-screen">
-                    <img sizes="100vw" className="h-full w-full object-cover object-top" src={props.bgImage.url} alt={props.bgImage.alt} />
+                <Background className="h-screen w-screen relative">
+                    <Image blurDataURL={props.bgImage.blurUpThumb} sizes={props.bgImage.responsiveImage.sizes} src={props.bgImage.responsiveImage.src} alt={props.bgImage.responsiveImage?.alt ?? "parallax background"} className="h-full w-full object-cover object-top" fill/>
                 </Background>
             </Parallax>
         </div>

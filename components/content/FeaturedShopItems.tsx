@@ -3,7 +3,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import type { ShopType } from '../../lib/hooks/plugins/useStore';
 
-interface StoreItem { 
+export interface StoreItem { 
     featuredImage: { 
         altText: string | null; url: string; 
     }; 

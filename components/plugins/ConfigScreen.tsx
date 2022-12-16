@@ -7,7 +7,7 @@ import { normalizeConfig, type VaildConfig } from '../../lib/utils/plugin/types'
 const options = [
     { label: "Shopify", value: "shopify" },
     { label: "Freewebstore", value: "freewebstore" },
-    { label: "Both", value: null }
+    { label: "Both", value: "null" }
 ];
 
 export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
@@ -31,17 +31,39 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
         }
 
         await ctx.updatePluginParameters(state);
+        try {
+            if(state.keyToken.length > 0) {
+                const body = [];
+                if(state.freeStoreApiKey.length > 0) body.push({ key: "FREEWEBSTORE_API_TOKEN", value: state.freeStoreApiKey });
+                if(state.shopifyDomain.length > 0) body.push({ key: "SHOPIFY_DOMAIN", value: state.shopifyDomain });
+                if(state.storefrontAccessToken.length > 0) body.push({ key: "SHOPIFY_STOREFRONT_ACCESS_TOKEN", value: state.storefrontAccessToken });
+
+                await fetch("/api/keys",{ 
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${state.keyToken}`
+                    },
+                    body: JSON.stringify(body)
+                })
+            }   
+        } catch (error) {
+            console.error(error);
+        }
         ctx.notice("Settings updated successfully!");
     }
 
     return (
         <Canvas ctx={ctx}>
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <h1>General</h1>
+                <h1 className="font-bold text-2xl">General Settings</h1>
                 <FieldGroup>
                     <Controller control={control} name="useOnlyStore" render={({ field: { ref, value, onChange, ...field }, formState })=>(
                         <SelectField 
-                        onChange={ev=>{ onChange(ev?.value ?? null) }}
+                        onChange={ev=>{ 
+                            if(ev?.value === "null") return onChange(ev?.value ?? null);
+                            onChange(ev?.value ?? null) 
+                        }}
                         id={field.name} 
                         {...field} 
                         error={formState.errors.useOnlyStore?.message}
@@ -50,11 +72,14 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
                             isMulti: false,
                             options: options
                         }}
-                        label="Use store fronts" 
+                        label="Use store front" 
                         hint="Allow for the use of both shopify and freewebstore or only one." />
                     )}/>
+                     <Controller control={control} rules={{ required: "This field is required!" }} name="keyToken" render={({ field: { ref, ...field }, formState })=>(
+                        <TextField error={formState.errors?.keyToken?.message} id={field.name} label="System Key" placeholder="xxxxxxxxxx" required {...field}/>
+                    )} />
                 </FieldGroup>
-                <h1>Shopify</h1>
+                <h1 className="font-bold text-2xl">Shopify Settings</h1>
                 <FieldGroup>
                     <Controller control={control} rules={{ required: "This field is required!" }} name="shopifyDomain" render={({ field: { ref, ...field }, formState })=>(
                         <TextField error={formState.errors?.shopifyDomain?.message} hint={
@@ -81,16 +106,8 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
                             </>
                           }textInputProps={{ monospaced: true }} placeholder="XXXYYY" required error={formState.errors?.storefrontAccessToken?.message} />
                     )}/>
-                    <Controller control={control} name="autoApplyToFieldsWithApiKey" render={({ field: { ref, ...field }, formState })=>(
-                        <TextField id={field.name} {...field} 
-                        label="Auto-apply this plugin to all Single-line fields fields matching the following API identifier:"
-                        hint="A regular expression can be used"
-                        error={formState.errors?.autoApplyToFieldsWithApiKey?.message}
-                        textInputProps={{ monospaced: true }}
-                        placeholder="shopify_product_id"/>
-                    )} />
                 </FieldGroup>
-                <h1>Freewebstore</h1>
+                <h1 className="font-bold text-2xl">Freewebstore settings</h1>
                 <FieldGroup>
                     <Controller control={control} rules={{ required: "This field is required!" }} name="freestoreDomain" render={({ field: { ref, ...field }, formState })=>(
                             <TextField error={formState.errors?.freestoreDomain?.message} hint={

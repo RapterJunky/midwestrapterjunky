@@ -29,7 +29,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
         <Canvas ctx={ctx}>
           <div className='max-h-52'>
             <form className='flex items-stretch' onSubmit={handleSubmit}>
-             {!config.useOnlyStore ?  <SelectInput
+             {config.useOnlyStore !== "null" ?  <SelectInput
                   options={options} 
                   isMulti={false}
                   className="mr-4 flex" 

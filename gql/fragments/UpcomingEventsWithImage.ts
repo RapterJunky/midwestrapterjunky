@@ -10,8 +10,14 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         slug
       }
       bgImage {
-        url
-        alt
+        responsiveImage {
+          sizes
+          alt
+          src
+          height
+          width
+        }
+        blurUpThumb
       }
     }
     _modelApiKey

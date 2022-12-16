@@ -1,7 +1,8 @@
-import { GetStaticPropsContext, GetStaticPropsResult, GetStaticPathsContext, GetStaticPathsResult } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { renderMetaTags, StructuredText, SeoOrFaviconTag } from 'react-datocms';
+import type { GetStaticPropsContext, GetStaticPropsResult, GetStaticPathsContext, GetStaticPathsResult } from "next";
+import { renderMetaTags, StructuredText, type SeoOrFaviconTag } from 'react-datocms';
+
 import Footer from "../../components/Footer";
 import Navbar, { NavProps } from "../../components/Navbar";
 import { DATOCMS_Fetch } from '../../lib/gql';
@@ -12,21 +13,31 @@ import { markRules } from "../../lib/StructuredTextRules";
 import Button from "../../components/Button";
 import prisma from "../../lib/prisma";
 
+import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '../../lib/types';
+import type { ShopType } from "../../lib/hooks/plugins/useStore";
+import Image from "next/image";
+
+import StoreButtonLink from "../../components/StoreButtonLink";
+import IconLink from "../../components/IconLink";
+
 interface EventPageProps extends NavProps {
+    site: any;
+    id: string;
+    updatedAt: string;
     dateTo: string;
     dateFrom: string;
     title: string;
-    updatedAt: string;
+    slug: string;
+    shopItemLink: null | { type: ShopType, handle: string; } 
     location: {
         latitude: number;
         longitude: number;
-    }
-    links: { link: string; title: string; }[];
-    id: string;
-    description: any;
-    gallery: { url: string; alt: string; }[];
+    } | null;
+    links: LinkWithIcon[];
+    description: StructuredContent;
+    extraLocationDetails: string | null;
+    gallery: ResponsiveImage[];
     _seoMetaTags: SeoOrFaviconTag[];
-    shoptItem: string | null;
 }
 
 const getPages = async () => {
@@ -55,7 +66,7 @@ const getPages = async () => {
 }
 
 const getPage = async (id: string = "", preview: boolean = false) => {
-    const data = await DATOCMS_Fetch<{ event: EventPageProps, navbar: NavProps["navbar"] } >(EventPageQuery,{ 
+    const data = await DATOCMS_Fetch<{ event: EventPageProps, navbar: NavProps["navbar"], _site: { faviconMetaTags: any[] }; } >(EventPageQuery,{ 
         variables: { 
             eq: id 
         }, 
@@ -90,7 +101,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     const data = await getPage(ctx.params?.id as string,ctx.preview);
 
     return {
-        props: { ...data.event, navbar: data.navbar }
+        props: { ...data.event, navbar: data.navbar, site: data._site }
     }
 }
 
@@ -101,66 +112,85 @@ export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetSta
         fallback: "blocking"
     }
 }
-
+// {props.shoptItem ? <Button href={props.shoptItem} link>VIEW SHOP</Button> : null }
 //https://wiki.openstreetmap.org/wiki/Export#Embeddable_HTML
 export default function EventPage(props: EventPageProps){
     return (
-        <div className="flex flex-col bg-gray-100">
+        <div className="flex flex-col flex-grow">
             <Head>
-                {renderMetaTags(props?._seoMetaTags ?? [])}
+                {renderMetaTags([
+                    ...props?._seoMetaTags,
+                    ...props.site.faviconMetaTags
+                ])}
             </Head>
-            <Navbar pageLinks={props.navbar.pageLinks} mode="none"/>
-            <main className="container mx-auto">
-                <header className="p-4 bg-zinc-400 mt-5">
-                    <h1 className="text-white font-bold text-4xl">{props.title} | {formatTime(props.dateFrom,props.dateTo)}</h1>
-                    <hr className="w-2/4 mt-2 mb-1"/>
-                    <p className="text-gray-500 text-xs font-thin">Updated: {formatTimeUser(props.updatedAt)}</p>
-                </header>
-                <div className="flex flex-col md:flex-row my-5">
-                    <article className="prose max-w-none px-2">
+            <Navbar {...props.navbar} mode="none"/>
+            <header className="container sm:mx-auto my-4">
+                <h1 className="ml-4 text-2xl font-bold mb-1">{props.title} | {formatTime(props.dateFrom,props.dateTo)}</h1>
+                <hr className="ml-4 border-t-2 border-gray-300"/>
+                <span className="ml-4 text-sm font-serif font-thin">Updated: {formatTimeUser(props.updatedAt)}</span>
+            </header>
+            <main className="container mx-auto flex flex-grow flex-col justify-center h-max">
+                <section className="flex flex-col sm:flex-row flex-warp items-start w-full gap-2">
+                    <article className="prose sm:w-3/4 max-w-none mx-10">
                         <StructuredText customMarkRules={markRules} data={props.description}/>
                     </article>
-                    <aside className="flex flex-col gap-2 pl-2 md:w-2/4">
-                        <div className="flex flex-col bg-zinc-400 p-3 text-white">
-                            <p>Starting Date: {formatUserDate(props.dateFrom)}</p>
-                            <div>Ending Date: {formatUserDate(props.dateTo)}</div>
+                    <div className="md:ml-6 flex flex-col h-full w-full sm:w-1/4 flex-grow items-center bg-gray-500 shadow rounded-sm text-white mb-2">
+                        <div className="p-4 text-right w-full">
+                            <h2 className="font-bold text-white mb-1">Event Details</h2>
+                            <hr className="border-gray-200 w-full mx-2"/>
                         </div>
-                        {props.shoptItem ? <Button href={props.shoptItem} link>VIEW SHOP</Button> : null }
-                        {props.location ? 
-                        <iframe className="outline-none" width="425" height="350" loading="lazy"  
-                            src={`https://www.openstreetmap.org/export/embed.html?bbox=${props.location.longitude}%2C${props.location.latitude}&amp;layer=mapnik&amp;marker=39.91457919444492%2C-86.05805397033691`} 
-                        ></iframe> : null }
-
-                        <h6 className="font-bold">Links</h6>
-                        <ul className="list-disc pl-4">
-                            {props.links.map((link,i)=>(
-                                <li className="list-item" key={i}><Link className="underline" href={link.link}>{link.title}</Link></li>
-                            ))}
-                        </ul>
-                    </aside>
-                </div>
-                <section className="overflow-hidden text-gray-700">
-                    <h4 className="font-bold text-xl pl-2">Gallery</h4>
-                    <hr className="w-full mt-1 mb-1 bg-slate-600 h-0.5"/>
-                    <div className="container px-5 py-2 mx-auto lg:pt-12 lg:px-32">
-                        <div  className="flex flex-wrap -m-1 md:-m-2">
-                            {props.gallery.map((value,i)=>(
-                                <div key={i} className="flex flex-wrap w-1/3">
-                                    <div className="w-full p-1 md:p-2">
-                                        <img alt={value.alt} className="block object-cover object-center w-full h-full rounded-lg"
-                                            src={value.url}/>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        { props?.shopItemLink ? (
+                            <div className="px-4 w-full">
+                                <StoreButtonLink {...props.shopItemLink}/>
+                            </div>
+                        ) : null }
+                        {props.location || props.extraLocationDetails ? (
+                            <div className="w-full p-4 flex flex-col">
+                                <h3>Location Details</h3>
+                                <hr className="mb-2"/>
+                                {props.extraLocationDetails ? (
+                                    <p className="my-2">{props.extraLocationDetails}</p>
+                                ) : null}
+                                {props.location ? (
+                                    <iframe className="outline-none w-full" loading="lazy" height={350}
+                                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${props.location.longitude}%2C${props.location.latitude}&amp;layer=mapnik&amp;marker=39.91457919444492%2C-86.05805397033691`} 
+                                    ></iframe>
+                                ) : null}
+                            </div>
+                        ) : null }
+                        { props.links && props.links.length > 0 ? (
+                            <div className="w-full px-4">
+                                <h3 className="font-bold">Links</h3>
+                                <hr/>
+                                <ul className="list-disc ml-3">
+                                    {props.links.map((value,i)=>(
+                                        <li key={i} className="p-1">
+                                            <IconLink {...value} className="text-blue-600 hover:text-blue-400 underline"/>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : null}
+                    </div>
+                </section>
+                <section className="flex flex-col justify-center items-center gap-2 my-4">
+                    <div className="w-full flex flex-col justify-start p-2">
+                        <h2 className="font-bold">Image Gallery</h2>
+                        <hr className="w-full"/>
+                    </div>
+                    <div className="container max-w-none flex flex-wrap gap-2 px-4">
+                        {props.gallery.map((value,i)=>(
+                            <div key={i} className="relative h-40 w-40">
+                                <Image fill sizes={value.responsiveImage.sizes} alt={value.responsiveImage?.alt ?? ""} className="block object-cover object-center w-full h-full rounded-lg"
+                                src={value.responsiveImage.src}/>
+                            </div>
+                        ))}
                     </div>
                 </section>
             </main>
-            <Footer/>
+            <div className="h-20">
+                <Footer/>
+            </div>
         </div>
     )
 }
-/*
-<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-86.06323063373567%2C39.91179360853309%2C-86.05427205562593%2C39.915661304356085&amp;layer=mapnik&amp;marker=39.91372748374549%2C-86.05875134468079" style="border: 1px solid black"></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=39.91373&amp;mlon=-86.05875#map=18/39.91373/-86.05875">View Larger Map</a></small>
-"https://www.openstreetmap.org/export/embed.html?bbox=-86.06323063373567%2C39.91179360853309%2C-86.05427205562593%2C39.915661304356085&amp;layer=mapnik&amp;marker=39.91372748374549%2C-86.05875134468079"
-*/
