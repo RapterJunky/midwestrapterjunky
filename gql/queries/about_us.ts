@@ -20,7 +20,12 @@ query AboutUsQuery {
       imageTitle
       title
       content {
-        links
+        links {
+          slug
+          title
+          dateFrom
+          dateTo
+        }
         value
         blocks {
           content {
