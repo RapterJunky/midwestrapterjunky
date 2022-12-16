@@ -95,7 +95,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
         ]);
 
         // cache for 2 hours
-        if(!req.preview) res.setHeader("Cache-Control", "public, max-age=7200, immutable");
+        if(!req.preview || process.env.VERCEL_ENV !== "development") res.setHeader("Cache-Control", "public, max-age=7200, immutable");
         return res.status(200).json(data.flat().sort((a,b)=>a.index-b.index).map(value=>value.product));
     } catch (error) {
         console.error(error);

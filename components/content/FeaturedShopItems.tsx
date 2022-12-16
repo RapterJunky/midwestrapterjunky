@@ -33,8 +33,6 @@ const formatter = (locale: string = "en", currency: string, value: string) => In
 export default function FeaturedShopItems(props: FeatureShopItems){
     const { data, error } = useSWR<StoreItem[]>([`/api/products?find=${btoa(props.items.map(value=>`${value.item.type[0]}:${value.item.handle}`).join(","))}`],(url)=>fetch(url).then(value=>value.json()));
 
-    if(error) return null;
-
     if(!data) return (
         <section className="flex flex-col bg-zinc-100 py-8 px-4">
             <div className="flex justify-center items-center">
@@ -44,6 +42,8 @@ export default function FeaturedShopItems(props: FeatureShopItems){
             </div>
         </section>
     );
+
+    if(error || "message" in data) return null;
 
     return (
         <section className="flex flex-col bg-zinc-100 py-8 px-4">
