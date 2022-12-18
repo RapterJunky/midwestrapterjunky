@@ -10,11 +10,13 @@ import ModuleContent from '../components/ModuleContent';
 import Footer from '../components/Footer';
 import HomePageQuery from '../gql/queries/home';
 import type { ModulerContent } from '../lib/types';
+import ExitPreview from '../components/ExitPreview';
 
 interface HomeContent extends NavProps {
   _site: {
     faviconMetaTags: SeoOrFaviconTag[];
   }
+  preview: boolean
   home: {
     _seoMetaTags: SeoOrFaviconTag[];
     bodyContent:  ModulerContent[]
@@ -27,14 +29,15 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
 
   return {
     props: {
-      ...data
+      ...data,
+      preview: context?.preview ?? false
     },
     // 12 hours
     revalidate: 43200
   }
 }
 
-const Home: NextPage<HomeContent> = ({ navbar, home, _site}) => {
+const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site}) => {
    return (
     <>
       <Head>
@@ -50,6 +53,7 @@ const Home: NextPage<HomeContent> = ({ navbar, home, _site}) => {
         <ModuleContent data={home.bodyContent}/>
       </main>
       <Footer/>
+      { preview ? <ExitPreview/> : null }
       <Script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js" strategy="afterInteractive"/>
     </>
    );

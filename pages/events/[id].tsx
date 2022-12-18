@@ -1,16 +1,14 @@
 import Head from "next/head";
-import Link from "next/link";
 import type { GetStaticPropsContext, GetStaticPropsResult, GetStaticPathsContext, GetStaticPathsResult } from "next";
 import { renderMetaTags, StructuredText, type SeoOrFaviconTag } from 'react-datocms';
 
 import Footer from "../../components/Footer";
 import Navbar, { NavProps } from "../../components/Navbar";
 import { DATOCMS_Fetch } from '../../lib/gql';
-import { formatTime, formatTimeUser, formatUserDate } from "../../lib/utils/timeFormat";
+import { formatTime, formatTimeUser } from "../../lib/utils/timeFormat";
 import EventPageQuery from '../../gql/queries/event';
 import EventsQuery from '../../gql/queries/events';
 import { markRules } from "../../lib/StructuredTextRules";
-import Button from "../../components/Button";
 import prisma from "../../lib/prisma";
 
 import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '../../lib/types';
@@ -19,6 +17,7 @@ import Image from "next/image";
 
 import StoreButtonLink from "../../components/StoreButtonLink";
 import IconLink from "../../components/IconLink";
+import ExitPreview from "../../components/ExitPreview";
 
 interface EventPageProps extends NavProps {
     site: any;
@@ -38,6 +37,7 @@ interface EventPageProps extends NavProps {
     extraLocationDetails: string | null;
     gallery: ResponsiveImage[];
     _seoMetaTags: SeoOrFaviconTag[];
+    preview: boolean;
 }
 
 const getPages = async () => {
@@ -101,7 +101,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     const data = await getPage(ctx.params?.id as string,ctx.preview);
 
     return {
-        props: { ...data.event, navbar: data.navbar, site: data._site }
+        props: { ...data.event, navbar: data.navbar, site: data._site, preview: ctx?.preview ?? false }
     }
 }
 
@@ -191,6 +191,7 @@ export default function EventPage(props: EventPageProps){
             <div className="h-20">
                 <Footer/>
             </div>
+            { props.preview ? <ExitPreview/> : null }
         </div>
     )
 }

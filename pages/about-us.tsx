@@ -2,6 +2,7 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import Head from "next/head";
 import Image from 'next/image';
 import { renderMetaTags, StructuredText, type SeoOrFaviconTag } from 'react-datocms';
+import ExitPreview from "../components/ExitPreview";
 import Footer from "../components/Footer";
 import ModuleContent from "../components/ModuleContent";
 import Navbar, { NavProps } from "../components/Navbar";
@@ -13,6 +14,7 @@ interface AboutUsProps extends NavProps {
     _site: {
         faviconMetaTags: SeoOrFaviconTag[];
     }
+    preview: boolean;
     aboutUsModel: {
         _seoMetaTags: SeoOrFaviconTag[];
         imageTitle: string;
@@ -35,7 +37,10 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     const data = await DATOCMS_Fetch<AboutUsProps>(about_us,{ preview: ctx.preview });
 
     return {
-        props: data
+        props: {
+            ...data,
+            preview: ctx?.preview ?? false
+        }
     }
 }
 
@@ -71,6 +76,7 @@ export default function AboutUs(props: AboutUsProps){
                 <ModuleContent data={props.aboutUsModel.footerContent}/>
             </main>
             <Footer/>
+            { props.preview ? <ExitPreview/> : null }
         </>
     );
 }

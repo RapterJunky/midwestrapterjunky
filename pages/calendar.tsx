@@ -8,6 +8,7 @@ import Navbar, { type NavProps } from "../components/Navbar";
 import { DATOCMS_Fetch } from "../lib/gql";
 import Query from '../gql/queries/calendar';
 import Calendar from "../components/Calendar";
+import ExitPreview from "../components/ExitPreview";
 
 interface CalendarProps extends NavProps {
     _site: {
@@ -23,6 +24,7 @@ interface CalendarProps extends NavProps {
     calendar: {
         _seoMetaTags: SeoOrFaviconTag[]
     }
+    preview: boolean
 }
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<CalendarProps>> => {
@@ -36,7 +38,10 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     });
     
     return {
-        props: data,
+        props: {
+            ...data,
+            preview: ctx?.preview ?? false
+        },
         // 12 hours
         revalidate: 43200
     }
@@ -58,6 +63,7 @@ export default function CalendarPage(props: CalendarProps){
                 <Calendar data={props.allEvents}/>
             </main>
             <Footer/>
+            { props.preview ? <ExitPreview/> : null }
         </div>
     );
 }
