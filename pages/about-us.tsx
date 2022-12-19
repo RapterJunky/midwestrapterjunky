@@ -1,11 +1,13 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import Head from "next/head";
+import { StructuredText, type SeoOrFaviconTag } from 'react-datocms';
 import Image from 'next/image';
-import { renderMetaTags, StructuredText, type SeoOrFaviconTag } from 'react-datocms';
+
 import ExitPreview from "../components/ExitPreview";
 import Footer from "../components/Footer";
 import ModuleContent from "../components/ModuleContent";
-import Navbar, { NavProps } from "../components/Navbar";
+import Navbar, { type NavProps } from "../components/Navbar";
+import SiteTags from "../components/SiteTags";
+
 import about_us from "../gql/queries/about_us";
 import { DATOCMS_Fetch } from "../lib/gql";
 import { markRules } from "../lib/StructuredTextRules";
@@ -47,12 +49,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 export default function AboutUs(props: AboutUsProps){
     return (
         <>
-            <Head>
-                {renderMetaTags([
-                    ...props._site.faviconMetaTags,
-                    ...props.aboutUsModel._seoMetaTags
-                ])}
-            </Head>
+            <SiteTags tags={[ props._site.faviconMetaTags, props.aboutUsModel._seoMetaTags ]}/>
             <header>
                 <Navbar {...props.navbar} mode="only-scroll"/>
             </header>

@@ -28,7 +28,9 @@
     "react-icons": "^4.7.1",
     "react-parallax": "^3.5.1",
     "swr": "^2.0.0",
-    "tw-elements": "^1.0.0-alpha13"
+    "tw-elements": "^1.0.0-alpha13",
+    "zod": "^3.20.2",
+    "zod-validation-error": "^0.2.2"
   },
   "devDependencies": {
     "@types/http-errors": "^2.0.1",

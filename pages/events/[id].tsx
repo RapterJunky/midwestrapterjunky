@@ -1,23 +1,25 @@
-import Head from "next/head";
 import type { GetStaticPropsContext, GetStaticPropsResult, GetStaticPathsContext, GetStaticPathsResult } from "next";
-import { renderMetaTags, StructuredText, type SeoOrFaviconTag } from 'react-datocms';
-
-import Footer from "../../components/Footer";
-import Navbar, { NavProps } from "../../components/Navbar";
-import { DATOCMS_Fetch } from '../../lib/gql';
-import { formatTime, formatTimeUser } from "../../lib/utils/timeFormat";
-import EventPageQuery from '../../gql/queries/event';
-import EventsQuery from '../../gql/queries/events';
-import { markRules } from "../../lib/StructuredTextRules";
-import prisma from "../../lib/prisma";
-
-import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '../../lib/types';
-import type { ShopType } from "../../lib/hooks/plugins/useStore";
+import { StructuredText, type SeoOrFaviconTag } from 'react-datocms';
 import Image from "next/image";
+
 
 import StoreButtonLink from "../../components/StoreButtonLink";
 import IconLink from "../../components/IconLink";
 import ExitPreview from "../../components/ExitPreview";
+import SiteTags from "../../components/SiteTags";
+import Footer from "../../components/Footer";
+import Navbar, { NavProps } from "../../components/Navbar";
+
+import prisma from "../../lib/prisma";
+import { DATOCMS_Fetch } from '../../lib/gql';
+import { formatTime, formatTimeUser } from "../../lib/utils/timeFormat";
+
+import EventPageQuery from '../../gql/queries/event';
+import EventsQuery from '../../gql/queries/events';
+import { markRules } from "../../lib/StructuredTextRules";
+
+import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '../../lib/types';
+import type { ShopType } from "../../lib/hooks/plugins/useStore";
 
 interface EventPageProps extends NavProps {
     site: any;
@@ -117,20 +119,15 @@ export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetSta
 export default function EventPage(props: EventPageProps){
     return (
         <div className="flex flex-col flex-grow">
-            <Head>
-                {renderMetaTags([
-                    ...props?._seoMetaTags,
-                    ...props.site.faviconMetaTags
-                ])}
-            </Head>
+            <SiteTags tags={[ props._seoMetaTags, props.site.faviconMetaTags ]}/>
             <Navbar {...props.navbar} mode="none"/>
-            <header className="container sm:mx-auto my-4">
+            <header className="my-4 mx-4">
                 <h1 className="ml-4 text-2xl font-bold mb-1">{props.title} | {formatTime(props.dateFrom,props.dateTo)}</h1>
                 <hr className="ml-4 border-t-2 border-gray-300"/>
                 <span className="ml-4 text-sm font-serif font-thin">Updated: {formatTimeUser(props.updatedAt)}</span>
             </header>
             <main className="container mx-auto flex flex-grow flex-col justify-center h-max">
-                <section className="flex flex-col sm:flex-row flex-warp items-start w-full gap-2">
+                <section className="flex flex-col sm:flex-row flex-warp items-start w-full gap-2 mb-4">
                     <article className="prose sm:w-3/4 max-w-none mx-10">
                         <StructuredText customMarkRules={markRules} data={props.description}/>
                     </article>
@@ -139,6 +136,9 @@ export default function EventPage(props: EventPageProps){
                             <h2 className="font-bold text-white mb-1">Event Details</h2>
                             <hr className="border-gray-200 w-full mx-2"/>
                         </div>
+                        { (!props?.shopItemLink && !(props.location || props.extraLocationDetails) && (!props.links || props.links.length === 0)) ? (
+                            <div className="mb-3 text-center">No details where provided.</div>
+                        ) : null  }
                         { props?.shopItemLink ? (
                             <div className="px-4 w-full">
                                 <StoreButtonLink {...props.shopItemLink}/>
@@ -173,20 +173,22 @@ export default function EventPage(props: EventPageProps){
                         ) : null}
                     </div>
                 </section>
-                <section className="flex flex-col justify-center items-center gap-2 my-4">
-                    <div className="w-full flex flex-col justify-start p-2">
-                        <h2 className="font-bold">Image Gallery</h2>
-                        <hr className="w-full"/>
-                    </div>
-                    <div className="container max-w-none flex flex-wrap gap-2 px-4">
-                        {props.gallery.map((value,i)=>(
-                            <div key={i} className="relative h-40 w-40">
-                                <Image fill sizes={value.responsiveImage.sizes} alt={value.responsiveImage?.alt ?? ""} className="block object-cover object-center w-full h-full rounded-lg"
-                                src={value.responsiveImage.src}/>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                { props.gallery && props.gallery.length > 0 ? (
+                    <section className="flex flex-col justify-center items-center gap-2 my-4">
+                        <div className="w-full flex flex-col justify-start p-2">
+                            <h2 className="font-bold">Image Gallery</h2>
+                            <hr className="w-full"/>
+                        </div>
+                        <div className="container max-w-none flex flex-wrap gap-2 px-4">
+                            {props.gallery.map((value,i)=>(
+                                <div key={i} className="relative h-40 w-40">
+                                    <Image fill sizes={value.responsiveImage.sizes} alt={value.responsiveImage?.alt ?? ""} className="block object-cover object-center w-full h-full rounded-lg"
+                                    src={value.responsiveImage.src}/>
+                                </div>
+                            ))}
+                        </div>
+                    </section> 
+                ) : null }
             </main>
             <div className="h-20">
                 <Footer/>

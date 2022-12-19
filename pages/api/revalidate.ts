@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(200).json({ revalidated: true });
             case "build":
                 await prisma.cache.updateMany({ where: { isDirty: false }, data: { isDirty: true } })
-                const client = buildClient({ apiToken: process.env.DATAOCMS_CLIENT_TOKEN as string });
+                const client = buildClient({ apiToken: process.env.DATOCMS_CLIENT_TOKEN });
                 await client.buildTriggers.trigger(BUILD_TRIGGER_ID);
                 return res.status(200).json({ revalidated: true });
             case "page-cache": 

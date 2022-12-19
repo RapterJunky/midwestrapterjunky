@@ -1,6 +1,5 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import Head from "next/head";
-import { renderMetaTags, type SeoOrFaviconTag } from 'react-datocms';
+import { type SeoOrFaviconTag } from 'react-datocms';
 import moment from "moment";
 
 import Footer from "../components/Footer";
@@ -9,6 +8,7 @@ import { DATOCMS_Fetch } from "../lib/gql";
 import Query from '../gql/queries/calendar';
 import Calendar from "../components/Calendar";
 import ExitPreview from "../components/ExitPreview";
+import SiteTags from "../components/SiteTags";
 
 interface CalendarProps extends NavProps {
     _site: {
@@ -50,12 +50,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 export default function CalendarPage(props: CalendarProps){
     return (
         <div className="flex flex-col">
-            <Head>
-                {renderMetaTags([
-                    ...props._site.faviconMetaTags,
-                    ...props.calendar._seoMetaTags
-                ])}
-            </Head>
+            <SiteTags tags={[ props._site.faviconMetaTags, props.calendar._seoMetaTags ]}/>
             <header>
                 <Navbar {...props.navbar} mode="none"/>
             </header>

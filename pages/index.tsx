@@ -1,8 +1,6 @@
 import type { NextPage, GetStaticPropsContext, GetStaticPropsResult } from 'next';
-import type { SeoOrFaviconTag, OgMetaAttributes } from 'react-datocms';
-import Head from 'next/head';
+import type { SeoOrFaviconTag } from 'react-datocms';
 import Script from 'next/script';
-import { renderMetaTags } from "react-datocms";
 
 import { DATOCMS_Fetch } from '../lib/gql';
 import Navbar, { type NavProps } from '../components/Navbar';
@@ -11,6 +9,7 @@ import Footer from '../components/Footer';
 import HomePageQuery from '../gql/queries/home';
 import type { ModulerContent } from '../lib/types';
 import ExitPreview from '../components/ExitPreview';
+import SiteTags from '../components/SiteTags';
 
 interface HomeContent extends NavProps {
   _site: {
@@ -33,19 +32,14 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
       preview: context?.preview ?? false
     },
     // 12 hours
-    revalidate: 43200
+    //revalidate: 43200
   }
 }
 
 const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site}) => {
    return (
     <>
-      <Head>
-          {renderMetaTags([
-            ...home._seoMetaTags.filter(value=>(value.attributes as OgMetaAttributes | null)?.property !== "article:modified_time"),
-            ..._site.faviconMetaTags
-          ])}
-      </Head>
+      <SiteTags ignore={["article:modified_time"]} tags={[ home._seoMetaTags, _site.faviconMetaTags ]}/>
       <header>
         <Navbar {...navbar} mode="fade-scroll"/>
       </header>

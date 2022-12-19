@@ -1,7 +1,7 @@
 import { GraphQLClient, type Variables } from 'graphql-request';
 import type { PatchedRequestInit } from 'graphql-request/dist/types';
 
-const DATO_CMS = "https://graphql.datocms.com/";
+const DATO_CMS = `https://graphql.datocms.com/environments/${process.env?.DATOCMS_EVIRONMENT ?? "main"}`;
 
 interface FetchOptions {
     variables?: Variables,
