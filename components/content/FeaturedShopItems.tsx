@@ -51,7 +51,7 @@ export default function FeaturedShopItems(props: FeatureShopItems){
                 {data.map(({ handle, featuredImage, priceRange, title, onlineStoreUrl })=>(
                     <Link key={handle} className="flex flex-col items-center gap-2 mb-11" href={onlineStoreUrl}>
                         <div className="h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 lg:h-96 lg:w-96 relative">
-                            <Image className="object-contain object-center" src={featuredImage.url} alt={featuredImage.altText ?? "Store Item"} sizes="100vw" fill/>
+                            <Image className="object-contain object-center h-full w-full" src={featuredImage.url} alt={featuredImage.altText ?? "Store Item"} sizes="100vw" fill/>
                         </div>
                         <div className="py-4 text-center text-sm">
                             <h4>{title}</h4>

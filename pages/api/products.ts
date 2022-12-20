@@ -1,5 +1,7 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
-import { NextApiRequest, NextApiResponse } from "next";
+import { z, ZodError } from "zod";
+import { fromZodError } from 'zod-validation-error';
 import { getKeys } from "../../lib/dynamic_keys";
 import { Shopify_Fetch } from '../../lib/gql';
 import { type Freewebstore } from "../../lib/utils/plugin/types";
@@ -48,14 +50,16 @@ const fetch_shopify = async (query: string, args: { SHOPIFY_STOREFRONT_ACCESS_TO
     })
 } 
 
+const inputValidation = z.string().transform(value=>Buffer.from(value,"base64").toString("utf-8"));
+
 export default async function handle(req: NextApiRequest, res: NextApiResponse){
     try {
         if(req.method !== "GET") throw createHttpError.MethodNotAllowed();   
-        if(!req.query?.find) throw createHttpError.BadRequest();
+      
+        const request = inputValidation.parse(req.query?.find);
 
         const keys = await getKeys(["SHOPIFY_STOREFRONT_ACCESS_TOKEN","SHOPIFY_DOMAIN","FREEWEBSTORE_API_TOKEN"] as const);
-        const request = Buffer.from(req.query.find as string,"base64").toString("utf-8");
-
+       
         let shopify_products: { index: number, handle: string; }[] = [];
         let free_shop: { index: number, handle: string }[] = [];
 
@@ -101,6 +105,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
         console.error(error);
         if(createHttpError.isHttpError(error)) {
             return res.status(error.statusCode).json(error);
+        }
+
+        if(error instanceof ZodError) {
+            const status = createHttpError.BadRequest();
+            const display = fromZodError(error);
+            return res.status(status.statusCode).json({ message: status.message, details: display.details });
         }
 
         const ie = createHttpError.InternalServerError();
