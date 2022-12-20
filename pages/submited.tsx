@@ -37,7 +37,10 @@ export default function Submited(props: SubmitedProps){
     return (
         <div className="h-full flex flex-col">
         
-            <SiteTags tags={[ props._site.faviconMetaTags, [ { tag: "title", content: "Midwest Rapter Junkies | Submited."  } ] ]}/>
+            <SiteTags tags={[ props._site.faviconMetaTags, [ 
+                { tag: "title", content: "Midwest Rapter Junkies | Submited."  },
+                { tag: "meta", attributes: { name: "robots", content: "noindex,nofollow" } }
+                 ] ]}/>
             <Navbar mode="none" {...props.navbar} />
             <main className="flex flex-col flex-grow justify-center items-center">
                 {  router.query.ok === "true" ? (
