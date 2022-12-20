@@ -1,5 +1,9 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withBundleAnalyzer({
   reactStrictMode: true,
   images: {
     deviceSizes: [150,300,600,900,1200,1500,1800,2100],
@@ -15,6 +19,6 @@ const nextConfig = {
         permanent: true
     }]
   }
-}
+});
 
 module.exports = nextConfig;

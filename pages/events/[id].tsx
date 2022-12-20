@@ -109,6 +109,9 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 
 export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetStaticPathsResult<{ id: string; }>> {
     const {paths} = await getPages();
+
+    // switch to using fallback only to reduce build times.
+
     return {
         paths,
         fallback: "blocking"

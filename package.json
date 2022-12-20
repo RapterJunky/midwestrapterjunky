@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@datocms/cma-client-node": "^1.1.14",
@@ -33,11 +34,13 @@
     "zod-validation-error": "^0.2.2"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.0.7",
     "@types/http-errors": "^2.0.1",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.8",
     "autoprefixer": "^10.4.13",
+    "cross-env": "^7.0.3",
     "eslint": "^8.27.0",
     "eslint-config-next": "^13.0.3",
     "postcss": "^8.4.19",
