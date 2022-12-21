@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
+import { logger } from "../../lib/logger";
 import { getKeys } from "../../lib/dynamic_keys";
 import { Shopify_Fetch } from '../../lib/gql';
 import { type Freewebstore } from "../../lib/utils/plugin/types";
@@ -102,18 +103,20 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
         if(!req.preview || process.env.VERCEL_ENV !== "development") res.setHeader("Cache-Control", "public, max-age=7200, immutable");
         return res.status(200).json(data.flat().sort((a,b)=>a.index-b.index).map(value=>value.product));
     } catch (error) {
-        console.error(error);
         if(createHttpError.isHttpError(error)) {
+            logger.error(error,error.message);
             return res.status(error.statusCode).json(error);
         }
 
         if(error instanceof ZodError) {
             const status = createHttpError.BadRequest();
             const display = fromZodError(error);
+            logger.error(error,display.message);
             return res.status(status.statusCode).json({ message: status.message, details: display.details });
         }
 
         const ie = createHttpError.InternalServerError();
+        logger.error(error,ie.message);
         return res.status(ie.statusCode).json(ie);
     }
 }

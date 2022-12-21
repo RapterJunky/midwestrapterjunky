@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from 'http-errors';
 import { buildClient } from '@datocms/cma-client-node';
+import { logger } from "../../lib/logger";
 import prisma from "../../lib/prisma";
 interface RevaildateSettings {
     type: "page" | "cache" | "page-cache" | "build" | "multi-page";
@@ -58,11 +59,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(200).json({ revalidated: false });
         }
     } catch (error: any) {
-        console.error(error);
-
         if(createHttpError.isHttpError(error)) {
+            logger.error(error,error.message);
             return res.status(error.statusCode).json({ ...error, revaildated: false });
         }
+
+        logger.error(error,"Internal Server Error");
 
         res.status(500).json({
             revalidated: false

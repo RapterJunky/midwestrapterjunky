@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import prisma from "../../lib/prisma";
+import { logger } from "../../lib/logger";
 
 const defaultResponse = "The Server was unable to add the email to the mailing list.";
 const emailValidator = z.object({
@@ -28,23 +29,25 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
    
         return formatRedirect(res,true);
     } catch (error: any) {
+
         if(error instanceof ZodError) {
             const status = fromZodError(error);
-            console.error(status);
+            logger.error(status,status.message);
             return formatRedirect(res,false,status.message);
         }
-        console.error(error);
-
+   
         if(error instanceof Prisma.PrismaClientKnownRequestError) {
+            logger.error(error,"Database Error");
             switch (error.code) {
                 case "P2002":
                     return formatRedirect(res,false,`${req.body.email} has already been added to the mailing list.`);
                 default:
                     return formatRedirect(res,false,defaultResponse);
             }
-
-
         }
+
+
+        logger.error(error,"Unkown Error");
 
         return formatRedirect(res,false,defaultResponse);
     }

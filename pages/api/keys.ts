@@ -1,6 +1,7 @@
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
+import { logger } from "../../lib/logger";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getKeys, addKeys } from '../../lib/dynamic_keys';
 
@@ -41,16 +42,21 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 throw createHttpError.MethodNotAllowed();
         }
     } catch (error) {
-        console.error(error);
-        if(createHttpError.isHttpError(error)) return res.status(error.statusCode).json(error);
+        
+        if(createHttpError.isHttpError(error)){ 
+            logger.error(error,error.message);
+            return res.status(error.statusCode).json(error);
+        }
 
         if(error instanceof ZodError) {
             const reason = fromZodError(error);
+            logger.error(error,reason.message);
             const status = createHttpError.BadRequest();
             return res.status(status.statusCode).json({ details: reason.details, message: status.message });
         }
 
         const ie = createHttpError.InternalServerError();
+        logger.error(error,ie.message);
         return res.status(ie.statusCode).json(ie);
     }
 }
