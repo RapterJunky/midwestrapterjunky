@@ -7,6 +7,7 @@ import ShopFieldExtension from "../../components/plugins/ShopFieldExtension";
 import BrowseProductsModel from "../../components/plugins/BrowseProductsModal";
 
 import "datocms-react-ui/styles.css";
+import CustomImageUpload from "../../components/plugins/CustomImagUpload";
 
 const FIELD_EXTENSION_ID = 'shopProduct';
 
@@ -15,6 +16,7 @@ const MidwestRaptor: NextPage<any> = () => {
         renderConfigScreen: true,
         renderFieldExtension: true,
         renderModal: true,
+        renderAssetSource: true,
         async onBoot(ctx) {
             if(!ctx.currentRole.meta.final_permissions.can_edit_schema || isVaildConfig(ctx.plugin.attributes.parameters)) return;
             const fields = await ctx.loadFieldsUsingPlugin();
@@ -61,6 +63,22 @@ const MidwestRaptor: NextPage<any> = () => {
         customMarksForStructuredTextField(field, ctx) {
             return StructuredTextFields;
         },
+        assetSources(ctx) {
+            return [
+                {
+                    id: "optwebp",
+                    name: "Optimized Upload",
+                    icon: {
+                        type: 'svg',
+                        viewBox: '0 0 448 512',
+                        content: '<path fill="currentColor" d="M448,230.17V480H0V230.17H141.13V355.09H306.87V230.17ZM306.87,32H141.13V156.91H306.87Z" class=""></path>',
+                    },
+                    modal: {
+                        width: "m"
+                    }
+                }
+            ];
+        },
     });
 
     switch (page) {
@@ -71,6 +89,9 @@ const MidwestRaptor: NextPage<any> = () => {
         case "renderModal":
             if(id === "browseProducts") return <BrowseProductsModel ctx={ctx}/>;
             return null;
+        case "renderAssetSource": {
+            return <CustomImageUpload ctx={ctx}/>
+        }
         default:
             return null;
     }

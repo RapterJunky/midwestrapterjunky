@@ -9,7 +9,7 @@ declare module NodeJS {
     interface ProcessEnv {
         DATOCMS_READONLY_TOKEN: string;
         DATOCMS_CLIENT_TOKEN: string;
-        DATOCMS_ENVIRONMENT?: "dev" | "main";
+        DATOCMS_ENVIRONMENT: "dev" | "main";
         KEYS_TOKEN: string;
         REVALIDATE_TOKEN:  string;
         PREVIEW_TOKEN: string;

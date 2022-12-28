@@ -17,7 +17,7 @@ const getVaildataion = z.array(z.string().transform(value=>value.toUpperCase()))
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     try {
-        if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN as string) throw createHttpError.Unauthorized();
+        if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN) throw createHttpError.Unauthorized();
 
         switch (req.method) {
             case "POST":{
