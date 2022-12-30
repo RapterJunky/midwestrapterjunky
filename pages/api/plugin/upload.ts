@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { tmpdir } from 'os';
 import { join } from "path";
 import { unlink, readFile } from 'fs/promises';
-import { cwebp } from '@ezy/webp';
+import { cwebp } from '@lib/webp';
 import multer from 'multer';
 import createHttpError from "http-errors";
 import { logger } from "@lib/logger";
