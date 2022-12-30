@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
-import { logger } from "../../lib/logger";
-import { getKeys } from "../../lib/dynamic_keys";
-import { Shopify_Fetch } from '../../lib/gql';
-import { type Freewebstore } from "../../lib/utils/plugin/types";
+import { logger } from "@lib/logger";
+import { getKeys } from "@lib/dynamic_keys";
+import { Shopify_Fetch } from '@lib/gql';
+import { type Freewebstore } from "@utils/plugin/types";
 
 const fetch_freestore = async (api: string, data: { index: number; handle: string; }) => {
     const request = await fetch(`https://api.freewebstore.com/product/${data.handle}`,{

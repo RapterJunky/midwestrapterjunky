@@ -2,15 +2,15 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { StructuredText, type SeoOrFaviconTag } from 'react-datocms';
 import Image from 'next/image';
 
-import ExitPreview from "../components/ExitPreview";
-import Footer from "../components/Footer";
-import ModuleContent from "../components/ModuleContent";
-import Navbar, { type NavProps } from "../components/Navbar";
-import SiteTags from "../components/SiteTags";
+import ExitPreview from "@components/ExitPreview";
+import Footer from "@components/Footer";
+import ModuleContent from "@components/ModuleContent";
+import Navbar, { type NavProps } from "@components/Navbar";
+import SiteTags from "@components/SiteTags";
 
-import about_us from "../gql/queries/about_us";
-import { DATOCMS_Fetch } from "../lib/gql";
-import { markRules } from "../lib/StructuredTextRules";
+import about_us from "@query/queries/about_us";
+import { DATOCMS_Fetch } from "@lib/gql";
+import { markRules } from "@lib/StructuredTextRules";
 
 interface AboutUsProps extends NavProps {
     _site: {

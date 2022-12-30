@@ -5,7 +5,7 @@ import { unlink, readFile } from 'fs/promises';
 import { cwebp } from '@ezy/webp';
 import multer from 'multer';
 import createHttpError from "http-errors";
-import { logger } from "../../../lib/logger";
+import { logger } from "@lib/logger";
 
 interface FileUpload {
     file: {

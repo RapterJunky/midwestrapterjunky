@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
-import { useDatoCMSPlugin } from "../../lib/hooks/plugins/useDatoCms";
-import StructuredTextFields from "../../lib/plugins/StructuredTextFields";
-import { isVaildConfig, normalizeConfig } from '../../lib/utils/plugin/types';
-import ConfigScreen from "../../components/plugins/ConfigScreen";
-import ShopFieldExtension from "../../components/plugins/ShopFieldExtension";
-import BrowseProductsModel from "../../components/plugins/BrowseProductsModal";
+import { useDatoCMSPlugin } from "@lib/hooks/plugins/useDatoCms";
+import StructuredTextFields from "@lib/plugins/StructuredTextFields";
+import { isVaildConfig, normalizeConfig } from '@lib/utils/plugin/types';
+import ConfigScreen from "@components/plugins/ConfigScreen";
+import ShopFieldExtension from "@components/plugins/ShopFieldExtension";
+import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
+import CustomImageUpload from "@components/plugins/CustomImagUpload";
 
 import "datocms-react-ui/styles.css";
-import CustomImageUpload from "../../components/plugins/CustomImagUpload";
 
 const FIELD_EXTENSION_ID = 'shopProduct';
 

@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
-import prisma from "../../lib/prisma";
-import { logger } from "../../lib/logger";
+import prisma from "@lib/prisma";
+import { logger } from "@lib/logger";
 
 const defaultResponse = "The Server was unable to add the email to the mailing list.";
 const emailValidator = z.object({

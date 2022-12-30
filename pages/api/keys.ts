@@ -1,9 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
-import { logger } from "../../lib/logger";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getKeys, addKeys } from '../../lib/dynamic_keys';
+import { logger } from "@lib/logger";
+import { getKeys, addKeys } from '@lib/dynamic_keys';
 
 const upsertVaildation = z.array(
     z.object({

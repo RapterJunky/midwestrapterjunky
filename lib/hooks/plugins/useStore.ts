@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import ShopifyClient, { type Product } from '../../utils/plugin/ShopifyClient';
-import { normalizeProduct ,normalizeConfig, ConvertToShopifyProduct,  type Freewebstore , type FreewebstoreProduct } from '../../../lib/utils/plugin/types';
+import ShopifyClient, { type Product } from '@utils/plugin/ShopifyClient';
+import { normalizeProduct ,normalizeConfig, ConvertToShopifyProduct,  type Freewebstore , type FreewebstoreProduct } from '@utils/plugin/types';
 
 export type ShopType = "shopify" | "freewebstore";
 export type Status = 'loading' | 'success' | 'error';
