@@ -3,23 +3,23 @@ import { StructuredText, type SeoOrFaviconTag } from 'react-datocms';
 import Image from "next/image";
 
 
-import StoreButtonLink from "../../components/StoreButtonLink";
-import IconLink from "../../components/IconLink";
-import ExitPreview from "../../components/ExitPreview";
-import SiteTags from "../../components/SiteTags";
-import Footer from "../../components/Footer";
-import Navbar, { NavProps } from "../../components/Navbar";
+import StoreButtonLink from "@components/StoreButtonLink";
+import IconLink from "@components/IconLink";
+import ExitPreview from "@components/ExitPreview";
+import SiteTags from "@components/SiteTags";
+import Footer from "@components/Footer";
+import Navbar, { NavProps } from "@components/Navbar";
 
-import prisma from "../../lib/prisma";
-import { DATOCMS_Fetch } from '../../lib/gql';
-import { formatTime, formatTimeUser } from "../../lib/utils/timeFormat";
+import prisma from "@lib/prisma";
+import { DATOCMS_Fetch } from '@lib/gql';
+import { formatTime, formatTimeUser } from "@lib/utils/timeFormat";
 
-import EventPageQuery from '../../gql/queries/event';
-import EventsQuery from '../../gql/queries/events';
-import { markRules } from "../../lib/StructuredTextRules";
+import EventPageQuery from '@query/queries/event';
+import EventsQuery from '@query/queries/events';
+import { markRules } from "@lib/StructuredTextRules";
 
-import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '../../lib/types';
-import type { ShopType } from "../../lib/hooks/plugins/useStore";
+import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '@lib/types';
+import type { ShopType } from "@lib/hooks/plugins/useStore";
 
 interface EventPageProps extends NavProps {
     site: any;

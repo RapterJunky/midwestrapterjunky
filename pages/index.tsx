@@ -2,14 +2,14 @@ import type { NextPage, GetStaticPropsContext, GetStaticPropsResult } from 'next
 import type { SeoOrFaviconTag } from 'react-datocms';
 import Script from 'next/script';
 
-import { DATOCMS_Fetch } from '../lib/gql';
-import Navbar, { type NavProps } from '../components/Navbar';
-import ModuleContent from '../components/ModuleContent';
-import Footer from '../components/Footer';
-import HomePageQuery from '../gql/queries/home';
-import type { ModulerContent } from '../lib/types';
-import ExitPreview from '../components/ExitPreview';
-import SiteTags from '../components/SiteTags';
+import { DATOCMS_Fetch } from '@lib/gql';
+import Navbar, { type NavProps } from '@components/Navbar';
+import ModuleContent from '@components/ModuleContent';
+import Footer from '@components/Footer';
+import HomePageQuery from '@query/queries/home';
+import type { ModulerContent } from '@lib/types';
+import ExitPreview from '@components/ExitPreview';
+import SiteTags from '@components/SiteTags';
 
 interface HomeContent extends NavProps {
   _site: {

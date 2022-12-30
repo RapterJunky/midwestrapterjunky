@@ -2,10 +2,10 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import type { SeoOrFaviconTag } from 'react-datocms';
 import Link from 'next/link';
 import { HiArrowLeft } from 'react-icons/hi';
-import SiteTags from '../components/SiteTags';
+import SiteTags from '@components/SiteTags';
 
-import { DATOCMS_Fetch } from "../lib/gql";
-import Query from '../gql/queries/generic_tags';
+import { DATOCMS_Fetch } from "@lib/gql";
+import Query from '@query/queries/generic_tags';
 
 type PageProps = {
     _site: {

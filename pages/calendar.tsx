@@ -2,13 +2,13 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { type SeoOrFaviconTag } from 'react-datocms';
 import moment from "moment";
 
-import Footer from "../components/Footer";
-import Navbar, { type NavProps } from "../components/Navbar";
-import { DATOCMS_Fetch } from "../lib/gql";
-import Query from '../gql/queries/calendar';
-import Calendar from "../components/Calendar";
-import ExitPreview from "../components/ExitPreview";
-import SiteTags from "../components/SiteTags";
+import Footer from "@components/Footer";
+import Navbar, { type NavProps } from "@components/Navbar";
+import { DATOCMS_Fetch } from "@lib/gql";
+import Query from '@query/queries/calendar';
+import Calendar from "@components/Calendar";
+import ExitPreview from "@components/ExitPreview";
+import SiteTags from "@components/SiteTags";
 
 interface CalendarProps extends NavProps {
     _site: {

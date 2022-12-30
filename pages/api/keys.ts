@@ -1,9 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
-import { logger } from "../../lib/logger";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getKeys, addKeys } from '../../lib/dynamic_keys';
+import { logger } from "@lib/logger";
+import { getKeys, addKeys } from '@lib/dynamic_keys';
 
 const upsertVaildation = z.array(
     z.object({
@@ -17,7 +17,7 @@ const getVaildataion = z.array(z.string().transform(value=>value.toUpperCase()))
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     try {
-        if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN as string) throw createHttpError.Unauthorized();
+        if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN) throw createHttpError.Unauthorized();
 
         switch (req.method) {
             case "POST":{

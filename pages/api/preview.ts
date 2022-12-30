@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
 import { fromZodError } from 'zod-validation-error';
-import { logger } from "../../lib/logger";
+import { logger } from "@lib/logger";
 
 const PreviewTimeWindow = 60 * 60;
 const slugValidation = z.string().startsWith("/");

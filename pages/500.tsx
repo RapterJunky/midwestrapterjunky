@@ -1,9 +1,9 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import type { SeoOrFaviconTag } from 'react-datocms';
-import SiteTags from '../components/SiteTags';
+import SiteTags from '@components/SiteTags';
 
-import { DATOCMS_Fetch } from "../lib/gql";
-import Query from '../gql/queries/generic_tags';
+import { DATOCMS_Fetch } from "@lib/gql";
+import Query from '@query/queries/generic_tags';
 
 type PageProps = {
     _site: {

@@ -1,13 +1,13 @@
 import type { GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import type { SeoOrFaviconTag } from 'react-datocms';
-import ExitPreview from '../components/ExitPreview';
-import Footer from '../components/Footer';
-import SiteTags from '../components/SiteTags';
+import ExitPreview from '@components/ExitPreview';
+import Footer from '@components/Footer';
+import SiteTags from '@components/SiteTags';
 
-import { DATOCMS_Fetch } from "../lib/gql";
-import Query from '../gql/queries/generic';
-import Navbar, { type NavProps } from '../components/Navbar';
+import { DATOCMS_Fetch } from "@lib/gql";
+import Query from '@query/queries/generic';
+import Navbar, { type NavProps } from '@components/Navbar';
 
 
 interface SubmitedProps extends NavProps {
