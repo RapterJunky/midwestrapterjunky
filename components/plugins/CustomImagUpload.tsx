@@ -1,6 +1,5 @@
 import { RenderAssetSourceCtx } from "datocms-plugin-sdk";
-import { Button, Spinner } from 'datocms-react-ui';
-import { Canvas } from "datocms-react-ui";
+import { Button, Spinner, Canvas } from 'datocms-react-ui';
 import Image from 'next/image';
 import { useState, useRef } from "react";
 
@@ -24,14 +23,13 @@ export default function CustomImageUpload({ ctx }: { ctx: RenderAssetSourceCtx }
             const token = new URLSearchParams(window.location.search).get("token");
             if(!token) throw new Error("No token")
 
-           /* const req = await fetch("/api/plugin/upload",{
+            const req = await fetch("/api/plugin/upload",{
                 method: "POST",
                 headers: {
                     // Don't set this headers when working with this type of form data
                     // fetch will create it for you
                     //"Content-Type": "multipart/form-data",
-                    "Authorization": `Bearer ${token}`,
-                    "X-DATO-USER": ctx.currentUserAccessToken
+                    "Authorization": `Bearer ${token}`
                 } as any,
                 body: data
             });
@@ -39,14 +37,14 @@ export default function CustomImageUpload({ ctx }: { ctx: RenderAssetSourceCtx }
             if(!req.ok) throw new Error(req.statusText);
 
             const info = await req.json();
-*/
-            await ctx.notice("Uploaded and optimized image.");
+
             await ctx.select({
                 resource: {
-                    base64: "",
-                    filename: ""
+                    base64: info.base64,
+                    filename: info.filename
                 }
             });
+            await ctx.notice("Uploaded and optimized image.");
         } catch (error) {
             console.error(error);
             (ev.target as HTMLFormElement).reset();
