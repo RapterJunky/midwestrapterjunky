@@ -4,7 +4,7 @@ import { resolve } from "path";
 const getBin = () => {
     const file = `cwebp${process.platform === "win32" ? ".exe" : ""}`;
     const platform = process.platform === "win32" ? "win" : "linux";
-    return resolve(process.cwd(), `bin/${platform}/${file}`);
+    return resolve("./bin",`${platform}/${file}`);
 }
 
 export function cwebp(input: string, out: string, ...opt: string[]): Promise<string> {
