@@ -19,7 +19,7 @@ import EventsQuery from '@query/queries/events';
 import { markRules } from "@lib/StructuredTextRules";
 
 import type { ResponsiveImage, StructuredContent, LinkWithIcon   } from '@lib/types';
-import type { ShopType } from "@lib/hooks/plugins/useStore";
+import type { ShopType } from "@hook/plugins/useStore";
 
 interface EventPageProps extends NavProps {
     site: any;

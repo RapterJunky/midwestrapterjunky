@@ -1,6 +1,6 @@
 import Button from "./Button";
 import useSWR from "swr";
-import type { ShopType } from "@lib/hooks/plugins/useStore";
+import type { ShopType } from "@hook/plugins/useStore";
 import type { StoreItem } from "./content/FeaturedShopItems";
 
 export default function StoreButtonLink(props: { handle: string; type: ShopType }){

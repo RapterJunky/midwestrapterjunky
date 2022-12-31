@@ -45,7 +45,7 @@ const fetch_shopify = async (query: string, args: { SHOPIFY_STOREFRONT_ACCESS_TO
     const data = await Shopify_Fetch(query,args);
     return Object.entries(data).map(([key, value])=>{
         return {
-            index: parseInt(key.split("_")[1]),
+            index: parseInt(key.split("_")?.at(1) ?? "0"),
             product: value
         }
     })
@@ -66,6 +66,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
 
         request.split(",").forEach((value,i)=>{
             const [shop,handle] = value.split(":");
+            if(!handle) throw new Error("Item does not have a handle.")
             if(shop === "s") return shopify_products.push({ handle, index: i });
             free_shop.push({ index:i, handle });
         });
