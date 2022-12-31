@@ -1,10 +1,10 @@
 import { execFile } from 'child_process';
-import { resolve } from "path";
+import { join } from "path";
 
 const getBin = () => {
     const file = `cwebp${process.platform === "win32" ? ".exe" : ""}`;
     const platform = process.platform === "win32" ? "win" : "linux";
-    return resolve("./bin",`${platform}/${file}`);
+    return join(process.cwd(),"bin",`${platform}/${file}`);
 }
 
 export function cwebp(input: string, out: string, ...opt: string[]): Promise<string> {
