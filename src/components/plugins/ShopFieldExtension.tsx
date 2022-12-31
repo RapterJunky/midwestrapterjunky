@@ -2,7 +2,7 @@ import type { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 import { Canvas, Button } from 'datocms-react-ui';
 import { useEffect } from 'react';
 import { FaSearch, FaExternalLinkAlt, FaTimesCircle } from 'react-icons/fa';
-import useStore, { type ShopType } from '@lib/hooks/plugins/useStore';
+import useStore, { type ShopType } from '@hook/plugins/useStore';
 
 interface Product { type: ShopType, handle: string };
 
@@ -48,7 +48,7 @@ export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx 
                             API Error! Could not fetch details for product:&nbsp;<code> {product.handle} on {product.type}</code>
                         </div>
                     ) : null}
-                    { products ? (
+                    { products && products[0] ? (
                         <div className='flex items-center'>
                             <div className="w-36 mr-5 bg-cover rounded bg-center border-var-border p-1 before:block before:pt-[100%]" style={{ backgroundImage: `url(${products[0].product.imageUrl})` }}/>
                             <div className="flex-1 text-left">
