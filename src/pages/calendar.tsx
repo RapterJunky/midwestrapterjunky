@@ -3,17 +3,15 @@ import { type SeoOrFaviconTag } from 'react-datocms';
 import moment from "moment";
 
 import Footer from "@components/Footer";
-import Navbar, { type NavProps } from "@components/Navbar";
+import Navbar from "@components/Navbar";
 import { DATOCMS_Fetch } from "@lib/gql";
 import Query from '@query/queries/calendar';
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
+import type { FullPageProps } from "@lib/types";
 
-interface CalendarProps extends NavProps {
-    _site: {
-        faviconMetaTags: SeoOrFaviconTag[];
-    };
+interface CalendarProps extends FullPageProps {
     allEvents: {
         id: string;
         slug: string;
@@ -24,7 +22,6 @@ interface CalendarProps extends NavProps {
     calendar: {
         _seoMetaTags: SeoOrFaviconTag[]
     }
-    preview: boolean
 }
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<CalendarProps>> => {

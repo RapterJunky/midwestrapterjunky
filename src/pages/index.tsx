@@ -3,19 +3,15 @@ import type { SeoOrFaviconTag } from 'react-datocms';
 import Script from 'next/script';
 
 import { DATOCMS_Fetch } from '@lib/gql';
-import Navbar, { type NavProps } from '@components/Navbar';
+import Navbar from '@components/Navbar';
 import ModuleContent from '@components/ModuleContent';
 import Footer from '@components/Footer';
 import HomePageQuery from '@query/queries/home';
-import type { ModulerContent } from '@lib/types';
+import type { FullPageProps, ModulerContent } from '@lib/types';
 import ExitPreview from '@components/ExitPreview';
 import SiteTags from '@components/SiteTags';
 
-interface HomeContent extends NavProps {
-  _site: {
-    faviconMetaTags: SeoOrFaviconTag[];
-  }
-  preview: boolean
+interface HomeContent extends FullPageProps {
   home: {
     _seoMetaTags: SeoOrFaviconTag[];
     bodyContent:  ModulerContent[]

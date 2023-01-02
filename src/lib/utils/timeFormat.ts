@@ -20,3 +20,7 @@ export const formatTimeUser = (date: string) => {
 export const formatUserDate = (date: string) => {
     return moment(date).format("MMM DD YYYY");
 }
+
+export const formatDateArticle = (date: string) => {
+    return moment(date).format("MMMM DD, YYYY");
+}

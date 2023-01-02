@@ -1,21 +1,13 @@
 import type { GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
-import type { SeoOrFaviconTag } from 'react-datocms';
 import ExitPreview from '@components/ExitPreview';
 import Footer from '@components/Footer';
 import SiteTags from '@components/SiteTags';
 
 import { DATOCMS_Fetch } from "@lib/gql";
 import Query from '@query/queries/generic';
-import Navbar, { type NavProps } from '@components/Navbar';
-
-
-interface SubmitedProps extends NavProps {
-    _site: {
-        faviconMetaTags: SeoOrFaviconTag[];
-    }
-    preview: boolean;
-}
+import Navbar from '@components/Navbar';
+import type { FullPageProps } from '@lib/types';
 
 export async function getStaticProps(ctx: GetStaticPropsContext){
     const data = await DATOCMS_Fetch(Query,{ 
@@ -31,7 +23,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext){
     }
 }
 
-export default function Submited(props: SubmitedProps){
+export default function Submited(props: FullPageProps){
     const router = useRouter();
 
     return (

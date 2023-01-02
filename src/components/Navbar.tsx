@@ -26,8 +26,6 @@ const navbarMode = {
     "none": "text-black bg-opacity-100"
 }
 
-
-
 export default function Navbar({ mode = "fade-scroll", pageLinks = [], logo }: NavbarProps){
     const [showNav,setShowNav] = useState<boolean>(false);
     const ref = useRef<HTMLElement>(null);

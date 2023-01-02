@@ -1,3 +1,6 @@
+import type { SeoOrFaviconTag } from "react-datocms";
+import type { NavProps } from "@components/Navbar";
+
 export type Color = {
     hex: string;
 }
@@ -26,3 +29,10 @@ export type ResponsiveImage<E = never> = {
 export type ModulerContent = { _modelApiKey: string; [key: string]: any; };
 
 export type StructuredContent = any;
+
+export interface FullPageProps extends NavProps {
+    _site: {
+        faviconMetaTags: SeoOrFaviconTag[];
+    }
+    preview: boolean;
+}
