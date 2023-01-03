@@ -1,3 +1,5 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -6,11 +8,10 @@ module.exports = {
     './node_modules/tw-elements/dist/js/**/*.js'
   ],
   theme: {
-    fontFamily: {
-      sans: ["Inter","-apple-system","BlinkMacSystemFont","Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","sans-serif"],
-      serif: ["Inter","-apple-system","BlinkMacSystemFont","Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","sans-serif"]
-    },
     extend: {
+      fontFamily: {
+        sans: ["var(--inter-font,'InterVariable')",...defaultTheme.fontFamily.sans]
+      },
       textColor: {
         "var-accent": "var(--accent-color)",
         "var-light": "var(--light-body-color)"

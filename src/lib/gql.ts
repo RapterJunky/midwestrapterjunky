@@ -1,7 +1,8 @@
 import { GraphQLClient, type Variables } from 'graphql-request';
 import type { PatchedRequestInit } from 'graphql-request/dist/types';
+import { logger } from './logger';
 
-const DATO_CMS = `https://graphql.datocms.com/environments/${process.env?.DATOCMS_EVIRONMENT ?? "main"}`;
+const DATO_CMS = `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT ?? "main"}`;
 
 interface FetchOptions {
     variables?: Variables,
@@ -24,15 +25,24 @@ export async function Shopify_Fetch<T extends Object>(query: string, args: { SHO
 }
 
 async function GQLFetch<T extends Object>(url: string, query: string, { variables }: FetchOptions = {}, opts?: PatchedRequestInit): Promise<T> {
-    
-    const client = new GraphQLClient(url,opts);
+    try {
+        const client = new GraphQLClient(url,opts);
 
-    const request = await client.rawRequest(query,variables);
+        const request = await client.rawRequest(query,variables);
 
-    if(request?.errors) {
-        console.error(request.errors);
-        throw new Error(`Failed fetch data from (${url})`);
+        if(request?.errors) throw request.errors;
+
+        return request.data;
+    } catch (error: any) {
+
+        if("response" in error) {
+            logger.error({ 
+                errors: error?.response.errors,
+                url: url,
+            },"GraphQL Error");
+            throw new Error("GraphQL Error");
+        }
+
+        throw new Error(JSON.stringify(error,undefined,2));
     } 
-
-    return request.data;
 }
