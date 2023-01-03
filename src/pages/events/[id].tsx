@@ -127,7 +127,7 @@ export default function EventPage(props: EventPageProps){
             <header className="my-4 mx-4">
                 <h1 className="ml-4 text-2xl font-bold mb-1">{props.title} | {formatTime(props.dateFrom,props.dateTo)}</h1>
                 <hr className="ml-4 border-t-2 border-gray-300"/>
-                <span className="ml-4 text-sm font-serif font-thin">Updated: {formatTimeUser(props.updatedAt)}</span>
+                <span className="ml-4 text-sm font-extralight">Updated: {formatTimeUser(props.updatedAt)}</span>
             </header>
             <main className="container mx-auto flex flex-grow flex-col justify-center h-max">
                 <section className="flex flex-col sm:flex-row flex-warp items-start w-full gap-2 mb-4">

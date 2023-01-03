@@ -10,7 +10,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--inter-font,'InterVariable')",...defaultTheme.fontFamily.sans]
+        sans: ["InterVariable",...defaultTheme.fontFamily.sans],
+        serif: ["Inter",...defaultTheme.fontFamily.serif]
       },
       textColor: {
         "var-accent": "var(--accent-color)",

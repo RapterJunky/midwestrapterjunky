@@ -62,12 +62,12 @@ const BlogLatest: NextPage<BlogLatestProps> = ({ _site, navbar, preview, posts }
             <main className="flex-grow mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
                 <div className="divide-y divide-gray-200">
                     <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-                    <h1 className="font-inter text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-                        Latest
-                    </h1>
-                    <p className="text-lg leading-7 text-gray-500 font-inter">
-                        A blog created with Next.js and Tailwind.css
-                    </p>
+                        <h1 className="font-inter text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+                            Latest
+                        </h1>
+                        <p className="text-lg leading-7 text-gray-500 font-inter">
+                            A blog created with Next.js and Tailwind.css
+                        </p>
                     </div>
                     <ul className="divide-y divide-gray-200">
                     {!posts.length && 'No posts found.'}
@@ -128,7 +128,6 @@ const BlogLatest: NextPage<BlogLatestProps> = ({ _site, navbar, preview, posts }
                         All Posts <HiArrowRight/>
                     </Link>
                 </div>
-            
             </main>
             <Footer/>
             { preview ? <ExitPreview/> : null }
