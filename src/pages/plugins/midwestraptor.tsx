@@ -6,10 +6,13 @@ import ConfigScreen from "@components/plugins/ConfigScreen";
 import ShopFieldExtension from "@components/plugins/ShopFieldExtension";
 import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
 import CustomImageUpload from "@components/plugins/CustomImagUpload";
+import AuthorEditor from "@components/plugins/AuthorEditor";
+import EditAuthorModal from "@components/plugins/EditAuthor";
 
 import "datocms-react-ui/styles.css";
 
 const FIELD_EXTENSION_ID = 'shopProduct';
+const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 
 const MidwestRaptor: NextPage<any> = () => {
     const {id,page,ctx} = useDatoCMSPlugin({
@@ -53,6 +56,12 @@ const MidwestRaptor: NextPage<any> = () => {
         manualFieldExtensions(ctx) {
             return [
                 {
+                    id: FIELD_EXTENSION_ID_AUTHOR,
+                    name: "Edit Authors",
+                    type: "editor",
+                    fieldTypes: ["json"]
+                },
+                {
                     id: FIELD_EXTENSION_ID,
                     name: 'Shop Products',
                     type: 'editor',
@@ -85,9 +94,17 @@ const MidwestRaptor: NextPage<any> = () => {
         case "renderConfigScreen":
             return <ConfigScreen ctx={ctx}/>;
         case "renderFieldExtension":
-            return <ShopFieldExtension ctx={ctx}/>;
+            switch (id) {
+                case 'shopProduct':
+                    return <ShopFieldExtension ctx={ctx}/>;
+                case "RJ_AUTHOR_EDITOR":
+                    return <AuthorEditor ctx={ctx}/>;
+                default:
+                    return null;
+            }
         case "renderModal":
             if(id === "browseProducts") return <BrowseProductsModel ctx={ctx}/>;
+            if(id === "editAuthor") return <EditAuthorModal ctx={ctx}/>
             return null;
         case "renderAssetSource": {
             return <CustomImageUpload ctx={ctx}/>

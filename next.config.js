@@ -9,7 +9,8 @@ const nextConfig = withBundleAnalyzer({
     deviceSizes: [150,300,600,900,1200,1500,1800,2100],
     domains: [
       "www.datocms-assets.com",
-      "cdn.shopify.com"
+      "cdn.shopify.com",
+      "api.lorem.space"
     ]
   },
   async redirects () {
