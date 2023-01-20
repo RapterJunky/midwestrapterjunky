@@ -12,7 +12,7 @@ query QueryBlogLatest($first: IntType = "5") {
     navbar {
         ...NavbarRecordFragment
     }
-    posts: allArticles(first: $first, orderBy: _publishedAt_DESC) {
+    posts: allArticles(first: $first, orderBy: _firstPublishedAt_DESC) {
         tags
         title
         slug
@@ -27,28 +27,3 @@ query QueryBlogLatest($first: IntType = "5") {
 ${Navbar}
 `;
 export default QueryBlogLatest;
-
-/*
-_site {
-            faviconMetaTags {
-                attributes
-                content
-                tag
-            }
-        }
-        navbar {
-            ...NavbarRecordFragment
-        }
-posts: allArticles(first: $first, orderBy: _publishedAt_DESC) {
-            tags
-            title
-            slug
-            seo: _seoMetaTags {
-                attributes
-                content
-                tag
-            }
-            publishedAt: _publishedAt
-        }
-
-*/

@@ -1,19 +1,20 @@
 import type { GetStaticPropsResult, GetStaticPropsContext, NextPage } from "next";
-import type { SeoOrFaviconTag,  RegularMetaAttributes, SeoMetaTag } from "react-datocms";
+import type { SeoOrFaviconTag } from "react-datocms";
+import Link from "next/link";
+import { HiArrowRight } from "react-icons/hi";
 
 import Navbar from "@components/Navbar";
 import SiteTags from "@components/SiteTags";
 import Footer from "@components/Footer";
 import ExitPreview from "@components/ExitPreview";
+import Tag from "@components/blog/tag";
 
 import { DATOCMS_Fetch } from "@lib/gql";
+import { getDescriptionTag } from "@lib/utils/description";
 import { formatDateArticle } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
 import type { FullPageProps } from "@lib/types";
-import Link from "next/link";
-import { HiArrowRight } from "react-icons/hi";
-import Tag from "@components/blog/tag";
 
 interface BlogLatestProps extends FullPageProps {
     posts: {
@@ -44,12 +45,6 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
             preview: ctx?.preview ?? false
         }
     }
-}
-
-const getDescriptionTag = (tags: SeoOrFaviconTag[]): string => {
-    const value = tags.find(value=>value.tag === "meta" && (value.attributes as RegularMetaAttributes)?.name === "description")
-    if(!value) return "";
-    return (value as SeoMetaTag).attributes.content;
 }
 
 const BlogLatest: NextPage<BlogLatestProps> = ({ _site, navbar, preview, posts }) => {
