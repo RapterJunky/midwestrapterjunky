@@ -1,6 +1,6 @@
-import { Client, SimpleSchemaTypes } from "@datocms/cli/lib/cma-client-node";
+import type { Client, SimpleSchemaTypes } from "@datocms/cli/lib/cma-client-node";
 
-export default async function (client: Client) {
+async function Migrate (client: Client) {
   const newFields: Record<string, SimpleSchemaTypes.Field> = {};
   const newFieldsets: Record<string, SimpleSchemaTypes.Fieldset> = {};
   const newItemTypes: Record<string, SimpleSchemaTypes.ItemType> = {};
@@ -197,3 +197,5 @@ export default async function (client: Client) {
     item_type: newItemTypes["1084572"],
   });
 }
+
+export default Migrate;
