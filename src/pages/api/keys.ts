@@ -14,7 +14,6 @@ const upsertVaildation = z.array(
 
 const getVaildataion = z.array(z.string().transform(value=>value.toUpperCase())).nonempty();
 
-
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     try {
         if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN) throw createHttpError.Unauthorized();
@@ -52,7 +51,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             const reason = fromZodError(error);
             logger.error(error,reason.message);
             const status = createHttpError.BadRequest();
-            return res.status(status.statusCode).json({ details: reason.details, message: status.message });
+            return res.status(status.statusCode).json({ 
+                details: reason.details, 
+                message: status.message 
+            });
         }
 
         const ie = createHttpError.InternalServerError();

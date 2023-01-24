@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
 
+import '@fontsource/inter/variable-full.css';
 import '../styles/globals.css';
 
 function App({ Component, pageProps }: AppProps) {
