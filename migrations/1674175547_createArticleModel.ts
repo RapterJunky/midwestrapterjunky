@@ -41,12 +41,6 @@ async function Migrate (client: Client) {
 
   console.log("Creating new fields/fieldsets");
 
-  console.log('Create fieldset "Page Settings" in model "Article" (`article`)');
-  newFieldsets["338405"] = await client.fieldsets.create(
-    newItemTypes["1084572"],
-    { title: "Page Settings" }
-  );
-
   console.log(
     'Create Single-line string field "Title" (`title`) in model "Article" (`article`)'
   );
@@ -63,18 +57,6 @@ async function Migrate (client: Client) {
   });
 
   console.log(
-    'Create SEO meta tags field "Seo" (`seo`) in model "Article" (`article`)'
-  );
-  newFields["5692712"] = await client.fields.create(newItemTypes["1084572"], {
-    label: "Seo",
-    field_type: "seo",
-    api_key: "seo",
-    validators: { title_length: { max: 60 }, description_length: { max: 160 } },
-    appearance: { addons: [], editor: "seo", parameters: {} },
-    fieldset: newFieldsets["338405"],
-  });
-
-  console.log(
     'Create JSON field "Tags" (`tags`) in model "Article" (`article`)'
   );
   newFields["5692710"] = await client.fields.create(newItemTypes["1084572"], {
@@ -86,6 +68,21 @@ async function Migrate (client: Client) {
       editor: newPlugins["67009"].id,
       parameters: {},
       field_extension: "tagEditor",
+    },
+  });
+
+  console.log(
+    'Create JSON field "Authors" (`authors`) in model "Article" (`article`)'
+  );
+  newFields["5692714"] = await client.fields.create(newItemTypes["1084572"], {
+    label: "Authors",
+    field_type: "json",
+    api_key: "authors",
+    appearance: {
+      addons: [],
+      editor: "58601",
+      parameters: {},
+      field_extension: "RJ_AUTHOR_EDITOR",
     },
   });
 
@@ -133,19 +130,22 @@ async function Migrate (client: Client) {
     },
   });
 
-  console.log(
-    'Create JSON field "Authors" (`authors`) in model "Article" (`article`)'
+  console.log('Create fieldset "Page Settings" in model "Article" (`article`)');
+  newFieldsets["338405"] = await client.fieldsets.create(
+    newItemTypes["1084572"],
+    { title: "Page Settings" }
   );
-  newFields["5692714"] = await client.fields.create(newItemTypes["1084572"], {
-    label: "Authors",
-    field_type: "json",
-    api_key: "authors",
-    appearance: {
-      addons: [],
-      editor: "58601",
-      parameters: {},
-      field_extension: "RJ_AUTHOR_EDITOR",
-    },
+
+  console.log(
+    'Create SEO meta tags field "Seo" (`seo`) in model "Article" (`article`)'
+  );
+  newFields["5692712"] = await client.fields.create(newItemTypes["1084572"], {
+    label: "Seo",
+    field_type: "seo",
+    api_key: "seo",
+    validators: { title_length: { max: 60 }, description_length: { max: 160 } },
+    appearance: { addons: [], editor: "seo", parameters: {} },
+    fieldset: newFieldsets["338405"],
   });
 
   console.log(
