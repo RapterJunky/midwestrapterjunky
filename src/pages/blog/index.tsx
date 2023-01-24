@@ -50,7 +50,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 const BlogLatest: NextPage<BlogLatestProps> = ({ _site, navbar, preview, posts }) => {
     return (
         <div className="h-full flex flex-col">
-            <SiteTags tags={[_site.faviconMetaTags]}/>
+            <SiteTags tags={[_site.faviconMetaTags, [ { tag:"title", content: "Blog Lastest" } ]]}/>
             <header>
                 <Navbar {...navbar} mode="none"/>
             </header>
