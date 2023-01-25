@@ -10,6 +10,10 @@ interface FetchOptions {
 }
 
 export async function DATOCMS_Fetch<T extends Object>(query: string, opts?: FetchOptions): Promise<T> {
+    logger.debug({
+        preview: opts?.preview,
+        env: process.env.DATOCMS_ENVIRONMENT,
+    },"DATOCMS CALL");
     return GQLFetch<T>(`${DATO_CMS}${opts?.preview ? "preview" : ""}`,query,opts,{
         headers: {
             Authorization: `Bearer ${process.env.DATOCMS_READONLY_TOKEN}`

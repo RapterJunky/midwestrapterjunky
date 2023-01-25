@@ -161,7 +161,7 @@ async function Migrate (client: Client) {
       parameters: { entity_path: "/blog/$slug" },
       field_extension: "preview",
     },
-    default_value: '{\n  "type": "page",\n  "slug": "/blog/[slug]"\n}',
+    default_value: '{\n  "type": "page",\n  "slug": "/blog/[slug]"\n,"cache":"blog-pages"}',
   });
 
   console.log(

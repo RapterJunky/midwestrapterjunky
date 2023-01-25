@@ -3,12 +3,17 @@ import { type SeoOrFaviconTag, StructuredText } from "react-datocms";
 import Image from "next/image";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
+import { z } from 'zod';
 
 import Navbar from "@components/Navbar";
 import SiteTags from "@components/SiteTags";
 import Footer from "@components/Footer";
 import Tag from "@components/blog/tag";
+import ExitPreview from "@components/ExitPreview";
+import ScrollToTop from "@components/blog/ScrollToTop";
 
+import { fetchCacheData } from '@lib/cache';
+import { logger } from '@lib/logger';
 import type { FullPageProps, StructuredContent } from "@lib/types";
 import { formatDateArticle } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
@@ -16,7 +21,7 @@ import { DATOCMS_Fetch } from "@lib/gql";
 
 import ArticleQuery from "@query/queries/article";
 import GetNextArticles from "@query/queries/next_articles";
-
+import ArticlesListQuery from "@query/queries/articles_list";
 
 interface ArticleProps extends FullPageProps {
     next: { slug: string; title: string; } | null;
@@ -48,24 +53,22 @@ interface ArticleProps extends FullPageProps {
     }
 }
 
-export const getStaticPaths = async (ctx: GetStaticPathsContext): Promise<GetStaticPathsResult> => {
-    return {
-        paths: [],
-        fallback: "blocking"
-    }
-}
+const PAGE_CACHE_KEY = "blog-pages";
+const param_check = z.string();
 
-export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<ArticleProps>> => {
+const getBlogPage = async (id: string, preview: boolean): Promise<ArticleProps> => {
+
+    logger.info(`Blog Page (${id}) - preview(${preview}) | Genearting`);
 
     const data = await DATOCMS_Fetch<ArticleProps>(ArticleQuery,{ 
-        preview: ctx.preview,
+        preview: preview,
         variables: {
-            slug: ctx.params?.id
+            slug: id
         } 
     });
 
     const extra = await DATOCMS_Fetch<{ next: ArticleProps["next"], prev: ArticleProps["prev"] }>(GetNextArticles,{
-        preview: ctx.preview,
+        preview: preview,
         variables: {
             id: data.post.id,
             date: data.post.publishedAt
@@ -73,11 +76,50 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     });
 
     return {
-        props: {
-            ...data,
-            ...extra,
-            preview: ctx?.preview ?? false
+        ...data,
+        ...extra,
+        preview
+    }
+}
+
+const loadBlogPages = async () => {
+    const data = await DATOCMS_Fetch<{ articles: { slug: string }[] }>(ArticlesListQuery);
+    return data.articles.map(value=>value.slug);
+}
+
+export const getStaticPaths = async (ctx: GetStaticPathsContext): Promise<GetStaticPathsResult> => {
+    await fetchCacheData(PAGE_CACHE_KEY,loadBlogPages);
+    return {
+        paths: [],
+        fallback: "blocking"
+    }
+}
+
+export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<ArticleProps>> => {
+    const schema = param_check.safeParse(ctx.params?.id)
+    if(!schema.success) return {
+        notFound: true
+    }
+
+    const id = schema.data;
+
+    if(ctx.preview) {
+        const data = await getBlogPage(id,true);
+        return {
+            props: data
         }
+    }
+
+    let pages = await fetchCacheData(PAGE_CACHE_KEY,loadBlogPages);
+
+    if(!(pages.data as string[]).includes(id)) return {
+        notFound: true
+    }
+    
+    const data = await getBlogPage(id,false);
+
+    return {
+        props: data
     }
 }
 
@@ -87,6 +129,7 @@ const Article: NextPage<ArticleProps> = ({ navbar, _site, preview, post, next, p
             <SiteTags tags={[_site.faviconMetaTags,post.seo]}/>
             <Navbar {...navbar} mode="none"/>
             <main className="flex-grow mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
+                <ScrollToTop comments={false}/>
                 <article className="mb-auto">
                     <div className="xl:divide-y xl:divide-gray-200">
                         <header className="pt-6 xl:pb-6">
@@ -188,6 +231,7 @@ const Article: NextPage<ArticleProps> = ({ navbar, _site, preview, post, next, p
             <div className="h-20">
                 <Footer/>
             </div>
+            { preview ?  <ExitPreview /> : null }
         </div>
     );
 }

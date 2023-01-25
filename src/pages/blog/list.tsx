@@ -16,6 +16,7 @@ import Tag from "@components/blog/tag";
 import GenericPageQuery from "@query/queries/generic";
 import Footer from "@components/Footer";
 import Pagination from "@components/blog/Pagination";
+import ExitPreview from "@components/ExitPreview";
 
 interface BlogListProps extends FullPageProps {}
 
@@ -36,10 +37,7 @@ interface Post {
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<BlogListProps>> => {
 
     const data = await DATOCMS_Fetch<BlogListProps>(GenericPageQuery,{ 
-        preview: ctx.preview,
-        variables: {
-            slug: ctx.params?.id
-        } 
+        preview: ctx.preview
     });
 
     return {
@@ -50,7 +48,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
     }
 }
 
-const BlogList: NextPage<BlogListProps> = ({ navbar, _site }) => {
+const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
     const [pageIndex,setPageIndex] = useState<number>(0);
     const { data,error, isLoading } = useSWR<Post,Response>(`/api/blog?page=${pageIndex}`,(uri)=>fetch(uri).then(value=>value.json()));
 
@@ -125,6 +123,7 @@ const BlogList: NextPage<BlogListProps> = ({ navbar, _site }) => {
             <div className="h-20">
                 <Footer/>
             </div>
+            { preview ? <ExitPreview/> : null }
         </div>
     );
 }

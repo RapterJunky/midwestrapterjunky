@@ -17,7 +17,7 @@ const EventPageQuery = `
                 content
                 tag
             }
-            updatedAt
+            updatedAt: _updatedAt
             dateTo
             dateFrom
             title
