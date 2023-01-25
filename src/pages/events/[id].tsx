@@ -103,9 +103,6 @@ export async function getStaticPaths(ctx: GetStaticPathsContext): Promise<GetSta
         fallback: "blocking"
     }
 }
-
-const postDateTemplate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-
 // {props.shoptItem ? <Button href={props.shoptItem} link>VIEW SHOP</Button> : null }
 //https://wiki.openstreetmap.org/wiki/Export#Embeddable_HTML
 export default function EventPage({ _site, preview, event, navbar }: EventPageProps){

@@ -16,7 +16,7 @@ const Author = ({ data, updateField }: { updateField: (editing: boolean, paramet
         <div className="relative group p-2">
             <div className="flex justify-center items-center gap-1 h-full">
                 <div className="relative h-12 w-12">
-                    <Image sizes="100vw" className="object-cover object-center rounded-full" src="https://api.lorem.space/image/car?w=48&h=48" alt="author image" fill/>
+                    <Image sizes="100vw" className="object-cover object-center rounded-full" src={data.avatar ?? "https://api.lorem.space/image/car?w=48&h=48"} alt="author image" fill/>
                 </div>
                 <div className="flex flex-col ml-1">
                     <h4 className="font-bold font-sans">{data.name}</h4>
@@ -32,7 +32,8 @@ const Author = ({ data, updateField }: { updateField: (editing: boolean, paramet
 
 
 export default function AuthorEditor({ctx}:{ ctx: RenderFieldExtensionCtx }){
-    const value = useMemo<AuthorItem[]>(()=>JSON.parse(ctx.formValues[ctx.fieldPath] as string) ?? [],[ctx.fieldPath, ctx.formValues[ctx.fieldPath]]);
+    const data = ctx.formValues[ctx.fieldPath];
+    const value = useMemo<AuthorItem[]>(()=>JSON.parse(data as string) ?? [],[data]);
 
     const setField = async (content: AuthorItem[]) => ctx.setFieldValue(ctx.fieldPath,JSON.stringify(content));
 

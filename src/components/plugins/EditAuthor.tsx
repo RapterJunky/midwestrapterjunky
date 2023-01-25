@@ -1,4 +1,5 @@
 import type { RenderModalCtx } from 'datocms-plugin-sdk';
+import { useEffect } from 'react';
 import { useForm, Controller, type Control } from 'react-hook-form';
 import { Canvas, Button, TextField, FieldGroup, FormLabel, Form, FieldError } from "datocms-react-ui";
 import Image from 'next/image';
@@ -11,9 +12,10 @@ interface FormState {
     id: string;
 }
 
-const ImageSelect = ({ ctx, form }: { ctx: RenderModalCtx, form:  { control: Control<FormState, any> }  }) => {
+const ImageSelect = ({ ctx, form, name }: { name: string | undefined; ctx: RenderModalCtx, form:  { control: Control<FormState, any> }  }) => {
     return (
-        <Controller rules={{ required: "Please Select a image." }} control={form.control} name="avatar" render={({ fieldState, field })=>(
+        <Controller rules={{ required: "Please Select a image." }} control={form.control} name="avatar" render={({ 
+             fieldState, field })=>(
             <div>
                 <FormLabel htmlFor='imageSelect'>Image</FormLabel>
                 { field.value ? (
@@ -35,7 +37,7 @@ const ImageSelect = ({ ctx, form }: { ctx: RenderModalCtx, form:  { control: Con
                         field.onChange(image.attributes.url);
                     }}>Use Existing Image</Button>
                     <Button onClick={()=>{
-                        const random = "https://api.lorem.space/image/car?w=48&h=48";
+                        const random = `https://api.dicebear.com/5.x/initials/png?seed=${encodeURIComponent(name ?? "Author")}`;
                         field.onChange(random)
                     }} type="button" buttonType="negative">Use Random Image</Button>
                 </section>) }
@@ -46,9 +48,11 @@ const ImageSelect = ({ ctx, form }: { ctx: RenderModalCtx, form:  { control: Con
 }
 
 export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }){
-    const { control, handleSubmit } = useForm<FormState>({
+    const { control, handleSubmit, watch } = useForm<FormState>({
         defaultValues: ctx.parameters
     });
+
+    const name = watch("name");
 
     const submit = (values: FormState) => {
 
@@ -72,7 +76,7 @@ export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }){
                     <Controller rules={{ required: "Author's name is required." }} control={control} name="name" render={({ fieldState, field: { name, onChange, value } })=>(
                         <TextField error={fieldState.error?.message} required id="author" name={name} placeholder="Enter author's full name." hint="Provide a full name" label="Author's name" onChange={onChange} value={value ?? undefined}/>
                     )}/>
-                    <ImageSelect form={{ control }} ctx={ctx}/>
+                    <ImageSelect name={name} form={{ control }} ctx={ctx}/>
                     <Controller control={control} name="social.user" render={({ fieldState, field })=>(
                         <TextField error={fieldState.error?.message} id="socialusername" name={field.name} placeholder='Enter social media username.' label="Social Media Username" onChange={field.onChange} value={field.value ?? undefined}/>
                     )}/>

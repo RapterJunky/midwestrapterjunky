@@ -31,7 +31,7 @@ interface FeatureShopItems {
 const formatter = (locale: string = "en", currency: string, value: string) => Intl.NumberFormat(locale,{ style: "currency", currency }).format(parseFloat(value));
 
 export default function FeaturedShopItems(props: FeatureShopItems){
-    const { data, error } = useSWR<StoreItem[]>([`/api/products?find=${btoa(props.items.map(value=>`${value.item.type[0]}:${value.item.handle}`).join(","))}`],(url)=>fetch(url).then(value=>value.json()));
+    const { data, error } = useSWR<StoreItem[]>([`/api/products?find=${btoa(props.items.map(value=>`${value.item.type[0]}:${value.item.handle}`).join(","))}`],(url: string)=>fetch(url).then(value=>value.json()));
 
     if(!data) return (
         <section className="flex flex-col bg-zinc-100 py-8 px-4">

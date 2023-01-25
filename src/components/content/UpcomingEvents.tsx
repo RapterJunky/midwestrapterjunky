@@ -1,5 +1,5 @@
 import Button from '@components/Button';
-import { formatTime } from '@utils/timeFormat';
+import { formatTime } from '@lib/utils/timeFormatServer';
 import Image from 'next/image';
 import { ResponsiveImage } from '@lib/types';
 

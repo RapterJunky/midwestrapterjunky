@@ -15,7 +15,7 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 import { fetchCacheData } from '@lib/cache';
 import { logger } from '@lib/logger';
 import type { FullPageProps, StructuredContent } from "@lib/types";
-import { formatDateArticle } from "@lib/utils/timeFormat";
+import { formatLocalDate } from "@lib/utils/timeFormatClient";
 import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
 import { DATOCMS_Fetch } from "@lib/gql";
 
@@ -138,7 +138,7 @@ const Article: NextPage<ArticleProps> = ({ navbar, _site, preview, post, next, p
                                     <div>
                                         <dt className="sr-only">Published on</dt>
                                         <dd className="text-base font-medium leading-6 text-gray-500">
-                                            <time dateTime={post.publishedAt}>{formatDateArticle(post.publishedAt)}</time>
+                                            <time dateTime={post.publishedAt ?? ""}>{formatLocalDate(post.publishedAt)}</time>
                                         </dd>
                                     </div>
                                 </dl>

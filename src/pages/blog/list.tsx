@@ -6,7 +6,7 @@ import useSWR from 'swr';
 
 import type { FullPageProps } from "@lib/types";
 import { DATOCMS_Fetch } from "@lib/gql";
-import { formatDateArticle } from "@lib/utils/timeFormat";
+import { formatLocalDate } from "@lib/utils/timeFormatClient";
 import { getDescriptionTag } from "@lib/utils/description";
 
 import Navbar from "@components/Navbar";
@@ -89,7 +89,7 @@ const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
                                                 <dl>
                                                     <dt className="sr-only">Published on</dt>
                                                     <dd className="text-base font-medium leading-6 text-gray-500">
-                                                    <time dateTime={post.publishedAt ?? new Date().toISOString()}>{formatDateArticle(post.publishedAt ?? new Date().toISOString())}</time>
+                                                    <time dateTime={post.publishedAt ?? ""}>{formatLocalDate(post.publishedAt)}</time>
                                                     </dd>
                                                 </dl>
                                                 <div className="space-y-3 xl:col-span-3">

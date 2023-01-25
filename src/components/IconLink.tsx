@@ -1,4 +1,7 @@
 import Link from "next/link";
+// This imports alot of extra stuff that is not required
+// see about using nextjs import resolution 
+// https://nextjs.org/blog/next-13-1#import-resolution-for-smaller-bundles
 import * as FAIcons from 'react-icons/fa';
 import type { LinkWithIcon } from '@lib/types';
 

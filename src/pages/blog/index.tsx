@@ -11,7 +11,7 @@ import Tag from "@components/blog/tag";
 
 import { DATOCMS_Fetch } from "@lib/gql";
 import { getDescriptionTag } from "@lib/utils/description";
-import { formatDateArticle } from "@lib/utils/timeFormat";
+import { formatLocalDate } from "@lib/utils/timeFormatClient";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
 import type { FullPageProps } from "@lib/types";
@@ -74,7 +74,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({ _site, navbar, preview, posts }
                                     <dl>
                                     <dt className="sr-only">Published on</dt>
                                     <dd className="text-base font-medium leading-6 text-gray-500 font-inter">
-                                        <time dateTime={post.publishedAt ?? new Date().toISOString()}>{formatDateArticle(post.publishedAt ?? new Date().toISOString())}</time>
+                                        <time dateTime={post?.publishedAt ?? ""}>{formatLocalDate(post?.publishedAt)}</time>
                                     </dd>
                                     </dl>
                                     <div className="space-y-5 xl:col-span-3">

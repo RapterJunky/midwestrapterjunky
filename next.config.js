@@ -10,7 +10,9 @@ const nextConfig = withBundleAnalyzer({
     domains: [
       "www.datocms-assets.com",
       "cdn.shopify.com",
-      "api.lorem.space"
+      "api.lorem.space",
+      "images.unsplash.com",
+      "api.dicebear.com"
     ]
   },
   async redirects () {
