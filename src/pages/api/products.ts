@@ -5,104 +5,135 @@ import { fromZodError } from 'zod-validation-error';
 import { logger } from "@lib/logger";
 import { getKeys } from "@lib/dynamic_keys";
 import { Shopify_Fetch } from '@lib/gql';
-import { type Freewebstore } from "@utils/plugin/types";
 
-const fetch_freestore = async (api: string, data: { index: number; handle: string; }) => {
-    const request = await fetch(`https://api.freewebstore.com/product/${data.handle}`,{
-        headers: {
-            "x-api-key": api
-        }
-    })
+type Storefront = "S" | "F";
+type EncodeProductItem = [Storefront,string,string];
+interface StorefontsProducts { keys: string[]; products: { idx: number; item: string; }[] }
 
-    if(!request.ok) throw request;
+const inputValidation = z.string().transform(value=>Buffer.from(value,"base64").toString("utf-8").split(","));
 
-    const response = await request.json() as Freewebstore;
-    return [{
-        product: {
-            featuredImage: {
-                altText: "",
-                url: response.images.primary
-            },
-            onlineStoreUrl: "",
-            title: response.name,
-            handle: response.id,
-            priceRange: {
-                maxVariantPrice: {
-                    amount: response.price,
-                    currencyCode: "USD",
-                },
-                minVariantPrice: {
-                    amount: "0",
-                    currencyCode: "USD"
-                }
-            }
-        },
-        index: data.index
-    }];
+const keyGeneration = (storefront: Storefront, tenant: string) => {
+    switch (storefront) {
+        case "S":    
+            return [`${tenant}_SHOPIFY_ACCESS_TOKEN`,`${tenant}_SHOPIFY_DOMAIN`];
+        default:
+            return [];
+    }
 }
 
-const fetch_shopify = async (query: string, args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string; }) => {
-    const data = await Shopify_Fetch(query,args);
+const shopifyData = async (arg: StorefontsProducts) => {
+    const keys = await getKeys(arg.keys);
+
+    const items = Object.entries(keys)
+    const access_token = items.find(value=>value[0].endsWith("_ACCESS_TOKEN"));
+    const domain = items.find(value=>value[0].endsWith("_SHOPIFY_DOMAIN"));
+
+    if(!domain || !access_token) throw new Error(`Failed to get domain or access_tokens`);
+    
+    const shopify_query = arg.products.map(value=>`
+        item_${value.idx}: productByHandle(handle: "${value.item}") {
+            featuredImage {
+                altText
+                url
+            }
+            title
+            handle
+            onlineStoreUrl
+            priceRange {
+            maxVariantPrice {
+                amount
+                currencyCode
+            }
+            minVariantPrice {
+                amount
+                currencyCode
+                }
+            }
+        }
+    `).join("\n");
+
+    const query = `query GetStoreItems {${shopify_query}}`;
+
+    const data = await Shopify_Fetch(query,{
+        SHOPIFY_DOMAIN: domain[1],
+        SHOPIFY_STOREFRONT_ACCESS_TOKEN: access_token[1]
+    });
+
     return Object.entries(data).map(([key, value])=>{
         return {
             index: parseInt(key.split("_")?.at(1) ?? "0"),
             product: value
         }
-    })
-} 
-
-const inputValidation = z.string().transform(value=>Buffer.from(value,"base64").toString("utf-8"));
-
+    });
+}
+ 
 export default async function handle(req: NextApiRequest, res: NextApiResponse){
     try {
         if(req.method !== "GET") throw createHttpError.MethodNotAllowed();   
       
+        // Query Param
+        // FORMAT: storeFront$TENANT$ProductHandle
         const request = inputValidation.parse(req.query?.find);
 
-        const keys = await getKeys(["SHOPIFY_STOREFRONT_ACCESS_TOKEN","SHOPIFY_DOMAIN","FREEWEBSTORE_API_TOKEN"] as const);
-       
-        let shopify_products: { index: number, handle: string; }[] = [];
-        let free_shop: { index: number, handle: string }[] = [];
+        const query = new Map<Storefront,{ [key: string]: StorefontsProducts  }>();
 
-        request.split(",").forEach((value,i)=>{
-            const [shop,handle] = value.split(":");
-            if(!handle) throw new Error("Item does not have a handle.")
-            if(shop === "s") return shopify_products.push({ handle, index: i });
-            free_shop.push({ index:i, handle });
-        });
-
-        const shopify_query = shopify_products.map(value=>`
-            item_${value.index}: productByHandle(handle: "${value.handle}") {
-                featuredImage {
-                    altText
-                    url
-                }
-                title
-                handle
-                onlineStoreUrl
-                priceRange {
-                maxVariantPrice {
-                    amount
-                    currencyCode
-                }
-                minVariantPrice {
-                    amount
-                    currencyCode
-                    }
-                }
+        // sort data into their storefronts and tenants
+        for(const [idx,data] of request.entries()) {
+            const [storefront,tenant,product] = data.split("$") as EncodeProductItem;
+                
+            if(!storefront || !tenant || !product) {
+                logger.warn({storefront,tenant,product},"Ignoring product query");
+                continue;
             }
-        `).join("\n");
 
-        const query = `query GetStoreItems {${shopify_query}}`;
+            const tenant_propper = tenant.toUpperCase();
 
-        const data = await Promise.all([
-            fetch_shopify(query,{ SHOPIFY_DOMAIN: keys.SHOPIFY_DOMAIN, SHOPIFY_STOREFRONT_ACCESS_TOKEN: keys.SHOPIFY_STOREFRONT_ACCESS_TOKEN }),
-            ...free_shop.map(value=>fetch_freestore(keys.FREEWEBSTORE_API_TOKEN,value))
-        ]);
+            if(!query.has(storefront)) {
+                query.set(storefront,{});
+            }
+            
+            const stores = query.get(storefront);
+            if(!stores) continue;
+
+            if(!stores[tenant_propper]) {
+                stores[tenant_propper] = {
+                    keys: keyGeneration(storefront,tenant_propper),
+                    products: []
+                };
+            }
+
+            stores[tenant_propper]?.products.push({ idx, item: product });
+        }
+
+        // generate fetch promies
+        const data: Promise<any[]>[] = [];
+
+        for(const [storefront, values] of query.entries()) {
+            switch (storefront) {
+                case "S":
+                    for(const tenant of Object.values(values)) data.push(shopifyData(tenant));
+                    break;
+                default:
+                    logger.warn({ storefront }, `Using unspported storefront!`);
+                    continue;
+            }
+        }
+
+        const results = await Promise.allSettled(data);
+
+        const output: any[] = [];
+
+        for(const item of results) {
+            if(item.status === "rejected") continue;
+            output.push(...item.value);
+        }
 
         // cache for 2 hours
         if(!req.preview || process.env.VERCEL_ENV !== "development") res.setHeader("Cache-Control", "public, max-age=7200, immutable");
-        return res.status(200).json(data.flat().sort((a,b)=>a.index-b.index).map(value=>value.product));
+        return res.status(200).json(
+            output.sort((a,b)=>a.index-b.index)
+            .map(value=>value.product)
+        );
     } catch (error) {
         if(createHttpError.isHttpError(error)) {
             logger.error(error,error.message);
