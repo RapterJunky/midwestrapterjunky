@@ -41,6 +41,18 @@ export const getKeys = async <T extends ReadonlyArray<string>>(keys: T): Promise
     return settings.map(setting=>({ key: setting.key, value: decrypt(setting.value) })).reduce((pre,cur): ObjectFromList<T> =>({ ...pre, [cur.key]: cur.value }),{} as ObjectFromList<T>);
 }
 
+export const dropKeys = async (keys: string[]) => {
+    const { count } = await prisma.settings.deleteMany({
+        where: {
+            key: {
+                in: keys
+            }
+        }
+    });
+
+    return count;
+}
+
 export const addKeys = async (values: { key: string; value: string; }[]) => {
 
     const settings = values.map(setting=>{

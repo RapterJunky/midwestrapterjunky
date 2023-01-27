@@ -3,9 +3,23 @@ import { Button, Canvas, TextField, Form, FieldGroup } from 'datocms-react-ui';
 import { useForm, Controller } from 'react-hook-form';
 import { normalizeConfig, type VaildConfig } from '@utils/plugin/types';
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useState } from "react";
+
+
+
+const getKeys = (storefront : VaildConfig["storefronts"][0]) => {
+    const keys: string[] = [];
+    
+    if(storefront.type === "S") {
+        keys.push(`${storefront.domain}_SHOPIFY_ACCESS_TOKEN`,`${storefront.domain}_SHOPIFY_DOMAIN`);
+    }
+
+    return keys;
+}
 
 export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
-    const { handleSubmit, control, formState } = useForm<VaildConfig>({
+    const [removelQueue,setRemovelQueue] = useState<string[]>([]);
+    const { handleSubmit, control, formState, getValues } = useForm<VaildConfig>({
         defaultValues: normalizeConfig(ctx.plugin.attributes.parameters) 
     });
 
@@ -40,6 +54,27 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
 
                 ok();
                 
+            } catch (error) {
+                console.error(error);
+                ok();
+            }
+        });
+
+        await new Promise<void>(async (ok)=>{
+            try {
+                if(removelQueue.length < 1) return ok();
+
+                await fetch("/api/keys",{ 
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${state.keyToken}`
+                    },
+                    body: JSON.stringify(removelQueue)
+                });
+                setRemovelQueue([]);
+
+                ok();
             } catch (error) {
                 console.error(error);
                 ok();
@@ -91,6 +126,10 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
                                             }) as boolean;
 
                                             if(result) {
+                                                setRemovelQueue((values)=>{
+                                                    const data = getKeys(value);
+                                                    return [...values,...data];
+                                                });
                                                 field.onChange(field.value.filter(value=>value.domain!==value.domain));
                                             }
                                         }} buttonSize="xxs" buttonType="negative" leftIcon={<FaTrash style={{ fill: "white" }}/>}></Button>
@@ -116,7 +155,7 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
                         }} buttonType="primary" buttonSize="xs">Add Storefront</Button>
                     </div></>
                  )}/>
-                <Button type="submit" fullWidth buttonSize="l" buttonType="primary" disabled={formState.isSubmitting || !formState.isDirty}>
+                <Button type="submit" fullWidth buttonSize="l" buttonType="primary" disabled={formState.isSubmitting}>
                     Save settings
                 </Button>
             </Form>

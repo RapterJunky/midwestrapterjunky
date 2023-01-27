@@ -1,7 +1,7 @@
 import type { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 import { Canvas, Button } from 'datocms-react-ui';
-import { useEffect } from 'react';
-import { FaSearch, FaExternalLinkAlt, FaTimesCircle } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaSearch, FaExternalLinkAlt, FaTimesCircle, FaWrench, FaSync } from 'react-icons/fa';
 import useStore, { type ShopType } from '@hook/plugins/useStore';
 import { normalizeConfig } from '@lib/utils/plugin/types';
 
@@ -22,20 +22,29 @@ const getValue = (ctx: RenderFieldExtensionCtx) => {
 
 export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx }){
     const config = normalizeConfig(ctx.plugin.attributes.parameters);
+    const [error, setError] = useState<string|undefined>();
     const product = getValue(ctx);
     const { shop, setShop, status, products, fetchProductByHandle } = useStore(config);
 
     useEffect(()=>{
-        if(!product || !product?.value) return;
+        try {
+            setError(undefined);
+            if(!product || !product?.value) return;
 
-        const [storefront,tenant,item] = product?.value?.split("$");
+            const [storefront,tenant,item] = product?.value?.split("$");
 
-        const store = config.storefronts.find(value=>value.domain===tenant && value.type === storefront);
-        if(!store || !item) return;
+            const store = config.storefronts.find(value=>value.domain===tenant && value.type === storefront);
+            if(!store || !item) throw new Error("No store front exists for this item!", { cause: "NO_STOREFRONT_FOUND" });
 
-        setShop(store);
+            setShop(store);
 
-        fetchProductByHandle(item);
+            fetchProductByHandle(item);
+        } catch (error: any) {
+            console.error(error);
+            if(error instanceof Error && error.cause === "NO_STOREFRONT_FOUND") {
+                setError(error.message);
+            }
+        }
     },[product?.value]);
 
     const handleReset = () =>  ctx.setFieldValue(ctx.fieldPath,null);
@@ -98,10 +107,24 @@ export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx 
                </div>
             ) : (
                 <div className="border border-dashed text-center" style={{ padding: "var(--spacing-l)", borderColor: "var(--border-color)" }}>
-                    <div className="mb-5" style={{ color: "var(--light-body-color)" }}>No product selected!</div>
-                    <Button onClick={handleOpenModel}  buttonSize='s' leftIcon={<FaSearch/>}>Browse products</Button>
+                    { error ? (
+                        <>
+                            <div className="mb-5" style={{ color: "var(--light-body-color)" }}>{error}</div>
+                            <Button onClick={handleReset}  buttonSize='s' leftIcon={<FaSync/>}>Reset Item</Button>
+                        </>
+                    ) : config.storefronts.length ? (
+                        <>
+                            <div className="mb-5" style={{ color: "var(--light-body-color)" }}>No product selected!</div>
+                            <Button onClick={handleOpenModel}  buttonSize='s' leftIcon={<FaSearch/>}>Browse products</Button>
+                        </>
+                    ) : (
+                        <>
+                            <div className="mb-5" style={{ color: "var(--light-body-color)" }}>No storefronts available.</div>
+                            <Button onClick={()=>ctx.navigateTo(`/admin/plugins/${ctx.plugin.id}/edit`)}  buttonSize='s' leftIcon={<FaWrench/>}>Config storefronts</Button>
+                        </>
+                    )}
                 </div>
-            )}
+            ) }
         </Canvas>
     );
 }

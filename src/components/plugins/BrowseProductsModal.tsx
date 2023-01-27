@@ -11,7 +11,6 @@ const asOption = (arg: any) => {
 
 export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
     const config = normalizeConfig(ctx.plugin.attributes.parameters);
-    console.log(ctx.plugin.attributes.parameters)
     const { shop, setShop, fetchProductByMatching, query, setQuery, status, products } = useStore(config);
 
     useEffect(()=>{
@@ -26,7 +25,8 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
     
     return (
         <Canvas ctx={ctx}>
-           { !shop || config.storefronts.length ? <div className='max-h-52'>
+           { shop && config.storefronts.length ? 
+           (<div className='max-h-52'>
             <form className='flex items-stretch' onSubmit={handleSubmit}>
               <SelectInput
                   options={config.storefronts.map(value=>asOption(value))} 
@@ -82,7 +82,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                 <div className="text-center h-52 flex items-center justify-center" style={{ backgroundColor: "var(--light-bg-color)", color: "var(--light-body-color)", fontSize: "var(--font-size-xl)" }}>API call failed!</div>
               ) : null}
             </div>
-          </div> : null }
+          </div>) : null}
       </Canvas>
     );
 }
