@@ -1,42 +1,33 @@
 import type { RenderConfigScreenCtx } from "datocms-plugin-sdk";
-import { Button, Canvas, TextField, Form, FieldGroup, SelectField } from 'datocms-react-ui';
+import { Button, Canvas, TextField, Form, FieldGroup } from 'datocms-react-ui';
 import { useForm, Controller } from 'react-hook-form';
-import ShopifyClient from "@utils/plugin/ShopifyClient";
 import { normalizeConfig, type VaildConfig } from '@utils/plugin/types';
-
-const options = [
-    { label: "Shopify", value: "shopify" },
-    { label: "Freewebstore", value: "freewebstore" },
-    { label: "Both", value: "null" }
-];
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
-    const { handleSubmit, control, formState, setError } = useForm<VaildConfig>({
-        defaultValues: normalizeConfig(ctx.plugin.attributes.parameters)
+    const { handleSubmit, control, formState } = useForm<VaildConfig>({
+        defaultValues: normalizeConfig(ctx.plugin.attributes.parameters) 
     });
 
     const onSubmit = async (state: VaildConfig) => {
-        // key test
-        try {
-            const client = new ShopifyClient(state);
-            await client.productsMatching("foo");
-        } catch (error) {
-
-            setError("storefrontAccessToken", {
-                message: 'The API key seems to be invalid for the specified Shopify domain!',
-                type: "validate"
-            });
-
-            return;
+        if(!ctx.currentRole.meta.final_permissions.can_edit_schema){
+            return ctx.alert("User does not have the permission to perform the operation.");
         }
+        await ctx.updatePluginParameters(state as VaildConfig);
 
-        await ctx.updatePluginParameters(state);
-        try {
-            if(state.keyToken.length > 0) {
-                const body = [];
-                if(state.freeStoreApiKey.length > 0) body.push({ key: "FREEWEBSTORE_API_TOKEN", value: state.freeStoreApiKey });
-                if(state.shopifyDomain.length > 0) body.push({ key: "SHOPIFY_DOMAIN", value: state.shopifyDomain });
-                if(state.storefrontAccessToken.length > 0) body.push({ key: "SHOPIFY_STOREFRONT_ACCESS_TOKEN", value: state.storefrontAccessToken });
+        await new Promise<void>(async (ok)=>{
+            if(state.storefronts.length < 0 || !state.keyToken) return ok();
+            try {
+
+                const keys = state.storefronts.map(value=>{
+                    if(value.type === "S") {
+                        return [
+                            { key: `${value.domain}_SHOPIFY_ACCESS_TOKEN`, value: value.token },
+                            { key: `${value.domain}_SHOPIFY_DOMAIN`, value: value.domain }
+                        ];
+                    }
+                    return [];
+                }).flat();
 
                 await fetch("/api/keys",{ 
                     method: "PATCH",
@@ -44,12 +35,17 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${state.keyToken}`
                     },
-                    body: JSON.stringify(body)
-                })
-            }   
-        } catch (error) {
-            console.error(error);
-        }
+                    body: JSON.stringify(keys)
+                });
+
+                ok();
+                
+            } catch (error) {
+                console.error(error);
+                ok();
+            }
+        });
+
         ctx.notice("Settings updated successfully!");
     }
 
@@ -58,86 +54,68 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }){
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <h1 className="font-bold text-2xl">General Settings</h1>
                 <FieldGroup>
-                    <Controller control={control} name="useOnlyStore" render={({ field: { ref, value, onChange, ...field }, formState })=>(
-                        <SelectField 
-                        onChange={ev=>{ 
-                            if(ev?.value === "null") return onChange(ev?.value ?? null);
-                            onChange(ev?.value ?? null) 
-                        }}
-                        id={field.name} 
-                        {...field} 
-                        error={formState.errors.useOnlyStore?.message}
-                        value={options.find(option=>option.value===value) ?? options[2]}
-                        selectInputProps={{
-                            isMulti: false,
-                            options: options
-                        }}
-                        label="Use store front" 
-                        hint="Allow for the use of both shopify and freewebstore or only one." />
-                    )}/>
                      <Controller control={control} rules={{ required: "This field is required!" }} name="keyToken" render={({ field: { ref, ...field }, formState })=>(
                         <TextField error={formState.errors?.keyToken?.message} id={field.name} label="System Key" placeholder="xxxxxxxxxx" required {...field}/>
                     )} />
                 </FieldGroup>
-                <h1 className="font-bold text-2xl">Shopify Settings</h1>
-                <FieldGroup>
-                    <Controller control={control} rules={{ required: "This field is required!" }} name="shopifyDomain" render={({ field: { ref, ...field }, formState })=>(
-                        <TextField error={formState.errors?.shopifyDomain?.message} hint={
-                            <>
-                              If your shop is <code>foo-bar.myshopify.com</code>, then
-                              insert <code>foo-bar</code>
-                            </>
-                          } id={field.name} label="Shop ID" placeholder="my-shop" required {...field}/>
-                    )} />
-                    <Controller control={control} rules={{ required: "This field is required!" }} name="storefrontAccessToken" render={({ field: { ref, ...field }, formState })=>(
-                        <TextField id={field.name} label="Storefront access token" {...field} hint={
-                            <>
-                              You can get a Storefront access token by creating a
-                              private app. Take a look at{' '}
-                              <a
-                                className="underline"
-                                href="https://help.shopify.com/en/api/custom-storefronts/storefront-api/getting-started#authentication"
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                Shopify documentation
-                              </a>{' '}
-                              for more info
-                            </>
-                          }textInputProps={{ monospaced: true }} placeholder="XXXYYY" required error={formState.errors?.storefrontAccessToken?.message} />
-                    )}/>
-                </FieldGroup>
-                <h1 className="font-bold text-2xl">Freewebstore settings</h1>
-                <FieldGroup>
-                    <Controller control={control} rules={{ required: "This field is required!" }} name="freestoreDomain" render={({ field: { ref, ...field }, formState })=>(
-                            <TextField error={formState.errors?.freestoreDomain?.message} hint={
-                                <>
-                                If your shop is <code>mystore.my-online.store</code>, then
-                                insert <code>foo-bar</code>
-                                </>
-                            } id={field.name} label="Shop ID" placeholder="mystore.my-online.store" required {...field}/>
-                        )} />
-                    <Controller control={control} name="freeStoreApiKey" render={({ field: { ref, ...field }, formState })=>(
-                            <TextField id={field.name} {...field} 
-                            label="Freewebstore API token" 
-                            hint={
-                                <>
-                                You can get a Api token from the freewebstore site. Take a look at{' '}
-                                <a className="underline"
-                                    href="https://freewebstore.com/"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    Freewebstore documentation
-                                </a>{' '}
-                                for more info
-                                </>
-                            } 
-                            textInputProps={{ monospaced: true }} 
-                            placeholder="XXXYYY" 
-                            error={formState.errors?.freeStoreApiKey?.message}/>
-                        )}/>
-                </FieldGroup>
+                <h1 className="font-bold text-2xl">Storefronts</h1>
+                <Controller control={control} name="storefronts" render={({ field, fieldState })=>(
+                    <><table className="w-full divide-y">
+                        <thead >
+                            <tr>
+                                <th>Storefront</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {field.value.map((value,idx)=>(
+                                <tr key={idx} className="divide-x">
+                                    <td>{value.label} <span className="text-gray-400 font-sans">({value.domain})</span></td>
+                                    <td className="flex justify-end py-2 mr-2 gap-2">
+                                        <Button onClick={async ()=>{  
+                                            const result = await ctx.openModal({
+                                                title: "Edit Storefront",
+                                                id: "storefrontModel",
+                                                parameters: value
+                                            });
+                                            if(!result) return;
+                                            field.onChange([...field.value.filter(item=>item.domain!==value.domain), result]);
+
+                                        }} buttonSize="xxs" buttonType="primary" leftIcon={<FaEdit style={{ fill: "white" }}/>} type="button"/>
+                                        <Button onClick={async ()=>{ 
+                                            const result = await ctx.openConfirm({ 
+                                                cancel: { label: "Cancel", intent: "positive", value: false },
+                                                title: "Remove Storefront", 
+                                                content: "Are you sure?", 
+                                                choices: [{ intent: "negative", label: "Yes", value: true }] 
+                                            }) as boolean;
+
+                                            if(result) {
+                                                field.onChange(field.value.filter(value=>value.domain!==value.domain));
+                                            }
+                                        }} buttonSize="xxs" buttonType="negative" leftIcon={<FaTrash style={{ fill: "white" }}/>}></Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div>
+                        <Button onClick={async ()=>{
+                            const data = await ctx.openModal({
+                                id: "storefrontModel",
+                                title: "Add Storefront"
+                            }) as { token: string; type: string; domain: string; label: string; } | null;
+
+                            if(!data) return;
+                    
+                            if(field.value.some(value=>value.domain === data.domain)) {
+                                ctx.alert(`A storefront with domain ${data.domain} already exits.`);
+                                return;
+                            }   
+                            field.onChange([ ...field.value, data]);
+                        }} buttonType="primary" buttonSize="xs">Add Storefront</Button>
+                    </div></>
+                 )}/>
                 <Button type="submit" fullWidth buttonSize="l" buttonType="primary" disabled={formState.isSubmitting || !formState.isDirty}>
                     Save settings
                 </Button>

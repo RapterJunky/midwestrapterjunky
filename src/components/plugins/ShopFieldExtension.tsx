@@ -3,6 +3,7 @@ import { Canvas, Button } from 'datocms-react-ui';
 import { useEffect } from 'react';
 import { FaSearch, FaExternalLinkAlt, FaTimesCircle } from 'react-icons/fa';
 import useStore, { type ShopType } from '@hook/plugins/useStore';
+import { normalizeConfig } from '@lib/utils/plugin/types';
 
 interface Product { type: ShopType, handle: string };
 
@@ -20,12 +21,22 @@ const getValue = (ctx: RenderFieldExtensionCtx) => {
 
 
 export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx }){
+    const config = normalizeConfig(ctx.plugin.attributes.parameters);
     const product = getValue(ctx);
-    const { status, products, fetchProductByHandle } = useStore(ctx);
+    const { shop, setShop, status, products, fetchProductByHandle } = useStore(config);
 
     useEffect(()=>{
-        if(product) fetchProductByHandle(product);
-    },[product?.handle,product?.type]);
+        if(!product || !product?.value) return;
+
+        const [storefront,tenant,item] = product?.value?.split("$");
+
+        const store = config.storefronts.find(value=>value.domain===tenant && value.type === storefront);
+        if(!store || !item) return;
+
+        setShop(store);
+
+        fetchProductByHandle(item);
+    },[product?.value]);
 
     const handleReset = () =>  ctx.setFieldValue(ctx.fieldPath,null);
     
@@ -36,12 +47,12 @@ export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx 
             width: 'xl',
         }) as Product | null;
 
-        if(product) ctx.setFieldValue(ctx.fieldPath,JSON.stringify(product));
+        if(product) ctx.setFieldValue(ctx.fieldPath,JSON.stringify({ value: product }));
     }
 
     return (
         <Canvas ctx={ctx}>
-            {product ? (
+            { shop && product ? (
                <div className={`border border-var-border text-center p-5 opacity-100 relative transition-opacity duration-[0.2s] ease-in-out${status === "loading" ? " opacity-60" : ""}`}>
                     { status === "error" ? (
                         <div className='flex items-center'>
@@ -50,32 +61,32 @@ export default function ShopFieldExtension({ctx}:{ ctx: RenderFieldExtensionCtx 
                     ) : null}
                     { products && products[0] ? (
                         <div className='flex items-center'>
-                            <div className="w-36 mr-5 bg-cover rounded bg-center border-var-border p-1 before:block before:pt-[100%]" style={{ backgroundImage: `url(${products[0].product.imageUrl})` }}/>
+                            <div className="w-36 mr-5 bg-cover rounded bg-center border-var-border p-1 before:block before:pt-[100%]" style={{ backgroundImage: `url(${products[0].imageUrl})` }}/>
                             <div className="flex-1 text-left">
                                 <div className="mb-1 text-var-accent flex gap-2 items-center">
-                                    <a className="font-bold hover:underline text-sm" target="_blank" rel="noopener noreferrer"href={products[0].product.onlineStoreUrl}>{products[0].product.title}</a>
+                                    <a className="font-bold hover:underline text-sm" target="_blank" rel="noopener noreferrer"href={products[0].onlineStoreUrl}>{products[0].title}</a>
                                     <FaExternalLinkAlt className="text-sm"/>
                                 </div>
-                                <div className="text-var-light mb-1 overflow-hidden" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{products[0].product.description}</div>
-                                { products[0].product.productType ? (
+                                <div className="text-var-light mb-1 overflow-hidden" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{products[0].description}</div>
+                                { products[0].productType ? (
                                     <div>
                                         <strong>Product Type:</strong> 
                                         &nbsp;
-                                        {products[0].product.productType}
+                                        {products[0].productType}
                                     </div>
                                 ) : null }
                                 <div>
                                     <strong>Price:</strong>
                                     &nbsp;
-                                    {products[0].product.priceRange.maxVariantPrice.amount !==
-                                        products[0].product.priceRange.minVariantPrice.amount ? (
+                                    {products[0].priceRange.maxVariantPrice.amount !==
+                                        products[0].priceRange.minVariantPrice.amount ? (
                                             <span>
-                                                <span>{products[0].product.priceRange.minVariantPrice.currencyCode}&nbsp;{products[0].product.priceRange.minVariantPrice.amount}</span>
+                                                <span>{products[0].priceRange.minVariantPrice.currencyCode}&nbsp;{products[0].priceRange.minVariantPrice.amount}</span>
                                             &nbsp; - &nbsp;
-                                                <span>{products[0].product.priceRange.maxVariantPrice.currencyCode}&nbsp;{products[0].product.priceRange.maxVariantPrice.amount}</span>
+                                                <span>{products[0].priceRange.maxVariantPrice.currencyCode}&nbsp;{products[0].priceRange.maxVariantPrice.amount}</span>
                                             </span>
                                         ) : (
-                                            <span>{products[0].product.priceRange.maxVariantPrice.currencyCode}&nbsp;{products[0].product.priceRange.maxVariantPrice.amount}</span>
+                                            <span>{products[0].priceRange.maxVariantPrice.currencyCode}&nbsp;{products[0].priceRange.maxVariantPrice.amount}</span>
                                         )}
                                 </div>
                             </div>

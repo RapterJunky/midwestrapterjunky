@@ -10,6 +10,7 @@ import AuthorEditor from "@components/plugins/AuthorEditor";
 import EditAuthorModal from "@components/plugins/EditAuthor";
 
 import "datocms-react-ui/styles.css";
+import StorefrontModel from "@components/plugins/StorefrontModel";
 
 const FIELD_EXTENSION_ID = 'shopProduct';
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
@@ -104,7 +105,8 @@ const MidwestRaptor: NextPage<any> = () => {
             }
         case "renderModal":
             if(id === "browseProducts") return <BrowseProductsModel ctx={ctx}/>;
-            if(id === "editAuthor") return <EditAuthorModal ctx={ctx}/>
+            if(id === "editAuthor") return <EditAuthorModal ctx={ctx}/>;
+            if(id === "storefrontModel") return <StorefrontModel ctx={ctx}/>
             return null;
         case "renderAssetSource": {
             return <CustomImageUpload ctx={ctx}/>

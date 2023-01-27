@@ -1,5 +1,3 @@
-import type { VaildConfig } from './types';
-
 export type PriceTypes = {
     amount: number;
     currencyCode: string;
@@ -74,14 +72,14 @@ const normalizeProduct = (product: any): Product => {
 const normalizeProducts = (products: any): Product[] =>
   products.edges.map((edge: any) => normalizeProduct(edge.node));
 
-  export default class ShopifyClient {
-    storefrontAccessToken: string;
-    shopifyDomain: string;
+export default class ShopifyClient {
+    private storefrontAccessToken: string;
+    private shopifyDomain: string;
   
     constructor({
       storefrontAccessToken,
       shopifyDomain,
-    }: Pick<VaildConfig, 'shopifyDomain' | 'storefrontAccessToken'>) {
+    }: { shopifyDomain: string; storefrontAccessToken: string; }) {
       this.storefrontAccessToken = storefrontAccessToken;
       this.shopifyDomain = shopifyDomain;
     }
