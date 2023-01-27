@@ -1,46 +1,31 @@
 import { useState, useMemo } from 'react';
 import ShopifyClient, { type Product } from '@utils/plugin/ShopifyClient';
-import { normalizeProduct ,normalizeConfig, ConvertToShopifyProduct,  type Freewebstore , type FreewebstoreProduct } from '@utils/plugin/types';
+import { type VaildConfig } from '@utils/plugin/types';
 
 export type ShopType = "shopify" | "freewebstore";
 export type Status = 'loading' | 'success' | 'error';
 
-const useStore = (ctx: any) => {
+const useStore = (ctx: VaildConfig) => {
   const [query,setQuery] = useState<string>("");
-  const [shop,setShop] = useState<ShopType>("shopify");
-  const [products,setProducts] = useState<({ type: ShopType; product: Product }[] | null)>(null);
+  const [shop,setShop] = useState<VaildConfig["storefronts"][0]|undefined>(ctx.storefronts[0]);
+  const [products,setProducts] = useState<(Product[] | null)>(null);
   const [status,setStatus] = useState<Status>("loading");
-
-  const config = normalizeConfig(ctx.plugin.attributes.parameters);
-
+  
   const client = useMemo(() => {
-    return new ShopifyClient({ shopifyDomain: config.shopifyDomain, storefrontAccessToken: config.storefrontAccessToken });
-  }, [config.storefrontAccessToken, config.shopifyDomain]);
+    if(!shop?.domain || !shop.token) return null;
+    return new ShopifyClient({ shopifyDomain: shop?.domain, storefrontAccessToken: shop?.token });
+  }, [shop?.domain, shop?.token]);
 
-  const fetchProductByHandle = async (item: { handle: string; type: ShopType }) => {
+  const fetchProductByHandle = async (item: string) => {
     try {
       setStatus("loading");
 
-      if(item.type === "shopify") {
-        const product = await client.productByHandle(item.handle);
+      if(!client) throw new Error("No Client");
 
-        setProducts([{ type: item.type, product }]);
-        setStatus("success");
-        return;
-      }
+      const product = await client.productByHandle(item);
 
-      const request = await fetch(`https://api.freewebstore.com/product/${item.handle}`,{
-        headers: {
-          "x-api-key": config.freeStoreApiKey
-        }
-      });
-      if(!request.ok) throw request;
-
-      const response = await request.json() as Freewebstore;
-
-      setProducts([{ type: "freewebstore", product: normalizeProduct(response,config.freestoreDomain) }]);
+      setProducts([product]);
       setStatus("success");
-
     } catch (error) {
       console.error(error);
       setProducts(null);
@@ -51,28 +36,11 @@ const useStore = (ctx: any) => {
     try {
       setStatus("loading");
 
-      if(shop === "shopify") {
-        const products = await client.productsMatching(query);
-        const data = products.map(value=>({ type: "shopify" as ShopType, product: value }));
+      if(!client) throw new Error("No Client");
+      const products = await client.productsMatching(query);
 
-        setProducts(data);
-        setStatus("success");
-        return;
-      }
-
-      const request = await fetch('https://api.freewebstore.com/product/',{
-        headers: {
-          "x-api-key": config.freeStoreApiKey
-        }
-      });
-      if(!request.ok) throw request;
-
-      const response = await request.json() as { products: FreewebstoreProduct[] };
-      const data = response.products.map(value=>({ type: "freewebstore" as ShopType, product: ConvertToShopifyProduct(value,config.freestoreDomain) })).filter(value=>value.product.title.includes(query));
-
-      setProducts(data);
+      setProducts(products);
       setStatus("success");
-
     } catch (error) {
       setProducts(null);
       setStatus("error");
