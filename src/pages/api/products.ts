@@ -80,7 +80,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
         // sort data into their storefronts and tenants
         for(const [idx,data] of request.entries()) {
             const [storefront,tenant,product] = data.split("$") as EncodeProductItem;
-                
+            
             if(!storefront || !tenant || !product) {
                 logger.warn({storefront,tenant,product},"Ignoring product query");
                 continue;

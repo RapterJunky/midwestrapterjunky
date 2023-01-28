@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
-import type { ShopType } from '@hook/plugins/useStore';
 
 export interface StoreItem { 
     featuredImage: { 

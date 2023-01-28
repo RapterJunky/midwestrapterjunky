@@ -43,7 +43,8 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
         props: {
             ...data,
             preview: ctx?.preview ?? false
-        }
+        },
+        revalidate: 7200
     }
 }
 

@@ -4,6 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withBundleAnalyzer({
+  productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
   reactStrictMode: true,
   images: {
     deviceSizes: [150,300,600,900,1200,1500,1800,2100],
