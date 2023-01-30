@@ -15,7 +15,7 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 import { fetchCacheData } from '@lib/cache';
 import { logger } from '@lib/logger';
 import type { FullPageProps, StructuredContent } from "@lib/types";
-import { formatLocalDate } from "@lib/utils/timeFormatClient";
+import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
 import { DATOCMS_Fetch } from "@lib/gql";
 

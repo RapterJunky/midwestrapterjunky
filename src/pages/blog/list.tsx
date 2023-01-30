@@ -6,7 +6,7 @@ import useSWR from 'swr';
 
 import type { FullPageProps } from "@lib/types";
 import { DATOCMS_Fetch } from "@lib/gql";
-import { formatLocalDate } from "@lib/utils/timeFormatClient";
+import { formatLocalDate } from "@lib/utils/timeFormat";
 import { getDescriptionTag } from "@lib/utils/description";
 
 import Navbar from "@components/Navbar";

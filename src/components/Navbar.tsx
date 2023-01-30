@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { HiMenu, HiX } from 'react-icons/hi';
 import IconLink from "./IconLink";
 import type { Color, LinkWithIcon, ResponsiveImage } from '@lib/types';
+import { capitlize } from "@lib/utils/capitlize";
 
 export interface NavProps {
     navbar: {
@@ -71,7 +72,7 @@ export default function Navbar({ mode = "fade-scroll", pageLinks = [], logo }: N
                         <ul className="[&>:not(:last-child)]:border-b">
                             {pageLinks.map((value,i)=>(
                                 <li key={i} className="flex">
-                                    <IconLink className="text-white pt-5 pb-5 pr-4 pl-4 w-full flex items-center gap-1" key={i} {...value}/>
+                                    <IconLink className="text-white pt-5 pb-5 pr-4 pl-4 w-full flex items-center gap-1" key={i} title={capitlize(value.title)} useIcon={value.useIcon} icon={value.icon} iconPosition={value.iconPosition} link={value.link} />
                                 </li>
                             ))}
                         </ul>

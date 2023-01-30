@@ -1,5 +1,5 @@
 import Button from '@components/Button';
-import { formatTime } from '@lib/utils/timeFormatServer';
+import { formatTime } from '@lib/utils/timeFormat';
 import Image from 'next/image';
 import { ResponsiveImage } from '@lib/types';
 
@@ -34,5 +34,3 @@ export default function UpcomingEvents(props: UpcomingEventsProps){
         </section>
     )
 }
-
-// <img className="object-contain object-top pointer-events-none h-full w-full" src={event.bgImage.url} alt={event.bgImage.alt}/>
