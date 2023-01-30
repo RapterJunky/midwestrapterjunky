@@ -26,10 +26,7 @@ export default function Calendar(props: CalenderProps){
         return date >= start && date < end;
     }
   
-    const isToday = (day: number): boolean =>  {
-        console.log(today,current);
-        return today.date === day && today.month === current.month && today.year === current.year;
-    }
+    const isToday = (day: number): boolean =>   today.date === day && today.month === current.month && today.year === current.year;
     
     const nextMouth = () => {
         setCurrent(data=>{

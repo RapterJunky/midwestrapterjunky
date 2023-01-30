@@ -1,19 +1,15 @@
 import Link from "next/link";
-// This imports alot of extra stuff that is not required
-// see about using nextjs import resolution 
-// https://nextjs.org/blog/next-13-1#import-resolution-for-smaller-bundles
-import * as FAIcons from 'react-icons/fa';
 import type { LinkWithIcon } from '@lib/types';
+import FontAwesomeIcon from "@components/FontAwesomeIcon";
 
 const IconLink = (props: LinkWithIcon & { className: string; }) => {
     if(props.useIcon && props.icon) {
         const dir = props.iconPosition === "start";
-        const name = props.icon.iconName.replace(/(\b\w)/g, letter => letter.toUpperCase()).replace("-","");
-        let Icon = (FAIcons as any)[`Fa${name}`] ?? FAIcons["FaQuestion"];
-
         return (
             <Link href={props.link} className={props.className}>
-                {dir ? <Icon/> : null} {props.title} {!dir ? <Icon/> : null}
+                {dir ? <FontAwesomeIcon {...props.icon}/> : null} 
+                {props.title} 
+                {!dir ? <FontAwesomeIcon {...props.icon}/> : null}
             </Link>
         );
     }

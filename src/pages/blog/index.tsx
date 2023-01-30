@@ -11,7 +11,7 @@ import Tag from "@components/blog/tag";
 
 import { DATOCMS_Fetch } from "@lib/gql";
 import { getDescriptionTag } from "@lib/utils/description";
-import { formatLocalDate } from "@lib/utils/timeFormatClient";
+import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
 import type { FullPageProps } from "@lib/types";

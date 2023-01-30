@@ -1,5 +1,5 @@
 import { StructuredText } from 'react-datocms';
-import { HiOutlineChevronRight} from 'react-icons/hi';
+import { HiOutlineChevronRight } from 'react-icons/hi';
 
 import { markRules } from '@lib/StructuredTextRules';
 import type { Color, StructuredContent } from '@lib/types';

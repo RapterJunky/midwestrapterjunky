@@ -5,7 +5,11 @@ export type Color = {
     hex: string;
 }
 
-export type Icon = { prefix: string; iconName: string; icon: any[]; }
+export type Icon = { 
+    prefix: string; 
+    iconName: string; 
+    icon: [number,number,any[],string,string]; 
+}
 
 export type LinkWithIcon = { 
     title: string; 
