@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "",
+    "cypress": "cypress open",
+    "cy:run":"npm run cy:run:edge && npm run cy:run:firefox && npm run cy:run:chrome:canary",
+    "cy:run:edge": "cypress run --browser edge",
+    "cy:run:firefox": "cypress run --browser firefox",
+    "cy:run:chrome:canary": "cypress run --browser chrome:canary",
     "analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
@@ -48,6 +52,7 @@
     "autoprefixer": "^10.4.13",
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.14",
+    "cypress": "^12.4.1",
     "eslint": "^8.32.0",
     "eslint-config-next": "^13.1.5",
     "pino-pretty": "^9.1.1",

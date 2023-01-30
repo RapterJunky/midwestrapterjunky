@@ -41,7 +41,7 @@ interface EventPageProps extends FullPageProps {
             latitude: number;
             longitude: number;
         } | null;
-        shopItemLink: null | { type: ShopType, handle: string; } 
+        shopItemLink: null | { value: string; } 
     }
 }
 

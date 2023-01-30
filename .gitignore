@@ -12,6 +12,11 @@
 /.next/
 /out/
 
+/cypress/videos
+/cypress/screenshots
+/cypress/downloads
+
+
 # production
 /build
 
