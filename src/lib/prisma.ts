@@ -1,18 +1,18 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
 declare global {
-    var prisma: PrismaClient;
+  var prisma: PrismaClient;
 }
 
 let prisma: PrismaClient;
 
-if(process.env.VERCEL_ENV !== "development") {
-    prisma = new PrismaClient();
+if (process.env.VERCEL_ENV !== "development") {
+  prisma = new PrismaClient();
 } else {
-    if (!global.prisma) {
-        global.prisma = new PrismaClient();
-    }
-    prisma = global.prisma;
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  prisma = global.prisma;
 }
 
 export default prisma;

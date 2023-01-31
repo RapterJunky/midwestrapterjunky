@@ -1,71 +1,82 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z, ZodError } from "zod";
-import { fromZodError } from 'zod-validation-error';
+import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
-import { getKeys, addKeys, dropKeys } from '@lib/dynamic_keys';
+import { getKeys, addKeys, dropKeys } from "@lib/dynamic_keys";
 
-const upsertVaildation = z.array(
+const upsertVaildation = z
+  .array(
     z.object({
-        key: z.string().transform(value=>value.toUpperCase()),
-        value: z.string()
+      key: z.string().transform((value) => value.toUpperCase()),
+      value: z.string(),
     })
-).nonempty();
+  )
+  .nonempty();
 
-const getVaildataion = z.array(z.string().transform(value=>value.toUpperCase())).nonempty();
+const getVaildataion = z
+  .array(z.string().transform((value) => value.toUpperCase()))
+  .nonempty();
 
-export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    try {
-        if(!req.headers.authorization || req.headers.authorization.replace("Bearer ","") !== process.env.KEYS_TOKEN) throw createHttpError.Unauthorized();
+export default async function handle(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    if (
+      !req.headers.authorization ||
+      req.headers.authorization.replace("Bearer ", "") !==
+        process.env.KEYS_TOKEN
+    )
+      throw createHttpError.Unauthorized();
 
-        switch (req.method) {
-            case "POST":{
-                const data = upsertVaildation.parse(req.body);
-                const request = await addKeys(data);
-                return res.status(201).json(request);
-            }
-            case "PATCH":{
-                const data = upsertVaildation.parse(req.body);
-                const request = await addKeys(data);
-                return res.status(202).json(request);
-            }
-            case "GET":{
-                const query = req.query.q;
-                if(!query) throw createHttpError.BadRequest();
-                const keys = Array.isArray(query) ? query : [query];
-                const data = getVaildataion.parse(keys);
-                const pairs = await getKeys(data);
-                return res.status(200).json(pairs);
-            }
-            case "DELETE": {
-                const data = getVaildataion.parse(req.body);
+    switch (req.method) {
+      case "POST": {
+        const data = upsertVaildation.parse(req.body);
+        const request = await addKeys(data);
+        return res.status(201).json(request);
+      }
+      case "PATCH": {
+        const data = upsertVaildation.parse(req.body);
+        const request = await addKeys(data);
+        return res.status(202).json(request);
+      }
+      case "GET": {
+        const query = req.query.q;
+        if (!query) throw createHttpError.BadRequest();
+        const keys = Array.isArray(query) ? query : [query];
+        const data = getVaildataion.parse(keys);
+        const pairs = await getKeys(data);
+        return res.status(200).json(pairs);
+      }
+      case "DELETE": {
+        const data = getVaildataion.parse(req.body);
 
-                const count = await dropKeys(data)
+        const count = await dropKeys(data);
 
-                return res.status(200).json({ count });
-            }
-            default:
-                throw createHttpError.MethodNotAllowed();
-        }
-    } catch (error) {
-        
-        if(createHttpError.isHttpError(error)){ 
-            logger.error(error,error.message);
-            return res.status(error.statusCode).json(error);
-        }
-
-        if(error instanceof ZodError) {
-            const reason = fromZodError(error);
-            logger.error(error,reason.message);
-            const status = createHttpError.BadRequest();
-            return res.status(status.statusCode).json({ 
-                details: reason.details, 
-                message: status.message 
-            });
-        }
-
-        const ie = createHttpError.InternalServerError();
-        logger.error(error,ie.message);
-        return res.status(ie.statusCode).json(ie);
+        return res.status(200).json({ count });
+      }
+      default:
+        throw createHttpError.MethodNotAllowed();
     }
+  } catch (error) {
+    if (createHttpError.isHttpError(error)) {
+      logger.error(error, error.message);
+      return res.status(error.statusCode).json(error);
+    }
+
+    if (error instanceof ZodError) {
+      const reason = fromZodError(error);
+      logger.error(error, reason.message);
+      const status = createHttpError.BadRequest();
+      return res.status(status.statusCode).json({
+        details: reason.details,
+        message: status.message,
+      });
+    }
+
+    const ie = createHttpError.InternalServerError();
+    logger.error(error, ie.message);
+    return res.status(ie.statusCode).json(ie);
+  }
 }

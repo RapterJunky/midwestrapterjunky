@@ -1,4 +1,4 @@
-import Navbar from '../fragments/Navbar';
+import Navbar from "../fragments/Navbar";
 
 const QueryBlogLatest = `
 query QueryBlogLatest($first: IntType = "5") {

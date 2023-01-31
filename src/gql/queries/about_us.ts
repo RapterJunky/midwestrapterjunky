@@ -1,7 +1,7 @@
-import Navbar from '../fragments/Navbar';
-import EmailCallToActionFragment from '../fragments/EmailCallToAction';
-import CustomHtmlSectionFragment from '../fragments/CustomHtmlSection';
-import SiteTags from '../fragments/SiteTags';
+import Navbar from "../fragments/Navbar";
+import EmailCallToActionFragment from "../fragments/EmailCallToAction";
+import CustomHtmlSectionFragment from "../fragments/CustomHtmlSection";
+import SiteTags from "../fragments/SiteTags";
 
 const AboutUsQuery = `
 query AboutUsQuery {

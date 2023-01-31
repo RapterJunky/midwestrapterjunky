@@ -2,16 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-
 html,
-body, #__next {
+body,
+#__next {
   padding: 0;
   margin: 0;
   height: 100vh;
 }
 
 .bg-opacity {
-  --tw-bg-opacity: 0.5
+  --tw-bg-opacity: 0.5;
 }

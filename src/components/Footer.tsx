@@ -1,7 +1,9 @@
-export default function Footer(){
-    return (
-        <footer className="flex w-full items-center bg-slate-100 px-8 h-20">
-            <div className="font-normal not-italic text-xs text-gray-700">© 2022, Midwest Raptor Junkies</div>
-        </footer>
-    );
+export default function Footer() {
+  return (
+    <footer className="flex h-20 w-full items-center bg-slate-100 px-8">
+      <div className="text-xs font-normal not-italic text-gray-700">
+        © 2022, Midwest Raptor Junkies
+      </div>
+    </footer>
+  );
 }

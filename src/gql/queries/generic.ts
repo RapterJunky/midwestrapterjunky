@@ -1,4 +1,4 @@
-import Navbar from '../fragments/Navbar';
+import Navbar from "../fragments/Navbar";
 
 const GenericPageQuery = `
 query GenericPageQuery {

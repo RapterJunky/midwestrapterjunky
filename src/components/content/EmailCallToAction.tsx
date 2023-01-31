@@ -1,26 +1,41 @@
-import { StructuredText } from 'react-datocms';
-import { HiOutlineChevronRight } from 'react-icons/hi';
+import { StructuredText } from "react-datocms";
+import { HiOutlineChevronRight } from "react-icons/hi";
 
-import { markRules } from '@lib/StructuredTextRules';
-import type { Color, StructuredContent } from '@lib/types';
+import { markRules } from "@lib/StructuredTextRules";
+import type { Color, StructuredContent } from "@lib/types";
 
 interface EmailCallToActionProps {
-    data: StructuredContent;
-    background_color: Color | null;
+  data: StructuredContent;
+  background_color: Color | null;
 }
 
-export default function EmailCallToAction(props: EmailCallToActionProps){
-    return (
-        <div style={{ backgroundColor: props?.background_color?.hex ?? "rgb(63 98 18)" }} className='pt-3 pb-3 flex flex-col lg:flex-row h-max lg:h-52 items-center justify-center gap-5 text-white'>
-            <div className="text-center w-3/5">
-                <StructuredText customMarkRules={markRules} data={props.data}/>
-            </div>
-            <form className="flex gap-5 w-3/4 justify-center sm:w-2/5 from-white" action="/api/submit-email" method='post'>
-                <input name="email" placeholder='Enter email' className="w-3/4 bg-transparent border-white border-x-0 border-t-0 ring-0 focus:ring-0 text-white placeholder:text-zinc-300" type="email" required/>
-                <button type="submit" className='active:translate-x-1'>
-                    <HiOutlineChevronRight className='text-white font-bold text-2xl'/>
-                </button>
-            </form>
-        </div>
-    );
+export default function EmailCallToAction(props: EmailCallToActionProps) {
+  return (
+    <div
+      style={{
+        backgroundColor: props?.background_color?.hex ?? "rgb(63 98 18)",
+      }}
+      className="flex h-max flex-col items-center justify-center gap-5 pt-3 pb-3 text-white lg:h-52 lg:flex-row"
+    >
+      <div className="w-3/5 text-center">
+        <StructuredText customMarkRules={markRules} data={props.data} />
+      </div>
+      <form
+        className="flex w-3/4 justify-center gap-5 from-white sm:w-2/5"
+        action="/api/submit-email"
+        method="post"
+      >
+        <input
+          name="email"
+          placeholder="Enter email"
+          className="w-3/4 border-x-0 border-t-0 border-white bg-transparent text-white ring-0 placeholder:text-zinc-300 focus:ring-0"
+          type="email"
+          required
+        />
+        <button type="submit" className="active:translate-x-1">
+          <HiOutlineChevronRight className="text-2xl font-bold text-white" />
+        </button>
+      </form>
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-import Navbar from '../fragments/Navbar';
+import Navbar from "../fragments/Navbar";
 
 const ArticleQuery = `
 query ArticlePageQuery($slug: String = "") {
