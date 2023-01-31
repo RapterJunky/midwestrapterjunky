@@ -34,8 +34,6 @@ export async function getStaticProps(
       ...data,
       preview: context?.preview ?? false,
     },
-    // 12 hours
-    //revalidate: 43200
   };
 }
 
