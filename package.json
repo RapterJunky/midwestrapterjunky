@@ -1,12 +1,12 @@
 {
   "name": "rapterjunky",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev | pino-pretty",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint && prettier --check ./src",
     "cypress": "cypress open",
     "cy:run": "npm run cy:run:edge && npm run cy:run:firefox && npm run cy:run:chrome:canary",
     "cy:run:edge": "cypress run --browser edge",
