@@ -7,14 +7,14 @@ describe("Navigation",()=>{
         });
  
          it("should naviage to the Blog root page",()=>{
-             cy.visit("http://localhost:3000/");
+             cy.visit("/");
              cy.get('a[href*="blog"]').click();
              cy.url().should("include","/blog");
              cy.get("h1").contains("Latest");
          });
 
          it("should naviage to the Blog list page",()=>{
-            cy.visit("http://localhost:3000/");
+            cy.visit("/");
             cy.get('a[href*="blog"]').click();
             cy.url().should("include","/blog");
             cy.get("h1").contains("Latest");
