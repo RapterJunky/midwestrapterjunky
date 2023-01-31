@@ -1,7 +1,14 @@
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import { useState, useEffect } from 'react';
-import moment from 'moment';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+
+interface CalenderProps {
+    data: any[];
+}
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 /**
  * @author mithicher
@@ -9,25 +16,46 @@ import Link from 'next/link';
  * @see https://tailwindcomponents.com/component/calendar-ui-with-tailwindcss-and-alpinejs
  * 
  */
-
-interface CalenderProps {
-    data: any[];
-}
-
 export default function Calendar(props: CalenderProps){
-    const [today,setToday] = useState({ date: 1, year: 2022, month: 10 });
-    const [current,setCurrent] = useState({ date: 0, year: 2022, month: 10 });
-    const [offsets,setOffsets] = useState({ start: 2, end: 3, days_in_month: 30, days_last_month: 31, name: 'November' });
+    const today = useMemo(()=>{  
+        const data = new Date();
+        return  { date: data.getDate(), year: data.getFullYear(), month: data.getMonth() }
+    },[]);
+    const [current,setCurrent] = useState(today);
 
-    const vaildEvents = (value: any, day: number) => {
-        const start = moment(value.dateFrom).unix();
-        const end = moment(value.dateTo).add({ days: 1 }).unix();
-        const date = moment().set({ date: day, month: current.month, year: current.year }).unix();
-        return date >= start && date < end;
+    const offsets = useMemo(()=>{
+        const date = new Date(current.year,current.month+1,0);
+        const daysInMonth = date.getDate();
+        date.setDate(1);
+
+        let offset = date.getDay();
+        if(offset === 7) offset = 0;
+
+        let offsetEnd = 7 - ( ( offset + daysInMonth ) % 7 );
+        if(offsetEnd === 7) offsetEnd = 0;
+
+        return { 
+            start: offset, 
+            end: offsetEnd , 
+            days_in_month: daysInMonth,
+            name: monthNames[date.getMonth()],
+            days_last_month: new Date(current.year,(current.month === 0 ? 11 : current.month - 1 ) + 1,0).getDate()
+        };
+    },[current]);
+
+    const vaildEvents = (value: { dateFrom: string; dateTo: string; }, day: number) => {
+        const start = new Date(value.dateFrom);
+        const end = new Date(value.dateTo);
+        const date = new Date(current.year,current.month+1,day);
+        return date >= start && date <= end;
     }
   
-    const isToday = (day: number): boolean =>   today.date === day && today.month === current.month && today.year === current.year;
-    
+    const isToday = (day: number, offsetMonth = 0): boolean => {
+        let month = current.month + offsetMonth;
+        if(month > 11) month = 0; else if(month < 0) month = 11;
+        return (today.date === day) && (today.month === month) && (today.year === (current.year));
+    }
+  
     const nextMouth = () => {
         setCurrent(data=>{
 
@@ -55,36 +83,6 @@ export default function Calendar(props: CalenderProps){
             return {...data, month: nextMouth, year };
         });
     }
-
-    useEffect(()=>{
-        const data = moment();
-        const orgin = { date: 27, year: data.year(), month: data.month() };
-        console.log(orgin);
-        setToday(orgin);
-        setCurrent(orgin);
-    },[]);
-
-    useEffect(()=>{
-        const data = moment().set({ year: current.year, month: current.month });
-
-        const dim = data.daysInMonth();
-        let offset = data.day() + 1;
-
-        if(offset === 7) offset = 0;
-        
-        let offsetEnd = 7 - ( ( offset + dim ) % 7 );
-        if(offsetEnd === 7) offsetEnd = 0;
-
-        setOffsets({ 
-            start: offset, 
-            end: offsetEnd , 
-            days_in_month: dim,
-            name: data.format("MMMM"),
-            days_last_month: data.month( current.month === 0 ? 11 : current.month - 1 ).daysInMonth() - offset
-        });
-
-    },[current]);
-
 
     return (
         <div className="antialiased sans-serif bg-gray-100 flex flex-col">
@@ -121,9 +119,9 @@ export default function Calendar(props: CalenderProps){
                     <div className="-mx-1 -mb-1">
             
                         <div className="flex flex-wrap border-t border-l">
-                            {Array.from({ length: offsets.start }, (_,i)=> offsets.days_last_month + (i + 1) ).map(day=>(
+                            {Array.from({ length: offsets.start }, (_,i)=>offsets.days_last_month - i).reverse().map(day=>(
                                 <div key={day} className="px-4 pt-2 border-r border-b relative w-1/7 h-30 bg-slate-100">
-                                     <div className={`inline-flex w-6 h-6 items-center justify-center text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-400 select-none ${ isToday(day) ? "bg-gray-500 text-white" : "" }`}>
+                                     <div className={`inline-flex w-6 h-6 items-center justify-center text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-400 select-none ${ isToday(day,-1) ? "bg-gray-500 text-white" : "" }`}>
                                         { day }
                                     </div>
                                 </div>
@@ -144,7 +142,7 @@ export default function Calendar(props: CalenderProps){
                             ))}
                              {Array.from({ length: offsets.end }).map((_,i)=>(
                                 <div key={i} className="border-r border-b px-4 pt-2 w-1/7 h-30 bg-slate-100">
-                                    <div className={`inline-flex w-6 h-6 items-center justify-center text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-400 select-none ${ isToday(i + 1) ? "bg-gray-500 text-white" : "" }`}>
+                                    <div className={`inline-flex w-6 h-6 items-center justify-center text-center leading-none rounded-full transition ease-in-out duration-100 text-gray-400 select-none ${ isToday(i + 1,1) ? "bg-gray-500 text-white" : "" }`}>
                                         { i + 1 }
                                     </div>
                                 </div>
