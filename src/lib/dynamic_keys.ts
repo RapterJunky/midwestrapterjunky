@@ -1,5 +1,5 @@
 import { randomBytes, createCipheriv, createDecipheriv } from "crypto";
-import prisma from "./prisma";
+import prisma from "@api/prisma";
 
 const ALGORITHM = "aes-256-ctr";
 const RANDOM_BYTES = 16;

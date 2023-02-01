@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Color, Icon } from "@lib/types";
+import type { Color, Icon } from "@type/page";
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
 
 interface SocialLinksProps {

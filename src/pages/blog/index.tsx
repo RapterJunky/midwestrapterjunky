@@ -18,7 +18,7 @@ import { getDescriptionTag } from "@lib/utils/description";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
-import type { FullPageProps } from "@lib/types";
+import type { FullPageProps } from "@lib/types/page";
 
 interface BlogLatestProps extends FullPageProps {
   posts: {

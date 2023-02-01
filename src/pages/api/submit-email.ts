@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Prisma } from "@prisma/client";
 import { z, ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import prisma from "@api/prisma";

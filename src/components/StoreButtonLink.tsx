@@ -1,6 +1,6 @@
-import Button from "./Button";
 import useSWR from "swr";
-import type { StoreItem } from "./content/FeaturedShopItems";
+import Button from "@components/Button";
+import type { StoreItem } from "@components/content/FeaturedShopItems";
 
 export default function StoreButtonLink(props: { value: string }) {
   const { data, error } = useSWR<StoreItem[], Response>(

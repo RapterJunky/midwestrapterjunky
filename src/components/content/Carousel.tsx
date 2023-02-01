@@ -1,6 +1,6 @@
 import { useId } from "react";
 import Image from "next/image";
-import type { ResponsiveImage } from "@lib/types";
+import type { ResponsiveImage } from "@type/page";
 
 interface CarouselProps {
   images: (ResponsiveImage & {

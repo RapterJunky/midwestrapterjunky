@@ -9,7 +9,7 @@ import Query from "@query/queries/calendar";
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
-import type { FullPageProps } from "@lib/types";
+import type { FullPageProps } from "@type/page";
 
 interface CalendarProps extends FullPageProps {
   allEvents: {

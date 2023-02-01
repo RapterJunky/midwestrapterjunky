@@ -1,6 +1,6 @@
 import { StructuredText } from "react-datocms";
 import { markRules } from "@lib/StructuredTextRules";
-import type { Color, StructuredContent } from "@lib/types";
+import type { Color, StructuredContent } from "@type/page";
 
 interface UpcomingEventProps {
   data: StructuredContent;

@@ -1,10 +1,10 @@
-import { StructuredText } from "react-datocms";
 import Image from "next/image";
+import { StructuredText } from "react-datocms";
 import { Parallax, Background } from "react-parallax";
 import { HiStar } from "react-icons/hi";
 import Button from "@components/Button";
-import { markRules } from "../../lib/StructuredTextRules";
-import type { Color, ResponsiveImage, StructuredContent } from "@lib/types";
+import { markRules } from "@lib/StructuredTextRules";
+import type { Color, ResponsiveImage, StructuredContent } from "@type/page";
 
 interface TestimonialAndShareProps {
   description: StructuredContent;

@@ -29,8 +29,8 @@ import type {
   StructuredContent,
   LinkWithIcon,
   FullPageProps,
-} from "@lib/types";
-import type { ShopType } from "@hook/plugins/useStore";
+} from "@type/page";
+
 import { fetchCacheData } from "@lib/cache";
 import ScrollToTop from "@components/blog/ScrollToTop";
 

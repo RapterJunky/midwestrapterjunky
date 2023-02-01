@@ -56,6 +56,8 @@ const productFragment = `
   }
 `;
 
+export class APIError extends Error {}
+
 const normalizeProduct = (product: any): Product => {
   if (!product || typeof product !== "object") {
     throw new Error("Invalid product");
@@ -137,13 +139,17 @@ export default class ShopifyClient {
     );
 
     if (res.status !== 200) {
-      throw new Error(`Invalid status code: ${res.status}`);
+      throw new APIError(`Invalid status code: ${res.status}`, {
+        cause: "FAILED_NETWORK_REQUEST",
+      });
     }
 
     const contentType = res.headers.get("content-type");
 
     if (!contentType || !contentType.includes("application/json")) {
-      throw new Error(`Invalid content type: ${contentType}`);
+      throw new APIError(`Invalid content type: ${contentType}`, {
+        cause: "INVAILD_PRODUCT_CONTENT",
+      });
     }
 
     const body = await res.json();

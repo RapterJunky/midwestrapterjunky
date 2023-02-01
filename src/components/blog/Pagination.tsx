@@ -1,5 +1,3 @@
-import CustomLink from "./Link";
-
 export default function Pagination({
   currentPage,
   total,

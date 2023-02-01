@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { Transition } from "@headlessui/react";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { Transition } from "@headlessui/react";
 import { HiMenu, HiX } from "react-icons/hi";
-import IconLink from "./IconLink";
-import type { Color, LinkWithIcon, ResponsiveImage } from "@lib/types";
-import { capitlize } from "@lib/utils/capitlize";
+import IconLink from "@components/IconLink";
+import { capitlize } from "@utils/capitlize";
+
+import type { Color, LinkWithIcon, ResponsiveImage } from "@type/page";
 
 export interface NavProps {
   navbar: {

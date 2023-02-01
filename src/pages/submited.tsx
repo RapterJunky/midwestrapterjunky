@@ -7,7 +7,7 @@ import SiteTags from "@components/SiteTags";
 import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic";
 import Navbar from "@components/Navbar";
-import type { FullPageProps } from "@lib/types";
+import type { FullPageProps } from "@type/page";
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const data = await DatoCMS(Query, {

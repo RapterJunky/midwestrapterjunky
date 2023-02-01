@@ -1,7 +1,7 @@
-import Button from "@components/Button";
-import { formatTime } from "@lib/utils/timeFormat";
 import Image from "next/image";
-import { ResponsiveImage } from "@lib/types";
+import Button from "@components/Button";
+import { formatTime } from "@utils/timeFormat";
+import type { ResponsiveImage } from "@type/page";
 
 interface UpcomingEventsProps {
   events: {

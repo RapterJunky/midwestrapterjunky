@@ -1,15 +1,15 @@
-import type { ModulerContent } from "../lib/types";
-import AdvertBlock from "./content/AdvertBlock";
-import Carousel from "./content/Carousel";
-import EmailCallToAction from "./content/EmailCallToAction";
-import FeaturedShopItems from "./content/FeaturedShopItems";
-import ImageGallery from "./content/ImageGallery";
-import SocialLinks from "./content/SocialLinks";
-import TestimonialAndShare from "./content/TestimonialAndShare";
-import UpcomingEvent from "./content/UpcomingEvent";
-import UpcomingEvents from "./content/UpcomingEvents";
-import VideoWithLinks from "./content/VideoWithLink";
-import HtmlSection from "./content/HtmlSection";
+import type { ModulerContent } from "@type/page";
+import AdvertBlock from "@components/content/AdvertBlock";
+import Carousel from "@components/content/Carousel";
+import EmailCallToAction from "@components/content/EmailCallToAction";
+import FeaturedShopItems from "@components/content/FeaturedShopItems";
+import ImageGallery from "@components/content/ImageGallery";
+import SocialLinks from "@components/content/SocialLinks";
+import TestimonialAndShare from "@components/content/TestimonialAndShare";
+import UpcomingEvent from "@components/content/UpcomingEvent";
+import UpcomingEvents from "@components/content/UpcomingEvents";
+import VideoWithLinks from "@components/content/VideoWithLink";
+import HtmlSection from "@components/content/HtmlSection";
 
 interface ModuleContentProps {
   data: ModulerContent[];

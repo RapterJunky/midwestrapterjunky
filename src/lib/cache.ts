@@ -1,4 +1,4 @@
-import prisma from "@lib/prisma";
+import prisma from "@api/prisma";
 
 export const fetchCacheData = async (
   key: string,

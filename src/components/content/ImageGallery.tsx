@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ResponsiveImage } from "@lib/types";
+import type { ResponsiveImage } from "@type/page";
 
 interface ImageGalleryProps {
   displayHeading: boolean;

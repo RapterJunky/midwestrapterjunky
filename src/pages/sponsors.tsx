@@ -10,7 +10,7 @@ import Navbar from "@components/Navbar";
 import SiteTags from "@components/SiteTags";
 import ExitPreview from "@components/ExitPreview";
 
-import type { FullPageProps, ResponsiveImage } from "@lib/types";
+import type { FullPageProps, ResponsiveImage } from "@type/page";
 import { DatoCMS } from "@api/gql";
 import Link from "next/link";
 import Image from "next/image";

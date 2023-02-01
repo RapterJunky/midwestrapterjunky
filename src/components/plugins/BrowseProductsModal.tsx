@@ -29,7 +29,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
 
   useEffect(() => {
     fetchProductByMatching(query);
-  }, [query, shop]);
+  }, [query, shop, fetchProductByMatching]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

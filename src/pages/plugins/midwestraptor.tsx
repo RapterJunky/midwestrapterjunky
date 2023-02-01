@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
-import { useDatoCMSPlugin } from "@hook/plugins/useDatoCms";
+import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugins/StructuredTextFields";
-import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/types";
+import { isVaildConfig, normalizeConfig } from "@utils/plugin/types";
 import ConfigScreen from "@components/plugins/ConfigScreen";
 import ShopFieldExtension from "@components/plugins/ShopFieldExtension";
 import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
@@ -16,7 +16,7 @@ const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 
 const MidwestRaptor: NextPage<any> = () => {
-  const { id, page, ctx } = useDatoCMSPlugin({
+  const { id, page, ctx } = useDatoCMS({
     renderConfigScreen: true,
     renderFieldExtension: true,
     renderModal: true,
@@ -111,9 +111,9 @@ const MidwestRaptor: NextPage<any> = () => {
   });
 
   switch (page) {
-    case "renderConfigScreen":
+    case "ConfigScreen":
       return <ConfigScreen ctx={ctx} />;
-    case "renderFieldExtension":
+    case "FieldExtension":
       switch (id) {
         case "shopProduct":
           return <ShopFieldExtension ctx={ctx} />;
@@ -122,12 +122,12 @@ const MidwestRaptor: NextPage<any> = () => {
         default:
           return null;
       }
-    case "renderModal":
+    case "Modal":
       if (id === "browseProducts") return <BrowseProductsModel ctx={ctx} />;
       if (id === "editAuthor") return <EditAuthorModal ctx={ctx} />;
       if (id === "storefrontModel") return <StorefrontModel ctx={ctx} />;
       return null;
-    case "renderAssetSource": {
+    case "AssetSource": {
       return <CustomImageUpload ctx={ctx} />;
     }
     default:

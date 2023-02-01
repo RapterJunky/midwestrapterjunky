@@ -11,7 +11,7 @@ import Navbar from "@components/Navbar";
 import ModuleContent from "@components/ModuleContent";
 import Footer from "@components/Footer";
 import HomePageQuery from "@query/queries/home";
-import type { FullPageProps, ModulerContent } from "@lib/types";
+import type { FullPageProps, ModulerContent } from "@type/page";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
 

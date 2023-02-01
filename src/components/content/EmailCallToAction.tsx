@@ -2,7 +2,7 @@ import { StructuredText } from "react-datocms";
 import { HiOutlineChevronRight } from "react-icons/hi";
 
 import { markRules } from "@lib/StructuredTextRules";
-import type { Color, StructuredContent } from "@lib/types";
+import type { Color, StructuredContent } from "@type/page";
 
 interface EmailCallToActionProps {
   data: StructuredContent;

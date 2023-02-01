@@ -1,7 +1,8 @@
 import { StructuredText } from "react-datocms";
 import { markRules } from "@lib/StructuredTextRules";
-import type { Color } from "@lib/types";
 import Button from "@components/Button";
+
+import type { Color } from "@type/page";
 
 interface VideoWithLinksProps {
   videoLink: string;

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type { FullPageProps } from "@lib/types";
+import type { FullPageProps } from "@lib/types/page";
 import { DatoCMS } from "@api/gql";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { getDescriptionTag } from "@lib/utils/description";

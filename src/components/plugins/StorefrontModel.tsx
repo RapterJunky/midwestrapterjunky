@@ -21,7 +21,9 @@ interface FormState {
 
 export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
   const { control, handleSubmit, formState, setError } = useForm<FormState>({
-    defaultValues: ctx.parameters ?? {},
+    defaultValues: Object.keys(ctx.parameters).length
+      ? ctx.parameters
+      : { type: "S", domain: "", token: "", label: "" },
   });
 
   const submit = async (params: FormState) => {
@@ -87,15 +89,17 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
             control={control}
             rules={{ required: "This field is required!" }}
             name="label"
-            render={({ field: { ref, ...field }, formState }) => (
+            render={({ field: { onChange, value, name }, formState }) => (
               <TextField
                 error={formState.errors?.label?.message}
                 hint="A easy name to identify the storefront."
-                id={field.name}
+                id={name}
+                name={name}
+                value={value}
+                onChange={onChange}
                 label="Storefront Label"
                 placeholder="Example Storefront"
                 required
-                {...field}
               />
             )}
           />
@@ -159,7 +163,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
           fullWidth
           buttonSize="l"
           buttonType="primary"
-          disabled={formState.isSubmitting}
+          disabled={formState.isSubmitting || !formState.isValid}
         >
           {ctx.parameters?.label ? "Update Storefront" : "Add Storefront"}
         </Button>
