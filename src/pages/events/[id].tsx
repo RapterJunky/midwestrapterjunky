@@ -18,7 +18,7 @@ import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
 
 import { logger } from "@lib/logger";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
@@ -59,7 +59,7 @@ const PAGE_CACHE_KEY = "event-pages";
 const schema = z.string();
 
 const loadPages = async () => {
-  const data = await DATOCMS_Fetch<{
+  const data = await DatoCMS<{
     allEvents: { id: string; slug: string }[];
   }>(EventsQuery);
   return data.allEvents.map((value) => value.slug);
@@ -67,7 +67,7 @@ const loadPages = async () => {
 
 const getPage = async (id: string = "", preview: boolean = false) => {
   logger.info(`Event page (${id}) - preview(${preview}) | Generating`);
-  const data = await DATOCMS_Fetch<EventPageProps>(EventPageQuery, {
+  const data = await DatoCMS<EventPageProps>(EventPageQuery, {
     variables: {
       eq: id,
     },

@@ -6,7 +6,7 @@ import type {
 import type { SeoOrFaviconTag } from "react-datocms";
 import Script from "next/script";
 
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import Navbar from "@components/Navbar";
 import ModuleContent from "@components/ModuleContent";
 import Footer from "@components/Footer";
@@ -25,7 +25,7 @@ interface HomeContent extends FullPageProps {
 export async function getStaticProps(
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<HomeContent>> {
-  const data = await DATOCMS_Fetch<HomeContent>(HomePageQuery, {
+  const data = await DatoCMS<HomeContent>(HomePageQuery, {
     preview: context.preview,
   });
 

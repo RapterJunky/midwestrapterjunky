@@ -23,7 +23,7 @@ import { logger } from "@lib/logger";
 import type { FullPageProps, StructuredContent } from "@lib/types";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 
 import ArticleQuery from "@query/queries/article";
 import GetNextArticles from "@query/queries/next_articles";
@@ -68,14 +68,14 @@ const getBlogPage = async (
 ): Promise<ArticleProps> => {
   logger.info(`Blog Page (${id}) - preview(${preview}) | Genearting`);
 
-  const data = await DATOCMS_Fetch<ArticleProps>(ArticleQuery, {
+  const data = await DatoCMS<ArticleProps>(ArticleQuery, {
     preview: preview,
     variables: {
       slug: id,
     },
   });
 
-  const extra = await DATOCMS_Fetch<{
+  const extra = await DatoCMS<{
     next: ArticleProps["next"];
     prev: ArticleProps["prev"];
   }>(GetNextArticles, {
@@ -94,7 +94,7 @@ const getBlogPage = async (
 };
 
 const loadBlogPages = async () => {
-  const data = await DATOCMS_Fetch<{ articles: { slug: string }[] }>(
+  const data = await DatoCMS<{ articles: { slug: string }[] }>(
     ArticlesListQuery
   );
   return data.articles.map((value) => value.slug);

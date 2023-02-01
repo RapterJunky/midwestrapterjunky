@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import prisma from "@lib/prisma";
+import prisma from "@api/prisma";
 import { logger } from "@lib/logger";
 
 const defaultResponse =

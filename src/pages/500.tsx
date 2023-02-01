@@ -2,7 +2,7 @@ import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import SiteTags from "@components/SiteTags";
 
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic_tags";
 
 type PageProps = {
@@ -14,7 +14,7 @@ type PageProps = {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<PageProps>> => {
-  const data = await DATOCMS_Fetch<PageProps>(Query, {
+  const data = await DatoCMS<PageProps>(Query, {
     preview: ctx.preview,
   });
   return {

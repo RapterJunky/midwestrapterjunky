@@ -9,7 +9,7 @@ import { useState } from "react";
 import useSWR from "swr";
 
 import type { FullPageProps } from "@lib/types";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { getDescriptionTag } from "@lib/utils/description";
 
@@ -41,7 +41,7 @@ interface Post {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<BlogListProps>> => {
-  const data = await DATOCMS_Fetch<BlogListProps>(GenericPageQuery, {
+  const data = await DatoCMS<BlogListProps>(GenericPageQuery, {
     preview: ctx.preview,
   });
 

@@ -4,7 +4,7 @@ import moment from "moment";
 
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/calendar";
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
@@ -27,7 +27,7 @@ interface CalendarProps extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<CalendarProps>> => {
-  const data = await DATOCMS_Fetch<CalendarProps>(Query, {
+  const data = await DatoCMS<CalendarProps>(Query, {
     preview: ctx.preview,
     variables: {
       first: 20,

@@ -4,7 +4,7 @@ import { z, ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 import { getKeys } from "@lib/dynamic_keys";
-import { Shopify_Fetch } from "@lib/gql";
+import { Shopify } from "@api/gql";
 
 type Storefront = "S" | "F";
 type EncodeProductItem = [Storefront, string, string];
@@ -68,7 +68,7 @@ const shopifyData = async (arg: StorefontsProducts) => {
 
   const query = `query GetStoreItems {${shopify_query}}`;
 
-  const data = await Shopify_Fetch(query, {
+  const data = await Shopify(query, {
     SHOPIFY_DOMAIN: domain[1],
     SHOPIFY_STOREFRONT_ACCESS_TOKEN: access_token[1],
   });

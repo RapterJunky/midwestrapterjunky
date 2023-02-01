@@ -1,6 +1,6 @@
 import { GraphQLClient, type Variables } from "graphql-request";
 import type { PatchedRequestInit } from "graphql-request/dist/types";
-import { logger } from "./logger";
+import { logger } from "@lib/logger";
 
 const DATO_CMS = `https://graphql.datocms.com/environments/${
   process.env.DATOCMS_ENVIRONMENT ?? "main"
@@ -11,7 +11,7 @@ interface FetchOptions {
   preview?: boolean;
 }
 
-export async function DATOCMS_Fetch<T extends Object>(
+export async function DatoCMS<T extends Object>(
   query: string,
   opts?: FetchOptions
 ): Promise<T> {
@@ -33,7 +33,7 @@ export async function DATOCMS_Fetch<T extends Object>(
     }
   );
 }
-export async function Shopify_Fetch<T extends Object>(
+export async function Shopify<T extends Object>(
   query: string,
   args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string },
   opts?: FetchOptions

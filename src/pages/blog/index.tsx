@@ -13,7 +13,7 @@ import Footer from "@components/Footer";
 import ExitPreview from "@components/ExitPreview";
 import Tag from "@components/blog/tag";
 
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import { getDescriptionTag } from "@lib/utils/description";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
@@ -37,7 +37,7 @@ const MAX_DISPLAY = 5;
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<BlogLatestProps>> => {
-  const data = await DATOCMS_Fetch<BlogLatestProps>(QueryBlogLatest, {
+  const data = await DatoCMS<BlogLatestProps>(QueryBlogLatest, {
     preview: ctx.preview,
     variables: {
       first: MAX_DISPLAY,

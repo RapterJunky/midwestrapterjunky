@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { buildClient } from "@datocms/cma-client-node";
 import { logger } from "@lib/logger";
-import prisma from "@lib/prisma";
+import prisma from "@api/prisma";
 interface RevaildateSettings {
   type: "page" | "cache" | "page-cache" | "build" | "multi-page";
   slug?: string;

@@ -11,7 +11,7 @@ import SiteTags from "@components/SiteTags";
 import ExitPreview from "@components/ExitPreview";
 
 import type { FullPageProps, ResponsiveImage } from "@lib/types";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import Link from "next/link";
 import Image from "next/image";
 import SponsorsQuery from "@query/queries/sponsors";
@@ -31,7 +31,7 @@ interface PageProps extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<PageProps>> => {
-  const data = await DATOCMS_Fetch<PageProps>(SponsorsQuery, {
+  const data = await DatoCMS<PageProps>(SponsorsQuery, {
     preview: ctx.preview,
   });
 

@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
-import { buildClient, LogLevel } from "@datocms/cma-client-node";
 import { z, ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import PagedArticles from "@query/queries/pagedArticles";
 
 const MAX_ITEMS = 5;
@@ -23,7 +22,7 @@ export default async function handle(
 
     const current = page * MAX_ITEMS;
 
-    const data = await DATOCMS_Fetch(PagedArticles, {
+    const data = await DatoCMS(PagedArticles, {
       preview: req.preview,
       variables: {
         first: 5,

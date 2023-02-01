@@ -9,7 +9,7 @@ import Navbar, { type NavProps } from "@components/Navbar";
 import SiteTags from "@components/SiteTags";
 
 import about_us from "@query/queries/about_us";
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import { markRules } from "@lib/StructuredTextRules";
 
 interface AboutUsProps extends NavProps {
@@ -37,7 +37,7 @@ interface AboutUsProps extends NavProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<AboutUsProps>> => {
-  const data = await DATOCMS_Fetch<AboutUsProps>(about_us, {
+  const data = await DatoCMS<AboutUsProps>(about_us, {
     preview: ctx.preview,
   });
 

@@ -4,13 +4,13 @@ import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/Footer";
 import SiteTags from "@components/SiteTags";
 
-import { DATOCMS_Fetch } from "@lib/gql";
+import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic";
 import Navbar from "@components/Navbar";
 import type { FullPageProps } from "@lib/types";
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
-  const data = await DATOCMS_Fetch(Query, {
+  const data = await DatoCMS(Query, {
     preview: ctx.preview,
   });
 
