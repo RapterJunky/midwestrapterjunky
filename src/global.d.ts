@@ -19,7 +19,7 @@ declare module NodeJS {
     DATABASE_URL: string;
 
     VERCEL: 1 | 0;
-    CI: 1 | 0;
+    CI: "true" | "false";
     VERCEL_ENV: "production" | "preview" | "development";
     VERCEL_URL: string;
     VERCEL_REGION: string;

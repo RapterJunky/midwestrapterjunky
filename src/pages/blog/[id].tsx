@@ -82,7 +82,7 @@ const getBlogPage = async (
     preview: preview,
     variables: {
       id: data.post.id,
-      date: data.post.publishedAt,
+      date: preview ? new Date().toISOString() : data.post.publishedAt,
     },
   });
 
@@ -103,7 +103,7 @@ const loadBlogPages = async () => {
 export const getStaticPaths = async (
   ctx: GetStaticPathsContext
 ): Promise<GetStaticPathsResult> => {
-  await fetchCacheData(PAGE_CACHE_KEY, loadBlogPages);
+  await fetchCacheData(PAGE_CACHE_KEY, loadBlogPages, !!process.env?.CI);
   return {
     paths: [],
     fallback: "blocking",

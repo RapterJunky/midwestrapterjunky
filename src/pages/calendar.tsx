@@ -24,13 +24,15 @@ interface CalendarProps extends FullPageProps {
   };
 }
 
+const MAX_FETCH = 8;
+
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<CalendarProps>> => {
   const data = await DatoCMS<CalendarProps>(Query, {
     preview: ctx.preview,
     variables: {
-      first: 20,
+      first: MAX_FETCH,
       date: moment().subtract(1, "months").toISOString(),
     },
   });

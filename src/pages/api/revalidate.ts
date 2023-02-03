@@ -3,23 +3,39 @@ import createHttpError from "http-errors";
 import { buildClient } from "@datocms/cma-client-node";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
-interface RevaildateSettings {
-  type: "page" | "cache" | "page-cache" | "build" | "multi-page";
+export interface RevaildateSettings {
+  type: "page" | "cache" | "page-cache" | "build";
   slug?: string;
   cache?: string;
 }
 
-interface WebhookRequest {
+export interface WebhookRequest {
+  environment: string;
   entity_type: string;
-  event_type: string;
+  event_type: "delete" | "unpublish" | "publish";
   entity: {
     id: string;
     type: string;
     attributes: {
       id: string;
       slug?: string;
-      revaildate?: string;
+      revalidate?: string;
     };
+    relationships: {}
+    meta: {
+      created_at: string;
+      updated_at: string;
+      published_at: string | null;
+      publication_scheduled_at: string | null;
+      unpublishing_scheduled_at: string | null;
+      first_published_at: string | null;
+      is_valid: boolean;
+      is_current_version_valid: boolean;
+      is_published_version_valid: boolean | null;
+      status: string;
+      current_version: string;
+      stage: null | string;
+    }
   };
 }
 
@@ -33,8 +49,7 @@ export default async function handler(
     if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
     if (
       !req.headers?.authorization ||
-      req.headers.authorization.replace("Bearer ", "") !==
-        process.env.REVALIDATE_TOKEN
+      req.headers.authorization !== `Bearer ${process.env.REVALIDATE_TOKEN}`
     )
       throw createHttpError.Unauthorized();
     if (
@@ -46,7 +61,7 @@ export default async function handler(
 
     const body = req.body as WebhookRequest;
     const data = JSON.parse(
-      body.entity.attributes?.revaildate ?? "null"
+      body.entity.attributes?.revalidate ?? "null"
     ) as RevaildateSettings | null;
 
     if (!data) return res.status(200).json({ revaildate: false });
@@ -54,11 +69,12 @@ export default async function handler(
     switch (data.type) {
       case "page":
         if (!data.slug) throw createHttpError.BadRequest();
-        await res.revalidate(
-          data.slug
-            .replace("[slug]", body.entity.attributes?.slug ?? "")
-            .replace("[id]", body.entity.attributes.id)
-        );
+        if (body.event_type === "publish")
+          await res.revalidate(
+            data.slug
+              .replace("[slug]", body.entity.attributes?.slug ?? "")
+              .replace("[id]", body.entity.attributes.id)
+          );
         return res.status(200).json({ revalidated: true });
       case "cache":
         if (!data?.cache) throw createHttpError.BadRequest();
@@ -79,11 +95,12 @@ export default async function handler(
         return res.status(200).json({ revalidated: true });
       case "page-cache":
         if (!data?.slug || !data?.cache) throw createHttpError.BadRequest();
-        await res.revalidate(
-          data.slug
-            .replace("[slug]", body.entity.attributes?.slug ?? "")
-            .replace("[id]", body.entity.attributes.id)
-        );
+        if (body.event_type === "publish")
+          await res.revalidate(
+            data.slug
+              .replace("[slug]", body.entity.attributes?.slug ?? "")
+              .replace("[id]", body.entity.attributes.id)
+          );
         await prisma.cache.update({
           where: { key: data.cache },
           data: { isDirty: true },
