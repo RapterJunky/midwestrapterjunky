@@ -105,7 +105,7 @@ export default function CustomImageUpload({
             </div>
             {image ? (
               <Button buttonType="primary" className="w-full" type="submit">
-                Add
+                Upload
               </Button>
             ) : null}
           </>

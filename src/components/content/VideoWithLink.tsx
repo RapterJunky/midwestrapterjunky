@@ -4,17 +4,19 @@ import Button from "@components/Button";
 
 import type { Color } from "@type/page";
 
+
 interface VideoWithLinksProps {
   videoLink: string;
-  isYoutubeVide: boolean;
+  isYoutubeVideo: boolean;
   content: any;
   color: Color;
+  youtubeid: string;
 }
 
 export default function VideoWithLinks(props: VideoWithLinksProps) {
   return (
     <section className="relative flex h-[350px] w-full md:h-[550px]">
-      <div className="absolute top-0 flex h-full flex-col items-start justify-center gap-5 pl-32">
+      <div className="absolute top-0 flex h-full flex-col items-start justify-center gap-5 pl-32 z-10">
         <div style={{ color: props.color.hex }}>
           <StructuredText customMarkRules={markRules} data={props.content} />
         </div>
@@ -32,16 +34,22 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
         </Button>
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">
-        <iframe
-          className="h-[200%] w-[200%] border-none"
-          allowFullScreen
-          allow="autoplay; encrypted-media;"
-          title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
-          src="https://www.youtube.com/embed/wgOlJ8lvhwM?autoplay=1&loop=1&mute=1&playlist=wgOlJ8lvhwM&controls=0&fs=0"
-          width="640"
-          height="360"
-        ></iframe>
+        {/**https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/ */}
+        {props.isYoutubeVideo ? (
+           <iframe
+           className="h-[200%] w-[200%] border-none"
+           allowFullScreen
+           allow="autoplay; encrypted-media;"
+           title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
+           src={`https://www.youtube-nocookie.com/embed/${props.youtubeid}?autoplay=1&loop=1&mute=1&playlist=${props.youtubeid}&controls=0&fs=0`}
+           width="640"
+           height="360"
+         ></iframe>
+        ) : (
+          <video className="h-[200%] w-[200%] border-none" width="640" height="360" muted autoPlay src={props.videoLink}/>
+        )}
+     
       </div>
     </section>
   );
-}
+}//wgOlJ8lvhwM

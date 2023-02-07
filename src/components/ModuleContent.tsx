@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import type { ModulerContent } from "@type/page";
 import AdvertBlock from "@components/content/AdvertBlock";
 import Carousel from "@components/content/Carousel";
@@ -15,10 +16,15 @@ interface ModuleContentProps {
   data: ModulerContent[];
 }
 
+const DynamicCountDown = dynamic(() => import('@components/content/Countdown'), {
+  loading: () => (<div className="h-80 flex justify-center"><span className='animate-pulse'>Loading...</span></div>),
+  ssr: false
+})
+
 export default function ModuleContent(props: ModuleContentProps) {
   return (
     <>
-      {props.data.map((value, i) => {
+      {props.data.map((value, i) => {     
         switch (value._modelApiKey) {
           case "videowithlink":
             return <VideoWithLinks key={i} {...(value as any)} />;
@@ -34,9 +40,7 @@ export default function ModuleContent(props: ModuleContentProps) {
             return (
               <UpcomingEvent
                 key={i}
-                textColor={value?.textColor}
-                backgroundColor={value?.backgroundColor}
-                data={value.event.description}
+                {...value as any}
               />
             );
           case "email_call_to_action":
@@ -54,7 +58,9 @@ export default function ModuleContent(props: ModuleContentProps) {
           case "advert_block":
             return <AdvertBlock key={i} {...(value as any)} />;
           case "custom_html_section":
-            return <HtmlSection key={i} {...(value as any)} />;
+            return <HtmlSection key={i} {...value} />;
+          case "countdown": 
+            return <DynamicCountDown key={i} {...(value as any)}/>
           default:
             return null;
         }

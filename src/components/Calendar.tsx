@@ -68,7 +68,7 @@ export default function Calendar(props: CalenderProps) {
   ) => {
     const start = new Date(value.dateFrom);
     const end = new Date(value.dateTo);
-    const date = new Date(current.year, current.month + 1, day);
+    const date = new Date(current.year, current.month, day);
     return date >= start && date <= end;
   };
 
