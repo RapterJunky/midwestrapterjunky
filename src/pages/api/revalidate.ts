@@ -21,7 +21,7 @@ export interface WebhookRequest {
       slug?: string;
       revalidate?: string;
     };
-    relationships: {}
+    relationships: {};
     meta: {
       created_at: string;
       updated_at: string;
@@ -35,7 +35,7 @@ export interface WebhookRequest {
       status: string;
       current_version: string;
       stage: null | string;
-    }
+    };
   };
 }
 

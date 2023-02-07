@@ -33,12 +33,17 @@ const MidwestRaptor: NextPage<any> = () => {
         await Promise.all(
           fields.map(async (field) => {
             if (
-              field.attributes.appearance.editor !== ctx.plugin.id || 
-              [FIELD_EXTENSION_ID,FIELD_EXTENSION_ID_AUTHOR].includes(field.attributes.appearance.field_extension ?? "")
+              field.attributes.appearance.editor !== ctx.plugin.id ||
+              [FIELD_EXTENSION_ID, FIELD_EXTENSION_ID_AUTHOR].includes(
+                field.attributes.appearance.field_extension ?? ""
+              )
             )
               return true;
 
-            if(field.attributes.appearance.field_extension === FIELD_EXTENSION_ID_AUTHOR) {
+            if (
+              field.attributes.appearance.field_extension ===
+              FIELD_EXTENSION_ID_AUTHOR
+            ) {
               await ctx.updateFieldAppearance(field.id, [
                 {
                   operation: "updateEditor",

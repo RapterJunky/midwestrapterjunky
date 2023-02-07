@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 import type { ModulerContent } from "@type/page";
 import AdvertBlock from "@components/content/AdvertBlock";
 import Carousel from "@components/content/Carousel";
@@ -16,15 +16,22 @@ interface ModuleContentProps {
   data: ModulerContent[];
 }
 
-const DynamicCountDown = dynamic(() => import('@components/content/Countdown'), {
-  loading: () => (<div className="h-80 flex justify-center"><span className='animate-pulse'>Loading...</span></div>),
-  ssr: false
-})
+const DynamicCountDown = dynamic(
+  () => import("@components/content/Countdown"),
+  {
+    loading: () => (
+      <div className="flex h-80 justify-center">
+        <span className="animate-pulse">Loading...</span>
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 export default function ModuleContent(props: ModuleContentProps) {
   return (
     <>
-      {props.data.map((value, i) => {     
+      {props.data.map((value, i) => {
         switch (value._modelApiKey) {
           case "videowithlink":
             return <VideoWithLinks key={i} {...(value as any)} />;
@@ -37,12 +44,7 @@ export default function ModuleContent(props: ModuleContentProps) {
           case "carousel":
             return <Carousel key={i} images={value?.images ?? []} />;
           case "upcomingevent":
-            return (
-              <UpcomingEvent
-                key={i}
-                {...value as any}
-              />
-            );
+            return <UpcomingEvent key={i} {...(value as any)} />;
           case "email_call_to_action":
             return (
               <EmailCallToAction
@@ -59,8 +61,8 @@ export default function ModuleContent(props: ModuleContentProps) {
             return <AdvertBlock key={i} {...(value as any)} />;
           case "custom_html_section":
             return <HtmlSection key={i} {...value} />;
-          case "countdown": 
-            return <DynamicCountDown key={i} {...(value as any)}/>
+          case "countdown":
+            return <DynamicCountDown key={i} {...(value as any)} />;
           default:
             return null;
         }

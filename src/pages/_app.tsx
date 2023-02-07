@@ -12,7 +12,12 @@ function App({ Component, pageProps, router }: AppProps) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      { router.pathname !== "/plugins/midwestraptor" ? <GoogleAnalytics trackPageViews debugMode={process.env.NODE_ENV === "development"}/> : null}
+      {router.pathname !== "/plugins/midwestraptor" ? (
+        <GoogleAnalytics
+          trackPageViews
+          debugMode={process.env.NODE_ENV === "development"}
+        />
+      ) : null}
       <Component {...pageProps} />
     </>
   );

@@ -114,7 +114,7 @@ export const getStaticProps = async (
 export async function getStaticPaths(
   ctx: GetStaticPathsContext
 ): Promise<GetStaticPathsResult<{ id: string }>> {
-  await fetchCacheData(PAGE_CACHE_KEY, loadPages,!!process.env?.CI);
+  await fetchCacheData(PAGE_CACHE_KEY, loadPages, !!process.env?.CI);
 
   return {
     paths: [],
