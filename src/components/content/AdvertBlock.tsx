@@ -23,11 +23,11 @@ export default function AdvertBlock(props: AdvertBlockProps) {
         href={props.link}
         className="flex w-1/2 flex-col items-center px-3 text-center md:border-r"
       >
-        <h4 className="font-semibold">{props.headingleft}</h4>
+        <span className="font-semibold">{props.headingleft}</span>
         <p className="text-sm text-slate-300">{props.textleft}</p>
       </Link>
       <div className="flex w-1/2 flex-col items-center px-3 text-center">
-        <h4 className="font-semibold">{props.headingright}</h4>
+        <span className="font-semibold">{props.headingright}</span>
         <p className="text-sm text-slate-300">{props.textright}</p>
       </div>
     </div>

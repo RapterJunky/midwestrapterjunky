@@ -13,7 +13,7 @@ export default function SocialLinks(props: SocialLinksProps) {
         <h3 className="text-2xl font-bold text-white">Find us on</h3>
         <div className="flex flex-wrap justify-center gap-5 py-4 text-9xl text-[10rem] text-white">
           {props.sociallinks.map((value, i) => (
-            <Link href={value.link} key={i}>
+            <Link title={value.logo.iconName} href={value.link} key={i}>
               <FontAwesomeIcon
                 {...value.logo}
                 style={{ color: value.iconColor?.hex ?? "white" }}

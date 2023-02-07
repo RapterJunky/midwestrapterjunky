@@ -40,9 +40,7 @@ export default function ModuleContent(props: ModuleContentProps) {
             return (
               <UpcomingEvent
                 key={i}
-                textColor={value?.textColor}
-                backgroundColor={value?.backgroundColor}
-                data={value.event.description}
+                {...value as any}
               />
             );
           case "email_call_to_action":

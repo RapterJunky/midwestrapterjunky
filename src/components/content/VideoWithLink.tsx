@@ -4,6 +4,7 @@ import Button from "@components/Button";
 
 import type { Color } from "@type/page";
 
+
 interface VideoWithLinksProps {
   videoLink: string;
   isYoutubeVide: boolean;
@@ -14,7 +15,7 @@ interface VideoWithLinksProps {
 export default function VideoWithLinks(props: VideoWithLinksProps) {
   return (
     <section className="relative flex h-[350px] w-full md:h-[550px]">
-      <div className="absolute top-0 flex h-full flex-col items-start justify-center gap-5 pl-32">
+      <div className="absolute top-0 flex h-full flex-col items-start justify-center gap-5 pl-32 z-10">
         <div style={{ color: props.color.hex }}>
           <StructuredText customMarkRules={markRules} data={props.content} />
         </div>
@@ -32,7 +33,8 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
         </Button>
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">
-        <iframe
+        {/**https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/ */}
+      <iframe
           className="h-[200%] w-[200%] border-none"
           allowFullScreen
           allow="autoplay; encrypted-media;"

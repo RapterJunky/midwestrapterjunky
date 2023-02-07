@@ -79,7 +79,7 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
                 />
               </div>
               <div className="py-4 text-center text-sm">
-                <h4>{title}</h4>
+                <span>{title}</span>
                 <p className="pt-2">
                   {formatter(
                     "en",

@@ -1,6 +1,7 @@
 const UpcomingEventFragment = `
 fragment UERFragment on UpcomingeventRecord {
     event {
+      title
       description {
         blocks
         links
