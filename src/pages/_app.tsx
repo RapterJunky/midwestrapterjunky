@@ -6,7 +6,6 @@ import "@fontsource/inter/variable-full.css";
 import "../styles/globals.css";
 
 function App({ Component, pageProps, router }: AppProps) {
-  console.log(router.pathname);
   return (
     <>
       <Head>
