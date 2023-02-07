@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+       
+      },
       fontFamily: {
         sans: ["InterVariable",...defaultTheme.fontFamily.sans],
         serif: ["Inter",...defaultTheme.fontFamily.serif]
@@ -35,6 +38,7 @@ module.exports = {
   plugins: [
     require('tw-elements/dist/plugin'),
     require('@tailwindcss/forms'),
-    require('@tailwindcss/typography')
+    require('@tailwindcss/typography'),
+    require("tailwindcss-animate")
   ],
 }

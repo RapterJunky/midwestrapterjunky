@@ -37,7 +37,7 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
           allowFullScreen
           allow="autoplay; encrypted-media;"
           title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
-          src="https://www.youtube.com/embed/wgOlJ8lvhwM?autoplay=1&loop=1&mute=1&playlist=wgOlJ8lvhwM&controls=0&fs=0"
+          src="https://www.youtube-nocookie.com/embed/wgOlJ8lvhwM?autoplay=1&loop=1&mute=1&playlist=wgOlJ8lvhwM&controls=0&fs=0"
           width="640"
           height="360"
         ></iframe>

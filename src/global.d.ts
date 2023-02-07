@@ -7,6 +7,7 @@ declare module React {
 
 declare module NodeJS {
   interface ProcessEnv {
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
     DATOCMS_READONLY_TOKEN: string;
     DATOCMS_CLIENT_TOKEN: string;
     DATOCMS_ENVIRONMENT: "dev" | "main";

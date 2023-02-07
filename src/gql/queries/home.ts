@@ -10,6 +10,7 @@ import SocialLinks from "../fragments/SocialLinks";
 import ImageGallery from "../fragments/ImageGallery";
 import VideoWithLink from "../fragments/VideoWithLink";
 import CustomHtmlSection from "../fragments/CustomHtmlSection";
+import CountdownFragment from "@query/fragments/CountDown";
 
 const HomePageQuery = `
     query HomePage { 
@@ -33,6 +34,7 @@ const HomePageQuery = `
                 ...IGFragment
                 ...VWLFragment
                 ...CHSFragment
+                ...CountdownFragment
             }
             _seoMetaTags {
                 attributes
@@ -56,6 +58,7 @@ ${SocialLinks}
 ${ImageGallery}
 ${VideoWithLink}
 ${Navbar}
+${CountdownFragment}
 `;
 
 export default HomePageQuery;
