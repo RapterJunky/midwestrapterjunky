@@ -3,6 +3,7 @@ fragment VWLFragment on VideowithlinkRecord {
     _modelApiKey
     isYoutubeVideo
     videoLink
+    youtubeid
     content {
       blocks
       links

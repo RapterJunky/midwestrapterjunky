@@ -7,9 +7,10 @@ import type { Color } from "@type/page";
 
 interface VideoWithLinksProps {
   videoLink: string;
-  isYoutubeVide: boolean;
+  isYoutubeVideo: boolean;
   content: any;
   color: Color;
+  youtubeid: string;
 }
 
 export default function VideoWithLinks(props: VideoWithLinksProps) {
@@ -34,16 +35,21 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">
         {/**https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/ */}
-      <iframe
-          className="h-[200%] w-[200%] border-none"
-          allowFullScreen
-          allow="autoplay; encrypted-media;"
-          title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
-          src="https://www.youtube-nocookie.com/embed/wgOlJ8lvhwM?autoplay=1&loop=1&mute=1&playlist=wgOlJ8lvhwM&controls=0&fs=0"
-          width="640"
-          height="360"
-        ></iframe>
+        {props.isYoutubeVideo ? (
+           <iframe
+           className="h-[200%] w-[200%] border-none"
+           allowFullScreen
+           allow="autoplay; encrypted-media;"
+           title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
+           src={`https://www.youtube-nocookie.com/embed/${props.youtubeid}?autoplay=1&loop=1&mute=1&playlist=${props.youtubeid}&controls=0&fs=0`}
+           width="640"
+           height="360"
+         ></iframe>
+        ) : (
+          <video className="h-[200%] w-[200%] border-none" width="640" height="360" muted autoPlay src={props.videoLink}/>
+        )}
+     
       </div>
     </section>
   );
-}
+}//wgOlJ8lvhwM
