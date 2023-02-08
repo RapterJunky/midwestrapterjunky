@@ -1,6 +1,5 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { type SeoOrFaviconTag } from "react-datocms";
-import moment from "moment";
 
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
@@ -29,11 +28,15 @@ const MAX_FETCH = 8;
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<CalendarProps>> => {
+
+  const currDate = new Date();
+  currDate.setMonth(currDate.getMonth() - 1);
+
   const data = await DatoCMS<CalendarProps>(Query, {
     preview: ctx.preview,
     variables: {
       first: MAX_FETCH,
-      date: moment().subtract(1, "months").toISOString(),
+      date: currDate.toISOString() // moment().subtract(1, "months").toISOString(),
     },
   });
 
