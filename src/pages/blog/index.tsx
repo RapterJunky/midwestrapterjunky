@@ -78,7 +78,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
               Latest
             </h1>
             <p className="font-inter text-lg leading-7 text-gray-500">
-              A blog created with Next.js and Tailwind.css
+              The lastest articles are here.
             </p>
           </div>
           <ul className="divide-y divide-gray-200">
