@@ -3,12 +3,16 @@ import { type SeoOrFaviconTag } from "react-datocms";
 
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
-import { DatoCMS } from "@api/gql";
-import Query from "@query/queries/calendar";
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
+
+import { REVAILDATE_IN_12H } from "@lib/RevaildateTimings";
+import { DatoCMS } from "@api/gql";
+import Query from "@query/queries/calendar";
+
 import type { FullPageProps } from "@type/page";
+
 
 interface CalendarProps extends FullPageProps {
   allEvents: {
@@ -45,8 +49,7 @@ export const getStaticProps = async (
       ...data,
       preview: ctx?.preview ?? false,
     },
-    // 12 hours
-    revalidate: 43200,
+    revalidate: REVAILDATE_IN_12H,
   };
 };
 

@@ -5,6 +5,7 @@ import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 import { getKeys } from "@lib/dynamic_keys";
 import { Shopify } from "@api/gql";
+import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
 
 type Storefront = "S" | "F";
 type EncodeProductItem = [Storefront, string, string];
@@ -150,7 +151,7 @@ export default async function handle(
 
     // cache for 2 hours
     if (!req.preview || process.env.VERCEL_ENV !== "development")
-      res.setHeader("Cache-Control", "public, max-age=7200, immutable");
+      res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
     return res
       .status(200)
       .json(

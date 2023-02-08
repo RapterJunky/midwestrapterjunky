@@ -6,6 +6,7 @@ import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 import PagedArticles from "@query/queries/pagedArticles";
+import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
 
 interface DataResponse {
   totalArticles: {
@@ -60,7 +61,7 @@ export default async function handle(
 
     // Two Hour wait
     if (!req.preview || process.env.VERCEL_ENV !== "development")
-      res.setHeader("Cache-Control", "public, max-age=7200, immutable");
+      res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
     return res.status(200).json({ posts, totalArticles: data.totalArticles });
   } catch (error: any) {
     if (error instanceof ZodError) {

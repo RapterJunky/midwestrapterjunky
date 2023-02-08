@@ -19,6 +19,7 @@ import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
 import type { FullPageProps } from "@lib/types/page";
+import { REVAILDATE_IN_2H } from "@lib/RevaildateTimings";
 
 interface BlogLatestProps extends FullPageProps {
   posts: {
@@ -49,7 +50,7 @@ export const getStaticProps = async (
       ...data,
       preview: ctx?.preview ?? false,
     },
-    revalidate: 7200,
+    revalidate: REVAILDATE_IN_2H,
   };
 };
 

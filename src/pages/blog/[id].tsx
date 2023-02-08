@@ -66,8 +66,8 @@ const getBlogPage = async (
   id: string,
   preview: boolean
 ): Promise<ArticleProps> => {
-  logger.info(`Blog Page (${id}) - preview(${preview}) | Genearting`);
 
+  logger.info(`Blog Page (${id}) - preview(${preview}) | Genearting`);
   const data = await DatoCMS<ArticleProps>(ArticleQuery, {
     preview: preview,
     variables: {
