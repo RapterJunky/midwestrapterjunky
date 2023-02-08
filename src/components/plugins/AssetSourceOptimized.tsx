@@ -3,7 +3,7 @@ import { Button, Spinner, Canvas } from "datocms-react-ui";
 import Image from "next/image";
 import { useState, useRef } from "react";
 
-export default function CustomImageUpload({
+export default function AssetSourceOptimized({
   ctx,
 }: {
   ctx: RenderAssetSourceCtx;

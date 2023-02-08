@@ -2,15 +2,19 @@ import type { NextPage } from "next";
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugins/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@utils/plugin/types";
+
 import ConfigScreen from "@components/plugins/ConfigScreen";
+
 import ShopFieldExtension from "@components/plugins/ShopFieldExtension";
-import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
-import CustomImageUpload from "@components/plugins/CustomImagUpload";
-import AuthorEditor from "@components/plugins/AuthorEditor";
+import AuthorEditorExtension from "@components/plugins/AuthorEditorExtension";
+
+import AssetSourceOptimized from "@components/plugins/AssetSourceOptimized";
+
 import EditAuthorModal from "@components/plugins/EditAuthor";
+import StorefrontModel from "@components/plugins/StorefrontModel";
+import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
 
 import "datocms-react-ui/styles.css";
-import StorefrontModel from "@components/plugins/StorefrontModel";
 
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
@@ -125,24 +129,28 @@ const MidwestRaptor: NextPage<any> = () => {
   });
 
   switch (page) {
-    case "ConfigScreen":
+    case "ConfigScreen":{
       return <ConfigScreen ctx={ctx} />;
-    case "FieldExtension":
+    }
+    case "FieldExtension": {
       switch (id) {
-        case "shopProduct":
+        case "shopProduct":{
           return <ShopFieldExtension ctx={ctx} />;
-        case "RJ_AUTHOR_EDITOR":
-          return <AuthorEditor ctx={ctx} />;
+        }
+        case "RJ_AUTHOR_EDITOR":{
+          return <AuthorEditorExtension ctx={ctx} />;
+        }
         default:
           return null;
       }
+    }
     case "Modal":
       if (id === "browseProducts") return <BrowseProductsModel ctx={ctx} />;
       if (id === "editAuthor") return <EditAuthorModal ctx={ctx} />;
       if (id === "storefrontModel") return <StorefrontModel ctx={ctx} />;
       return null;
     case "AssetSource": {
-      return <CustomImageUpload ctx={ctx} />;
+      return <AssetSourceOptimized ctx={ctx} />;
     }
     default:
       return null;

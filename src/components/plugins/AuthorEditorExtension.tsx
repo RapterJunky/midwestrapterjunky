@@ -48,7 +48,7 @@ const Author = ({
   );
 };
 
-export default function AuthorEditor({
+export default function AuthorEditorExtension({
   ctx,
 }: {
   ctx: RenderFieldExtensionCtx;

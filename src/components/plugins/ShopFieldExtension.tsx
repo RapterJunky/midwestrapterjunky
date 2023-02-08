@@ -15,7 +15,6 @@ import ShopifyClient, {
   APIError,
   type Product as ShopifyProduct,
 } from "@utils/plugin/ShopifyClient";
-import { type VaildConfig } from "@utils/plugin/types";
 
 export default function ShopFieldExtension({
   ctx,
