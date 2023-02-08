@@ -6,13 +6,13 @@ import {
   TextInput,
   SelectInput,
 } from "datocms-react-ui";
-import useSWR from 'swr';
+import useSWR from "swr";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { normalizeConfig, type VaildConfig } from "@utils/plugin/types";
 import ShopifyClient, { type Product } from "@utils/plugin/ShopifyClient";
 
-type RequestValue = [string,string|undefined,string|undefined];
+type RequestValue = [string, string | undefined, string | undefined];
 
 const asOption = (arg: any) => {
   return { label: arg.label, value: arg.domain };
@@ -20,19 +20,25 @@ const asOption = (arg: any) => {
 
 export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
   const config = normalizeConfig(ctx.plugin.attributes.parameters);
-  const [shop,setShop] = useState<VaildConfig["storefronts"][0] | undefined>(config.storefronts[0]);
-  const [query,setQuery] = useState<string>("");
-  const { data, isLoading, error } = useSWR<Product[],Error,RequestValue>([query,shop?.type,shop?.domain],(args)=>{
-    if(!shop) throw new Error("No storefront to use.",{ cause: "NO_STOREFRONT" });
+  const [shop, setShop] = useState<VaildConfig["storefronts"][0] | undefined>(
+    config.storefronts[0]
+  );
+  const [query, setQuery] = useState<string>("");
+  const { data, isLoading, error } = useSWR<Product[], Error, RequestValue>(
+    [query, shop?.type, shop?.domain],
+    (args) => {
+      if (!shop)
+        throw new Error("No storefront to use.", { cause: "NO_STOREFRONT" });
 
-    const client = new ShopifyClient({
-      shopifyDomain: shop?.domain,
-      storefrontAccessToken: shop?.token,
-    });
-    
-    return client.productsMatching(query);
-  });
- 
+      const client = new ShopifyClient({
+        shopifyDomain: shop?.domain,
+        storefrontAccessToken: shop?.token,
+      });
+
+      return client.productsMatching(query);
+    }
+  );
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.target as HTMLFormElement);
@@ -84,7 +90,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
           <div className="relative" style={{ marginTop: "var(--spacing-l)" }}>
             {!isLoading && !error && data?.length ? (
               <div
-                className={`grid grid-cols-5 opacity-100 ease-in-out duration-700`}
+                className={`grid grid-cols-5 opacity-100 duration-700 ease-in-out`}
                 style={{ gap: "var(--spacing-m)" }}
               >
                 {data.map((product) => (
@@ -122,7 +128,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                 ))}
               </div>
             ) : null}
-            { isLoading && !error  ? (
+            {isLoading && !error ? (
               <div className="flex h-52 items-center justify-center text-center">
                 <Spinner size={25} placement="centered" />
               </div>
@@ -148,7 +154,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                   fontSize: "var(--font-size-xl)",
                 }}
               >
-               {error?.message ?? "API call failed!"}
+                {error?.message ?? "API call failed!"}
               </div>
             ) : null}
           </div>

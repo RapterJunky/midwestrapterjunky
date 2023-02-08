@@ -13,7 +13,6 @@ import Query from "@query/queries/calendar";
 
 import type { FullPageProps } from "@type/page";
 
-
 interface CalendarProps extends FullPageProps {
   allEvents: {
     id: string;
@@ -32,7 +31,6 @@ const MAX_FETCH = 8;
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<CalendarProps>> => {
-
   const currDate = new Date();
   currDate.setMonth(currDate.getMonth() - 1);
 
@@ -40,7 +38,7 @@ export const getStaticProps = async (
     preview: ctx.preview,
     variables: {
       first: MAX_FETCH,
-      date: currDate.toISOString() // moment().subtract(1, "months").toISOString(),
+      date: currDate.toISOString(), // moment().subtract(1, "months").toISOString(),
     },
   });
 

@@ -37,7 +37,7 @@ export async function getStaticProps(
       ...data,
       preview: context?.preview ?? false,
     },
-     revalidate: REVAILDATE_IN_12H,
+    revalidate: REVAILDATE_IN_12H,
   };
 }
 

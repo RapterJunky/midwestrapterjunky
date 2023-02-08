@@ -129,15 +129,15 @@ const MidwestRaptor: NextPage<any> = () => {
   });
 
   switch (page) {
-    case "ConfigScreen":{
+    case "ConfigScreen": {
       return <ConfigScreen ctx={ctx} />;
     }
     case "FieldExtension": {
       switch (id) {
-        case "shopProduct":{
+        case "shopProduct": {
           return <ShopFieldExtension ctx={ctx} />;
         }
-        case "RJ_AUTHOR_EDITOR":{
+        case "RJ_AUTHOR_EDITOR": {
           return <AuthorEditorExtension ctx={ctx} />;
         }
         default:
