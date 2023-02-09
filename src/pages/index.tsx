@@ -4,7 +4,6 @@ import type {
   GetStaticPropsResult,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
-import Script from "next/script";
 
 import Navbar from "@components/Navbar";
 import ModuleContent from "@components/ModuleContent";
@@ -56,10 +55,6 @@ const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site }) => {
       </main>
       <Footer />
       {preview ? <ExitPreview /> : null}
-      <Script
-        src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"
-        strategy="afterInteractive"
-      />
     </>
   );
 };

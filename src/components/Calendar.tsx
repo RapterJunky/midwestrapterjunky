@@ -121,6 +121,8 @@ export default function Calendar(props: CalenderProps) {
             </div>
             <div className="rounded-lg border px-1 pt-0.5">
               <button
+                role="button"
+                aria-label="Previous Month"
                 onClick={prevMouth}
                 type="button"
                 className="inline-flex cursor-pointer items-center rounded-lg p-1 leading-none transition duration-100 ease-in-out hover:bg-gray-200"
@@ -129,6 +131,8 @@ export default function Calendar(props: CalenderProps) {
               </button>
               <div className="inline-flex h-6 border-r"></div>
               <button
+                role="button"
+                aria-label="Next Month"
                 onClick={nextMouth}
                 type="button"
                 className="inline-flex cursor-pointer items-center rounded-lg p-1 leading-none transition duration-100 ease-in-out hover:bg-gray-200"

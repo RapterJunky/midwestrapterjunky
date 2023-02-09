@@ -10,7 +10,7 @@ export default function SocialLinks(props: SocialLinksProps) {
   return (
     <div className="top-0 z-10 flex h-full w-full flex-col">
       <div className="social flex w-full flex-col items-center justify-center bg-zinc-700 py-8">
-        <h3 className="text-2xl font-bold text-white">Find us on</h3>
+        <div className="text-2xl font-bold text-white">Find us on</div>
         <div className="flex flex-wrap justify-center gap-5 py-4 text-9xl text-[10rem] text-white">
           {props.sociallinks.map((value, i) => (
             <Link title={value.logo.iconName} href={value.link} key={i}>

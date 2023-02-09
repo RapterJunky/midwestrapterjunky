@@ -6,7 +6,7 @@ const IconLink = (props: LinkWithIcon & { className: string }) => {
   if (props.useIcon && props.icon) {
     const dir = props.iconPosition === "start";
     return (
-      <Link role="link" href={props.link} className={props.className}>
+      <Link href={props.link} className={props.className}>
         {dir ? <FontAwesomeIcon {...props.icon} /> : null}
         {props.title}
         {!dir ? <FontAwesomeIcon {...props.icon} /> : null}
@@ -15,7 +15,7 @@ const IconLink = (props: LinkWithIcon & { className: string }) => {
   }
 
   return (
-    <Link role="link" href={props.link} className={props.className}>
+    <Link href={props.link} className={props.className}>
       {props.title}
     </Link>
   );

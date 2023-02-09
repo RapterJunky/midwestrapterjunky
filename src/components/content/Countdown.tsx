@@ -16,7 +16,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-center gap-4">
       <div className="flex w-28 flex-col items-center">
-        <h6 className="mb-2 uppercase text-white">Days</h6>
+        <div className="mb-2 uppercase text-white">Days</div>
         <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
           <div className="duration-500 animate-in slide-in-from-bottom-6">
             {formatted.days}
@@ -24,7 +24,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
         </div>
       </div>
       <div className="flex w-28 flex-col items-center">
-        <h6 className="mb-2 uppercase text-white">Hours</h6>
+        <div className="mb-2 uppercase text-white">Hours</div>
         <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
           <div className="duration-500 animate-in slide-in-from-bottom-6">
             {formatted.hours}
@@ -32,7 +32,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
         </div>
       </div>
       <div className="flex w-28 flex-col items-center">
-        <h6 className="mb-2 uppercase text-white">Minutes</h6>
+        <div className="mb-2 uppercase text-white">Minutes</div>
         <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
           <div
             key={formatted.minutes}
@@ -43,7 +43,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
         </div>
       </div>
       <div className="flex w-28 flex-col items-center">
-        <h6 className="mb-2 uppercase text-white">Seconds</h6>
+        <div className="mb-2 uppercase text-white">Seconds</div>
         <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
           <div
             key={formatted.seconds}

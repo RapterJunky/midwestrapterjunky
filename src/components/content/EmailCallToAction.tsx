@@ -32,7 +32,12 @@ export default function EmailCallToAction(props: EmailCallToActionProps) {
           type="email"
           required
         />
-        <button type="submit" className="active:translate-x-1">
+        <button
+          role="button"
+          aria-label="Submit Email"
+          type="submit"
+          className="active:translate-x-1"
+        >
           <HiOutlineChevronRight className="text-2xl font-bold text-white" />
         </button>
       </form>

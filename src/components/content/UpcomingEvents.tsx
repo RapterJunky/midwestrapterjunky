@@ -19,7 +19,7 @@ interface UpcomingEventsProps {
 
 export default function UpcomingEvents(props: UpcomingEventsProps) {
   return (
-    <section className="flex w-full flex-wrap" role="feed">
+    <section className="flex w-full flex-wrap">
       {props.events.map((event, i) => (
         <div key={i} className="relative flex w-2/4 justify-center md:w-1/4">
           <div className="h-full max-h-[608px] w-full max-w-[608px]">

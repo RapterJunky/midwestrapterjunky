@@ -65,7 +65,16 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [{ tag: "title", content: "Blog Lastest" }],
+          [
+            { tag: "title", content: "Blog Lastest" },
+            {
+              tag: "meta",
+              attributes: {
+                name: "description",
+                content: "Midwest Raptor Junkies latest published articles.",
+              },
+            },
+          ],
         ]}
       />
       <header>

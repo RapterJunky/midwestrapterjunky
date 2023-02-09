@@ -40,10 +40,12 @@ export default function Navbar({
     if (!ref.current || mode !== "fade-scroll") return;
     if (window.scrollY > 0) {
       ref.current.classList.remove("bg-opacity-0");
+      ref.current.classList.remove("text-white");
       ref.current.classList.add("bg-opacity-100");
       ref.current.classList.add("text-black");
     } else {
       ref.current.classList.add("bg-opacity-0");
+      ref.current.classList.add("text-white");
       ref.current.classList.remove("bg-opacity-100");
       ref.current.classList.remove("text-black");
     }
@@ -76,7 +78,9 @@ export default function Navbar({
       >
         <nav className="flex h-full w-3/4 flex-col bg-zinc-800 opacity-100">
           <div className="relative flex justify-center pt-2 pb-2">
-            <button role="button" data-cy="sidenav-toggle"
+            <button
+              role="button"
+              data-cy="sidenav-toggle"
               className="absolute right-4 top-4"
               onClick={() => setShowNav(false)}
             >
@@ -132,7 +136,7 @@ export default function Navbar({
         </button>
       </div>
       <div className="hidden content-center items-center justify-between lg:flex">
-        {pageLinks.map((value, i) => (
+        {pageLinks.slice(0, 7).map((value, i) => (
           <IconLink
             data-cy="sidenav-link"
             className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
@@ -140,6 +144,32 @@ export default function Navbar({
             {...value}
           />
         ))}
+        {pageLinks.length > 7 ? (
+          <div className="dropdown relative">
+            <button
+              className="dropdown-toggle flex items-center whitespace-nowrap px-2 py-2.5 text-3xl font-bold uppercase not-italic hover:opacity-60 focus:outline-none focus:ring-0"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <HiMenu />
+            </button>
+            <ul
+              className="dropdown-menu absolute z-50 float-left m-0 mt-1 hidden min-w-max list-none rounded-sm border-none bg-white bg-clip-padding py-2 text-left text-base shadow-lg"
+              aria-labelledby="dropdownMenuButton"
+            >
+              {pageLinks.slice(7).map((value, i) => (
+                <li key={i}>
+                  <IconLink
+                    {...value}
+                    className="dropdown-item flex w-full items-center gap-1 whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-gray-700 hover:bg-gray-100"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
     </nav>
   );

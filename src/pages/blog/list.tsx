@@ -63,7 +63,19 @@ const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
   return (
     <div className="flex h-full flex-col">
       <SiteTags
-        tags={[_site.faviconMetaTags, [{ tag: "title", content: "Articles" }]]}
+        tags={[
+          _site.faviconMetaTags,
+          [
+            { tag: "title", content: "Articles" },
+            {
+              tag: "meta",
+              attributes: {
+                name: "description",
+                content: "All of Midwest Raptor Junkies published articles.",
+              },
+            },
+          ],
+        ]}
       />
       <header>
         <Navbar {...navbar} mode="none" />

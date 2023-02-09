@@ -14,7 +14,7 @@ import {
   type FieldIntentCtx,
   type StructuredTextCustomMark,
   type StructuredTextCustomBlockStyle,
-  FullConnectParameters
+  FullConnectParameters,
 } from "datocms-plugin-sdk";
 
 export type RenderPage =
@@ -28,8 +28,17 @@ export type RenderPage =
   | "Page"
   | "none";
 
-
-type Params = Omit<FullConnectParameters,"renderManualFieldExtensionConfigScreen"|"renderItemFormSidebarPanel"|"renderItemFormOutlet"|"renderModal"| "renderConfigScreen" | "renderPage" | "renderAssetSource" | "renderFieldExtension">;
+type Params = Omit<
+  FullConnectParameters,
+  | "renderManualFieldExtensionConfigScreen"
+  | "renderItemFormSidebarPanel"
+  | "renderItemFormOutlet"
+  | "renderModal"
+  | "renderConfigScreen"
+  | "renderPage"
+  | "renderAssetSource"
+  | "renderFieldExtension"
+>;
 
 interface PluginOverride {
   /**
