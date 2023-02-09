@@ -3,21 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-  .perspective-3 {
-    perspective: 300px;
-  }
-  .perspective-center {
-    perspective-origin: 50% 50%;
-  }
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-  .bg-opacity {
-    --tw-bg-opacity: 0.5;
-  }
+
 }
 
 @layer components {
