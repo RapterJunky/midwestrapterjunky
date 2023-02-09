@@ -76,7 +76,7 @@ export default function Navbar({
       >
         <nav className="flex h-full w-3/4 flex-col bg-zinc-800 opacity-100">
           <div className="relative flex justify-center pt-2 pb-2">
-            <button
+            <button role="button" data-cy="sidenav-toggle"
               className="absolute right-4 top-4"
               onClick={() => setShowNav(false)}
             >
@@ -97,6 +97,7 @@ export default function Navbar({
             {pageLinks.map((value, i) => (
               <li key={i} className="flex">
                 <IconLink
+                  data-cy="nav-top-link"
                   className="flex w-full items-center gap-1 pt-5 pb-5 pr-4 pl-4 text-white"
                   key={i}
                   title={capitlize(value.title)}
@@ -133,6 +134,7 @@ export default function Navbar({
       <div className="hidden content-center items-center justify-between lg:flex">
         {pageLinks.map((value, i) => (
           <IconLink
+            data-cy="sidenav-link"
             className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
             key={i}
             {...value}

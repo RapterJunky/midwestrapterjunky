@@ -35,7 +35,6 @@ export function useDatoCMS(settings: Partial<PluginSettings>) {
       renderManualFieldExtensionConfigScreen,
       ...other
     } = settings;
-
     await connect({
       renderConfigScreen: renderConfigScreen
         ? (ctx) => {

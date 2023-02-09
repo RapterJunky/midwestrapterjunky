@@ -15,7 +15,7 @@ function App({ Component, pageProps, router }: AppProps) {
       {router.pathname !== "/plugins/midwestraptor" ? (
         <GoogleAnalytics
           trackPageViews
-          debugMode={process.env.NODE_ENV === "development"}
+          debugMode={process.env.VERCEL_ENV !== "production"}
         />
       ) : null}
       <Component {...pageProps} />

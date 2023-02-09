@@ -22,7 +22,7 @@ describe("Navigation",()=>{
 
         it("should navigate to the about page",()=>{
             cy.visit("/");
-            cy.get("header>nav>div>button").should("contain.html","svg").click()
+            cy.get('[data-cy="sidenav-toggle"]').click()
             cy.get('ul>li>a[href*="about-us"]').should("be.visible").click();
             cy.url().should("include","/about-us");
             cy.get("h1").contains("About");
