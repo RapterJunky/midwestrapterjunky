@@ -1,12 +1,11 @@
-import Link from "next/link";
+//import Link from "next/link";
 
 const Tag = ({ text }: { text: string }) => (
-  <Link
-    href="/"
-    className="font-inter mr-3 text-sm font-medium uppercase text-teal-500 hover:text-teal-600"
+  <span
+    className="font-inter mr-3 text-sm font-medium uppercase text-red-600 hover:text-red-600"
   >
     {text.split(" ").join("-")}
-  </Link>
+  </span>
 );
 
 export default Tag;

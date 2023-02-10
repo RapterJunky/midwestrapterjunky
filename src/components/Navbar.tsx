@@ -80,6 +80,7 @@ export default function Navbar({
           <div className="relative flex justify-center pt-2 pb-2">
             <button
               role="button"
+              aria-label="Close sidenav"
               data-cy="sidenav-toggle"
               className="absolute right-4 top-4"
               onClick={() => setShowNav(false)}
@@ -128,7 +129,9 @@ export default function Navbar({
         />
       </div>
       <div className="flex lg:hidden">
-        <button
+        <button 
+          data-cy="mobile-sidenav-toggle"
+          aria-label="Sidenav Toggle"
           className="active:translate-x-1 active:translate-y-1 active:transform"
           onClick={() => setShowNav(!showNav)}
         >

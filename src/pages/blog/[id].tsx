@@ -202,7 +202,7 @@ const Article: NextPage<ArticleProps> = ({
                           <dd>
                             {author.social ? (
                               <Link
-                                className="text-teal-500 hover:text-teal-600"
+                                className="text-red-500 hover:text-red-600"
                                 href={author.social.link}
                               >
                                 {author.social.user}
@@ -216,7 +216,7 @@ const Article: NextPage<ArticleProps> = ({
                 </dd>
               </dl>
               <section className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0">
-                <div className="prose max-w-none pt-10 pb-8 ">
+                <div className="prose max-w-none pt-10 pb-8">
                   <StructuredText
                     renderInlineRecord={renderInlineRecord}
                     renderBlock={renderBlock}
@@ -247,7 +247,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Previous Article
                         </h2>
-                        <div className="text-teal-500 hover:text-teal-600">
+                        <div className="text-red-500 hover:text-red-600">
                           <Link href={`/blog/${prev.slug}`}>{prev.title}</Link>
                         </div>
                       </div>
@@ -257,7 +257,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Next Article
                         </h2>
-                        <div className="text-teal-500 hover:text-teal-600">
+                        <div className="text-red-500 hover:text-red-600">
                           <Link href={`/blog/${next.slug}`}>{next.title}</Link>
                         </div>
                       </div>
@@ -267,7 +267,7 @@ const Article: NextPage<ArticleProps> = ({
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href="/blog"
-                    className="flex items-center text-teal-500 hover:text-teal-600"
+                    className="flex items-center text-red-500 hover:text-red-600"
                   >
                     <HiArrowLeft /> Back to the blog
                   </Link>

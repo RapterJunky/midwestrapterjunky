@@ -31,6 +31,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
     >
       {comments ? (
         <button
+          data-cy="scroll-to-comments"
           aria-label="Scroll To Comment"
           type="button"
           onClick={handleScrollToComment}
@@ -40,6 +41,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
         </button>
       ) : null}
       <button
+        data-cy="scroll-to-top"
         aria-label="Scroll To Top"
         type="button"
         onClick={handleScrollTop}

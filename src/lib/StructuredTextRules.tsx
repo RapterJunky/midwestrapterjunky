@@ -41,13 +41,14 @@ export const renderBlock = ({ record }: RenderBlockContext<any>) => {
   switch (record.__typename) {
     case "ImageRecord":
       return (
-        <div className="relative h-full">
+        <div className="relative">
           <Image
-            className="not-prose object-scale-down object-center"
+            className="object-center"
+            width={record.content.responsiveImage.width}
+            height={record.content.responsiveImage.height}
             blurDataURL={record.content.blurUpThumb}
             src={record.content.responsiveImage.src}
             alt={record.content.responsiveImage.alt}
-            fill
           />
         </div>
       );

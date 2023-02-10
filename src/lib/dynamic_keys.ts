@@ -1,6 +1,10 @@
 import { randomBytes, createCipheriv, createDecipheriv } from "crypto";
 import prisma from "@api/prisma";
 
+type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
+  [K in T extends ReadonlyArray<infer U> ? U : never]: V;
+};
+
 const ALGORITHM = "aes-256-ctr";
 const RANDOM_BYTES = 16;
 
@@ -29,10 +33,6 @@ const decrypt = (hash: string) => {
     decipher.final(),
   ]);
   return decrpyted.toString();
-};
-
-type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
-  [K in T extends ReadonlyArray<infer U> ? U : never]: V;
 };
 
 export const getKeys = async <T extends ReadonlyArray<string>>(

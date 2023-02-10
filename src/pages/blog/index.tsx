@@ -61,7 +61,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   posts,
 }) => {
   return (
-    <div className="flex h-full flex-col">
+    <>
       <SiteTags
         tags={[
           _site.faviconMetaTags,
@@ -80,7 +80,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
       <header>
         <Navbar {...navbar} mode="none" />
       </header>
-      <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
+      <main className="h-full mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <div className="divide-y divide-gray-200">
           <div className="space-y-2 pt-6 pb-8 md:space-y-5">
             <h1 className="font-inter md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl">
@@ -129,7 +129,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
                         <div className="text-base font-medium leading-6">
                           <Link
                             href={`/blog/${post.slug}`}
-                            className="flex items-center gap-2 text-teal-500 hover:text-teal-600"
+                            className="flex items-center gap-2 text-red-500 hover:text-red-600"
                             aria-label={`Read "${post.title}"`}
                           >
                             Read more <HiArrowRight />
@@ -147,7 +147,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
         <div className="flex justify-end text-base font-medium leading-6">
           <Link
             href="/blog/list"
-            className="flex items-center gap-2 text-teal-500 hover:text-teal-600"
+            className="flex items-center gap-2 text-red-500 hover:text-red-600"
             aria-label="all posts"
           >
             All Posts <HiArrowRight />
@@ -156,7 +156,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
       </main>
       <Footer />
       {preview ? <ExitPreview /> : null}
-    </div>
+    </>
   );
 };
 

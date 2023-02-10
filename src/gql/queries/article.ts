@@ -31,6 +31,8 @@ query ArticlePageQuery($slug: String = "") {
                 sizes
                 src
                 alt
+                height
+                width
               }
               blurUpThumb
             }

@@ -1,5 +1,5 @@
 import Pino from "pino";
 
 export const logger = Pino({
-  level: process.env.NODE_ENV === "production" ? "info" : "debug",
+  level: process.env.VERCEL_ENV === "production" ? "info" : "debug",
 });

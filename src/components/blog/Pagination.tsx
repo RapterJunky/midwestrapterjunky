@@ -19,6 +19,8 @@ export default function Pagination({
     <div className="mt-auto space-y-2 pt-6 pb-8 md:space-y-5">
       <nav className="flex justify-between">
         <button
+          data-cy="pagination-previous-page"
+          aria-label="Previous Page"
           className="cursor-auto disabled:opacity-50"
           disabled={!prevPage}
           onClick={() =>
@@ -35,6 +37,8 @@ export default function Pagination({
           {currentPage + 1} of {totalPages + 1}
         </span>
         <button
+          data-cy="pagination-next-page"
+          aria-label="Next Page"
           className="cursor-auto disabled:opacity-50"
           disabled={!nextPage}
           onClick={() =>

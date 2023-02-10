@@ -5,18 +5,15 @@ import Image from "next/image";
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/Footer";
 import ModuleContent from "@components/ModuleContent";
-import Navbar, { type NavProps } from "@components/Navbar";
+import Navbar from "@components/Navbar";
 import SiteTags from "@components/SiteTags";
 
 import about_us from "@query/queries/about_us";
 import { DatoCMS } from "@api/gql";
-import { markRules } from "@lib/StructuredTextRules";
+import { markRules, renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
+import type { FullPageProps } from "@type/page";
 
-interface AboutUsProps extends NavProps {
-  _site: {
-    faviconMetaTags: SeoOrFaviconTag[];
-  };
-  preview: boolean;
+interface AboutUsProps extends FullPageProps {
   aboutUsModel: {
     _seoMetaTags: SeoOrFaviconTag[];
     imageTitle: string;
@@ -64,7 +61,9 @@ export default function AboutUs(props: AboutUsProps) {
             <div className="mb-4 flex justify-center">
               <h1 className="text-2xl font-bold">{props.aboutUsModel.title}</h1>
             </div>
-            <StructuredText
+            <StructuredText 
+              renderBlock={renderBlock}
+              renderInlineRecord={renderInlineRecord}
               customMarkRules={markRules}
               data={props.aboutUsModel.content}
             />
