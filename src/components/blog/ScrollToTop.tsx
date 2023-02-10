@@ -35,7 +35,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
           aria-label="Scroll To Comment"
           type="button"
           onClick={handleScrollToComment}
-          className="rounded-full bg-gray-200 p-2 text-gray-500 transition-all hover:bg-gray-300"
+          className="rounded-full bg-gray-200 p-4 text-gray-500 transition-all hover:bg-gray-300"
         >
           <HiAnnotation />
         </button>
@@ -45,7 +45,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
         aria-label="Scroll To Top"
         type="button"
         onClick={handleScrollTop}
-        className="rounded-full bg-gray-200 p-2 text-gray-500 transition-all hover:bg-gray-300"
+        className="rounded-full bg-gray-200 p-4 text-gray-500 transition-all hover:bg-gray-300"
       >
         <HiArrowUp />
       </button>
