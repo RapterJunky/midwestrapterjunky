@@ -15,7 +15,7 @@ interface VideoWithLinksProps {
 export default function VideoWithLinks(props: VideoWithLinksProps) {
   return (
     <section className="relative flex h-[350px] w-full md:h-[550px]">
-      <div className="absolute top-0 z-10 flex h-full flex-col items-start justify-center gap-5 pl-8 sm:pl-10 md:pl-32 bg-gray-700 bg-opacity-80 sm:bg-transparent">
+      <div className="absolute top-0 z-10 flex h-full flex-col items-start justify-center gap-5 bg-gray-700 bg-opacity-80 pl-8 sm:bg-transparent sm:pl-10 md:pl-32">
         <div style={{ color: props.color.hex }}>
           <StructuredText customMarkRules={markRules} data={props.content} />
         </div>

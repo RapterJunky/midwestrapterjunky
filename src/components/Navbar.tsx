@@ -129,7 +129,7 @@ export default function Navbar({
         />
       </div>
       <div className="flex lg:hidden">
-        <button 
+        <button
           data-cy="mobile-sidenav-toggle"
           aria-label="Sidenav Toggle"
           className="active:translate-x-1 active:translate-y-1 active:transform"

@@ -33,7 +33,7 @@ export default function UpcomingEvents(props: UpcomingEventsProps) {
               sizes={event.bgImage.responsiveImage.sizes}
             />
           </div>
-          <div className="bg-opacity-50 absolute top-0 flex h-full w-full flex-col items-center justify-center gap-5 bg-gray-900 p-2 transition-opacity duration-150 ease-in-out hover:opacity-100 md:opacity-0">
+          <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center gap-5 bg-gray-900 bg-opacity-50 p-2 transition-opacity duration-150 ease-in-out hover:opacity-100 md:opacity-0">
             <h2 className="text-center text-xl font-semibold text-white">
               {event.eventLink.title}{" "}
               {formatTime(event.eventLink.dateFrom, event.eventLink.dateTo)}
