@@ -1,68 +1,123 @@
 import dynamic from "next/dynamic";
 import type { ModulerContent } from "@type/page";
-import AdvertBlock from "@components/content/AdvertBlock";
-import Carousel from "@components/content/Carousel";
-import EmailCallToAction from "@components/content/EmailCallToAction";
-import FeaturedShopItems from "@components/content/FeaturedShopItems";
-import ImageGallery from "@components/content/ImageGallery";
-import SocialLinks from "@components/content/SocialLinks";
-import TestimonialAndShare from "@components/content/TestimonialAndShare";
-import UpcomingEvent from "@components/content/UpcomingEvent";
-import UpcomingEvents from "@components/content/UpcomingEvents";
-import VideoWithLinks from "@components/content/VideoWithLink";
-import HtmlSection from "@components/content/HtmlSection";
 
 interface ModuleContentProps {
   data: ModulerContent[];
 }
-
-const DynamicCountDown = dynamic(
-  () => import("@components/content/Countdown"),
-  {
-    loading: () => (
-      <div className="flex h-80 justify-center">
-        <span className="animate-pulse">Loading...</span>
-      </div>
-    ),
-    ssr: false,
-  }
-);
 
 export default function ModuleContent(props: ModuleContentProps) {
   return (
     <>
       {props.data.map((value, i) => {
         switch (value._modelApiKey) {
-          case "videowithlink":
-            return <VideoWithLinks key={i} {...(value as any)} />;
-          case "image_gallery":
-            return <ImageGallery key={i} {...(value as any)} />;
-          case "featuredshop":
-            return <FeaturedShopItems key={i} items={value?.items ?? []} />;
-          case "upcomingeventswithimage":
-            return <UpcomingEvents key={i} events={value?.events ?? []} />;
-          case "carousel":
-            return <Carousel key={i} images={value?.images ?? []} />;
-          case "upcomingevent":
-            return <UpcomingEvent key={i} {...(value as any)} />;
-          case "email_call_to_action":
+          case "videowithlink":{
+            const DynamicVideoWithLinks = dynamic(
+              ()=> import("@components/content/VideoWithLink"),
+            );
+            return(
+              <DynamicVideoWithLinks  key={i} {...(value as any)} />
+            );
+          }
+          case "image_gallery":{
+            const DynamicImageGallery = dynamic(
+              ()=> import("@components/content/ImageGallery"),
+            );
             return (
-              <EmailCallToAction
+              <DynamicImageGallery key={i} {...(value as any)} />
+            );
+          }
+          case "featuredshop":{
+            const DynamicFeaturedShopItems = dynamic(
+              ()=> import("@components/content/FeaturedShopItems"),
+            );
+            return (
+              <DynamicFeaturedShopItems key={i} items={value?.items ?? []} />
+            );
+          };
+          case "upcomingeventswithimage":{
+            const DynamicUpcomingEvents = dynamic(
+              ()=> import("@components/content/UpcomingEvents"),
+            );
+            return (
+              <DynamicUpcomingEvents key={i} events={value?.events ?? []} />
+            );
+          }
+          case "carousel": {
+            const DynamicCarousel = dynamic(
+              ()=> import("@components/content/Carousel"),
+            );
+            return (
+              <DynamicCarousel key={i} images={value?.images ?? []} />
+            );
+          }
+          case "upcomingevent":{
+            const DynamicUpcomingEvent= dynamic(
+              ()=> import("@components/content/UpcomingEvent"),
+            );
+            return (
+              <DynamicUpcomingEvent key={i} {...(value as any)} />
+            );
+          }
+          case "email_call_to_action":{
+            const DynamicEmailCallToAction = dynamic(
+              ()=> import("@components/content/EmailCallToAction"),
+            );
+            return (
+              <DynamicEmailCallToAction
                 background_color={value?.backgroundColor}
                 data={value?.callToActionMessage ?? {}}
                 key={i}
               />
             );
-          case "testimonial_and_share":
-            return <TestimonialAndShare {...(value as any)} key={i} />;
-          case "social_links_block":
-            return <SocialLinks key={i} {...(value as any)} />;
-          case "advert_block":
-            return <AdvertBlock key={i} {...(value as any)} />;
-          case "custom_html_section":
-            return <HtmlSection key={i} {...value} />;
-          case "countdown":
-            return <DynamicCountDown key={i} {...(value as any)} />;
+          }
+          case "testimonial_and_share": {
+            const DynamicTestimonialAndShare = dynamic(
+              ()=> import("@components/content/TestimonialAndShare"),
+            );
+            return (
+              <DynamicTestimonialAndShare {...(value as any)} key={i} />
+            );
+          }
+          case "social_links_block":{
+            const DynamicSocialLinks = dynamic(
+              ()=> import("@components/content/SocialLinks"),
+            );
+            return (
+              <DynamicSocialLinks key={i} {...(value as any)} />
+            );
+          }
+          case "advert_block":{
+            const DynamicAdvertBlock = dynamic(
+              ()=> import("@components/content/AdvertBlock"),
+            );
+            return (
+              <DynamicAdvertBlock key={i} {...(value as any)} />
+            );
+          }
+          case "custom_html_section": {
+            const DynamicHtmlSection = dynamic(
+              ()=> import("@components/content/HtmlSection"),
+            );
+            return (
+              <DynamicHtmlSection key={i} {...value} />
+            );
+          }
+          case "countdown": {
+            const DynamicCountDown = dynamic(
+              () => import("@components/content/Countdown"),
+              {
+                loading: () => (
+                  <div className="flex h-80 justify-center">
+                    <span className="animate-pulse">Loading...</span>
+                  </div>
+                ),
+                ssr: false,
+              }
+            );
+            return (
+              <DynamicCountDown key={i} {...(value as any)} />
+            );
+          }
           default:
             return null;
         }

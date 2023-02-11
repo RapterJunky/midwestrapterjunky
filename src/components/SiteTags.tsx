@@ -1,7 +1,7 @@
-import {
-  type SeoOrFaviconTag,
-  type RegularMetaAttributes,
-  type OgMetaAttributes,
+import type {
+  SeoOrFaviconTag,
+  RegularMetaAttributes,
+  OgMetaAttributes,
 } from "react-datocms";
 import { renderMetaTags } from 'react-datocms/seo';
 import Head from "next/head";
