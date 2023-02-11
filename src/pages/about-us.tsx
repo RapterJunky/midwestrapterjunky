@@ -1,6 +1,6 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
-import { StructuredText } from 'react-datocms/structured-text';
+import { StructuredText } from "react-datocms/structured-text";
 import Image from "next/image";
 
 import ExitPreview from "@components/ExitPreview";

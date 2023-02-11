@@ -10,33 +10,29 @@ export default function ModuleContent(props: ModuleContentProps) {
     <>
       {props.data.map((value, i) => {
         switch (value._modelApiKey) {
-          case "videowithlink":{
+          case "videowithlink": {
             const DynamicVideoWithLinks = dynamic(
-              ()=> import("@components/content/VideoWithLink"),
+              () => import("@components/content/VideoWithLink")
             );
-            return(
-              <DynamicVideoWithLinks  key={i} {...(value as any)} />
-            );
+            return <DynamicVideoWithLinks key={i} {...(value as any)} />;
           }
-          case "image_gallery":{
+          case "image_gallery": {
             const DynamicImageGallery = dynamic(
-              ()=> import("@components/content/ImageGallery"),
+              () => import("@components/content/ImageGallery")
             );
-            return (
-              <DynamicImageGallery key={i} {...(value as any)} />
-            );
+            return <DynamicImageGallery key={i} {...(value as any)} />;
           }
-          case "featuredshop":{
+          case "featuredshop": {
             const DynamicFeaturedShopItems = dynamic(
-              ()=> import("@components/content/FeaturedShopItems"),
+              () => import("@components/content/FeaturedShopItems")
             );
             return (
               <DynamicFeaturedShopItems key={i} items={value?.items ?? []} />
             );
-          };
-          case "upcomingeventswithimage":{
+          }
+          case "upcomingeventswithimage": {
             const DynamicUpcomingEvents = dynamic(
-              ()=> import("@components/content/UpcomingEvents"),
+              () => import("@components/content/UpcomingEvents")
             );
             return (
               <DynamicUpcomingEvents key={i} events={value?.events ?? []} />
@@ -44,23 +40,19 @@ export default function ModuleContent(props: ModuleContentProps) {
           }
           case "carousel": {
             const DynamicCarousel = dynamic(
-              ()=> import("@components/content/Carousel"),
+              () => import("@components/content/Carousel")
             );
-            return (
-              <DynamicCarousel key={i} images={value?.images ?? []} />
-            );
+            return <DynamicCarousel key={i} images={value?.images ?? []} />;
           }
-          case "upcomingevent":{
-            const DynamicUpcomingEvent= dynamic(
-              ()=> import("@components/content/UpcomingEvent"),
+          case "upcomingevent": {
+            const DynamicUpcomingEvent = dynamic(
+              () => import("@components/content/UpcomingEvent")
             );
-            return (
-              <DynamicUpcomingEvent key={i} {...(value as any)} />
-            );
+            return <DynamicUpcomingEvent key={i} {...(value as any)} />;
           }
-          case "email_call_to_action":{
+          case "email_call_to_action": {
             const DynamicEmailCallToAction = dynamic(
-              ()=> import("@components/content/EmailCallToAction"),
+              () => import("@components/content/EmailCallToAction")
             );
             return (
               <DynamicEmailCallToAction
@@ -72,35 +64,27 @@ export default function ModuleContent(props: ModuleContentProps) {
           }
           case "testimonial_and_share": {
             const DynamicTestimonialAndShare = dynamic(
-              ()=> import("@components/content/TestimonialAndShare"),
+              () => import("@components/content/TestimonialAndShare")
             );
-            return (
-              <DynamicTestimonialAndShare {...(value as any)} key={i} />
-            );
+            return <DynamicTestimonialAndShare {...(value as any)} key={i} />;
           }
-          case "social_links_block":{
+          case "social_links_block": {
             const DynamicSocialLinks = dynamic(
-              ()=> import("@components/content/SocialLinks"),
+              () => import("@components/content/SocialLinks")
             );
-            return (
-              <DynamicSocialLinks key={i} {...(value as any)} />
-            );
+            return <DynamicSocialLinks key={i} {...(value as any)} />;
           }
-          case "advert_block":{
+          case "advert_block": {
             const DynamicAdvertBlock = dynamic(
-              ()=> import("@components/content/AdvertBlock"),
+              () => import("@components/content/AdvertBlock")
             );
-            return (
-              <DynamicAdvertBlock key={i} {...(value as any)} />
-            );
+            return <DynamicAdvertBlock key={i} {...(value as any)} />;
           }
           case "custom_html_section": {
             const DynamicHtmlSection = dynamic(
-              ()=> import("@components/content/HtmlSection"),
+              () => import("@components/content/HtmlSection")
             );
-            return (
-              <DynamicHtmlSection key={i} {...value} />
-            );
+            return <DynamicHtmlSection key={i} {...value} />;
           }
           case "countdown": {
             const DynamicCountDown = dynamic(
@@ -114,9 +98,7 @@ export default function ModuleContent(props: ModuleContentProps) {
                 ssr: false,
               }
             );
-            return (
-              <DynamicCountDown key={i} {...(value as any)} />
-            );
+            return <DynamicCountDown key={i} {...(value as any)} />;
           }
           default:
             return null;

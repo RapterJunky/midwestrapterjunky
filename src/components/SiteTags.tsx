@@ -3,7 +3,7 @@ import type {
   RegularMetaAttributes,
   OgMetaAttributes,
 } from "react-datocms";
-import { renderMetaTags } from 'react-datocms/seo';
+import { renderMetaTags } from "react-datocms/seo";
 import Head from "next/head";
 export default function SiteTags({
   tags,
