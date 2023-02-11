@@ -1,10 +1,10 @@
+import { isParagraph, isHeading } from "datocms-structured-text-utils";
 import {
   renderNodeRule,
   renderMarkRule,
   type RenderBlockContext,
   RenderInlineRecordContext,
-} from "react-datocms";
-import { isParagraph, isHeading } from "datocms-structured-text-utils";
+} from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
 
