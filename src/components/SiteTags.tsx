@@ -1,9 +1,9 @@
 import {
-  renderMetaTags,
   type SeoOrFaviconTag,
   type RegularMetaAttributes,
   type OgMetaAttributes,
 } from "react-datocms";
+import { renderMetaTags } from 'react-datocms/seo';
 import Head from "next/head";
 export default function SiteTags({
   tags,

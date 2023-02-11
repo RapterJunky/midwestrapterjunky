@@ -4,7 +4,8 @@ import type {
   GetStaticPathsContext,
   GetStaticPathsResult,
 } from "next";
-import { StructuredText, type SeoOrFaviconTag } from "react-datocms";
+import type { SeoOrFaviconTag } from "react-datocms";
+import { StructuredText } from 'react-datocms/structured-text';
 import Image from "next/image";
 import { z } from "zod";
 import Link from "next/link";
@@ -199,7 +200,7 @@ export default function EventPage({
                       </p>
                     ) : null}
                     {event.location ? (
-                      <iframe
+                      <iframe title="Event Location"
                         className="w-full outline-none"
                         loading="lazy"
                         height={350}

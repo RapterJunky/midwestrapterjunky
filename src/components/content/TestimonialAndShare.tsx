@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { StructuredText } from "react-datocms";
+import { StructuredText } from "react-datocms/structured-text";
 import { Parallax, Background } from "react-parallax";
 import { HiStar } from "react-icons/hi";
 import Button from "@components/Button";

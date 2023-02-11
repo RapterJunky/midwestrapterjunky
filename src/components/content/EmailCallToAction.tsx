@@ -1,4 +1,4 @@
-import { StructuredText } from "react-datocms";
+import { StructuredText } from "react-datocms/structured-text";
 import { HiOutlineChevronRight } from "react-icons/hi";
 
 import { markRules } from "@lib/StructuredTextRules";

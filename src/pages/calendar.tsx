@@ -1,5 +1,5 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import { type SeoOrFaviconTag } from "react-datocms";
+import type {  SeoOrFaviconTag } from "react-datocms";
 
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";

@@ -4,6 +4,8 @@ import type {
   NextPage,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
+import Link from "next/link";
+import Image from "next/image";
 
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
@@ -12,8 +14,6 @@ import ExitPreview from "@components/ExitPreview";
 
 import type { FullPageProps, ResponsiveImage } from "@type/page";
 import { DatoCMS } from "@api/gql";
-import Link from "next/link";
-import Image from "next/image";
 import SponsorsQuery from "@query/queries/sponsors";
 
 interface PageProps extends FullPageProps {
