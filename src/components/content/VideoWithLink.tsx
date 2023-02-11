@@ -35,7 +35,7 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">
         {props.isYoutubeVideo ? (
-          <YoutubeFrame youtubeId={props.youtubeid}/>
+          <YoutubeFrame youtubeId={props.youtubeid} />
         ) : (
           <video
             className="h-[200%] w-[200%] border-none"
