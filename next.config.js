@@ -13,7 +13,8 @@ const nextConfig = withBundleAnalyzer({
       "cdn.shopify.com",
       "api.lorem.space",
       "images.unsplash.com",
-      "api.dicebear.com"
+      "api.dicebear.com",
+      "img.youtube.com"
     ]
   },
   async redirects () {

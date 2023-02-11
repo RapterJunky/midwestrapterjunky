@@ -3,6 +3,7 @@ import { markRules } from "@lib/StructuredTextRules";
 import Button from "@components/Button";
 
 import type { Color } from "@type/page";
+import YoutubeFrame from "@components/YoutubeFrame";
 
 interface VideoWithLinksProps {
   videoLink: string;
@@ -33,17 +34,8 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
         </Button>
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">
-        {/**https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/ */}
         {props.isYoutubeVideo ? (
-          <iframe
-            className="h-[200%] w-[200%] border-none"
-            allowFullScreen
-            allow="autoplay; encrypted-media;"
-            title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
-            src={`https://www.youtube-nocookie.com/embed/${props.youtubeid}?autoplay=1&loop=1&mute=1&playlist=${props.youtubeid}&controls=0&fs=0`}
-            width="640"
-            height="360"
-          ></iframe>
+          <YoutubeFrame youtubeId={props.youtubeid}/>
         ) : (
           <video
             className="h-[200%] w-[200%] border-none"
