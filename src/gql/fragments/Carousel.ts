@@ -3,11 +3,11 @@ fragment CRFragment on CarouselRecord {
     images {
       responsiveImage {
         alt
+        title
         src
         sizes
       }
       blurUpThumb
-      customData
     }
     _modelApiKey
 }`;

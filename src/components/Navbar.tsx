@@ -1,4 +1,5 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Transition } from "@headlessui/react";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -28,6 +29,8 @@ const navbarMode = {
   "only-scroll": "fixed bg-opacity-100 text-black",
   none: "text-black bg-opacity-100",
 };
+
+const NavDropdown = dynamic(() => import("@components/NavDropdown"));
 
 export default function Navbar({
   mode = "fade-scroll",
@@ -147,32 +150,7 @@ export default function Navbar({
             {...value}
           />
         ))}
-        {pageLinks.length > 7 ? (
-          <div className="dropdown relative">
-            <button
-              className="dropdown-toggle flex items-center whitespace-nowrap px-2 py-2.5 text-3xl font-bold uppercase not-italic hover:opacity-60 focus:outline-none focus:ring-0"
-              type="button"
-              id="dropdownMenuButton"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <HiMenu />
-            </button>
-            <ul
-              className="dropdown-menu absolute z-50 float-left m-0 mt-1 hidden min-w-max list-none rounded-sm border-none bg-white bg-clip-padding py-2 text-left text-base shadow-lg"
-              aria-labelledby="dropdownMenuButton"
-            >
-              {pageLinks.slice(7).map((value, i) => (
-                <li key={i}>
-                  <IconLink
-                    {...value}
-                    className="dropdown-item flex w-full items-center gap-1 whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-gray-700 hover:bg-gray-100"
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+        {pageLinks.length > 7 ? <NavDropdown links={pageLinks} /> : null}
       </div>
     </nav>
   );

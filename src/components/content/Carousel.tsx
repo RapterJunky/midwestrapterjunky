@@ -1,14 +1,11 @@
 import { useId } from "react";
 import Image from "next/image";
 import type { ResponsiveImage } from "@type/page";
-
 interface CarouselProps {
-  images: (ResponsiveImage & {
-    customData: {
-      heading?: string;
-      subheading?: string;
-    } | null;
-  })[];
+  images: ResponsiveImage<{
+    alt: string | null;
+    title: string | null;
+  }>[];
 }
 
 export default function Carousel(props: CarouselProps) {
@@ -50,12 +47,14 @@ export default function Carousel(props: CarouselProps) {
               className="block h-full w-full object-cover object-center"
               alt={value.responsiveImage?.alt ?? "Carousel Image"}
             />
-            <div className="carousel-caption absolute hidden text-center md:block">
-              <h5 className="text-xl font-bold">
-                {value.customData?.heading ?? ""}
-              </h5>
-              <p>{value.customData?.subheading ?? ""}</p>
-            </div>
+            {value.responsiveImage?.title && value.responsiveImage?.alt ? (
+              <div className="carousel-caption absolute hidden text-center md:block">
+                <h5 className="text-xl font-bold">
+                  {value.responsiveImage.title}
+                </h5>
+                <p>{value.responsiveImage.alt}</p>
+              </div>
+            ) : null}
           </div>
         ))}
       </div>

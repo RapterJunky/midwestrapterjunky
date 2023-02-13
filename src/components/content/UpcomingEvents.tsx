@@ -22,7 +22,7 @@ export default function UpcomingEvents(props: UpcomingEventsProps) {
     <section className="flex w-full flex-wrap">
       {props.events.map((event, i) => (
         <div key={i} className="relative flex w-2/4 justify-center md:w-1/4">
-          <div className="h-full max-h-[608px] w-full max-w-[608px]">
+          <div className="flex h-full max-h-[608px] w-full max-w-[608px] justify-center">
             <Image
               className="pointer-events-none object-cover object-center"
               height={event.bgImage.responsiveImage.height}
