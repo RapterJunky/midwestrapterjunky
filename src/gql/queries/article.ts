@@ -38,10 +38,18 @@ query ArticlePageQuery($slug: String = "") {
             }
           }
           links {
-            title
-            slug
-            id
-            __typename
+            ... on ArticleRecord {
+              id
+              title 
+              slug
+              __typename
+            }
+            ... on EventRecord {
+              id
+              slug 
+              title
+              __typename
+            }
           }
         }
         slug

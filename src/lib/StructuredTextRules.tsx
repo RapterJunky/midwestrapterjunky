@@ -3,7 +3,7 @@ import {
   renderNodeRule,
   renderMarkRule,
   type RenderBlockContext,
-  RenderInlineRecordContext,
+  type RenderInlineRecordContext,
 } from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,7 +28,13 @@ export const renderInlineRecord = ({
   switch (record.__typename) {
     case "EventRecord":
       return (
-        <Link className="underline" href={`/events/${record.slug}`}>
+        <Link title={`Event: ${record.title}`} className="underline" href={`/events/${record.slug}`}>
+          {record.title}
+        </Link>
+      );
+    case "ArticleRecord":
+      return (
+        <Link title={`Article: ${record.title}`} className="underline" href={`/blog/${record.slug}`}>
           {record.title}
         </Link>
       );
@@ -43,7 +49,7 @@ export const renderBlock = ({ record }: RenderBlockContext<any>) => {
       return (
         <div className="relative">
           <Image
-            className="object-center"
+            className="object-center shadow rounded"
             width={record.content.responsiveImage.width}
             height={record.content.responsiveImage.height}
             blurDataURL={record.content.blurUpThumb}
