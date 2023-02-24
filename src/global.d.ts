@@ -5,6 +5,10 @@ declare module React {
   }
 }
 
+declare interface Window {
+  te: any
+}
+
 declare module NodeJS {
   interface ProcessEnv {
     NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
