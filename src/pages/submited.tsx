@@ -31,7 +31,7 @@ export default function Submited(props: FullPageProps) {
         tags={[
           props._site.faviconMetaTags,
           [
-            { tag: "title", content: "Midwest Rapter Junkies | Submited." },
+            { tag: "title", content: "Submited - Midwest Raptor Junkies" },
             {
               tag: "meta",
               attributes: { name: "robots", content: "noindex,nofollow" },

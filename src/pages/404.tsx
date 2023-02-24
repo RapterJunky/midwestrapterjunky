@@ -38,7 +38,7 @@ export default function ErrorPage404(props: PageProps) {
         tags={[
           props._site.faviconMetaTags,
           [
-            { tag: "title", content: "Midwest Rapter Junkies | Not Found" },
+            { tag: "title", content: "Not Found - Midwest Raptor Junkies" },
             {
               tag: "meta",
               attributes: { name: "robots", content: "noindex,nofollow" },

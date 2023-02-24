@@ -66,7 +66,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
         tags={[
           _site.faviconMetaTags,
           [
-            { tag: "title", content: "Midwest Raptor Junkies | Blog Lastest" },
+            { tag: "title", content: " Blog Lastest - Midwest Raptor Junkies" },
             {
               tag: "meta",
               attributes: {

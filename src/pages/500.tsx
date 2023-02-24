@@ -36,7 +36,7 @@ export default function ErrorPage500(props: PageProps) {
         tags={[
           props._site.faviconMetaTags,
           [
-            { tag: "title", content: "Midwest Rapter Junkies | Server Error" },
+            { tag: "title", content: "Server Error - Midwest Raptor Junkies" },
             {
               tag: "meta",
               attributes: { name: "robots", content: "noindex,nofollow" },

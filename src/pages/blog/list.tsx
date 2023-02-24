@@ -66,7 +66,7 @@ const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
         tags={[
           _site.faviconMetaTags,
           [
-            { tag: "title", content: "Midwest Raptor Junkies | Articles" },
+            { tag: "title", content: "Articles - Midwest Raptor Junkies" },
             {
               tag: "meta",
               attributes: {
