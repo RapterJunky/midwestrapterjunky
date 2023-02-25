@@ -56,7 +56,7 @@ const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site }) => {
       </main>
       <Footer />
       <Script
-        onLoad={() => {
+        onReady={() => {
           /* TW Elements does not seem to execute on load sometimes, so create instances here. 
                                 World like to get rid of haveing this script in the frist place but not sandalone 
                                 script is ready or react compable */

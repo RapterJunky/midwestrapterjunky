@@ -61,7 +61,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   posts,
 }) => {
   return (
-    <>
+    <div>
       <SiteTags
         tags={[
           _site.faviconMetaTags,
@@ -91,7 +91,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
             </p>
           </div>
           <ul className="divide-y divide-gray-200">
-            {!posts.length && "No posts found."}
+            {!posts.length ? "No posts found." : null}
             {posts.map((post) => {
               return (
                 <li key={post.slug} className="py-12">
@@ -154,9 +154,11 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
           </Link>
         </div>
       </main>
-      <Footer />
+      <div className="mt-2">
+        <Footer />
+      </div>
       {preview ? <ExitPreview /> : null}
-    </>
+    </div>
   );
 };
 
