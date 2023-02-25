@@ -28,13 +28,21 @@ export const renderInlineRecord = ({
   switch (record.__typename) {
     case "EventRecord":
       return (
-        <Link title={`Event: ${record.title}`} className="underline" href={`/events/${record.slug}`}>
+        <Link
+          title={`Event: ${record.title}`}
+          className="underline"
+          href={`/events/${record.slug}`}
+        >
           {record.title}
         </Link>
       );
     case "ArticleRecord":
       return (
-        <Link title={`Article: ${record.title}`} className="underline" href={`/blog/${record.slug}`}>
+        <Link
+          title={`Article: ${record.title}`}
+          className="underline"
+          href={`/blog/${record.slug}`}
+        >
           {record.title}
         </Link>
       );
@@ -49,7 +57,7 @@ export const renderBlock = ({ record }: RenderBlockContext<any>) => {
       return (
         <div className="relative">
           <Image
-            className="object-center shadow rounded"
+            className="rounded object-center shadow"
             width={record.content.responsiveImage.width}
             height={record.content.responsiveImage.height}
             blurDataURL={record.content.blurUpThumb}

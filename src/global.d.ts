@@ -6,7 +6,7 @@ declare module React {
 }
 
 declare interface Window {
-  te: any
+  te: any;
 }
 
 declare module NodeJS {
