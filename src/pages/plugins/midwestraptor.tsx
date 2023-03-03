@@ -10,7 +10,7 @@ import AuthorEditorExtension from "@components/plugins/AuthorEditorExtension";
 
 import AssetSourceOptimized from "@components/plugins/AssetSourceOptimized";
 
-import EditAuthorModal from "@components/plugins/EditAuthor";
+import EditAuthorModal from "@components/plugins/EditAuthorModel";
 import StorefrontModel from "@components/plugins/StorefrontModel";
 import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
 

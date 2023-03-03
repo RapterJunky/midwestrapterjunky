@@ -114,7 +114,7 @@ export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
       avatar: values.avatar,
       name: values.name,
       social,
-      id: values?.id ?? crypto.randomUUID().replaceAll("-", ""),
+      id: values?.id ?? crypto.randomUUID(),
     });
   };
 

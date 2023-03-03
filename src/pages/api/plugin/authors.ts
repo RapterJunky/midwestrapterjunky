@@ -10,8 +10,14 @@ import { logger } from "@lib/logger";
 let authorSchema = z.object({
     avatar: z.string().url(),
     name: z.string(),
-    social: z.string().nullable(),
-    id: z.string()
+    social: z.object({
+        link: z.string().url(),
+        user: z.string()
+    }).nullable().transform((value) => {
+        if (!value) return Prisma.DbNull;
+        return value;
+    }),
+    id: z.string().uuid()
 });
 
 const querySchema = z.object({
@@ -53,11 +59,22 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 const paginate = paginator(prisma);
 
                 const page = await paginate.authors.paginate({ where: {} }, {
-                    pageIndex: query.page,
+                    page: query.page,
                     limit: 10
                 });
 
                 return res.status(200).json(page);
+            }
+            case "DELETE": {
+                const query = await z.object({ id: z.string().uuid() }).parseAsync(req.body);
+
+                await prisma.authors.delete({
+                    where: {
+                        id: query.id
+                    }
+                });
+
+                return res.status(201).json({ ok: true });
             }
             default:
                 throw createHttpError.BadRequest();

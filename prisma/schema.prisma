@@ -10,7 +10,7 @@ datasource db {
 model Authors {
   avatar String
   name String
-  social String?
+  social Json?
   id String @unique
 }
 
