@@ -22,11 +22,29 @@ const Edit = ({ ctx, setEdit }: { setEdit: React.Dispatch<React.SetStateAction<b
 
     const dropItem = async () => {
         try {
+            const check = await ctx.openConfirm({
+                title: "Delete Author",
+                content: "This author will be removed from the database. This will not affect any other articles that reference this author.",
+                choices: [
+                    {
+                        label: 'Yes',
+                        value: true,
+                        intent: 'positive',
+                    }
+                ],
+                cancel: {
+                    label: 'Cancel',
+                    value: false,
+                }
+            });
+
+            if (!check) return;
+
             const token = new URLSearchParams(window.location.search).get("token");
             if (!token) throw new Error("Failed to perform action.", { cause: "MISSING_AUTH_TOKEN" });
 
             const result = await fetch("/api/plugin/authors", {
-                method: isEdit ? "PATCH" : "POST",
+                method: "DELETE",
                 body: JSON.stringify({
                     id: ctx.parameters.id
                 }),
@@ -45,7 +63,7 @@ const Edit = ({ ctx, setEdit }: { setEdit: React.Dispatch<React.SetStateAction<b
                 code = error.statusText.toUpperCase().replaceAll(" ", "_");
             }
             console.error(error);
-            ctx.alert(`Internal Server Error | CODE: FAILED_REQUEST_${code}`);
+            ctx.alert(`Internal Server Error | CODE: ${code}`);
         }
     }
 
@@ -75,16 +93,13 @@ const Edit = ({ ctx, setEdit }: { setEdit: React.Dispatch<React.SetStateAction<b
                 }
             });
 
-            if (!result.ok) {
-                const data = await result.json();
-                throw new Error(data?.message ?? "Failed to perform action", { cause: `FAILED_REQUEST_${result.statusText.toUpperCase().replaceAll(" ", "_")}` })
-            }
+            if (!result.ok) throw result;
 
             ctx.resolve(data);
         } catch (error) {
             if (error instanceof Error) ctx.alert(`${error.message} | CODE: ${error.cause}`);
             if (error instanceof Response) {
-                ctx.alert(`Internal Server Error | CODE: FAILED_REQUEST_${error.statusText.toUpperCase().replaceAll(" ", "_")}`);
+                ctx.alert(`${error.status === 500 ? "Internal Server Error" : "Failed to perform action."} | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`);
             }
             console.error(error);
         }

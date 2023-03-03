@@ -26,11 +26,11 @@ const querySchema = z.object({
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     try {
-        /*if (
+        if (
             !req.headers.authorization ||
             req.headers.authorization.replace("Bearer ", "") !==
             process.env.PLUGIN_TOKEN
-        ) throw createHttpError.Unauthorized();*/
+        ) throw createHttpError.Unauthorized();
 
         switch (req.method) {
             case "POST": {
@@ -66,7 +66,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 return res.status(200).json(page);
             }
             case "DELETE": {
-                const query = await z.object({ id: z.string().uuid() }).parseAsync(req.body);
+                const query = await z.object({ id: z.string() }).parseAsync(req.body);
 
                 await prisma.authors.delete({
                     where: {

@@ -9,9 +9,9 @@ datasource db {
 
 model Authors {
   avatar String
-  name String
+  name   String
   social Json?
-  id String @unique
+  id     String @unique
 }
 
 model Cache {
