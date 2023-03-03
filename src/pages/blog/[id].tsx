@@ -31,7 +31,9 @@ import ArticleQuery from "@query/queries/article";
 import GetNextArticles from "@query/queries/next_articles";
 import ArticlesListQuery from "@query/queries/articles_list";
 
-const Comments = dynamic(() => import("@components/blog/Comments"), { ssr: false });
+const Comments = dynamic(() => import("@components/blog/Comments"), {
+  ssr: false,
+});
 
 interface ArticleProps extends FullPageProps {
   next: { slug: string; title: string } | null;
@@ -60,9 +62,9 @@ interface ArticleProps extends FullPageProps {
     slug: string;
     tags: string[];
     id: string;
-    displayComments: number,
-    enableComments: boolean | null,
-    commentsAdmins: string[] | null
+    displayComments: number;
+    enableComments: boolean | null;
+    commentsAdmins: string[] | null;
   };
 }
 
@@ -158,14 +160,16 @@ const Article: NextPage<ArticleProps> = ({
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[
-        _site.faviconMetaTags,
-        post.seo,
-        post.commentsAdmins?.map((value => ({
-          tag: "meta",
-          attributes: { property: "fb:admins", content: value }
-        }))) ?? []
-      ]} />
+      <SiteTags
+        tags={[
+          _site.faviconMetaTags,
+          post.seo,
+          post.commentsAdmins?.map((value) => ({
+            tag: "meta",
+            attributes: { property: "fb:admins", content: value },
+          })) ?? [],
+        ]}
+      />
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />
@@ -238,7 +242,10 @@ const Article: NextPage<ArticleProps> = ({
                   />
                 </div>
                 {post.enableComments ? (
-                  <Comments pageSlug={post.slug} numPosts={post.displayComments} />
+                  <Comments
+                    pageSlug={post.slug}
+                    numPosts={post.displayComments}
+                  />
                 ) : null}
               </section>
               <section>

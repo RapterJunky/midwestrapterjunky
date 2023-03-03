@@ -95,7 +95,7 @@ const ImageSelect = ({
 };
 
 export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
-  const [isEdit, setEdit] = useState(!!Object.keys(ctx.parameters).length)
+  const [isEdit, setEdit] = useState(!!Object.keys(ctx.parameters).length);
   const [page, setPage] = useState("/");
 
   const { control, handleSubmit, watch } = useForm<FormState>({
@@ -118,82 +118,87 @@ export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
     });
   };
 
-  if (isEdit) return (
-    <Canvas ctx={ctx}>
-      <Form onSubmit={handleSubmit(submit)}>
-        <FieldGroup>
-          <Controller
-            rules={{ required: "Author's name is required." }}
-            control={control}
-            name="name"
-            render={({ fieldState, field: { name, onChange, value } }) => (
-              <TextField
-                error={fieldState.error?.message}
-                required
-                id="author"
-                name={name}
-                placeholder="Enter author's full name."
-                hint="Provide a full name"
-                label="Author's name"
-                onChange={onChange}
-                value={value ?? undefined}
-              />
+  if (isEdit)
+    return (
+      <Canvas ctx={ctx}>
+        <Form onSubmit={handleSubmit(submit)}>
+          <FieldGroup>
+            <Controller
+              rules={{ required: "Author's name is required." }}
+              control={control}
+              name="name"
+              render={({ fieldState, field: { name, onChange, value } }) => (
+                <TextField
+                  error={fieldState.error?.message}
+                  required
+                  id="author"
+                  name={name}
+                  placeholder="Enter author's full name."
+                  hint="Provide a full name"
+                  label="Author's name"
+                  onChange={onChange}
+                  value={value ?? undefined}
+                />
+              )}
+            />
+            <ImageSelect name={name} form={{ control }} ctx={ctx} />
+            <Controller
+              control={control}
+              name="social.user"
+              render={({ fieldState, field }) => (
+                <TextField
+                  error={fieldState.error?.message}
+                  id="socialusername"
+                  name={field.name}
+                  placeholder="Enter social media username."
+                  label="Social Media Username"
+                  onChange={field.onChange}
+                  value={field.value ?? undefined}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="social.link"
+              render={({ field, fieldState }) => (
+                <TextField
+                  error={fieldState.error?.message}
+                  id="sociallink"
+                  name={field.name}
+                  placeholder="Enter social media link"
+                  label="Social Media Link"
+                  onChange={field.onChange}
+                  value={field.value ?? undefined}
+                />
+              )}
+            />
+          </FieldGroup>
+          <div className="mt-5 flex justify-between">
+            {ctx.parameters?.id ? (
+              <Button
+                onClick={() =>
+                  ctx.resolve({ type: "delete", id: ctx.parameters.id })
+                }
+                leftIcon={
+                  <FaTrash style={{ fill: "var(--lighter-bg-color)" }} />
+                }
+                buttonType="negative"
+                type="submit"
+              >
+                Delete
+              </Button>
+            ) : (
+              <Button onClick={() => setEdit(false)} buttonType="negative">
+                Back
+              </Button>
             )}
-          />
-          <ImageSelect name={name} form={{ control }} ctx={ctx} />
-          <Controller
-            control={control}
-            name="social.user"
-            render={({ fieldState, field }) => (
-              <TextField
-                error={fieldState.error?.message}
-                id="socialusername"
-                name={field.name}
-                placeholder="Enter social media username."
-                label="Social Media Username"
-                onChange={field.onChange}
-                value={field.value ?? undefined}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="social.link"
-            render={({ field, fieldState }) => (
-              <TextField
-                error={fieldState.error?.message}
-                id="sociallink"
-                name={field.name}
-                placeholder="Enter social media link"
-                label="Social Media Link"
-                onChange={field.onChange}
-                value={field.value ?? undefined}
-              />
-            )}
-          />
-        </FieldGroup>
-        <div className="mt-5 flex justify-between">
-          {ctx.parameters?.id ? (
-            <Button
-              onClick={() =>
-                ctx.resolve({ type: "delete", id: ctx.parameters.id })
-              }
-              leftIcon={<FaTrash style={{ fill: "var(--lighter-bg-color)" }} />}
-              buttonType="negative"
-              type="submit"
-            >
-              Delete
+            <Button buttonType="primary" type="submit">
+              Submit
             </Button>
-          ) : (
-            <Button onClick={() => setEdit(false)} buttonType="negative">Back</Button>
-          )}
-          <Button buttonType="primary" type="submit">
-            Submit
-          </Button>
-        </div>
-      </Form>
-    </Canvas>
-  );
+          </div>
+        </Form>
+      </Canvas>
+    );
 
   return (
     <Canvas ctx={ctx}>

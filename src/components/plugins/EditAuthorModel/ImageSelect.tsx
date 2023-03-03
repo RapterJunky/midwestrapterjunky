@@ -6,41 +6,77 @@ import { FaTrash } from "react-icons/fa";
 import type { FormState } from "./Edit";
 
 interface ImageSelectProps {
-    ctx: RenderModalCtx,
-    name: string | undefined,
-    control: Control<FormState>
+  ctx: RenderModalCtx;
+  name: string | undefined;
+  control: Control<FormState>;
 }
 
 const ImageSelect = ({ ctx, name, control }: ImageSelectProps) => {
-    return (
-        <Controller rules={{ required: "Please Select a image" }} name="avatar" control={control} render={({ fieldState, field }) => (
-            <div>
-                <FormLabel htmlFor="avatar">Image</FormLabel>
-                {field.value ? (
-                    <div id="avatar" className="group relative flex items-center justify-center p-2">
-                        <div className="relative h-28 w-28">
-                            <Image sizes="100vw" src={field.value} alt="Avator Image" fill />
-                        </div>
-                        <button className="absolute hidden h-full w-full items-center justify-center bg-slate-400 bg-opacity-40 group-hover:flex" onClick={() => field.onChange(null)}>
-                            <FaTrash className="h-8 w-8 text-red-600" />
-                        </button>
-                    </div>
-                ) : (
-                    <div id="avatar" className="flex h-28 items-center justify-center gap-2 p-2">
-                        <Button onClick={async () => {
-                            const image = await ctx.selectUpload();
-                            if (!image) return;
-                            field.onChange(image.attributes.url);
-                        }} type="button">Use Existing</Button>
-                        <Button onClick={() => field.onChange(`https://api.dicebear.com/5.x/initials/png?seed=${encodeURIComponent(name ?? "Author")}`)} type="button" buttonType="negative">Use Generated</Button>
-                    </div>
-                )}
-                {fieldState.error?.message ? (
-                    <FieldError>{fieldState.error.message}</FieldError>
-                ) : null}
+  return (
+    <Controller
+      rules={{ required: "Please Select a image" }}
+      name="avatar"
+      control={control}
+      render={({ fieldState, field }) => (
+        <div>
+          <FormLabel htmlFor="avatar">Image</FormLabel>
+          {field.value ? (
+            <div
+              id="avatar"
+              className="group relative flex items-center justify-center p-2"
+            >
+              <div className="relative h-28 w-28">
+                <Image
+                  sizes="100vw"
+                  src={field.value}
+                  alt="Avator Image"
+                  fill
+                />
+              </div>
+              <button
+                className="absolute hidden h-full w-full items-center justify-center bg-slate-400 bg-opacity-40 group-hover:flex"
+                onClick={() => field.onChange(null)}
+              >
+                <FaTrash className="h-8 w-8 text-red-600" />
+              </button>
             </div>
-        )} />
-    );
-}
+          ) : (
+            <div
+              id="avatar"
+              className="flex h-28 items-center justify-center gap-2 p-2"
+            >
+              <Button
+                onClick={async () => {
+                  const image = await ctx.selectUpload();
+                  if (!image) return;
+                  field.onChange(image.attributes.url);
+                }}
+                type="button"
+              >
+                Use Existing
+              </Button>
+              <Button
+                onClick={() =>
+                  field.onChange(
+                    `https://api.dicebear.com/5.x/initials/png?seed=${encodeURIComponent(
+                      name ?? "Author"
+                    )}`
+                  )
+                }
+                type="button"
+                buttonType="negative"
+              >
+                Use Generated
+              </Button>
+            </div>
+          )}
+          {fieldState.error?.message ? (
+            <FieldError>{fieldState.error.message}</FieldError>
+          ) : null}
+        </div>
+      )}
+    />
+  );
+};
 
 export default ImageSelect;

@@ -6,7 +6,7 @@
     "dev": "next dev | pino-pretty",
     "build": "cross-env CI=true next build",
     "start": "next start",
-    "lint": "next lint && prettier --check ./src",
+    "lint": "next lint && prettier --write ./src",
     "cypress": "cypress open",
     "analyze": "cross-env ANALYZE=true next build"
   },

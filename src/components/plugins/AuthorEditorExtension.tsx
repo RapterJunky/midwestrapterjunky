@@ -14,14 +14,14 @@ interface AuthorItem {
 const Author = ({
   data,
   updateField,
-  drop
+  drop,
 }: {
   updateField: (
     editing: boolean,
     parameters?: Record<string, any>
   ) => Promise<void>;
   data: AuthorItem;
-  drop: (id: string) => void
+  drop: (id: string) => void;
 }) => {
   return (
     <div className="group relative p-2">
@@ -40,11 +40,17 @@ const Author = ({
           <span className="text-blue-600">{data.social?.user}</span>
         </div>
       </div>
-      <div className="absolute right-0 top-0 hidden h-full w-full gap-1 rounded bg-gray-200 bg-opacity-90 group-hover:flex divide-x divide-gray-600 py-2">
-        <button className="w-full h-full flex justify-center items-center text-gray-700 hover:text-gray-600" onClick={() => updateField(true, data)}>
+      <div className="absolute right-0 top-0 hidden h-full w-full gap-1 divide-x divide-gray-600 rounded bg-gray-200 bg-opacity-90 py-2 group-hover:flex">
+        <button
+          className="flex h-full w-full items-center justify-center text-gray-700 hover:text-gray-600"
+          onClick={() => updateField(true, data)}
+        >
           <FaEdit className="h-8 w-8" />
         </button>
-        <button className="h-full w-full flex justify-center items-center text-red-600 hover:text-red-500" onClick={() => drop(data.id)}>
+        <button
+          className="flex h-full w-full items-center justify-center text-red-600 hover:text-red-500"
+          onClick={() => drop(data.id)}
+        >
           <FaTrash className="h-8 w-8" />
         </button>
       </div>
@@ -69,7 +75,7 @@ export default function AuthorEditorExtension({
   const drop = async (id: string) => {
     const nextData = value.filter((value) => value.id !== id);
     await setField(nextData);
-  }
+  };
 
   const updateField = async (
     editing: boolean,
@@ -91,7 +97,7 @@ export default function AuthorEditorExtension({
       return;
     }
 
-    const exists = value.some(value => value.id === data.id)
+    const exists = value.some((value) => value.id === data.id);
     if (exists) {
       ctx.alert(`Author ${data.name} has already been selected!`);
       return;
