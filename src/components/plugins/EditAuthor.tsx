@@ -1,5 +1,5 @@
 import type { RenderModalCtx } from "datocms-plugin-sdk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller, type Control } from "react-hook-form";
 import {
   Canvas,
@@ -95,6 +95,9 @@ const ImageSelect = ({
 };
 
 export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
+  const [isEdit, setEdit] = useState(!!Object.keys(ctx.parameters).length)
+  const [page, setPage] = useState("/");
+
   const { control, handleSubmit, watch } = useForm<FormState>({
     defaultValues: ctx.parameters,
   });
@@ -115,7 +118,7 @@ export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
     });
   };
 
-  return (
+  if (isEdit) return (
     <Canvas ctx={ctx}>
       <Form onSubmit={handleSubmit(submit)}>
         <FieldGroup>
@@ -182,13 +185,26 @@ export default function EditAuthorModal({ ctx }: { ctx: RenderModalCtx }) {
               Delete
             </Button>
           ) : (
-            <span></span>
+            <Button onClick={() => setEdit(false)} buttonType="negative">Back</Button>
           )}
           <Button buttonType="primary" type="submit">
             Submit
           </Button>
         </div>
       </Form>
+    </Canvas>
+  );
+
+  return (
+    <Canvas ctx={ctx}>
+      {page === "/" ? (
+        <div className="flex flex-col content-around justify-around divide-x-4">
+          <Button onClick={() => setEdit(true)}>Create New</Button>
+          <Button onClick={() => setPage("edit")}>Use Existing</Button>
+        </div>
+      ) : (
+        <div></div>
+      )}
     </Canvas>
   );
 }

@@ -9,6 +9,7 @@ import type { SeoOrFaviconTag } from "react-datocms";
 import { StructuredText } from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { HiArrowLeft } from "react-icons/hi";
 import { z } from "zod";
 
@@ -29,6 +30,8 @@ import { DatoCMS } from "@api/gql";
 import ArticleQuery from "@query/queries/article";
 import GetNextArticles from "@query/queries/next_articles";
 import ArticlesListQuery from "@query/queries/articles_list";
+
+const Comments = dynamic(() => import("@components/blog/Comments"), { ssr: false });
 
 interface ArticleProps extends FullPageProps {
   next: { slug: string; title: string } | null;
@@ -57,6 +60,9 @@ interface ArticleProps extends FullPageProps {
     slug: string;
     tags: string[];
     id: string;
+    displayComments: number,
+    enableComments: boolean | null,
+    commentsAdmins: string[] | null
   };
 }
 
@@ -152,7 +158,14 @@ const Article: NextPage<ArticleProps> = ({
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[_site.faviconMetaTags, post.seo]} />
+      <SiteTags tags={[
+        _site.faviconMetaTags,
+        post.seo,
+        post.commentsAdmins?.map((value => ({
+          tag: "meta",
+          attributes: { property: "fb:admins", content: value }
+        }))) ?? []
+      ]} />
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />
@@ -224,7 +237,9 @@ const Article: NextPage<ArticleProps> = ({
                     data={post.content}
                   />
                 </div>
-                {/* Comments section would go here. */}
+                {post.enableComments ? (
+                  <Comments pageSlug={post.slug} numPosts={post.displayComments} />
+                ) : null}
               </section>
               <section>
                 <div className="divide-gray-200 text-sm font-medium leading-5 xl:col-start-1 xl:row-start-2 xl:divide-y">
