@@ -54,6 +54,10 @@ export default function Navbar({
     }
   }, [mode]);
 
+  const close = () => {
+    document.body.classList.remove("h-full", "overflow-hidden");
+  }
+
   useEffect(() => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -64,9 +68,8 @@ export default function Navbar({
   return (
     <nav
       ref={ref}
-      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${
-        navbarMode[mode] ?? ""
-      }`}
+      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${navbarMode[mode] ?? ""
+        }`}
     >
       <Transition
         show={showNav}
@@ -79,14 +82,14 @@ export default function Navbar({
         leaveFrom="translate-x-0"
         leaveTo="-translate-x-full"
       >
-        <nav className="flex h-full w-3/4 flex-col bg-zinc-800 opacity-100">
+        <nav className="flex h-screen w-3/4 flex-col bg-zinc-800 opacity-100 overflow-y-hidden">
           <div className="relative flex justify-center pt-2 pb-2">
             <button
               role="button"
               aria-label="Close sidenav"
               data-cy="sidenav-toggle"
               className="absolute right-4 top-4"
-              onClick={() => setShowNav(false)}
+              onClick={() => { setShowNav(false); close(); }}
             >
               <HiX className="text-4xl text-gray-50" />
             </button>
@@ -103,7 +106,7 @@ export default function Navbar({
           </div>
           <ul className="[&>:not(:last-child)]:border-b">
             {pageLinks.map((value, i) => (
-              <li key={i} className="flex">
+              <li key={i} className="flex" onClick={close}>
                 <IconLink
                   data-cy="nav-top-link"
                   className="flex w-full items-center gap-1 pt-5 pb-5 pr-4 pl-4 text-white"
@@ -136,7 +139,7 @@ export default function Navbar({
           data-cy="mobile-sidenav-toggle"
           aria-label="Sidenav Toggle"
           className="active:translate-x-1 active:translate-y-1 active:transform"
-          onClick={() => setShowNav(!showNav)}
+          onClick={() => { setShowNav(!showNav); document.body.classList.add("h-full", "overflow-hidden"); }}
         >
           <HiMenu className="text-4xl" />
         </button>

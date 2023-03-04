@@ -53,14 +53,14 @@ export const getStaticProps = async (
 
 export default function CalendarPage(props: CalendarProps) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <SiteTags
         tags={[props._site.faviconMetaTags, props.calendar._seoMetaTags]}
       />
       <header>
         <Navbar {...props.navbar} mode="none" />
       </header>
-      <main className="flex flex-col">
+      <main className="flex flex-col h-full">
         <Calendar data={props.allEvents} />
       </main>
       <Footer />

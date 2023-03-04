@@ -51,7 +51,7 @@ const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site }) => {
       <header>
         <Navbar {...navbar} mode="fade-scroll" />
       </header>
-      <main>
+      <main className="overflow-x-hidden">
         <ModuleContent data={home.bodyContent} />
       </main>
       <Footer />
