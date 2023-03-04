@@ -1,5 +1,5 @@
-import Script from 'next/script';
-import { useState, useCallback } from 'react';
+import Script from "next/script";
+import { useState, useCallback } from "react";
 
 /**
  * Uses facebook comments plugin.
@@ -18,7 +18,8 @@ const Comments = ({
   const LoadComments = useCallback(() => {
     setLoadComments(false);
     const script = document.createElement("script");
-    script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0";
+    script.src =
+      "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0";
     script.async = true;
     script.setAttribute("id", "fb-sdk");
     script.setAttribute("crossorigin", "anonymous");
@@ -31,7 +32,6 @@ const Comments = ({
       const fbScript = document.getElementById("fb-sdk");
       if (!fbScript) document.body.appendChild(script);
     }
-
   }, []);
 
   return (
@@ -39,12 +39,14 @@ const Comments = ({
       {loadComments ? (
         <button onClick={LoadComments}>Load Comments</button>
       ) : null}
-      <div id="comments"
+      <div
+        id="comments"
         data-order-by="reverse-time"
         data-width="100%"
         data-numposts={numPosts.toString()}
         data-lazy
-        data-href={`https://midwestraptorjunkies.com/blog/${pageSlug}`}></div>
+        data-href={`https://midwestraptorjunkies.com/blog/${pageSlug}`}
+      ></div>
       <Script />
     </div>
   );

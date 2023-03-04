@@ -42,7 +42,7 @@ export default function ModuleContent(props: ModuleContentProps) {
             const DynamicCarousel = dynamic(
               () => import("@components/content/Carousel"),
               {
-                loading: () => (<div className="h-screen"></div>)
+                loading: () => <div className="h-screen"></div>,
               }
             );
             return <DynamicCarousel key={i} images={value?.images ?? []} />;
