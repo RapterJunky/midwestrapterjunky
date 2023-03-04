@@ -31,9 +31,7 @@ import ArticleQuery from "@query/queries/article";
 import GetNextArticles from "@query/queries/next_articles";
 import ArticlesListQuery from "@query/queries/articles_list";
 
-const Comments = dynamic(() => import("@components/blog/Comments"), {
-  ssr: false,
-});
+const Comments = dynamic(() => import("@components/blog/Comments"));
 
 interface ArticleProps extends FullPageProps {
   next: { slug: string; title: string } | null;

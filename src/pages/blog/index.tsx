@@ -61,7 +61,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   posts,
 }) => {
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <SiteTags
         tags={[
           _site.faviconMetaTags,

@@ -1,4 +1,5 @@
-import Script from "next/script";
+import Script from 'next/script';
+import { useState, useCallback } from 'react';
 
 /**
  * Uses facebook comments plugin.
@@ -12,24 +13,40 @@ const Comments = ({
   pageSlug: string;
   numPosts?: number;
 }) => {
+  const [loadComments, setLoadComments] = useState(true);
+
+  const LoadComments = useCallback(() => {
+    setLoadComments(false);
+    const script = document.createElement("script");
+    script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0";
+    script.async = true;
+    script.setAttribute("id", "fb-sdk");
+    script.setAttribute("crossorigin", "anonymous");
+    script.setAttribute("nonce", "VI21h7U0");
+
+    const comments = document.getElementById("comments");
+    if (comments) {
+      comments.classList.add("fb-comments");
+
+      const fbScript = document.getElementById("fb-sdk");
+      if (!fbScript) document.body.appendChild(script);
+    }
+
+  }, []);
+
   return (
-    <>
-      <div
-        className="fb-comments"
+    <div className="pt-6 pb-6 text-center text-gray-700">
+      {loadComments ? (
+        <button onClick={LoadComments}>Load Comments</button>
+      ) : null}
+      <div id="comments"
+        data-order-by="reverse-time"
         data-width="100%"
         data-numposts={numPosts.toString()}
         data-lazy
-        data-href={`https://midwestraptorjunkies.com/blog/${pageSlug}`}
-      ></div>
-      <Script
-        async
-        defer
-        crossOrigin="anonymous"
-        strategy="lazyOnload"
-        nonce="VI21h7U0"
-        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v16.0"
-      />
-    </>
+        data-href={`https://midwestraptorjunkies.com/blog/${pageSlug}`}></div>
+      <Script />
+    </div>
   );
 };
 

@@ -62,7 +62,7 @@ export const renderBlock = ({ record }: RenderBlockContext<any>) => {
             height={record.content.responsiveImage.height}
             blurDataURL={record.content.blurUpThumb}
             src={record.content.responsiveImage.src}
-            alt={record.content.responsiveImage.alt}
+            alt={record.content.responsiveImage?.alt ?? "Article Content"}
           />
         </div>
       );
