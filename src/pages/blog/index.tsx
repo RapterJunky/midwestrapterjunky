@@ -61,7 +61,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   posts,
 }) => {
   return (
-    <div className="flex h-full flex-col">
+    <div className="h-full flex flex-col">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
@@ -80,7 +80,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
       <header>
         <Navbar {...navbar} mode="none" />
       </header>
-      <main className="mx-auto h-full max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0 flex-1">
         <div className="divide-y divide-gray-200">
           <div className="space-y-2 pt-6 pb-8 md:space-y-5">
             <h1 className="font-inter md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl">
