@@ -10,7 +10,7 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         slug
       }
       bgImage {
-        responsiveImage {
+        responsiveImage(imgixParams: {crop: focalpoint, w: 960, h: 960 }) {
           sizes
           alt
           src
