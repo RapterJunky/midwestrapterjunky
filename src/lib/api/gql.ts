@@ -1,8 +1,10 @@
 import { GraphQLClient, type Variables } from "graphql-request";
-import type { RequestConfig } from 'graphql-request/src/types';
+import type { RequestConfig } from "graphql-request/src/types";
 import { logger } from "@lib/logger";
 
-const DATO_CMS = `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT ?? "main"}`;
+const DATO_CMS = `https://graphql.datocms.com/environments/${
+  process.env.DATOCMS_ENVIRONMENT ?? "main"
+}`;
 
 interface FetchOptions {
   variables?: Variables;
