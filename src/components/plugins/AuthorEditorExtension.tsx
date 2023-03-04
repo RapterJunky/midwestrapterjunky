@@ -1,6 +1,6 @@
 import { type RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import Image from "next/image";
-import { FaPlusCircle, FaEdit } from "react-icons/fa";
+import { FaPlusCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { Canvas } from "datocms-react-ui";
 import { useMemo } from "react";
 
@@ -14,12 +14,14 @@ interface AuthorItem {
 const Author = ({
   data,
   updateField,
+  drop,
 }: {
   updateField: (
     editing: boolean,
     parameters?: Record<string, any>
   ) => Promise<void>;
   data: AuthorItem;
+  drop: (id: string) => void;
 }) => {
   return (
     <div className="group relative p-2">
@@ -38,12 +40,20 @@ const Author = ({
           <span className="text-blue-600">{data.social?.user}</span>
         </div>
       </div>
-      <button
-        className="absolute right-0 top-0 hidden h-full w-full items-center justify-center gap-1 rounded bg-gray-200 bg-opacity-90 group-hover:flex"
-        onClick={() => updateField(true, data)}
-      >
-        <FaEdit className="h-8 w-8" />
-      </button>
+      <div className="absolute right-0 top-0 hidden h-full w-full gap-1 divide-x divide-gray-600 rounded bg-gray-200 bg-opacity-90 py-2 group-hover:flex">
+        <button
+          className="flex h-full w-full items-center justify-center text-gray-700 hover:text-gray-600"
+          onClick={() => updateField(true, data)}
+        >
+          <FaEdit className="h-8 w-8" />
+        </button>
+        <button
+          className="flex h-full w-full items-center justify-center text-red-600 hover:text-red-500"
+          onClick={() => drop(data.id)}
+        >
+          <FaTrash className="h-8 w-8" />
+        </button>
+      </div>
     </div>
   );
 };
@@ -62,6 +72,11 @@ export default function AuthorEditorExtension({
   const setField = async (content: AuthorItem[]) =>
     ctx.setFieldValue(ctx.fieldPath, JSON.stringify(content));
 
+  const drop = async (id: string) => {
+    const nextData = value.filter((value) => value.id !== id);
+    await setField(nextData);
+  };
+
   const updateField = async (
     editing: boolean,
     parameters?: Record<string, any>
@@ -73,16 +88,18 @@ export default function AuthorEditorExtension({
     })) as AuthorItem | { type: "delete"; id: string } | undefined;
     if (!data) return;
 
-    if ("type" in data) {
-      const nextData = value.filter((value) => value.id !== data.id);
-      await setField(nextData);
-      return;
-    }
+    if ("type" in data) return drop(data.id);
 
     if (editing) {
       const nextData = value.filter((value) => value?.id !== data.id);
       nextData.push(data);
       await setField(nextData);
+      return;
+    }
+
+    const exists = value.some((value) => value.id === data.id);
+    if (exists) {
+      ctx.alert(`Author ${data.name} has already been selected!`);
       return;
     }
 
@@ -94,7 +111,7 @@ export default function AuthorEditorExtension({
     <Canvas ctx={ctx}>
       <div className="flex flex-wrap gap-2 divide-x">
         {value.map((item, i) => (
-          <Author updateField={updateField} key={i} data={item} />
+          <Author drop={drop} updateField={updateField} key={i} data={item} />
         ))}
         <button
           className="group flex w-16 flex-col items-center justify-center gap-1 p-2"
