@@ -141,7 +141,7 @@ const Edit = ({
         )}`
       );
     }
-  }, [name]);
+  }, [name, setValue, getValues]);
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
