@@ -42,7 +42,10 @@ const Threads: NextPage<Props> = ({ threads, preview, _site, navbar }) => {
             <header>
                 <Navbar {...navbar} mode="none" />
             </header>
-            <main className="flex-1 flex justify-center">
+            <main className="flex-1 flex flex-col items-center">
+                <div className="container my-6">
+                    <h1 className="font-bold text-2xl">Threads</h1>
+                </div>
                 <div className="container flex flex-col gap-4 mt-4">
                     {threads.map(value => (
                         <Link key={value.id} className="shadow-lg h-max p-2 rounded-sm flex justify-between" href={{ pathname: "/threads/[thread]", query: { thread: value.id } }}>

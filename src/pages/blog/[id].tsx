@@ -134,9 +134,9 @@ export const getStaticProps = async (
     };
   }
 
-  let pages = await fetchCacheData(PAGE_CACHE_KEY, loadBlogPages);
+  let pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadBlogPages);
 
-  if (!(pages.data as string[]).includes(id))
+  if (!pages.includes(id))
     return {
       notFound: true,
     };

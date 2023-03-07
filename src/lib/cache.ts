@@ -1,10 +1,10 @@
 import prisma from "@api/prisma";
 
-export const fetchCacheData = async (
+export const fetchCacheData = async <R = unknown>(
   key: string,
   fetch: () => Promise<any>,
   ci: boolean = false
-) => {
+): Promise<R> => {
   let pages = await prisma.cache.findFirst({ where: { key } });
   if (!pages || pages.isDirty || ci) {
     const data = await fetch();
@@ -25,5 +25,5 @@ export const fetchCacheData = async (
     });
   }
 
-  return pages;
+  return pages.data as R;
 };

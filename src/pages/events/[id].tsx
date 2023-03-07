@@ -98,9 +98,9 @@ export const getStaticProps = async (
     };
   }
 
-  const pages = await fetchCacheData(PAGE_CACHE_KEY, loadPages);
+  const pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadPages);
 
-  if (!(pages.data as string[]).includes(id))
+  if (!pages.includes(id))
     return {
       notFound: true,
     };
@@ -184,8 +184,8 @@ export default function EventPage({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

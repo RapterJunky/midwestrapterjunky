@@ -35,8 +35,11 @@
     "react-hook-form": "^7.43.4",
     "react-icons": "^4.8.0",
     "react-parallax": "^3.5.1",
+    "slate": "^0.91.4",
+    "slate-react": "^0.91.9",
     "swr": "^2.0.4",
     "tw-elements": "^1.0.0-beta1",
+    "use-debounce": "^9.0.3",
     "zod": "^3.21.0",
     "zod-validation-error": "^1.0.1"
   },

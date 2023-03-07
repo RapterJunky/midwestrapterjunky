@@ -8,18 +8,27 @@ import { strToNum } from "@utils/strToNum";
 
 const requestSchema = z.object({
     page: z.string().transform(strToNum),
-    thread: z.string().transform(strToNum)
+    thread: z.string().transform(strToNum),
+    search: z.string().optional().transform(value => {
+        if (value) return decodeURIComponent(value);
+        return value;
+    })
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { page, thread } = requestSchema.parse(req.query);
+        const { page, thread, search } = requestSchema.parse(req.query);
 
         const paginate = paginator(prisma.threadPost);
 
         const data = await paginate.paginate({
             where: {
-                threadId: thread
+                threadId: thread,
+                AND: search ? {
+                    name: {
+                        contains: search
+                    }
+                } : undefined
             },
             select: {
                 name: true,

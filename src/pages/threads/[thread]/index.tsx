@@ -1,6 +1,8 @@
 import type { GetStaticPropsResult, GetStaticPropsContext, NextPage, GetStaticPathsResult } from 'next';
 import Link from 'next/link';
 import useSWR from 'swr';
+import { useState } from 'react';
+import { useDebounce } from "use-debounce";
 import type { FullPageProps, Paginate } from '@type/page';
 
 import SiteTags from '@components/SiteTags';
@@ -53,7 +55,9 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 }
 
 const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
-    const { data, isLoading, error } = useSWR<Paginate<ThreadPost & { owner: User }>, Response, [string]>([`/api/threads?thread=${thread.id}&page=1`], ([path]) => fetch(path).then(value => value.json()));
+    const [query, setQuery] = useState<string>("");
+    const [debouncedQuery] = useDebounce(query, 1000);
+    const { data, isLoading, error } = useSWR<Paginate<ThreadPost & { owner: User }>, Response, string>(`/api/threads?thread=${thread.id}&page=1&search=${encodeURIComponent(debouncedQuery)}`, (url) => fetch(url).then(value => value.json()));
 
     return (
         <div className="flex flex-col h-full">
@@ -66,11 +70,11 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
                     <h1 className="font-bold text-4xl">Thread - {thread.name}</h1>
                 </div>
                 <div className='flex container mt-4 shadow p-2'>
-                    <input type="text" className="rounded-sm" placeholder='Search' />
+                    <input onChange={(ev) => setQuery(ev.target.value)} value={query} type="text" className="rounded-sm" placeholder='Search' />
                     <div className="mr-auto">
 
                     </div>
-                    <button className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500'>Create Post</button>
+                    <Link href={{ pathname: "/threads/[thread]/new", query: { thread: thread.id } }} className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500'>Create Post</Link>
                 </div>
                 <div className="container flex flex-col gap-4 mt-4">
                     <hr className='w-full' />
