@@ -4,18 +4,7 @@ import { z, ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 import paginator from "prisma-paginate";
 import prisma from "@api/prisma";
-
-const strToNum = (arg: string, ctx: z.RefinementCtx) => {
-    const parsed = parseInt(arg);
-    if (isNaN(parsed)) {
-        ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Not a number",
-        });
-        return z.NEVER;
-    }
-    return parsed;
-}
+import { strToNum } from "@utils/strToNum";
 
 const requestSchema = z.object({
     page: z.string().transform(strToNum),
@@ -44,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
             },
             orderBy: {
-                created: "desc"
+                created: "asc"
             }
         }, { limit: 20, page });
 
@@ -63,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const ie = createHttpError.InternalServerError();
 
-        return res.status(500).json(ie);
+        return res.status(ie.statusCode).json(ie);
     }
 }
 

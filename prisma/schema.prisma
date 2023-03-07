@@ -33,18 +33,18 @@ model MailingList {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -60,14 +60,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  TheadPost ThreadPost[]
+  TheadPost     ThreadPost[]
+  Comment       Comment[]
 }
 
 model Comment {
@@ -75,23 +76,25 @@ model Comment {
   content         Json // Dast
   created         DateTime
   parentCommentId String?
+  ownerId         String
+  owner           User       @relation(fields: [ownerId], references: [id])
   ThreadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
   threadPostId    String
 }
 
 model ThreadPost {
-  id        String    @id
-  name      String
-  ownerId   String
-  created   DateTime
-  owner     User      @relation(fields: [ownerId], references: [id])
-  thread    Thread     @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
-  threadId  Int
-  comments  Comment[]
+  id       String    @id
+  name     String
+  ownerId  String
+  created  DateTime
+  owner    User      @relation(fields: [ownerId], references: [id])
+  thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
+  threadId Int
+  comments Comment[]
 }
 
 model Thread {
-  id    Int         @id @default(autoincrement())
-  name  String      @unique
+  id    Int          @id @default(autoincrement())
+  name  String       @unique
   posts ThreadPost[]
 }
