@@ -1,53 +1,91 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Prisma } from '@prisma/client';
 import createHttpError from "http-errors";
 import { z, ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 import paginator from "prisma-paginate";
 import prisma from "@api/prisma";
-import { strToNum } from "@utils/strToNum";
+import { logger } from "@lib/logger";
+import { strToNum } from "@lib/utils/strToNum";
 
-const requestSchema = z.object({
-    page: z.string().transform(strToNum),
-    thread: z.string().transform(strToNum),
-    search: z.string().optional().transform(value => {
-        if (value) return decodeURIComponent(value);
-        return value;
-    })
+const getSchema = z.object({
+    page: z.string().default("1").transform(strToNum)
 });
+const postSchema = z.object({
+    name: z.string(),
+});
+const patchSchema = z.object({
+    name: z.string(),
+    id: z.number().positive(),
+});
+const deleteSchema = z.object({
+    id: z.number().positive(),
+});
+
+const auth = (req: NextApiRequest) => {
+    if (
+        !req.headers.authorization ||
+        req.headers.authorization.replace("Bearer ", "") !==
+        process.env.PLUGIN_TOKEN
+    )
+        throw createHttpError.Unauthorized();
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { page, thread, search } = requestSchema.parse(req.query);
+        switch (req.method) {
+            case "GET": {
+                const { page } = getSchema.parse(req.query);
+                const paginate = paginator(prisma.thread);
 
-        const paginate = paginator(prisma.threadPost);
+                const result = await paginate.paginate({}, { limit: 20, page });
 
-        const data = await paginate.paginate({
-            where: {
-                threadId: thread,
-                AND: search ? {
-                    name: {
-                        contains: search
-                    }
-                } : undefined
-            },
-            select: {
-                name: true,
-                created: true,
-                id: true,
-                owner: {
-                    select: {
-                        name: true,
-                        image: true
-                    }
-                }
-            },
-            orderBy: {
-                created: "asc"
+                return res.status(200).json(result);
             }
-        }, { limit: 20, page });
+            case "POST": {
+                auth(req);
+                const { name } = postSchema.parse(req.body);
 
-        return res.status(200).json(data);
+                const result = await prisma.thread.create({
+                    data: {
+                        name
+                    }
+                });
+
+                return res.status(201).json(result);
+            }
+            case "PATCH": {
+                auth(req);
+                const { name, id } = patchSchema.parse(req.body);
+
+                const result = await prisma.thread.update({
+                    where: {
+                        id
+                    },
+                    data: {
+                        name
+                    }
+                });
+
+                return res.status(200).json(result);
+            }
+            case "DELETE": {
+                auth(req);
+                const { id } = deleteSchema.parse(req.body);
+
+                const result = await prisma.thread.delete({
+                    where: {
+                        id
+                    }
+                });
+
+                return res.status(200).json(result);
+            }
+            default:
+                throw createHttpError.MethodNotAllowed();
+        }
     } catch (error) {
+        logger.error(error);
         if (error instanceof ZodError) {
             const data = fromZodError(error);
 
@@ -56,8 +94,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 details: data.details
             });
         }
-
-        console.log(error);
+        if (error instanceof Prisma.PrismaClientValidationError) {
+            return res.status(400).json({ message: error.message });
+        }
+        if (createHttpError.isHttpError(error)) {
+            return res.status(error.statusCode).json(error);
+        }
 
         const ie = createHttpError.InternalServerError();
 

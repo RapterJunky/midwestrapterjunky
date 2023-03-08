@@ -73,8 +73,8 @@ model User {
 
 model Comment {
   id              String     @id
-  content         Json // Dast
-  created         DateTime
+  content         Json // Dast maybe, for now { message: string }
+  created         DateTime   @default(now())
   parentCommentId String?
   ownerId         String
   owner           User       @relation(fields: [ownerId], references: [id])
@@ -86,7 +86,8 @@ model ThreadPost {
   id       String    @id
   name     String
   ownerId  String
-  created  DateTime
+  created  DateTime  @default(now())
+  content  Json?     // Dast
   owner    User      @relation(fields: [ownerId], references: [id])
   thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
   threadId Int
