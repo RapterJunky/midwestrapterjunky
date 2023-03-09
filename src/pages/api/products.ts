@@ -5,7 +5,7 @@ import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 import { getKeys } from "@lib/dynamic_keys";
 import { Shopify } from "@api/gql";
-import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
+import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 
 type Storefront = "S" | "F";
 type EncodeProductItem = [Storefront, string, string];

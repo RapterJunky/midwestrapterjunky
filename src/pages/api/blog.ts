@@ -6,7 +6,7 @@ import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 import PagedArticles from "@query/queries/pagedArticles";
-import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
+import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 
 interface DataResponse {
   totalArticles: {

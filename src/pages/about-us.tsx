@@ -15,7 +15,7 @@ import {
   markRules,
   renderBlock,
   renderInlineRecord,
-} from "@lib/StructuredTextRules";
+} from "@lib/structuredTextRules";
 import type { FullPageProps } from "@type/page";
 
 interface AboutUsProps extends FullPageProps {

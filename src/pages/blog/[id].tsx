@@ -24,7 +24,7 @@ import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
 import type { FullPageProps, StructuredContent } from "@type/page";
 import { formatLocalDate } from "@lib/utils/timeFormat";
-import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
+import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";
 
 import ArticleQuery from "@query/queries/article";

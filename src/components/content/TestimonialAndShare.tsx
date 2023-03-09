@@ -3,7 +3,7 @@ import { StructuredText } from "react-datocms/structured-text";
 import { Parallax, Background } from "react-parallax";
 import { HiStar } from "react-icons/hi";
 import Button from "@components/Button";
-import { markRules } from "@lib/StructuredTextRules";
+import { markRules } from "@lib/structuredTextRules";
 import type { Color, ResponsiveImage, StructuredContent } from "@type/page";
 
 interface TestimonialAndShareProps {

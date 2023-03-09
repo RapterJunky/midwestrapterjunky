@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import type { Comment, Thread, ThreadPost, User } from "@prisma/client";
 
 declare global {

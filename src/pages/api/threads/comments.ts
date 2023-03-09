@@ -1,17 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { randomUUID } from 'node:crypto';
-import { Prisma } from "@prisma/client";
 import createHttpError from "http-errors";
-import { z, ZodError } from 'zod';
-import { fromZodError } from 'zod-validation-error';
+import { z } from 'zod';
 import paginator from "prisma-paginate";
 
 import prisma from "@api/prisma";
 import { strToNum } from "@utils/strToNum";
-import { getServerSession } from 'next-auth';
-import { authConfig } from "@api/auth";
-import { logger } from "@lib/logger";
-
+import { getSession } from "@lib/getSession";
+import { handleError } from "@api/errorHandler";
+import { applyRateLimit } from "@api/rateLimiter";
 
 const getSchema = z.object({
     post: z.string().uuid(),
@@ -19,7 +16,7 @@ const getSchema = z.object({
 });
 const postSchema = z.object({
     content: z.object({}).passthrough(),
-    parentCommentId: z.string().uuid(),
+    parentCommentId: z.string().uuid().nullable(),
     threadPostId: z.string().uuid()
 });
 const patchSchema = z.object({
@@ -62,13 +59,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 return res.status(200).json(data);
             }
-
-                break;
             case "POST": {
-                const session = await getServerSession(req, res, authConfig);
-                if (!session) throw createHttpError.Unauthorized();
-
+                await applyRateLimit(req, res);
+                const session = await getSession(req, res);
                 const { content, parentCommentId, threadPostId } = postSchema.parse(req.body);
+
+                const exists = await prisma.threadPost.findFirst({
+                    where: {
+                        id: threadPostId
+                    }
+                });
+                if (!exists) throw createHttpError.NotFound("Given post id was not found");
+
+                if (parentCommentId) {
+                    const exists = await prisma.comment.findFirst({
+                        where: {
+                            id: parentCommentId
+                        }
+                    });
+                    if (!exists) throw createHttpError.NotFound("Given parent comment id was not found");
+                }
 
                 const result = await prisma.comment.create({
                     data: {
@@ -83,9 +93,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(201).json(result);
             }
             case "PATCH": {
-                const session = await getServerSession(req, res, authConfig);
-                if (!session) throw createHttpError.Unauthorized();
+                await applyRateLimit(req, res);
+                const session = await getSession(req, res);
                 const { content, id } = patchSchema.parse(req.body);
+
+                const exists = await prisma.comment.findFirst({
+                    where: {
+                        id,
+                        AND: {
+                            ownerId: session.user.id
+                        }
+                    }
+                });
+                if (!exists) throw createHttpError.NotFound();
 
                 const result = await prisma.comment.update({
                     where: {
@@ -99,7 +119,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(200).json(result);
             }
             case "DELETE": {
+                await applyRateLimit(req, res);
+                const session = await getSession(req, res);
                 const { id } = deleteSchema.parse(req.body);
+
+                const exists = await prisma.comment.findFirst({
+                    where: {
+                        id,
+                        AND: {
+                            ownerId: session.user.id
+                        }
+                    }
+                });
+                if (!exists) throw createHttpError.NotFound();
+
                 const result = await prisma.comment.delete({
                     where: {
                         id
@@ -111,25 +144,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 throw createHttpError.MethodNotAllowed();
         }
     } catch (error) {
-        logger.error(error);
-        if (error instanceof ZodError) {
-            const data = fromZodError(error);
-
-            return res.status(400).json({
-                message: data.message,
-                details: data.details
-            });
-        }
-        if (error instanceof Prisma.PrismaClientValidationError) {
-            return res.status(400).json({ message: error.message });
-        }
-        if (createHttpError.isHttpError(error)) {
-            return res.status(error.statusCode).json(error);
-        }
-
-        const ie = createHttpError.InternalServerError();
-
-        return res.status(ie.statusCode).json(ie);
+        handleError(error, res);
     }
 }
 

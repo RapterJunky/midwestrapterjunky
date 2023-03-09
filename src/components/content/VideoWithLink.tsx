@@ -1,5 +1,5 @@
 import { StructuredText } from "react-datocms/structured-text";
-import { markRules } from "@lib/StructuredTextRules";
+import { markRules } from "@lib/structuredTextRules";
 import Button from "@components/Button";
 
 import type { Color } from "@type/page";

@@ -16,7 +16,7 @@ import { DatoCMS } from "@api/gql";
 import type { FullPageProps, ModulerContent } from "@type/page";
 import HomePageQuery from "@query/queries/home";
 
-import { REVAILDATE_IN_12H } from "@lib/RevaildateTimings";
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 
 interface HomeContent extends FullPageProps {
   home: {

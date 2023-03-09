@@ -1,12 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Prisma } from '@prisma/client';
 import createHttpError from "http-errors";
-import { z, ZodError } from 'zod';
-import { fromZodError } from 'zod-validation-error';
+import { z } from 'zod';
 import paginator from "prisma-paginate";
 import prisma from "@api/prisma";
-import { logger } from "@lib/logger";
 import { strToNum } from "@lib/utils/strToNum";
+import { handleError } from "@api/errorHandler";
 
 const getSchema = z.object({
     page: z.string().default("1").transform(strToNum)
@@ -85,25 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 throw createHttpError.MethodNotAllowed();
         }
     } catch (error) {
-        logger.error(error);
-        if (error instanceof ZodError) {
-            const data = fromZodError(error);
-
-            return res.status(400).json({
-                message: data.message,
-                details: data.details
-            });
-        }
-        if (error instanceof Prisma.PrismaClientValidationError) {
-            return res.status(400).json({ message: error.message });
-        }
-        if (createHttpError.isHttpError(error)) {
-            return res.status(error.statusCode).json(error);
-        }
-
-        const ie = createHttpError.InternalServerError();
-
-        return res.status(ie.statusCode).json(ie);
+        handleError(error, res);
     }
 }
 

@@ -19,7 +19,7 @@ import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
 import type { FullPageProps } from "@lib/types/page";
-import { REVAILDATE_IN_2H } from "@lib/RevaildateTimings";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 
 interface BlogLatestProps extends FullPageProps {
   posts: {

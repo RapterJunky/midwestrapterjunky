@@ -7,7 +7,7 @@ import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
 
-import { REVAILDATE_IN_12H } from "@lib/RevaildateTimings";
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/calendar";
 

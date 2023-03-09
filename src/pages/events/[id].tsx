@@ -23,7 +23,7 @@ import { DatoCMS } from "@api/gql";
 
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
-import { markRules } from "@lib/StructuredTextRules";
+import { markRules } from "@lib/structuredTextRules";
 
 import type {
   ResponsiveImage,
