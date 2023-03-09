@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { randomUUID } from 'node:crypto';
 import createHttpError from "http-errors";
 import { z } from 'zod';
-import paginator from "prisma-paginate";
 
 import prisma from "@api/prisma";
 import { strToNum } from "@utils/strToNum";
@@ -33,9 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (req.method) {
             case "GET": {
                 const { post, page } = getSchema.parse(req.query);
-                const paginate = paginator(prisma.comment);
 
-                const data = await paginate.paginate({
+                const [comments, meta] = await prisma.comment.paginate({
                     where: {
                         threadPostId: post,
                     },
@@ -55,29 +53,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     orderBy: {
                         created: "asc"
                     }
-                }, { limit: 20, page });
+                }).withPages({ limit: 20, page });
 
-                return res.status(200).json(data);
+                return res.status(200).json({ results: comments, ...meta });
             }
             case "POST": {
                 await applyRateLimit(req, res);
                 const session = await getSession(req, res);
                 const { content, parentCommentId, threadPostId } = postSchema.parse(req.body);
 
-                const exists = await prisma.threadPost.findFirst({
+                await prisma.threadPost.exists({
                     where: {
                         id: threadPostId
                     }
-                });
-                if (!exists) throw createHttpError.NotFound("Given post id was not found");
+                }, createHttpError.NotFound("Given post id was not found"));
+
 
                 if (parentCommentId) {
-                    const exists = await prisma.comment.findFirst({
+                    await prisma.comment.exists({
                         where: {
                             id: parentCommentId
                         }
-                    });
-                    if (!exists) throw createHttpError.NotFound("Given parent comment id was not found");
+                    }, createHttpError.NotFound("Given parent comment id was not found"));
                 }
 
                 const result = await prisma.comment.create({
@@ -97,15 +94,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const session = await getSession(req, res);
                 const { content, id } = patchSchema.parse(req.body);
 
-                const exists = await prisma.comment.findFirst({
+                await prisma.comment.exists({
                     where: {
                         id,
                         AND: {
                             ownerId: session.user.id
                         }
                     }
-                });
-                if (!exists) throw createHttpError.NotFound();
+                }, createHttpError.NotFound());
 
                 const result = await prisma.comment.update({
                     where: {
@@ -123,15 +119,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const session = await getSession(req, res);
                 const { id } = deleteSchema.parse(req.body);
 
-                const exists = await prisma.comment.findFirst({
+                await prisma.comment.exists({
                     where: {
                         id,
                         AND: {
                             ownerId: session.user.id
                         }
                     }
-                });
-                if (!exists) throw createHttpError.NotFound();
+                }, createHttpError.NotFound());
 
                 const result = await prisma.comment.delete({
                     where: {

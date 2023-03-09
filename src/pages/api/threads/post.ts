@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { randomUUID } from 'node:crypto';
 import createHttpError from "http-errors";
 import { z } from 'zod';
-import paginator from "prisma-paginate";
 
 import prisma from "@api/prisma";
 import { strToNum } from "@utils/strToNum";
@@ -37,8 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (req.method) {
             case "GET": {
                 const { page, thread, search } = getSchema.parse(req.query);
-                const paginate = paginator(prisma.threadPost);
-                const data = await paginate.paginate({
+
+                const [posts, meta] = await prisma.threadPost.paginate({
                     where: {
                         threadId: thread,
                         AND: search ? {
@@ -61,22 +60,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     orderBy: {
                         created: "asc"
                     }
-                }, { limit: 20, page });
+                }).withPages({ limit: 20, page });
 
-                return res.status(200).json(data);
+                return res.status(200).json({ results: posts, ...meta });
             }
             case "POST": {
                 await applyRateLimit(req, res);
                 const session = await getSession(req, res);
                 const { name, threadId, content } = postSchema.parse(req.body);
 
-                const exists = prisma.thread.findFirst({
+                await prisma.thread.exists({
                     where: {
                         id: threadId
                     }
-                });
-
-                if (!exists) throw createHttpError.NotFound("Provided thread does not exist.");
+                }, createHttpError.NotFound("Provided thread does not exist."));
 
                 const result = await prisma.threadPost.create({
                     data: {
@@ -97,15 +94,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 if (!name && !content) return res.status(200).json({ message: "No Change" });
 
-                const exists = await prisma.threadPost.findFirst({
+                await prisma.threadPost.exists({
                     where: {
                         id,
                         AND: {
                             ownerId: session.user.id
                         }
                     }
-                });
-                if (!exists) throw createHttpError.NotFound();
+                }, createHttpError.NotFound());
 
                 const result = await prisma.threadPost.update({
                     where: {
@@ -124,16 +120,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const session = await getSession(req, res);
                 const { id } = deleteSchema.parse(req.body);
 
-                const exists = await prisma.threadPost.findFirst({
+                await prisma.threadPost.exists({
                     where: {
                         id,
                         AND: {
                             ownerId: session.user.id
                         }
                     }
-                });
-
-                if (!exists) throw createHttpError.NotFound();
+                }, createHttpError.NotFound());
 
                 const result = await prisma.threadPost.delete({
                     where: {

@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from 'zod';
-import paginator from "prisma-paginate";
 import prisma from "@api/prisma";
 import { strToNum } from "@lib/utils/strToNum";
 import { handleError } from "@api/errorHandler";
@@ -34,11 +33,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (req.method) {
             case "GET": {
                 const { page } = getSchema.parse(req.query);
-                const paginate = paginator(prisma.thread);
 
-                const result = await paginate.paginate({}, { limit: 20, page });
+                const [threads, meta] = await prisma.thread.paginate().withPages({ limit: 20, page });
 
-                return res.status(200).json(result);
+                return res.status(200).json({
+                    results: threads,
+                    ...meta
+                });
             }
             case "POST": {
                 auth(req);

@@ -29,7 +29,7 @@
     "next-auth": "^4.20.1",
     "nextjs-google-analytics": "^2.3.3",
     "pino": "^8.11.0",
-    "prisma-paginate": "^4.2.3",
+    "prisma-extension-pagination": "^0.2.4",
     "react": "18.2.0",
     "react-countdown": "^2.3.5",
     "react-datocms": "^4.0.9",

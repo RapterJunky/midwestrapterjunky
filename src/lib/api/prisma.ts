@@ -1,17 +1,43 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import type { Comment, Thread, ThreadPost, User } from "@prisma/client";
+import pagination from "prisma-extension-pagination";
 
-declare global {
-  var prisma: PrismaClient;
+type PrismaModel = {
+  "findFirst": CallableFunction;
+};
+
+const existsExtension = Prisma.defineExtension({
+  name: "exists",
+  model: {
+    $allModels: {
+      exists: async function <T, A, E extends Error>(this: T, where: Prisma.Args<T, "findFirst">, throws?: E): Promise<boolean> {
+        const result = await (this as PrismaModel).findFirst(where);
+        if (throws && !result) throw throws;
+        return !!result;
+      }
+    }
+  }
+});
+
+//https://echobind.com/post/extending-types-for-prisma-extensions-in-nextjs
+const getExtendPrismaClient = () => {
+  return new PrismaClient().$extends(pagination).$extends(existsExtension);
 }
 
-let prisma: PrismaClient;
+type ExtendPrismaClient = ReturnType<typeof getExtendPrismaClient>;
+
+declare global {
+  var prisma: ExtendPrismaClient;
+}
+
+
+let prisma: ExtendPrismaClient;
 
 if (process.env.VERCEL_ENV !== "development") {
-  prisma = new PrismaClient();
+  prisma = getExtendPrismaClient();
 } else {
   if (!global.prisma) {
-    global.prisma = new PrismaClient();
+    global.prisma = getExtendPrismaClient();
   }
   prisma = global.prisma;
 }
