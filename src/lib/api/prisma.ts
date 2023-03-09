@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import type { Comment, Thread, ThreadPost, User } from "@prisma/client";
+import type { Comment, Thread, ThreadPost, User, Authors } from "@prisma/client";
 import pagination from "prisma-extension-pagination";
 
 type PrismaModel = {
@@ -42,5 +42,5 @@ if (process.env.VERCEL_ENV !== "development") {
   prisma = global.prisma;
 }
 
-export type { Comment, Thread, ThreadPost, User };
+export type { Comment, Thread, ThreadPost, User, Authors };
 export default prisma;

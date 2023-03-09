@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 }).withPages({ limit: 20, page });
 
-                return res.status(200).json({ results: posts, ...meta });
+                return res.status(200).json({ result: posts, ...meta });
             }
             case "POST": {
                 await applyRateLimit(req, res);

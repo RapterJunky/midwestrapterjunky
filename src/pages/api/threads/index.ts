@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const [threads, meta] = await prisma.thread.paginate().withPages({ limit: 20, page });
 
                 return res.status(200).json({
-                    results: threads,
+                    result: threads,
                     ...meta
                 });
             }

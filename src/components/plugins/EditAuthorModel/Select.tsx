@@ -4,28 +4,12 @@ import { useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
-
-interface AuthorPagiation {
-  limit: number;
-  exceedCount: boolean;
-  exceedTotalPages: boolean;
-  strictLimit: boolean;
-  count: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  page: number;
-  result: {
-    avatar: string;
-    name: string;
-    social: { user: string; link: string } | null;
-    id: string;
-  }[];
-}
+import type { Paginate } from "@type/page";
+import type { Authors } from "@api/prisma";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useSWR<AuthorPagiation, Error, [number]>(
+  const { data, isLoading, error } = useSWR<Paginate<Omit<Authors, "social"> & { social: { user: string; link: string; } }>, Error, [number]>(
     [page],
     async ([index]) => {
       const token = new URLSearchParams(window.location.search).get("token");
@@ -58,7 +42,7 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
     );
   }
 
-  if (error) {
+  if ((!data && !isLoading) || error) {
     return (
       <div className="flex w-full flex-col items-center justify-center p-5">
         <span>There was an error, when trying to fetch authors.</span>
@@ -100,17 +84,17 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <Button
-          disabled={!data?.hasPrevPage}
-          onClick={() => setPage((data?.page ?? 1) - 1)}
+          disabled={data?.isFirstPage}
+          onClick={() => setPage((data?.previousPage ?? 1))}
         >
           Prev
         </Button>
         <span style={{ color: "var(--primary-color)" }}>
-          {data?.page} of {(data?.totalPages ?? 0) + 1}
+          {data?.currentPage} of {(data?.pageCount ?? 0) + 1}
         </span>
         <Button
-          disabled={!data?.hasNextPage}
-          onClick={() => setPage((data?.page ?? 0) + 1)}
+          disabled={data?.isLastPage}
+          onClick={() => setPage((data?.nextPage ?? 1))}
         >
           Next
         </Button>

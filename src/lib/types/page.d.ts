@@ -42,14 +42,12 @@ export interface FullPageProps extends NavProps {
 }
 
 export interface Paginate<T> {
-  limit: number;
-  exceedCount: boolean;
-  exceedTotalPages: boolean;
-  count: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  page: boolean;
+  currentPage: number,
+  isFirstPage: boolean,
+  isLastPage: boolean,
+  previousPage: number | null,
+  nextPage: number | null,
+  pageCount: number | null,
   result: T[];
 }
 
