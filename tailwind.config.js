@@ -228,6 +228,7 @@ module.exports = {
     require('tw-elements/dist/plugin'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
+	require('@headlessui/tailwindcss'),
     animatePlugin
   ],
 }

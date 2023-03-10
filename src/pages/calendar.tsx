@@ -1,8 +1,8 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
-import Footer from "@components/Footer";
-import Navbar from "@components/Navbar";
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";

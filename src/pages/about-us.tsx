@@ -4,9 +4,9 @@ import { StructuredText } from "react-datocms/structured-text";
 import Image from "next/image";
 
 import ExitPreview from "@components/ExitPreview";
-import Footer from "@components/Footer";
-import ModuleContent from "@components/ModuleContent";
-import Navbar from "@components/Navbar";
+import Footer from "@components/layout/Footer";
+import ModuleContent from "@components/layout/ModuleContent";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 
 import about_us from "@query/queries/about_us";

@@ -13,16 +13,16 @@ import { DatoCMS } from "@api/gql";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { getDescriptionTag } from "@lib/utils/description";
 
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 import Tag from "@components/blog/tag";
 
 import GenericPageQuery from "@query/queries/generic";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import Pagination from "@components/blog/Pagination";
 import ExitPreview from "@components/ExitPreview";
 
-interface BlogListProps extends FullPageProps {}
+interface BlogListProps extends FullPageProps { }
 
 interface Post {
   posts: {

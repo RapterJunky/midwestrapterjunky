@@ -1,5 +1,5 @@
 import type { SeoOrFaviconTag } from "react-datocms";
-import type { NavProps } from "@components/Navbar";
+import type { NavProps } from "@components/layout/Navbar";
 
 export type Color = {
   hex: string;

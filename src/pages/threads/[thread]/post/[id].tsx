@@ -7,8 +7,8 @@ import { DatoCMS } from '@api/gql';
 import GenericPageQuery from '@query/queries/generic';
 import prisma, { User, Thread, ThreadPost, Comment } from '@api/prisma';
 import SiteTags from '@components/SiteTags';
-import Navbar from '@components/Navbar';
-import Footer from '@components/Footer';
+import Navbar from '@components/layout/Navbar';
+import Footer from '@components/layout/Footer';
 import ExitPreview from '@components/ExitPreview';
 import { HiArrowRight, HiDotsHorizontal, HiDotsVertical } from 'react-icons/hi';
 

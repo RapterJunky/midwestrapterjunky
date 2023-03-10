@@ -7,9 +7,9 @@ import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import { HiArrowRight } from "react-icons/hi";
 
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import ExitPreview from "@components/ExitPreview";
 import Tag from "@components/blog/tag";
 

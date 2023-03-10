@@ -4,16 +4,53 @@ import { useState, useMemo, useCallback } from 'react';
 import { Slate, Editable, withReact, useSlate } from 'slate-react';
 import type { FullPageProps } from '@type/page';
 import { useForm } from 'react-hook-form';
+import { Tab } from '@headlessui/react'
+
+import { z } from 'zod';
 
 import SiteTags from '@components/SiteTags';
-import Navbar from '@components/Navbar';
+import Navbar from '@components/layout/Navbar';
 import ExitPreview from '@components/ExitPreview';
-import Footer from '@components/Footer';
+import Footer from '@components/layout/Footer';
 
 import GenericPageQuery from '@query/queries/generic';
 import { DatoCMS } from '@api/gql';
 import { fetchCacheData } from '@lib/cache';
 import { StructuredText } from 'react-datocms/structured-text';
+
+const mark = z.enum(["strong", "code", "emphasis", "underline", "strikethrough", "highlight"]);
+const span = z.object({
+    type: z.literal("span"),
+    marks: z.array(mark).optional(),
+    value: z.string()
+});
+const link = z.object({
+    type: z.literal("link"),
+    url: z.string().url(),
+    meta: z.array(z.object({ id: z.string(), value: z.string() })).optional(),
+    children: z.array(span)
+});
+
+const inlineNode = z.union([span, link]);
+
+const heading = z.object({
+    type: z.literal("heading"),
+    level: z.number().min(1).max(6),
+    style: z.string().optional(),
+    children: z.array(inlineNode)
+});
+
+const paragraph = z.object({
+    type: z.literal("paragraph"),
+    children: z.array(inlineNode),
+    style: z.string().optional()
+});
+const dastSchema = z.object({
+    type: z.literal("root"),
+    children: z.array(z.union([paragraph, heading]))
+});
+
+type Dast = z.infer<typeof dastSchema>;
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
@@ -46,48 +83,33 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
 }
 
 const Element = ({ attributes, children, element }: any) => {
-    const style = { textAlign: element.align }
     switch (element.type) {
-        case 'block-quote':
+        case "heading": {
+            switch (element.level) {
+                case 1:
+                    return (<h1 {...attributes}>{children}</h1>);
+                case 2:
+                    return (<h2 {...attributes}>{children}</h2>);
+                default:
+                    return (<h6 {...attributes}>{children}</h6>);
+            }
+        }
+        case "list": {
+            if (element.style === "bulleted") {
+                return (<ol {...attributes}>{children}</ol>);
+            }
+            return (<ul {...attributes}>{children}</ul>);
+        }
+        case 'blockquote':
             return (
-                <blockquote style={style} {...attributes}>
+                <blockquote {...attributes}>
                     {children}
                 </blockquote>
-            )
-        case 'bulleted-list':
-            return (
-                <ul style={style} {...attributes}>
-                    {children}
-                </ul>
-            )
-        case 'heading-one':
-            return (
-                <h1 style={style} {...attributes}>
-                    {children}
-                </h1>
-            )
-        case 'heading-two':
-            return (
-                <h2 style={style} {...attributes}>
-                    {children}
-                </h2>
-            )
-        case 'list-item':
-            return (
-                <li style={style} {...attributes}>
-                    {children}
-                </li>
-            )
-        case 'numbered-list':
-            return (
-                <ol style={style} {...attributes}>
-                    {children}
-                </ol>
-            )
+            );
         default:
             return (
-                <p style={style} {...attributes}>
-                    {children}
+                <p {...attributes}>
+                    <span>{children}</span>
                 </p>
             )
     }
@@ -130,7 +152,7 @@ const toggleMark = (editor: any, format: string) => {
 const MarkButton = ({ format }: { format: string }) => {
     const editor = useSlate();
     return (
-        <button type="button" className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500' onMouseDown={(ev) => {
+        <button type="button" className="p-2 border border-gray-400" onClick={(ev) => {
             ev.preventDefault();
             toggleMark(editor, format);
         }}>
@@ -142,7 +164,7 @@ const MarkButton = ({ format }: { format: string }) => {
 const BlockButton = ({ format }: { format: string }) => {
     const editor = useSlate()
     return (
-        <button className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500' type="button"
+        <button className="p-2 border border-gray-400" type="button"
             onClick={event => {
                 event.preventDefault()
                 toggleBlock(editor, format)
@@ -151,6 +173,24 @@ const BlockButton = ({ format }: { format: string }) => {
             {format}
         </button>
     )
+}
+
+const SelectHeading = () => {
+    const editor = useSlate()
+    return (
+        <select onChange={(ev) => {
+            ev.preventDefault();
+            const meta = ev.target.options[ev.target.selectedIndex]?.getAttribute("data-level");
+
+            toggleBlock(editor, ev.target.value, meta);
+            //toggleBlock(editor, { type: ev.target.value, meta: ev.target.getAttribute("data-level") });
+        }}>
+            <option value="paragraph">Normal</option>
+            <option value="heading" data-level="1">Heading One</option>
+            <option value="heading" data-level="2">Heading Two</option>
+
+        </select>
+    );
 }
 
 const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
@@ -170,38 +210,17 @@ const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
     return !!match
 }
 
-const toggleBlock = (editor: Editor, format: string) => {
-    const isActive = isBlockActive(
-        editor,
-        format,
-        TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-    )
-    const isList = LIST_TYPES.includes(format)
+const toggleBlock = (editor: Editor, format: string, meta: any) => {
 
-    Transforms.unwrapNodes(editor, {
-        match: n =>
-            !Editor.isEditor(n) &&
-            SlateElement.isElement(n) &&
-            LIST_TYPES.includes((n as any).type) &&
-            !TEXT_ALIGN_TYPES.includes(format),
-        split: true,
-    })
-    let newProperties: any
-    if (TEXT_ALIGN_TYPES.includes(format)) {
-        newProperties = {
-            align: isActive ? undefined : format,
-        }
-    } else {
-        newProperties = {
-            type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-        }
+    let newProperties: any = {
+        type: format,
     }
-    Transforms.setNodes<SlateElement>(editor, newProperties)
 
-    if (!isActive && isList) {
-        const block = { type: format, children: [] }
-        Transforms.wrapNodes(editor, block)
+    if (format === "heading") {
+        newProperties.level = parseInt(meta);
     }
+
+    Transforms.setNodes<SlateElement>(editor, newProperties);
 }
 
 const exampleDast = {
@@ -223,40 +242,99 @@ const exampleDast = {
     ]
 };
 
+const convertToDast = (doc: any[]): any[] => {
+
+    const root = [];
+    for (const i of doc) {
+        if ("text" in i) {
+            const node: { type: string; value: string; marks?: string[] } = {
+                type: "span",
+                value: i.text
+            };
+
+            if (i?.bold) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("strong");
+            }
+            if (i?.code) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("code");
+            }
+            if (i?.italic) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("emphasis");
+            }
+            if (i?.underline) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("underline");
+            }
+            if (i?.strikethrough) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("strikethrough");
+            }
+            if (i?.highlight) {
+                if (!node?.marks) node.marks = [];
+                node.marks.push("highlight");
+            }
+
+            root.push(node);
+            continue;
+        }
+        switch (i.type) {
+            case "paragraph": {
+                const children = convertToDast(i.children);
+                const node = {
+                    type: "paragraph",
+                    children
+                };
+                root.push(node);
+                break;
+            }
+            case "heading": {
+                const children = convertToDast(i.children);
+                const node = {
+                    type: "heading",
+                    level: i.level,
+                    children
+                };
+                root.push(node);
+                break;
+            }
+            case "blockquote": {
+                const children = convertToDast(i.children);
+                const node = {
+                    type: "blockquote",
+                    children
+                };
+                root.push(node);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    return root;
+}
+
 const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
     const { handleSubmit } = useForm();
+    const [editorState, setEditorState] = useState([{ type: "paragraph", children: [{ text: 'A line of text in a paragraph.' }] }]);
     const [test, setTest] = useState<any>(exampleDast);
     const editor = useMemo(() => withReact(createEditor()), []);
     const renderElement = useCallback((props: any) => <Element {...props} />, []);
     const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
 
     const onSubmit = () => {
-        const dast = {
+        console.log(editorState);
+        const dast = convertToDast(editorState);
+
+        const root: Dast = {
             type: "root",
-            children: [] as any[]
-        }
+            children: dast
+        };
 
-        console.log(editor.children);
-
-        for (const i of editor.children) {
-            if ((i as any)?.type === "paragraph") {
-                const node = {
-                    type: "paragraph",
-                    children: [
-                        {
-                            type: "span",
-                            value: (i as any).children[0].text
-                        }
-                    ],
-                    marks: []
-                }
-                dast.children.push(node);
-            } else {
-
-            }
-        }
-
-        setTest(dast);
+        setTest(root);
     }
 
     return (
@@ -267,30 +345,36 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
             </header>
             <main className="flex-1 flex flex-col items-center">
                 <h1 className="font-bold">Creat a post</h1>
-                <form className="flex flex-col max-w-5xl w-full gap-4 mt-4" onSubmit={handleSubmit(onSubmit)}>
-                    <input type="text" placeholder='Title' name="title" className="from-input" />
-                    <Slate editor={editor} value={[{ type: "paragraph", children: [{ text: 'A line of text in a paragraph.' }], } as any]}>
-                        <div className="flex gap-2 items-center mt-2 flex-wrap">
-                            <MarkButton format='bold' />
-                            <MarkButton format="italic" />
-                            <MarkButton format="underline" />
-                            <BlockButton format="heading-one" />
-                            <BlockButton format="heading-two" />
-                            <BlockButton format="block-quote" />
-                            <BlockButton format="numbered-list" />
-                            <BlockButton format="bulleted-list" />
-                            <BlockButton format="left" />
-                            <BlockButton format="center" />
-                            <BlockButton format="right" />
-                            <BlockButton format="justify" />
-                        </div>
-                        <Editable className="form-textarea mt-4 prose max-w-none" renderElement={renderElement} renderLeaf={renderLeaf} spellCheck autoFocus placeholder="Enter some rich text…" />
-                    </Slate>
-                    <button type="submit" className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500'>Post</button>
-                </form>
-                <div className="prose">
-                    <StructuredText data={test} />
-                </div>
+                <Tab.Group>
+                    <Tab.List>
+                        <Tab className="inline-block rounded bg-primary-700 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-selected:bg-primary-700 ui-selected:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]">Write</Tab>
+                        <Tab className="inline-block rounded bg-primary-700 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-selected:bg-primary-700 ui-selected:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]">Preview</Tab>
+                    </Tab.List>
+                    <Tab.Panels>
+                        <Tab.Panel>
+                            <form className="flex flex-col max-w-5xl w-full gap-4 mt-4" onSubmit={handleSubmit(onSubmit)}>
+                                <input type="text" placeholder='Title' name="title" className="from-input" />
+                                <Slate editor={editor} value={editorState} onChange={(ev) => setEditorState(ev as any)}>
+                                    <div className="flex gap-2 items-center mt-2 flex-wrap">
+                                        <SelectHeading />
+                                        <MarkButton format='bold' />
+                                        <MarkButton format="italic" />
+                                        <MarkButton format="underline" />
+                                        <BlockButton format="blockquote" />
+                                        <BlockButton format="list" />
+                                    </div>
+                                    <Editable className="form-textarea mt-4 prose max-w-none" renderElement={renderElement} renderLeaf={renderLeaf} spellCheck autoFocus placeholder="Enter some rich text…" />
+                                </Slate>
+                                <button type="submit" className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500'>Post</button>
+                            </form>
+                        </Tab.Panel>
+                        <Tab.Panel>
+                            <div className="prose">
+                                <StructuredText data={test} />
+                            </div>
+                        </Tab.Panel>
+                    </Tab.Panels>
+                </Tab.Group>
             </main>
             <Footer />
             {preview ? <ExitPreview /> : null}

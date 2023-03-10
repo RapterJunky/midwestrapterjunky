@@ -1,12 +1,12 @@
 import type { GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 import ExitPreview from "@components/ExitPreview";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
 import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic";
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import type { FullPageProps } from "@type/page";
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {

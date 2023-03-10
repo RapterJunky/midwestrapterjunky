@@ -13,9 +13,9 @@ import dynamic from "next/dynamic";
 import { HiArrowLeft } from "react-icons/hi";
 import { z } from "zod";
 
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import Tag from "@components/blog/tag";
 import ExitPreview from "@components/ExitPreview";
 import ScrollToTop from "@components/blog/ScrollToTop";
