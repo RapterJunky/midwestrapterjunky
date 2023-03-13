@@ -2,7 +2,7 @@ import type { GetStaticPropsResult, GetStaticPropsContext, NextPage, GetStaticPa
 import { createEditor, Transforms, Text, Editor, Element as SlateElement, Node } from "slate";
 import { useState, useMemo, useCallback } from 'react';
 import { Slate, Editable, withReact, useSlate } from 'slate-react';
-import type { FullPageProps } from '@type/page';
+import type { FullPageProps } from 'types/page';
 import { useForm } from 'react-hook-form';
 import { Tab } from '@headlessui/react'
 

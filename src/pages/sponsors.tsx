@@ -12,7 +12,7 @@ import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 import ExitPreview from "@components/ExitPreview";
 
-import type { FullPageProps, ResponsiveImage } from "@type/page";
+import type { FullPageProps, ResponsiveImage } from "types/page";
 import { DatoCMS } from "@api/gql";
 import SponsorsQuery from "@query/queries/sponsors";
 

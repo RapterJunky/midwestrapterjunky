@@ -13,7 +13,7 @@ import SiteTags from "@components/SiteTags";
 import Footer from "@components/layout/Footer";
 
 import { DatoCMS } from "@api/gql";
-import type { FullPageProps, ModulerContent } from "@type/page";
+import type { FullPageProps, ModulerContent } from "types/page";
 import HomePageQuery from "@query/queries/home";
 
 import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";

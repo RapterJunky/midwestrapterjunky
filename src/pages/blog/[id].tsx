@@ -22,7 +22,7 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
-import type { FullPageProps, StructuredContent } from "@type/page";
+import type { FullPageProps, StructuredContent } from "types/page";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";

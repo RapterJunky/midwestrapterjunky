@@ -16,7 +16,7 @@ import {
   renderBlock,
   renderInlineRecord,
 } from "@lib/structuredTextRules";
-import type { FullPageProps } from "@type/page";
+import type { FullPageProps } from "types/page";
 
 interface AboutUsProps extends FullPageProps {
   aboutUsModel: {

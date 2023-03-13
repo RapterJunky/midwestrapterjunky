@@ -6,7 +6,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import IconLink from "@components/IconLink";
 import { capitlize } from "@utils/capitlize";
 
-import type { Color, LinkWithIcon, ResponsiveImage } from "@type/page";
+import type { Color, LinkWithIcon, ResponsiveImage } from "types/page";
 
 export interface NavProps {
   navbar: {
@@ -68,9 +68,8 @@ export default function Navbar({
   return (
     <nav
       ref={ref}
-      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${
-        navbarMode[mode] ?? ""
-      }`}
+      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${navbarMode[mode] ?? ""
+        }`}
     >
       <Transition
         show={showNav}

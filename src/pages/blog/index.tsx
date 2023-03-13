@@ -18,7 +18,7 @@ import { getDescriptionTag } from "@lib/utils/description";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
 
-import type { FullPageProps } from "@lib/types/page";
+import type { FullPageProps } from "types/page";
 import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 
 interface BlogLatestProps extends FullPageProps {

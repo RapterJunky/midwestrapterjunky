@@ -4,12 +4,12 @@ import { useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
-import type { Paginate } from "@type/page";
+import type { Paginate } from "types/page";
 import type { Authors } from "@api/prisma";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useSWR<Paginate<Omit<Authors, "social"> & { social: { user: string; link: string; } }>, Error, [number]>(
+  const { data, isLoading, error } = useSWR<Paginate<Authors>, Error, [number]>(
     [page],
     async ([index]) => {
       const token = new URLSearchParams(window.location.search).get("token");

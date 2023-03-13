@@ -3,6 +3,10 @@ generator client {
   previewFeatures = ["clientExtensions"]
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -11,6 +15,7 @@ datasource db {
 model Authors {
   avatar String
   name   String
+  /// [AuthorSocial]
   social Json?
   id     String @unique
 }
@@ -74,6 +79,7 @@ model User {
 
 model Comment {
   id              String     @id
+  /// [PostComment]
   content         Json // Dast maybe, for now { message: string }
   created         DateTime   @default(now())
   parentCommentId String?
@@ -88,6 +94,7 @@ model ThreadPost {
   name     String
   ownerId  String
   created  DateTime  @default(now())
+  /// [Dast]
   content  Json?     // Dast
   owner    User      @relation(fields: [ownerId], references: [id])
   thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post

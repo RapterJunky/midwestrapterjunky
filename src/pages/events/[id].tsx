@@ -30,7 +30,7 @@ import type {
   StructuredContent,
   LinkWithIcon,
   FullPageProps,
-} from "@type/page";
+} from "types/page";
 
 import { fetchCacheData } from "@lib/cache";
 import ScrollToTop from "@components/blog/ScrollToTop";

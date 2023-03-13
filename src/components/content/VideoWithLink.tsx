@@ -2,7 +2,7 @@ import { StructuredText } from "react-datocms/structured-text";
 import { markRules } from "@lib/structuredTextRules";
 import Button from "@components/Button";
 
-import type { Color } from "@type/page";
+import type { Color } from "types/page";
 import YoutubeFrame from "@components/YoutubeFrame";
 
 interface VideoWithLinksProps {

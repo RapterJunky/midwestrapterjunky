@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import prisma from "@api/prisma";
 import { handleError } from "@api/errorHandler";
+import { strToNum } from "@lib/utils/strToNum";
 
 let authorSchema = z.object({
   avatar: z.string().url(),
@@ -22,7 +23,7 @@ let authorSchema = z.object({
 });
 
 const querySchema = z.object({
-  page: z.string().transform((value) => parseInt(value)),
+  page: z.string().transform(strToNum),
 });
 
 export default async function handle(

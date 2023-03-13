@@ -6,6 +6,16 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const nextConfig = withBundleAnalyzer({
   productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
   reactStrictMode: true,
+  experimental: {
+    swcPlugins: [
+      [
+        "next-superjson-plugin",
+        {
+          excluded: [],
+        },
+      ],
+    ],
+  },
   images: {
     deviceSizes: [150, 300, 600, 900, 1200, 1500, 1800, 2100],
     domains: [

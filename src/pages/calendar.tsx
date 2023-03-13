@@ -11,7 +11,7 @@ import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/calendar";
 
-import type { FullPageProps } from "@type/page";
+import type { FullPageProps } from "types/page";
 
 interface CalendarProps extends FullPageProps {
   allEvents: {

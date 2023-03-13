@@ -3,7 +3,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { useState } from 'react';
 import { useDebounce } from "use-debounce";
-import type { FullPageProps, Paginate } from '@type/page';
+import type { FullPageProps, Paginate } from 'types/page';
 
 import SiteTags from '@components/SiteTags';
 import Navbar from '@components/layout/Navbar';

@@ -1,6 +1,6 @@
 import type { GetStaticPropsResult, GetStaticPropsContext, NextPage } from 'next';
 import Link from 'next/link';
-import type { FullPageProps } from '@type/page';
+import type { FullPageProps } from 'types/page';
 
 import SiteTags from '@components/SiteTags';
 import Navbar from '@components/layout/Navbar';
@@ -48,12 +48,12 @@ const Threads: NextPage<Props> = ({ threads, preview, _site, navbar }) => {
                 </div>
                 <div className="container flex flex-col gap-4 mt-4">
                     {threads.map(value => (
-                        <Link key={value.id} className="shadow-lg h-max p-2 rounded-sm flex justify-between" href={{ pathname: "/threads/[thread]", query: { thread: value.id } }}>
+                        <Link key={value.id} className="shadow-lg h-max p-2 rounded-sm flex justify-between border" href={{ pathname: "/threads/[thread]", query: { thread: value.id } }}>
                             <div>
                                 <h1 className="underline font-bold text-gray-800">{value.name}</h1>
                                 <span className="text-xs text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, sit quo?</span>
                             </div>
-                            <button className='inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500'>View</button>
+                            <button className="disabled:pointer-events-none disabled:opacity-70 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]">View</button>
                         </Link>
                     ))}
                 </div>
