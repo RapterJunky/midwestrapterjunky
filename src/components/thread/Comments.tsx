@@ -1,13 +1,10 @@
 import useSWR from 'swr';
-import { useSession, signIn } from "next-auth/react"
-import { HiArrowCircleRight, HiDotsHorizontal, HiReply } from "react-icons/hi";
-import { User, Comment } from "@api/prisma";
-import type { Paginate } from "@type/page";
+import Image from 'next/image';
 import { useState } from 'react';
-import { formatLocalDate } from '@lib/utils/timeFormat';
-
-type PostComments = Paginate<Omit<Comment, "ownerId" | "threadPostId"> & { owner: Omit<User, "email" | "emailVerified"> }>
-
+import { useSession, signIn } from "next-auth/react"
+import { HiArrowCircleRight } from "react-icons/hi";
+import type { Paginate } from "@type/page";
+import Comment, { type TComment } from './Comment';
 interface Props {
     post: string;
 }
@@ -15,19 +12,90 @@ interface Props {
 const Comments: React.FC<Props> = ({ post }) => {
     const session = useSession();
     const [page, setPage] = useState(1);
-    const { data, isLoading, error, mutate } = useSWR<PostComments, Response>(`/api/threads/comments?post=${post}&page=${page}`, (url) => fetch(url).then(value => { if (value.ok) return value; throw value; }).then(res => res.json()));
+    const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(`/api/threads/comments?post=${post}&page=${page}`, (url) => fetch(url).then(value => { if (value.ok) return value; throw value; }).then(res => res.json()));
+
+    const deleteComment = async (id: string) => {
+        try {
+            if (!data) return;
+            const request = await fetch("/api/threads/comments", {
+                method: "DELETE",
+                body: JSON.stringify({ id }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (!request.ok) throw new Error();
+
+            await mutate({ ...data, result: data.result.filter(value => value.id !== id) });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const reportComment = async (id: string) => {
+        try {
+            const request = await fetch("/api/threads/comments", {
+                method: "POST",
+                body: JSON.stringify({
+                    id
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Comment-Report": "true"
+                }
+            });
+            if (!request.ok) throw new Error();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleCreateComment = async (ev: React.FormEvent<HTMLFormElement>) => {
+        ev.preventDefault();
+        try {
+            if (!data) return;
+            const formData = new FormData(ev.target as HTMLFormElement);
+
+            (ev.target as HTMLFormElement).reset();
+
+            const result = await fetch("/api/threads/comments", {
+                method: "POST",
+                body: JSON.stringify({
+                    threadPostId: post,
+                    content: {
+                        message: formData.get("comment") ?? "Placeholder text"
+                    }
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!result.ok) throw new Error();
+            const content = await result.json();
+
+            await mutate({ ...data, result: [...data.result, content] });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleEdit = async (ev: React.FormEvent<HTMLFormElement>) => {
+        try {
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
-        <div className="my-4">
-            <span>{data?.result.length} Comments</span>
+        <div className="my-4 mx-4">
             {session.status === "authenticated" ? (
-                <form className="flex gap-4 mt-6">
-                    <div>
-                        <img className="rounded-full w-16" src={`https://api.dicebear.com/5.x/icons/png?seed=${"SomeData"}`} alt="avatar" />
-                    </div>
-                    <input className="mt-0 block w-full px-0.5 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-black" type="text" placeholder="Add a comment" />
-                    <button type="submit" className='px-2'>
-                        <HiArrowCircleRight className="h-10 w-10" />
+                <form className="flex justify-evenly gap-2 mt-6" onSubmit={handleCreateComment}>
+                    <Image width={52} height={52} className="rounded-full" src={session.data.user?.image ?? "https://api.dicebear.com/5.x/icons/png?seed=Question"} alt="avatar" />
+                    <input autoComplete="off" name="comment" className="mt-0 block w-full px-0.5 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-black" type="text" placeholder="Add a comment" />
+                    <button type="submit" className='px-1'>
+                        <HiArrowCircleRight className="h-10 w-10 text-blue-400 hover:text-blue-500" />
                     </button>
                 </form>
             ) : (
@@ -36,39 +104,13 @@ const Comments: React.FC<Props> = ({ post }) => {
                     <button className="underline" onClick={() => signIn()}>Login</button>
                 </div>
             )}
-            <ul className="mt-5">
+            <div className="mt-5">{data?.result.length} Comments</div>
+            <ul className="mt-5 w-full">
                 {error || !data ? (<li>{error?.statusText ?? "Failed to load comments"}</li>) : null}
                 {isLoading ? (<li>Loading</li>) : null}
                 {!isLoading && data && !data?.result?.length ? (<li>No Comments</li>) : null}
                 {!isLoading && data ? data?.result.map((comment) => (
-                    <li key={comment.id} className={`flex gap-4 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""}`}>
-                        <div>
-                            <img className="rounded-full w-16" src={`https://api.dicebear.com/5.x/icons/png?seed=${"SomeData"}`} alt="avatar" />
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <div className="text-xs text-gray-500">{comment.owner.name} • {formatLocalDate(comment.created, "en-us", { weekday: "short" })}</div>
-                            <article className='prose max-w-none'>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto molestiae sit quaerat illum impedit, unde earum aut voluptatem tempore! Eveniet minima iste vitae rerum eos, tempora expedita quo consectetur tenetur!
-                            </article>
-                            <div className="flex gap-2 items-center text-gray-500">
-                                <button className='text-xs flex gap-1 items-center'>
-                                    <HiReply /> Reply
-                                </button>
-                                •
-                                {session.data?.user.id === comment.owner.id ? (
-                                    <>
-                                        <button className='text-xs flex gap-1 items-center'>
-                                            Edit
-                                        </button> •
-                                    </>
-                                ) : null}
-                                <button>
-                                    <HiDotsHorizontal />
-                                </button>
-                            </div>
-                        </div>
-                        <div></div>
-                    </li>
+                    <Comment key={comment.id} comment={comment} session={session} handleEdit={handleEdit} handleCreate={handleCreateComment} deleteComment={deleteComment} reportComment={reportComment} />
                 )) : null}
             </ul>
             <div className='flex items-center justify-evenly mt-5'>

@@ -14,13 +14,16 @@ const getSchema = z.object({
     page: z.string().default("1").transform(strToNum)
 });
 const postSchema = z.object({
-    content: z.object({}).passthrough(),
-    parentCommentId: z.string().uuid().nullable(),
+    content: z.object({ message: z.string() }),
+    parentCommentId: z.string().uuid().nullable().optional(),
     threadPostId: z.string().uuid()
 });
+
 const patchSchema = z.object({
     id: z.string().uuid(),
-    content: z.object({}).passthrough(),
+    content: z.object({
+        message: z.string()
+    }),
 });
 const deleteSchema = z.object({
     id: z.string().uuid()
@@ -60,6 +63,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case "POST": {
                 await applyRateLimit(req, res);
                 const session = await getSession(req, res);
+
+                if (req.headers["x-comment-report"] === "true") {
+
+                    const { id } = deleteSchema.parse(req.body);
+
+                    console.log(`Comment ${id} reported by ${session.user.id}`);
+
+                    return res.status(201).json({ message: "Reported" });
+                }
+
                 const { content, parentCommentId, threadPostId } = postSchema.parse(req.body);
 
                 await prisma.threadPost.exists({
@@ -84,6 +97,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         ownerId: session.user.id,
                         threadPostId,
                         parentCommentId
+                    },
+                    select: {
+                        id: true,
+                        content: true,
+                        created: true,
+                        parentCommentId: true,
+                        owner: {
+                            select: {
+                                image: true,
+                                id: true,
+                                name: true
+                            }
+                        }
                     }
                 });
 
