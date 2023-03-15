@@ -29,6 +29,10 @@ const deleteSchema = z.object({
     id: z.string().uuid()
 });
 
+const reportSchema = deleteSchema.extend({
+    reason: z.string()
+});
+
 //https://kittygiraudel.com/2022/05/16/rate-limit-nextjs-api-routes/
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -64,11 +68,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await applyRateLimit(req, res);
                 const session = await getSession(req, res);
 
-                if (req.headers["x-comment-report"] === "true") {
+                if (req.headers["x-type-report"] === "true") {
 
-                    const { id } = deleteSchema.parse(req.body);
+                    const { id, reason } = reportSchema.parse(req.body);
 
-                    console.log(`Comment ${id} reported by ${session.user.id}`);
+                    console.log(`Comment ${id} reported by ${session.user.id} for ${reason}`);
 
                     return res.status(201).json({ message: "Reported" });
                 }

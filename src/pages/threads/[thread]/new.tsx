@@ -70,7 +70,7 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
 
-    const props = await fetchCacheData<Props>("fav-nav", () => DatoCMS<Props>(GenericPageQuery, {
+    const props = await fetchCacheData<Props>("GenericPage", () => DatoCMS<Props>(GenericPageQuery, {
         preview: ctx.preview,
     }));
 
@@ -181,9 +181,7 @@ const SelectHeading = () => {
         <select onChange={(ev) => {
             ev.preventDefault();
             const meta = ev.target.options[ev.target.selectedIndex]?.getAttribute("data-level");
-
             toggleBlock(editor, ev.target.value, meta);
-            //toggleBlock(editor, { type: ev.target.value, meta: ev.target.getAttribute("data-level") });
         }}>
             <option value="paragraph">Normal</option>
             <option value="heading" data-level="1">Heading One</option>
@@ -329,9 +327,16 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
         console.log(editorState);
         const dast = convertToDast(editorState);
 
-        const root: Dast = {
-            type: "root",
-            children: dast
+        const root: PrismaJson.Dast = {
+            value: {
+                schema: "dast",
+                document: {
+                    type: "root",
+                    children: dast
+                }
+            },
+            blocks: [],
+            links: []
         };
 
         setTest(root);

@@ -1,20 +1,27 @@
 import type { GetStaticPropsResult, GetStaticPropsContext, NextPage, GetStaticPathsResult } from 'next';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react'
+import { HiFlag } from 'react-icons/hi';
 import { StructuredText } from 'react-datocms/structured-text';
 import { z } from 'zod';
-import type { FullPageProps } from '@type/page';
-import { DatoCMS } from '@api/gql';
-import GenericPageQuery from '@query/queries/generic';
-import prisma, { type User, type Thread, type ThreadPost } from '@api/prisma';
+
 import SiteTags from '@components/SiteTags';
 import Navbar from '@components/layout/Navbar';
 import Footer from '@components/layout/Footer';
 import ExitPreview from '@components/ExitPreview';
-import { fetchCacheData } from '@lib/cache';
-import Link from 'next/link';
+import ScrollToTop from '@components/blog/ScrollToTop';
+import ReportDialog from '@components/dialogs/ReportDialog';
 import Comments from '@components/thread/Comments';
+
+import { DatoCMS } from '@api/gql';
+import prisma, { type User, type Thread, type ThreadPost } from '@api/prisma';
+import GenericPageQuery from '@query/queries/generic';
+import type { FullPageProps } from '@type/page';
+
+import { fetchCacheData } from '@lib/cache';
 import { formatLocalDate } from '@lib/utils/timeFormat';
 import { renderBlock } from '@lib/structuredTextRules';
-import Image from 'next/image';
 
 interface Props extends FullPageProps {
     post: Pick<ThreadPost, "created" | "name" | "id" | "content"> & {
@@ -59,7 +66,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetSta
             }
         });
 
-        const props = await fetchCacheData<Omit<Props, "post">>("fav-nav", () => DatoCMS(GenericPageQuery, {
+        const props = await fetchCacheData<Omit<Props, "post">>("GenericPage", () => DatoCMS(GenericPageQuery, {
             preview: ctx.preview,
         }));
 
@@ -264,28 +271,61 @@ const ExampleDast: any = {
 };
 
 const Post: NextPage<Props> = ({ preview, _site, navbar, post }) => {
+    const [show, setShow] = useState<boolean>(false);
+
     return (
-        <div className="flex flex-col h-full">
-            <SiteTags tags={[_site.faviconMetaTags, [{ tag: "title", content: `Post ${post.name} - Midwest Raptor Junkies` }]]} />
+        <div className="flex flex-col">
+            <ReportDialog reportHandle={async state => {
+                try {
+                    const request = await fetch("/api/threads/post", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            id: post.id,
+                            reason: state.get("reason")
+                        }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Type-Report": "true"
+                        }
+                    });
+                    if (!request.ok) throw request;
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    setShow(false);
+                }
+            }} show={show} onClose={() => setShow(false)} title="Report Post" />
+            <SiteTags tags={[_site.faviconMetaTags, [
+                { tag: "title", content: `${post.name} - Midwest Raptor Junkies` }
+            ]]} />
             <header>
                 <Navbar {...navbar} mode="none" />
             </header>
-            <main className="flex-1 flex flex-col items-center gap-2">
-                <div className='flex items-center gap-4 w-full max-w-5xl mt-5'>
+            <main className="flex-1 flex flex-col items-center gap-2 self-center mx-4">
+                <div className='flex items-center gap-4 w-full mt-5'>
                     <Image src={post.owner.image ?? ""} alt="avatar" className="rounded-full" width={48} height={48} />
                     <div>
                         <div className="font-bold text-3xl">{post.name}</div>
                         <span className="text-sm">By <span className="text-red-500">{post.owner.name}</span>, in <Link href={`/threads/${post.thread.id}`} className='text-red-500 underline active:text-red-700'>{post.thread.name}</Link> on {formatLocalDate(post.created, "en-us", { weekday: "short" })} </span>
                     </div>
                 </div>
-                <hr className="w-full max-w-5xl" />
-                <div className="w-full max-w-5xl p-2 prose min-h-[320px] prose-blockquote:last-of-type:">
+                <hr className="w-full" />
+                <div className="w-full p-2 prose max-w-none min-h-[320px]">
                     <StructuredText renderBlock={renderBlock} data={ExampleDast} />
                 </div>
-                <div className="sm:max-w-5xl w-full overflow-hidden">
+                <div className="w-full">
+                    <hr className='w-full' />
+                    <div className="mt-4 flex justify-between text-sm text-gray-600">
+                        <span>Tags: No Tags</span>
+                        <button onClick={() => setShow(true)} className='flex items-center gap-1 text-red-500 hover:text-red-700'><HiFlag /> Report</button>
+                    </div>
+                    <hr className='w-full mt-4' />
+                </div>
+                <div className="w-full overflow-hidden" id="comment">
                     <Comments post={post.id} />
                 </div>
             </main>
+            <ScrollToTop comments />
             <div className="h-20 mt-4">
                 <Footer />
             </div>

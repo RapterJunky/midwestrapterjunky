@@ -9,6 +9,18 @@ import { getSession } from "@lib/getSession";
 import { handleError } from "@api/errorHandler";
 import { applyRateLimit } from "@api/rateLimiter";
 
+const dastSchema = z.object({
+    value: z.object({
+        schema: z.literal('dast'),
+        document: z.object({
+            type: z.literal("root"),
+            children: z.array(z.any())
+        })
+    }),
+    links: z.array(z.object({ __typename: z.string(), id: z.string() }).passthrough()).optional(),
+    blocks: z.array(z.object({ __typename: z.string(), id: z.string() }).passthrough()).optional()
+})
+
 const getSchema = z.object({
     page: z.string().default("1").transform(strToNum),
     thread: z.string({ required_error: "Thread query param is required." }).transform(strToNum),
@@ -17,18 +29,24 @@ const getSchema = z.object({
         return value;
     })
 });
+
+const deleteSchema = z.object({
+    id: z.string().uuid()
+});
+
+const reportSchema = deleteSchema.extend({
+    reason: z.string()
+});
+
+const patchSchema = deleteSchema.extend({
+    name: z.string().optional(),
+    content: dastSchema
+});
+
 const postSchema = z.object({
     name: z.string(),
     threadId: z.number().positive(),
-    content: z.object({})
-});
-const patchSchema = z.object({
-    name: z.string().optional(),
-    id: z.string().uuid(),
-    content: z.object({}).passthrough().optional()
-});
-const deleteSchema = z.object({
-    id: z.string().uuid()
+    content: dastSchema
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -67,6 +85,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case "POST": {
                 await applyRateLimit(req, res);
                 const session = await getSession(req, res);
+
+                if (req.headers["x-type-report"] === "true") {
+                    const { id, reason } = reportSchema.parse(req.body);
+
+                    console.log(`post ${id} was reported by ${session.user.id} for ${reason}`);
+
+                    return res.status(201).json({ message: "Reported" });
+                }
+
                 const { name, threadId, content } = postSchema.parse(req.body);
 
                 await prisma.thread.exists({

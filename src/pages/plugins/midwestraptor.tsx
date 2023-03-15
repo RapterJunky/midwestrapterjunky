@@ -13,16 +13,20 @@ import AssetSourceOptimized from "@components/plugins/AssetSourceOptimized";
 import EditAuthorModal from "@components/plugins/EditAuthorModel";
 import StorefrontModel from "@components/plugins/StorefrontModel";
 import BrowseProductsModel from "@components/plugins/BrowseProductsModal";
+import MessageBoardManagerPage from "@components/plugins/MessageBoardManagerPage";
 
 import "datocms-react-ui/styles.css";
 
+
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
+const MESSAGE_BOARD_PAGE_ID = "messageBoardManager";
 
 const MidwestRaptor: NextPage<any> = () => {
   const { id, page, ctx } = useDatoCMS({
     renderConfigScreen: true,
     renderFieldExtension: true,
+    renderPage: true,
     renderModal: true,
     renderAssetSource: true,
     async onBoot(ctx) {
@@ -126,6 +130,17 @@ const MidwestRaptor: NextPage<any> = () => {
         },
       ];
     },
+    mainNavigationTabs(ctx) {
+      return [
+        {
+          label: "Message Board",
+          icon: "comments",
+          pointsTo: {
+            pageId: MESSAGE_BOARD_PAGE_ID
+          }
+        }
+      ];
+    },
   });
 
   switch (page) {
@@ -143,6 +158,10 @@ const MidwestRaptor: NextPage<any> = () => {
         default:
           return null;
       }
+    }
+    case "Page": {
+      if (id === MESSAGE_BOARD_PAGE_ID) return <MessageBoardManagerPage ctx={ctx} />
+      return null;
     }
     case "Modal":
       if (id === "browseProducts") return <BrowseProductsModel ctx={ctx} />;

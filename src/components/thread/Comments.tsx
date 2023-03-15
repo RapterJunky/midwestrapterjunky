@@ -1,16 +1,19 @@
 import useSWR from 'swr';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useSession, signIn } from "next-auth/react"
 import { HiArrowCircleRight } from "react-icons/hi";
 import type { Paginate } from "@type/page";
 import Comment, { type TComment } from './Comment';
+import ReportDialog from '@components/dialogs/ReportDialog';
 interface Props {
     post: string;
 }
 
 const Comments: React.FC<Props> = ({ post }) => {
     const session = useSession();
+    const commentId = useRef<string>();
+    const [show, setShow] = useState(false);
     const [page, setPage] = useState(1);
     const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(`/api/threads/comments?post=${post}&page=${page}`, (url) => fetch(url).then(value => { if (value.ok) return value; throw value; }).then(res => res.json()));
 
@@ -24,7 +27,7 @@ const Comments: React.FC<Props> = ({ post }) => {
                     "Content-Type": "application/json"
                 }
             });
-            if (!request.ok) throw new Error();
+            if (!request.ok) throw request;
 
             await mutate({ ...data, result: data.result.filter(value => value.id !== id) });
         } catch (error) {
@@ -33,20 +36,30 @@ const Comments: React.FC<Props> = ({ post }) => {
     }
 
     const reportComment = async (id: string) => {
+        commentId.current = id;
+        setShow(true);
+    }
+
+    const handleReport = async (state: FormData) => {
         try {
+            if (!commentId.current) throw new Error("Missing comment id");
+
             const request = await fetch("/api/threads/comments", {
                 method: "POST",
                 body: JSON.stringify({
-                    id
+                    id: commentId.current,
+                    reason: state.get("reason")
                 }),
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Comment-Report": "true"
+                    "X-Type-Report": "true"
                 }
             });
-            if (!request.ok) throw new Error();
+            if (!request.ok) throw request;
         } catch (error) {
             console.error(error);
+        } finally {
+            setShow(false);
         }
     }
 
@@ -71,7 +84,7 @@ const Comments: React.FC<Props> = ({ post }) => {
                 }
             });
 
-            if (!result.ok) throw new Error();
+            if (!result.ok) throw result;
             const content = await result.json();
 
             await mutate({ ...data, result: [...data.result, content] });
@@ -80,19 +93,12 @@ const Comments: React.FC<Props> = ({ post }) => {
         }
     }
 
-    const handleEdit = async (ev: React.FormEvent<HTMLFormElement>) => {
-        try {
-
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     return (
-        <div className="my-4 mx-4">
+        <div className="my-4">
+            <ReportDialog title="Report Comment" show={show} onClose={() => setShow(false)} reportHandle={handleReport} />
             {session.status === "authenticated" ? (
                 <form className="flex justify-evenly gap-2 mt-6" onSubmit={handleCreateComment}>
-                    <Image width={52} height={52} className="rounded-full" src={session.data.user?.image ?? "https://api.dicebear.com/5.x/icons/png?seed=Question"} alt="avatar" />
+                    <Image width={52} height={52} className="rounded-full" src={session.data.user?.image ?? "https://api.dicebear.com/5.x/icons/png?seed=Unknown"} alt="avatar" />
                     <input autoComplete="off" name="comment" className="mt-0 block w-full px-0.5 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-black" type="text" placeholder="Add a comment" />
                     <button type="submit" className='px-1'>
                         <HiArrowCircleRight className="h-10 w-10 text-blue-400 hover:text-blue-500" />
@@ -110,7 +116,7 @@ const Comments: React.FC<Props> = ({ post }) => {
                 {isLoading ? (<li>Loading</li>) : null}
                 {!isLoading && data && !data?.result?.length ? (<li>No Comments</li>) : null}
                 {!isLoading && data ? data?.result.map((comment) => (
-                    <Comment key={comment.id} comment={comment} session={session} handleEdit={handleEdit} handleCreate={handleCreateComment} deleteComment={deleteComment} reportComment={reportComment} />
+                    <Comment key={comment.id} comment={comment} session={session} deleteComment={deleteComment} reportComment={reportComment} />
                 )) : null}
             </ul>
             <div className='flex items-center justify-evenly mt-5'>
