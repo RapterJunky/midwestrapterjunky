@@ -77,6 +77,14 @@ model User {
   Comment       Comment[]
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model Comment {
   id              String     @id
   /// [PostComment]
