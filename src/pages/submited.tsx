@@ -5,13 +5,12 @@ import Navbar from "@components/layout/Navbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
-import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic";
 import type { FullPageProps } from "types/page";
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
 
 export async function getStaticProps() {
-  const data = await fetchCacheData<FullPageProps>("GenericPage", () => DatoCMS(Query));
+  const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
 
   return {
     props: {

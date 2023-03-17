@@ -1,23 +1,20 @@
-import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import type { GetStaticPropsResult, NextPage } from "next";
 import Link from "next/link";
 
+import ScrollToTop from "@components/blog/ScrollToTop";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 
-import { DatoCMS } from "@api/gql";
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
-import ScrollToTop from "@components/blog/ScrollToTop";
-
-
 
 interface Props extends FullPageProps { }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
     try {
-        const props = await fetchCacheData<Props>("GenericPage", () => DatoCMS(GenericPageQuery));
+        const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
 
         return {
             props: {

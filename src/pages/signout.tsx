@@ -1,13 +1,14 @@
-import { DatoCMS } from "@api/gql";
 import SiteTags from "@components/SiteTags";
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
 import GenericPageQuery from "@query/queries/generic";
 import { FullPageProps } from "@type/page";
 import type { GetStaticPropsResult, NextPage } from "next";
 import { signOut } from 'next-auth/react';
 
-export const getStaticProps = async (): Promise<GetStaticPropsResult<Omit<FullPageProps, "navbar" | "preview">>> => {
-    const data = await fetchCacheData<FullPageProps>("GenericPage", () => DatoCMS(GenericPageQuery))
+type Props = Omit<FullPageProps, "navbar" | "preview">;
+
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
+    const data = await fetchCachedQuery<FullPageProps>("GenericPage", GenericPageQuery);
 
     return {
         props: {
@@ -15,7 +16,7 @@ export const getStaticProps = async (): Promise<GetStaticPropsResult<Omit<FullPa
         }
     }
 }
-const SignOut: NextPage<Omit<FullPageProps, "navbar" | "preview">> = ({ _site }) => {
+const SignOut: NextPage<Props> = ({ _site }) => {
     return (
         <div className="flex h-full items-center justify-center bg-neutral-200">
             <SiteTags tags={[_site.faviconMetaTags, [{ tag: "title", content: "Signout - Midwest Raptor Junkies" }]]} />

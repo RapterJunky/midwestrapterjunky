@@ -1,14 +1,14 @@
-import { DatoCMS } from "@api/gql";
-import SiteTags from "@components/SiteTags";
-import { fetchCacheData } from "@lib/cache";
-import GenericPageQuery from "@query/queries/generic";
-import { FullPageProps } from "@type/page";
 import type { NextPage, GetStaticPropsResult, GetStaticPropsContext } from "next";
+import type { FaviconAttributes } from "react-datocms/seo";
 import { getProviders, signIn } from "next-auth/react"
+import { FaGoogle } from 'react-icons/fa';
 import Image from "next/image";
 import Link from "next/link";
-import type { FaviconAttributes } from "react-datocms/seo";
-import { FaGoogle } from 'react-icons/fa';
+
+import SiteTags from "@components/SiteTags";
+import { fetchCachedQuery } from "@lib/cache";
+import GenericPageQuery from "@query/queries/generic";
+import type { FullPageProps } from "@type/page";
 
 interface Props {
     providers: Awaited<ReturnType<typeof getProviders>>,
@@ -17,7 +17,7 @@ interface Props {
 
 export const getStaticProps = async (ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
     const providers = await getProviders();
-    const data = await fetchCacheData<FullPageProps>("GenericPage", () => DatoCMS(GenericPageQuery))
+    const data = await fetchCachedQuery<FullPageProps>("GenericPage", GenericPageQuery);
 
     return {
         props: {
@@ -96,14 +96,5 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
         </div>
     );
 }
-
-/*
-<div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                            <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                                Already have an account?
-                                <Link href="/signin" className="text-gray-700 underline ml-1">Log in</Link>.
-                            </p>
-                        </div>
-*/
 
 export default SignIn;
