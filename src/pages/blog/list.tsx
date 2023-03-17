@@ -168,9 +168,7 @@ const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
           total={data?.totalArticles.count ?? 0}
         />
       </main>
-      <div className="h-20">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );

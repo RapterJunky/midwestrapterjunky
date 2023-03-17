@@ -1,5 +1,6 @@
 import type { GetStaticPropsResult, GetStaticPropsContext, NextPage, GetStaticPathsResult } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import useSWR from 'swr';
 import { useState } from 'react';
 import { useDebounce } from "use-debounce";
@@ -13,6 +14,7 @@ import Footer from '@components/layout/Footer';
 import prisma, { type ThreadPost, type Thread, type User } from '@api/prisma';
 import { DatoCMS } from '@api/gql';
 import GenericPageQuery from '@query/queries/generic';
+
 
 
 
@@ -97,7 +99,7 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
                         <div key={value.id} className="w-full flex flex-col sm:flex-row border-2 rounded-md mx-auto p-4 items-center justify-between animate-in fade-in-20">
                             <div className="flex flex-row items-center h-full justify-center space-x-5">
                                 <div className="flex flex-col gap-1 items-center">
-                                    <img className="h-12 w-12 rounded-full" src={"https://lh3.googleusercontent.com/a/AGNmyxYcKL2ewkT9EnBkCBn0gB3q_VpvBia2Los5HwXyVQ=s96-c"} alt="avatar" />
+                                    <Image height={48} width={48} className="h-12 w-12 rounded-full" src={value.owner?.image ?? ""} alt="avatar" />
                                     <span className="h-3 rounded-md text-sm">{value.owner.name}</span>
                                 </div>
                                 <div className="flex flex-col space-y-3">

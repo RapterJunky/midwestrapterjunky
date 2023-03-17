@@ -129,7 +129,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
                         <div className="text-base font-medium leading-6">
                           <Link
                             href={`/blog/${post.slug}`}
-                            className="flex items-center gap-2 text-red-500 hover:text-red-600"
+                            className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
                             aria-label={`Read "${post.title}"`}
                           >
                             Read more <HiArrowRight />
@@ -147,16 +147,14 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
         <div className="flex justify-end text-base font-medium leading-6">
           <Link
             href="/blog/list"
-            className="flex items-center gap-2 text-red-500 hover:text-red-600"
+            className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
             aria-label="all posts"
           >
             All Posts <HiArrowRight />
           </Link>
         </div>
       </main>
-      <div className="mt-2">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );

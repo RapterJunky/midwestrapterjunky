@@ -1,24 +1,21 @@
-import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
 import SiteTags from "@components/SiteTags";
 
 import { DatoCMS } from "@api/gql";
-import Query from "@query/queries/generic_tags";
+import Query from "@query/queries/generic";
+import { fetchCacheData } from "@lib/cache";
 
-type PageProps = {
+type Props = {
   _site: {
     faviconMetaTags: SeoOrFaviconTag[];
   };
 };
 
-export const getStaticProps = async (
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<PageProps>> => {
-  const data = await DatoCMS<PageProps>(Query, {
-    preview: ctx.preview,
-  });
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
+  const data = await fetchCacheData<Props>("GenericPage", () => DatoCMS<Props>(Query));
   return {
     props: data,
   };
@@ -27,11 +24,8 @@ export const getStaticProps = async (
 /**
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
- *
- * @export
- * @return {*}
  */
-export default function ErrorPage404(props: PageProps) {
+const ErrorPage: NextPage<Props> = (props) => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-200 px-16 md:px-0">
       <SiteTags
@@ -68,3 +62,5 @@ export default function ErrorPage404(props: PageProps) {
     </div>
   );
 }
+
+export default ErrorPage;

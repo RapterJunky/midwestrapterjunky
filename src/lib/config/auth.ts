@@ -3,8 +3,13 @@ import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@api/prisma';
 import { logger } from '@lib/logger';
+import type { PrismaClient } from '@prisma/client';
 
 export const authConfig = {
+    pages: {
+        signIn: "/signin",
+        signOut: "/signout"
+    },
     logger: {
         debug(code, metadata) {
             logger.debug(metadata, code);
@@ -24,7 +29,7 @@ export const authConfig = {
             return session;
         },
     },
-    adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma as never as PrismaClient),
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,

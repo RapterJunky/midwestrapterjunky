@@ -218,7 +218,7 @@ const Article: NextPage<ArticleProps> = ({
                           <dd>
                             {author.social ? (
                               <Link
-                                className="text-red-500 hover:text-red-600"
+                                className="text-blue-500 hover:text-blue-600"
                                 href={author.social.link}
                               >
                                 {author.social.user}
@@ -268,7 +268,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Previous Article
                         </h2>
-                        <div className="text-red-500 hover:text-red-600">
+                        <div className="text-blue-500 hover:text-blue-600">
                           <Link href={`/blog/${prev.slug}`}>{prev.title}</Link>
                         </div>
                       </div>
@@ -278,7 +278,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Next Article
                         </h2>
-                        <div className="text-red-500 hover:text-red-600">
+                        <div className="text-blue-500 hover:text-blue-600">
                           <Link href={`/blog/${next.slug}`}>{next.title}</Link>
                         </div>
                       </div>
@@ -288,7 +288,7 @@ const Article: NextPage<ArticleProps> = ({
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href="/blog"
-                    className="flex items-center text-red-500 hover:text-red-600"
+                    className="flex items-center text-blue-500 hover:text-blue-600"
                   >
                     <HiArrowLeft /> Back to the blog
                   </Link>

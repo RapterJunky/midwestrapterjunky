@@ -36,7 +36,10 @@ export const getStaticProps = async (
   });
 
   return {
-    props: data,
+    props: {
+      ...data,
+      preview: ctx?.preview ?? false
+    },
   };
 };
 
@@ -74,9 +77,7 @@ const SponsorsPage: NextPage<PageProps> = ({
           ))}
         </section>
       </main>
-      <div className="h-20 w-full">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );

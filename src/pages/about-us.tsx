@@ -1,7 +1,7 @@
-import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import Image from "next/image";
 import type { SeoOrFaviconTag } from "react-datocms";
 import { StructuredText } from "react-datocms/structured-text";
-import Image from "next/image";
 
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
@@ -51,7 +51,7 @@ export const getStaticProps = async (
   };
 };
 
-export default function AboutUs(props: AboutUsProps) {
+const AboutUs: NextPage<AboutUsProps> = (props) => {
   return (
     <>
       <SiteTags
@@ -96,3 +96,5 @@ export default function AboutUs(props: AboutUsProps) {
     </>
   );
 }
+
+export default AboutUs;
