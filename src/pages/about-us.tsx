@@ -1,4 +1,8 @@
-import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import Image from "next/image";
 import type { SeoOrFaviconTag } from "react-datocms";
 import { StructuredText } from "react-datocms/structured-text";
@@ -95,6 +99,6 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
       {props.preview ? <ExitPreview /> : null}
     </>
   );
-}
+};
 
 export default AboutUs;

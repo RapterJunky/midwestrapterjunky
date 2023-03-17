@@ -38,7 +38,7 @@ export const getStaticProps = async (
   return {
     props: {
       ...data,
-      preview: ctx?.preview ?? false
+      preview: ctx?.preview ?? false,
     },
   };
 };

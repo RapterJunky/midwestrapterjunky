@@ -1,4 +1,8 @@
-import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
@@ -14,8 +18,12 @@ type Props = {
   };
 };
 
-export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
-  const data = await fetchCacheData<Props>("GenericPage", () => DatoCMS<Props>(Query));
+export const getStaticProps = async (): Promise<
+  GetStaticPropsResult<Props>
+> => {
+  const data = await fetchCacheData<Props>("GenericPage", () =>
+    DatoCMS<Props>(Query)
+  );
   return {
     props: data,
   };
@@ -61,6 +69,6 @@ const ErrorPage: NextPage<Props> = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default ErrorPage;

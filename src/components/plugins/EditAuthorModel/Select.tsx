@@ -85,7 +85,7 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
       <div className="mt-4 flex items-center justify-between">
         <Button
           disabled={data?.isFirstPage}
-          onClick={() => setPage((data?.previousPage ?? 1))}
+          onClick={() => setPage(data?.previousPage ?? 1)}
         >
           Prev
         </Button>
@@ -94,7 +94,7 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
         </span>
         <Button
           disabled={data?.isLastPage}
-          onClick={() => setPage((data?.nextPage ?? 1))}
+          onClick={() => setPage(data?.nextPage ?? 1)}
         >
           Next
         </Button>

@@ -2,30 +2,37 @@ import type { Prisma } from "@prisma/client";
 import { DatoCMS } from "@api/gql";
 import prisma from "@api/prisma";
 
-export const fetchCachedQuery = async <R = unknown>(key: string, query: string, opt?: { ci?: true, preview?: true }): Promise<R> => {
-  const request = async (preview: boolean = false) => DatoCMS(query, { preview });
+export const fetchCachedQuery = async <R = unknown>(
+  key: string,
+  query: string,
+  opt?: { ci?: true; preview?: true }
+): Promise<R> => {
+  const request = async (preview: boolean = false) =>
+    DatoCMS(query, { preview });
   if (opt?.preview) return request(true) as Promise<R>;
 
   let cache = await prisma.cache.findFirst({ where: { key } });
 
   if (!cache || cache.isDirty || opt?.ci) {
-    const data = await request() as Prisma.InputJsonValue;
+    const data = (await request()) as Prisma.InputJsonValue;
     cache = await prisma.cache.upsert({
       create: {
-        key, data, isDirty: false,
+        key,
+        data,
+        isDirty: false,
       },
       update: {
         data,
-        isDirty: false
+        isDirty: false,
       },
       where: {
-        key
-      }
+        key,
+      },
     });
   }
 
   return cache.data as R;
-}
+};
 
 export const fetchCacheData = async <R = unknown>(
   key: string,

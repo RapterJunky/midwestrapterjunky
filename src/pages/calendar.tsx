@@ -1,4 +1,8 @@
-import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
 import Footer from "@components/layout/Footer";
@@ -38,7 +42,7 @@ export const getStaticProps = async (
     preview: ctx.preview,
     variables: {
       first: MAX_FETCH,
-      date: currDate.toISOString()
+      date: currDate.toISOString(),
     },
   });
 
@@ -51,23 +55,26 @@ export const getStaticProps = async (
   };
 };
 
-const CalendarPage: NextPage<CalendarProps> = ({ _site, calendar, navbar, allEvents, preview }) => {
+const CalendarPage: NextPage<CalendarProps> = ({
+  _site,
+  calendar,
+  navbar,
+  allEvents,
+  preview,
+}) => {
   return (
     <div className="flex flex-col">
-      <SiteTags
-        tags={[_site.faviconMetaTags, calendar._seoMetaTags]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, calendar._seoMetaTags]} />
       <header>
         <Navbar {...navbar} mode="none" />
       </header>
-      <main className="flex flex-1 h-full flex-col">
+      <main className="flex h-full flex-1 flex-col">
         <Calendar data={allEvents} />
       </main>
       <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );
-}
-
+};
 
 export default CalendarPage;

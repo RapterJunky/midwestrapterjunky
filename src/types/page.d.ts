@@ -30,7 +30,7 @@ export type ResponsiveImage<E = never> = {
   responsiveImage: [E] extends [never] ? Image : Image & E;
 };
 
-export type ModulerContent = { _modelApiKey: string;[key: string]: any };
+export type ModulerContent = { _modelApiKey: string; [key: string]: any };
 
 export type StructuredContent = any;
 
@@ -42,12 +42,11 @@ export interface FullPageProps extends NavProps {
 }
 
 export interface Paginate<T> {
-  currentPage: number,
-  isFirstPage: boolean,
-  isLastPage: boolean,
-  previousPage: number | null,
-  nextPage: number | null,
-  pageCount: number | null,
+  currentPage: number;
+  isFirstPage: boolean;
+  isLastPage: boolean;
+  previousPage: number | null;
+  nextPage: number | null;
+  pageCount: number | null;
   result: T[];
 }
-

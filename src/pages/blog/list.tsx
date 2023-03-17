@@ -22,7 +22,7 @@ import Footer from "@components/layout/Footer";
 import Pagination from "@components/blog/Pagination";
 import ExitPreview from "@components/ExitPreview";
 
-interface BlogListProps extends FullPageProps { }
+interface BlogListProps extends FullPageProps {}
 
 interface Post {
   posts: {

@@ -17,7 +17,6 @@ import MessageBoardManagerPage from "@components/plugins/MessageBoardManagerPage
 
 import "datocms-react-ui/styles.css";
 
-
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const MESSAGE_BOARD_PAGE_ID = "messageBoardManager";
@@ -136,9 +135,9 @@ const MidwestRaptor: NextPage<any> = () => {
           label: "Message Board",
           icon: "comments",
           pointsTo: {
-            pageId: MESSAGE_BOARD_PAGE_ID
-          }
-        }
+            pageId: MESSAGE_BOARD_PAGE_ID,
+          },
+        },
       ];
     },
   });
@@ -160,7 +159,8 @@ const MidwestRaptor: NextPage<any> = () => {
       }
     }
     case "Page": {
-      if (id === MESSAGE_BOARD_PAGE_ID) return <MessageBoardManagerPage ctx={ctx} />
+      if (id === MESSAGE_BOARD_PAGE_ID)
+        return <MessageBoardManagerPage ctx={ctx} />;
       return null;
     }
     case "Modal":

@@ -34,7 +34,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-      process.env.PLUGIN_TOKEN
+        process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -63,11 +63,10 @@ export default async function handle(
       case "GET": {
         const { page } = await querySchema.parseAsync(req.query);
 
-
         const [authors, meta] = await prisma.authors.paginate().withPages({
           page,
           limit: 10,
-          includePageCount: true
+          includePageCount: true,
         });
 
         return res.status(200).json({ result: authors, ...meta });

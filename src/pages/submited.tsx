@@ -38,7 +38,7 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
       />
       <Navbar mode="none" {...navbar} />
       <main className="flex flex-1 items-center justify-center">
-        <div className="prose md:prose-lg text-center">
+        <div className="prose text-center md:prose-lg">
           {router.query.ok === "true" ? (
             <>
               <h1 className="p-2 text-4xl font-bold">Thank you.</h1>
@@ -60,6 +60,6 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
       <Footer />
     </div>
   );
-}
+};
 
 export default Submited;

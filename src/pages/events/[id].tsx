@@ -185,8 +185,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>
@@ -225,7 +225,7 @@ const EventPage: NextPage<EventPageProps> = ({
                         <li key={i} className="p-1">
                           <IconLink
                             {...value}
-                            className="flex items-center gap-1 underline text-blue-500 hover:text-blue-600"
+                            className="flex items-center gap-1 text-blue-500 underline hover:text-blue-600"
                           />
                         </li>
                       ))}
@@ -249,5 +249,5 @@ const EventPage: NextPage<EventPageProps> = ({
       {preview ? <ExitPreview /> : null}
     </div>
   );
-}
+};
 export default EventPage;
