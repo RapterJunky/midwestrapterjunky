@@ -19,12 +19,11 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 import ReportDialog from "@components/dialogs/ReportDialog";
 import Comments from "@components/thread/Comments";
 
-import { DatoCMS } from "@api/gql";
 import prisma, { type User, type Thread, type ThreadPost } from "@api/prisma";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
 
@@ -73,11 +72,7 @@ export const getStaticProps = async (
       },
     });
 
-    const props = await fetchCacheData<Omit<Props, "post">>("GenericPage", () =>
-      DatoCMS(GenericPageQuery, {
-        preview: ctx.preview,
-      })
-    );
+    const props = await fetchCachedQuery<Omit<Props, "post">>("GenericPage", GenericPageQuery);
 
     return {
       props: {

@@ -9,7 +9,6 @@ import { useMemo, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Slate, Editable, withReact } from "slate-react";
 import { StructuredText } from "react-datocms/structured-text";
-import type { FullPageProps } from "types/page";
 import { useForm, Controller } from "react-hook-form";
 import { Tab } from "@headlessui/react";
 
@@ -17,10 +16,9 @@ import SiteTags from "@components/SiteTags";
 import Navbar from "@components/layout/Navbar";
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
-
+import type { FullPageProps } from "types/page";
 import GenericPageQuery from "@query/queries/generic";
-import { DatoCMS } from "@api/gql";
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
@@ -30,7 +28,7 @@ interface FormState {
   title: string;
   document: Descendant[];
 }
-interface Props extends FullPageProps {}
+interface Props extends FullPageProps { }
 
 export const getStaticPaths = (): GetStaticPathsResult => {
   return {
@@ -42,11 +40,7 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const props = await fetchCacheData<Props>("GenericPage", () =>
-    DatoCMS<Props>(GenericPageQuery, {
-      preview: ctx.preview,
-    })
-  );
+  const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
 
   return {
     props: {
