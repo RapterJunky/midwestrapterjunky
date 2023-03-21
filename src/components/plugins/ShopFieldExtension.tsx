@@ -137,7 +137,7 @@ const RenderError = ({
         <h4 className="mb-2 font-bold">{message}</h4>
         <code className="text-sm">{cause}</code>
       </div>
-      <Button onClick={() => {}} buttonSize="s" leftIcon={<FaSync />}>
+      <Button onClick={() => { }} buttonSize="s" leftIcon={<FaSync />}>
         Reset Item
       </Button>
     </div>
@@ -172,7 +172,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
           style={{ backgroundImage: `url(${data.imageUrl})` }}
         />
         <div className="flex-1 text-left">
-          <div className="mb-1 flex items-center gap-2 text-var-accent">
+          <div className="mb-1 flex items-center gap-2 text-dato-accent">
             <a
               className="text-sm font-bold hover:underline"
               target="_blank"
@@ -204,7 +204,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
             <strong>Price:</strong>
             &nbsp;
             {data.priceRange?.maxVariantPrice?.amount !==
-            data.priceRange?.minVariantPrice?.amount ? (
+              data.priceRange?.minVariantPrice?.amount ? (
               <span>
                 <span>
                   {data.priceRange.minVariantPrice.currencyCode}

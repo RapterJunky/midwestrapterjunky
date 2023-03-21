@@ -26,6 +26,7 @@ import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
+import { hasFlag } from "@lib/config/hasFlag";
 
 interface Props extends FullPageProps {
   post: Pick<ThreadPost, "created" | "name" | "id" | "content"> & {

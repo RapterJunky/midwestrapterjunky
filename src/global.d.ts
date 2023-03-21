@@ -11,6 +11,9 @@ declare interface Window {
 
 declare module NodeJS {
   interface ProcessEnv {
+    NEXT_PUBLIC_FEATURE_FLAGS: string;
+    GOOGLE_CLIENT_ID: string;
+    GOOGLE_CLIENT_SECRET: string;
     NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
     DATOCMS_READONLY_TOKEN: string;
     DATOCMS_CLIENT_TOKEN: string;

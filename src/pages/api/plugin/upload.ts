@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { tmpdir } from "os";
-import { join } from "path";
-import { unlink, readFile } from "fs/promises";
-import { cwebp } from "@lib/webp";
-import multer from "multer";
+import { unlink, readFile } from "node:fs/promises";
 import createHttpError from "http-errors";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import multer from "multer";
+
+import { cwebp } from "@lib/webp";
 import { logger } from "@lib/logger";
+import { handleError } from "@api/errorHandler";
 
 interface FileUpload {
   file: {
@@ -48,7 +50,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -80,19 +82,6 @@ export default async function handle(
       filename: filename,
     });
   } catch (error) {
-    if (createHttpError.isHttpError(error)) {
-      logger.error(error, error.message);
-      return res.status(error.statusCode).json(error);
-    }
-
-    const ie = createHttpError.InternalServerError();
-
-    if (error instanceof multer.MulterError) {
-      logger.error(error, error.message);
-      return res.status(ie.statusCode).json(ie);
-    }
-
-    logger.error(error, ie.message);
-    return res.status(ie.statusCode).json(ie);
+    handleError(error, res);
   }
 }

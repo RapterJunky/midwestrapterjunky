@@ -19,6 +19,7 @@ import Footer from "@components/layout/Footer";
 import prisma, { type ThreadPost, type Thread, type User } from "@api/prisma";
 import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
+import { hasFlag } from "@lib/config/hasFlag";
 
 interface Props extends FullPageProps {
   thread: Thread;

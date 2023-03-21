@@ -15,6 +15,7 @@ import prisma, { type Thread } from "@api/prisma";
 
 import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
+import { hasFlag } from "@lib/config/hasFlag";
 
 interface Props extends FullPageProps {
   threads: Thread[];

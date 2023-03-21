@@ -19,6 +19,7 @@ import Footer from "@components/layout/Footer";
 import type { FullPageProps } from "types/page";
 import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
+import { hasFlag } from "@lib/config/hasFlag";
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
