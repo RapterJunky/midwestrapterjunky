@@ -1,3 +1,10 @@
+import useSWR from 'swr';
+import { useCtx } from 'datocms-react-ui';
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
+import Image from 'next/image';
+import type { User, Report, ThreadPost, Comment } from '@prisma/client';
+import type { RenderPageCtx } from 'datocms-plugin-sdk';
 import {
     Dropdown,
     DropdownMenu,
@@ -5,6 +12,7 @@ import {
     TextInput,
     DropdownOption,
     Button,
+    Spinner,
 } from "datocms-react-ui";
 import {
     FaSearch,
@@ -12,8 +20,13 @@ import {
     FaChevronDown,
 } from "react-icons/fa";
 import { Panel } from "./Panel";
+import type { Paginate } from '@type/page';
 
-const ArticleReport: React.FC<{ article: { slug: string; name: string; }, reason: string; created: string, owner: { image: string; name: string; }; reporter: { image: string; name: string; } }> = ({ article, reason, created, owner, reporter }) => {
+type ContentType = Paginate<Omit<Report, "created"> & { created: string; owner: User | null, comment: Comment & { owner: User } | null; post: ThreadPost & { owner: User } | null }>;
+
+type FullReport = { id: number; handleDelete: (id: number) => void; reason: string; created: string; owner: User | null; reporter: User | null };
+
+const ArticleReport: React.FC<{ article: { slug: string; name: string; } } & FullReport> = ({ handleDelete, id, article, reason, created, owner, reporter }) => {
     return (
         <li className="shadow p-4 bg-white">
             <h2 className="text-lg font-bold line-clamp-1">{reason}</h2>
@@ -25,16 +38,16 @@ const ArticleReport: React.FC<{ article: { slug: string; name: string; }, reason
                 <h4 className="font-bold">Reason:</h4>
                 <p className="line-clamp-1 p-1 text-sm">{reason}</p>
                 <h4 className="font-bold">Link to Article:</h4>
-                <a className="text-blue-400 underline ml-4" href={article.slug}>{article.name}</a>
+                <a className="text-blue-400 underline ml-4" target="_blank" href={article.slug}>{article.name}</a>
                 <h4 className="font-bold">Owner:</h4>
                 <div className="ml-4">
-                    <img className="h-8 w-8" src={owner.image} />
-                    <span className="text-sm">{owner.name}</span>
+                    <Image width={32} height={32} className="h-8 w-8" src={owner?.image ?? ""} alt="avatar" />
+                    <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
                 </div>
                 <h4 className="font-bold">Reported By:</h4>
                 <div className="ml-4">
-                    <img className="h-8 w-8" src={reporter.image} />
-                    <span className="text-sm">{reporter.name}</span>
+                    <Image width={32} height={32} className="h-8 w-8" src={reporter?.image ?? ""} alt="avatar" />
+                    <span className="text-sm">{reporter?.name ?? "Deleted Reporter"}</span>
                 </div>
 
                 <div className="w-full flex justify-end">
@@ -45,7 +58,7 @@ const ArticleReport: React.FC<{ article: { slug: string; name: string; }, reason
                             <DropdownOption red>Remove Article and Ban User</DropdownOption>
                             <DropdownOption red>Remove Article</DropdownOption>
                             <DropdownOption red>Ban Reporty</DropdownOption>
-                            <DropdownOption>Dismiss Report</DropdownOption>
+                            <DropdownOption onClick={() => handleDelete(id)}>Dismiss Report</DropdownOption>
                         </DropdownMenu>
                     </Dropdown>
                 </div>
@@ -54,7 +67,7 @@ const ArticleReport: React.FC<{ article: { slug: string; name: string; }, reason
     );
 }
 
-const CommentReport: React.FC<{ comment: { content: { message: string; } }, reason: string; created: string, owner: { image: string; name: string; }; reporter: { image: string; name: string; } }> = ({ comment, reason, created, owner, reporter }) => {
+const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({ id, handleDelete, comment, reason, created, owner, reporter }) => {
     return (
         <li className="shadow p-4 bg-white">
             <h2 className="text-lg font-bold line-clamp-1">{reason}</h2>
@@ -69,13 +82,13 @@ const CommentReport: React.FC<{ comment: { content: { message: string; } }, reas
                 <p className="p-1 text-sm w-1/2">{comment.content.message}</p>
                 <h4 className="font-bold">Owner:</h4>
                 <div className="ml-4">
-                    <img className="h-8 w-8" src={owner.image} />
-                    <span className="text-sm">{owner.name}</span>
+                    <Image width={32} height={32} className="h-8 w-8" src={owner?.image ?? ""} alt="avatar" />
+                    <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
                 </div>
                 <h4 className="font-bold">Reported By:</h4>
                 <div className="ml-4">
-                    <img className="h-8 w-8" src={reporter.image} />
-                    <span className="text-sm">{reporter.name}</span>
+                    <Image width={32} height={32} className="h-8 w-8" src={reporter?.image ?? ""} alt="avatar" />
+                    <span className="text-sm">{reporter?.name ?? "Deleted Reporter"}</span>
                 </div>
 
                 <div className="w-full flex justify-end">
@@ -87,7 +100,7 @@ const CommentReport: React.FC<{ comment: { content: { message: string; } }, reas
                             <DropdownOption red>Remove Article</DropdownOption>
                             <DropdownOption red>Ban Reporty</DropdownOption>
                             <DropdownOption>Hide Article</DropdownOption>
-                            <DropdownOption>Dismiss Report</DropdownOption>
+                            <DropdownOption onClick={() => handleDelete(id)}>Dismiss Report</DropdownOption>
                         </DropdownMenu>
                     </Dropdown>
                 </div>
@@ -97,24 +110,79 @@ const CommentReport: React.FC<{ comment: { content: { message: string; } }, reas
 }
 
 export const Reports: React.FC<{ mini: boolean, setMini: React.Dispatch<React.SetStateAction<boolean>> }> = ({ mini, setMini }) => {
+    const ctx = useCtx<RenderPageCtx>();
+    const [page, setPage] = useState<number>(1);
+    const [order, setOrder] = useState<"asc" | "desc">("desc");
+    const [type, setType] = useState<"Comment" | "Post" | undefined>();
+    const [query, setQuery] = useDebounce<string>("", 500);
+    const { data, isLoading, error, mutate } = useSWR([page, query, order, type], async (params) => {
+        const token = new URLSearchParams(window.location.search).get("token");
+        if (!token)
+            throw new Error("Invaild auth", {
+                cause: "MISSING_AUTH_TOKEN",
+            });
+        const url = new URL("/api/plugin/reports", window.location.origin);
+        url.searchParams.set("page", params[0].toString());
+        if (params[1] && !!params[1].length) {
+            url.searchParams.set("search", params[1]);
+        }
+        url.searchParams.set("order", params[2]);
+        if (params[3]) {
+            url.searchParams.set("type", params[3]);
+        }
+
+        const reports = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!reports.ok) throw new Error("Bad Request");
+        return reports.json() as Promise<ContentType>;
+    });
+
+    const handleDelete = async (id: number) => {
+        try {
+            if (!data) throw new Error("NoSourceData");
+            const token = new URLSearchParams(window.location.search).get("token");
+            if (!token)
+                throw new Error("Invaild auth", {
+                    cause: "MISSING_AUTH_TOKEN",
+                });
+            const request = await fetch("/api/plugin/reports", {
+                method: "DELETE",
+                body: JSON.stringify({ id }),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            if (!request.ok) throw request;
+            mutate({ ...data, result: data?.result.filter(value => value.id !== id) })
+        } catch (error) {
+            console.error(error);
+            ctx.alert("Failed to delete report!");
+        }
+    }
+
     return (
         <Panel
             actions={<>
                 <div className="flex mr-dato-m">
-                    <TextInput id="search" name="search" placeholder="Search" />
+                    <TextInput onChange={(value) => setQuery(value)} id="search" name="search" placeholder="Search" />
                     <Button leftIcon={<FaSearch />} />
                 </div>
                 <Dropdown renderTrigger={({ open, onClick }) => (
-                    <Button buttonType='primary' buttonSize="m" rightIcon={open ? <FaChevronUp style={{ fill: "white" }} /> : <FaChevronDown style={{ fill: "white" }} />} onClick={onClick}>Sort By: Newest</Button>
+                    <Button buttonType='primary' buttonSize="m" rightIcon={open ? <FaChevronUp style={{ fill: "white" }} /> : <FaChevronDown style={{ fill: "white" }} />} onClick={onClick}>Sort By: {type ?? "All"} | {order === "asc" ? "Asc" : "Desc"}</Button>
                 )}>
                     <DropdownMenu alignment="right">
                         <DropdownGroup name="Date">
-                            <DropdownOption>Newest</DropdownOption>
-                            <DropdownOption>Oldest</DropdownOption>
+                            <DropdownOption onClick={() => setOrder("desc")}>Desc</DropdownOption>
+                            <DropdownOption onClick={() => setOrder("asc")}>Asc</DropdownOption>
                         </DropdownGroup>
                         <DropdownGroup name="Type">
-                            <DropdownOption>Comment</DropdownOption>
-                            <DropdownOption>Post</DropdownOption>
+                            <DropdownOption onClick={() => setType(undefined)}>All</DropdownOption>
+                            <DropdownOption onClick={() => setType("Comment")}>Comment</DropdownOption>
+                            <DropdownOption onClick={() => setType("Post")}>Post</DropdownOption>
                         </DropdownGroup>
                     </DropdownMenu>
                 </Dropdown>
@@ -123,13 +191,58 @@ export const Reports: React.FC<{ mini: boolean, setMini: React.Dispatch<React.Se
             mini={mini}
             setMini={() => setMini((state) => !state)}
         >
-            <ul className="space-y-2 p-4 w-full">
-                {Array.from({ length: 30 }).map((_, i) => i % 2 ? (
-                    <ArticleReport article={{ slug: "#", name: "Some Article" }} reason=" Lorem ipsum dolor sit amet consectetur adipisicing elit." created={new Date().toISOString()} owner={{ image: "https://api.dicebear.com/5.x/initials/svg?seed=ON", name: "Owner Name" }} reporter={{ image: "https://api.dicebear.com/5.x/initials/svg?seed=RN", name: "Reporter Name" }} />
-                ) : (
-                    <CommentReport comment={{ content: { message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus corrupti ratione dolorem ab voluptatibus libero atque cumque, voluptatum exercitationem molestias quia rem dolore voluptates nulla architecto nihil vel eligendi veniam?" } }} reason="Lorem ipsum dolor sit amet." created={new Date().toISOString()} owner={{ image: "https://api.dicebear.com/5.x/initials/svg?seed=ON", name: "Owner Name" }} reporter={{ image: "https://api.dicebear.com/5.x/initials/svg?seed=RN", name: "Reporter Name" }} />
-                ))}
-            </ul>
+            {!data && error ? (
+                <div className="h-full w-full flex justify-center items-center">
+                    <h1 className="text-lg">There was an error, loading reports.</h1>
+                </div>
+            ) : null}
+            {!data && isLoading ? (
+                <div className="h-full w-full flex justify-center items-center">
+                    <Spinner size={56} />
+                </div>
+            ) : null}
+            {data && !data.result.length ? (
+                <div className="h-full w-full flex justify-center items-center">
+                    <h1 className="text-lg">No reports found!</h1>
+                </div>
+            ) : null}
+            {data && data.result.length ? (
+                <>
+                    <ul className="space-y-2 p-4 w-full">
+                        {data.result.map(report => (
+                            report.type === "Comment" ? (
+                                <CommentReport handleDelete={handleDelete} key={report.id} id={report.id} comment={report.comment as Comment} reason={report.reason} created={report.created} owner={report.comment?.owner ?? null} reporter={report.owner} />
+                            ) : (
+                                <ArticleReport handleDelete={handleDelete} key={report.id} id={report.id} article={{ slug: `/thread/${report.post?.threadId}/post/${report.post?.id}`, name: report.post?.name ?? "Missing Name" }} reason={report.reason} created={report.created} owner={report.post?.owner ?? null} reporter={report.owner} />
+                            )
+                        ))}
+                    </ul>
+                    <hr />
+                    <div className="flex items-center justify-evenly my-dato-l">
+                        <Button
+                            onClick={() => setPage(data?.previousPage ?? 1)}
+                            disabled={data?.isFirstPage}
+                            type="button"
+                            buttonType="primary"
+                        >
+                            Prev
+                        </Button>
+
+                        <div>
+                            {data?.currentPage ?? 0} of {data?.currentPage ?? 0}
+                        </div>
+
+                        <Button
+                            onClick={() => setPage(data?.nextPage ?? 1)}
+                            disabled={data?.isLastPage}
+                            type="button"
+                            buttonType="primary"
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </>
+            ) : null}
         </Panel>
     );
 }

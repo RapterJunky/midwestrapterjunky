@@ -75,6 +75,7 @@ model User {
   sessions      Session[]
   TheadPost     ThreadPost[]
   Comment       Comment[]
+  reports       Report[]
 }
 
 model VerificationToken {
@@ -95,6 +96,7 @@ model Comment {
   owner           User       @relation(fields: [ownerId], references: [id])
   ThreadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
   threadPostId    String
+  reports         Report[]
 }
 
 model ThreadPost {
@@ -108,10 +110,29 @@ model ThreadPost {
   thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
   threadId Int
   comments Comment[]
+  reports  Report[]
 }
 
 model Thread {
   id    Int          @id @default(autoincrement())
   name  String       @unique
   posts ThreadPost[]
+}
+
+model Report {
+  id        Int        @id @default(autoincrement())
+  created   DateTime   @default(now())
+  type      ReportType
+  ownerId   String?
+  commentId String?
+  postId    String?
+  reason    String
+  comment   Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post      ThreadPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  owner     User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+}
+
+enum ReportType {
+  Comment
+  Post
 }

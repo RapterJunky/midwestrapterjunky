@@ -73,10 +73,10 @@ export default async function handler(
               threadId: thread,
               AND: search
                 ? {
-                    name: {
-                      contains: search,
-                    },
-                  }
+                  name: {
+                    contains: search,
+                  },
+                }
                 : undefined,
             },
             select: {
@@ -105,9 +105,14 @@ export default async function handler(
         if (req.headers["x-type-report"] === "true") {
           const { id, reason } = reportSchema.parse(req.body);
 
-          console.log(
-            `post ${id} was reported by ${session.user.id} for ${reason}`
-          );
+          await prisma.report.create({
+            data: {
+              type: "Post",
+              postId: id,
+              reason,
+              ownerId: session.user.id
+            }
+          });
 
           return res.status(201).json({ message: "Reported" });
         }

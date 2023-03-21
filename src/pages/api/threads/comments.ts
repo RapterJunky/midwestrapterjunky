@@ -76,9 +76,14 @@ export default async function handler(
         if (req.headers["x-type-report"] === "true") {
           const { id, reason } = reportSchema.parse(req.body);
 
-          console.log(
-            `Comment ${id} reported by ${session.user.id} for ${reason}`
-          );
+          await prisma.report.create({
+            data: {
+              ownerId: session.user.id,
+              commentId: id,
+              reason,
+              type: "Comment"
+            }
+          });
 
           return res.status(201).json({ message: "Reported" });
         }

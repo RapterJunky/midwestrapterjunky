@@ -4,6 +4,7 @@ import type {
   NextPage,
   GetStaticPathsResult,
 } from "next";
+import superjson from 'superjson';
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -26,7 +27,6 @@ import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
-import { hasFlag } from "@lib/config/hasFlag";
 
 interface Props extends FullPageProps {
   post: Pick<ThreadPost, "created" | "name" | "id" | "content"> & {
@@ -75,10 +75,13 @@ export const getStaticProps = async (
 
     const props = await fetchCachedQuery<Omit<Props, "post">>("GenericPage", GenericPageQuery);
 
+    // temp for borken swc plugin
+    const { json } = superjson.serialize(post);
+
     return {
       props: {
         ...props,
-        post,
+        post: json as any,
         preview: ctx?.preview ?? false,
       },
     };

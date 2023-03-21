@@ -1,13 +1,15 @@
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Button, Spinner } from "datocms-react-ui";
 import useSWR from 'swr';
+import { useState } from 'react';
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Panel } from './Panel';
 import type { Paginate } from "@type/page";
 import type { Thread } from "@prisma/client";
 
 export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: React.Dispatch<React.SetStateAction<boolean>> }> = ({ ctx, mini, setMini }) => {
-    const { data, error, isLoading, mutate } = useSWR<Paginate<Thread>>("/api/threads", (url) => fetch(url).then(value => value.json()));
+    const [page, setPage] = useState<number>(1);
+    const { data, error, isLoading, mutate } = useSWR<Paginate<Thread>>(`/api/threads?page=${page}`, (url) => fetch(url).then(value => value.json()));
 
     const createModel = async () => {
         try {
@@ -145,24 +147,50 @@ export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: Rea
             ) : null}
             {data && !data.result.length ? (
                 <div className="h-full w-full flex justify-center items-center">
-                    <h1 className="text-lg">There's no threads! Try creating one.</h1>
+                    <h1 className="text-lg">There&apos;s no threads! Try creating one.</h1>
                 </div>
             ) : null}
             {data && data.result.length ? (
-                <ul className="mt-dato-m space-y-dato-m">
-                    {data ? (data.result.map(value => (
-                        <li className="flex bg-white shadow p-4" key={value.id}>
-                            <div className="mr-auto">
-                                <h1 className="font-bold text-xl">{value.name}</h1>
-                                <span className="text-sm">Description</span>
-                            </div>
-                            <div className="flex text-white gap-dato-m">
-                                <Button onClick={() => editModel(value)} rightIcon={<FaEdit style={{ fill: "white" }} />} buttonType="primary" />
-                                <Button onClick={() => deleteModel(value.id)} rightIcon={<FaTrash style={{ fill: "white" }} />} buttonType="negative" />
-                            </div>
-                        </li>
-                    ))) : null}
-                </ul>
+                <>
+                    <ul className="mt-dato-m space-y-dato-m">
+                        {data ? (data.result.map(value => (
+                            <li className="flex bg-white shadow p-4" key={value.id}>
+                                <div className="mr-auto">
+                                    <h1 className="font-bold text-xl">{value.name}</h1>
+                                    <span className="text-sm">Description</span>
+                                </div>
+                                <div className="flex text-white gap-dato-m">
+                                    <Button onClick={() => editModel(value)} rightIcon={<FaEdit style={{ fill: "white" }} />} buttonType="primary" />
+                                    <Button onClick={() => deleteModel(value.id)} rightIcon={<FaTrash style={{ fill: "white" }} />} buttonType="negative" />
+                                </div>
+                            </li>
+                        ))) : null}
+                    </ul>
+                    <hr className="mt-dato-m" />
+                    <div className="my-dato-l flex items-center justify-evenly">
+                        <Button
+                            onClick={() => setPage(data?.previousPage ?? 1)}
+                            disabled={data?.isFirstPage}
+                            type="button"
+                            buttonType="primary"
+                        >
+                            Prev
+                        </Button>
+
+                        <div>
+                            {data?.currentPage ?? 0} of {data?.currentPage ?? 0}
+                        </div>
+
+                        <Button
+                            onClick={() => setPage(data?.nextPage ?? 1)}
+                            disabled={data?.isLastPage}
+                            type="button"
+                            buttonType="primary"
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </>
             ) : null}
         </Panel>
     );
