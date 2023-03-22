@@ -21,6 +21,7 @@ import {
 } from "react-icons/fa";
 import { Panel } from "./Panel";
 import type { Paginate } from '@type/page';
+import { AuthFetch } from '@lib/utils/plugin/auth_fetch';
 
 type ContentType = Paginate<Omit<Report, "created"> & { created: string; owner: User | null, comment: Comment & { owner: User } | null; post: ThreadPost & { owner: User } | null }>;
 
@@ -116,11 +117,6 @@ export const Reports: React.FC<{ mini: boolean, setMini: React.Dispatch<React.Se
     const [type, setType] = useState<"Comment" | "Post" | undefined>();
     const [query, setQuery] = useDebounce<string>("", 500);
     const { data, isLoading, error, mutate } = useSWR([page, query, order, type], async (params) => {
-        const token = new URLSearchParams(window.location.search).get("token");
-        if (!token)
-            throw new Error("Invaild auth", {
-                cause: "MISSING_AUTH_TOKEN",
-            });
         const url = new URL("/api/plugin/reports", window.location.origin);
         url.searchParams.set("page", params[0].toString());
         if (params[1] && !!params[1].length) {
@@ -131,33 +127,21 @@ export const Reports: React.FC<{ mini: boolean, setMini: React.Dispatch<React.Se
             url.searchParams.set("type", params[3]);
         }
 
-        const reports = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        if (!reports.ok) throw new Error("Bad Request");
+        const reports = await AuthFetch(url);
+
         return reports.json() as Promise<ContentType>;
     });
 
     const handleDelete = async (id: number) => {
         try {
             if (!data) throw new Error("NoSourceData");
-            const token = new URLSearchParams(window.location.search).get("token");
-            if (!token)
-                throw new Error("Invaild auth", {
-                    cause: "MISSING_AUTH_TOKEN",
-                });
-            const request = await fetch("/api/plugin/reports", {
+
+            await AuthFetch("/api/plugin/reports", {
                 method: "DELETE",
-                body: JSON.stringify({ id }),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
+                json: { id }
             });
-            if (!request.ok) throw request;
-            mutate({ ...data, result: data?.result.filter(value => value.id !== id) })
+
+            await mutate({ ...data, result: data?.result.filter(value => value.id !== id) })
         } catch (error) {
             console.error(error);
             ctx.alert("Failed to delete report!");

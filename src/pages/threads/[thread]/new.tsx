@@ -19,7 +19,7 @@ import Footer from "@components/layout/Footer";
 import type { FullPageProps } from "types/page";
 import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
-import { hasFlag } from "@lib/config/hasFlag";
+import { z } from "zod";
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
@@ -41,6 +41,13 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
+  const result = z.coerce.number().positive().min(1).safeParse(ctx.params?.thread);
+
+  if (!result.success) return { notFound: true };
+
+  const exists = await prisma.thread.exists({ where: { id: result.data } });
+  if (!exists) return { notFound: true };
+
   const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
 
   return {

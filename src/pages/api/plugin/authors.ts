@@ -4,7 +4,6 @@ import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import prisma from "@api/prisma";
 import { handleError } from "@api/errorHandler";
-import { strToNum } from "@lib/utils/strToNum";
 
 let authorSchema = z.object({
   avatar: z.string().url(),
@@ -23,7 +22,7 @@ let authorSchema = z.object({
 });
 
 const querySchema = z.object({
-  page: z.string().transform(strToNum),
+  page: z.coerce.number().positive().min(1).optional().default(1)
 });
 
 export default async function handle(
@@ -34,7 +33,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 

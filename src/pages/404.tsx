@@ -1,31 +1,25 @@
 import type {
-  GetStaticPropsContext,
   GetStaticPropsResult,
   NextPage,
 } from "next";
-import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
 import SiteTags from "@components/SiteTags";
 
-import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/generic";
-import { fetchCacheData } from "@lib/cache";
+import { fetchCachedQuery } from "@lib/cache";
+import type { FullPageProps } from "@type/page";
 
-type Props = {
-  _site: {
-    faviconMetaTags: SeoOrFaviconTag[];
-  };
-};
+type Props = Pick<FullPageProps, "_site">;
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
-  const data = await fetchCacheData<Props>("GenericPage", () =>
-    DatoCMS<Props>(Query)
-  );
+  const data = await fetchCachedQuery<Props>("GenericPage", Query);
   return {
-    props: data,
+    props: {
+      _site: data._site
+    },
   };
 };
 
@@ -33,12 +27,12 @@ export const getStaticProps = async (): Promise<
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
  */
-const ErrorPage: NextPage<Props> = (props) => {
+const ErrorPage: NextPage<Props> = ({ _site }) => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-200 px-16 md:px-0">
       <SiteTags
         tags={[
-          props._site.faviconMetaTags,
+          _site.faviconMetaTags,
           [
             { tag: "title", content: "Not Found - Midwest Raptor Junkies" },
             {

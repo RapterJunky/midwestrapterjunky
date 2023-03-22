@@ -89,7 +89,7 @@ export default async function handler(
           data: { isDirty: true },
         });
         const client = buildClient({
-          apiToken: process.env.DATOCMS_CLIENT_TOKEN,
+          apiToken: process.env.DATOCMS_API_TOKEN,
         });
         await client.buildTriggers.trigger(BUILD_TRIGGER_ID);
         return res.status(200).json({ revalidated: true });
@@ -109,7 +109,7 @@ export default async function handler(
       default:
         return res.status(200).json({ revalidated: false });
     }
-  } catch (error: any) {
+  } catch (error) {
     if (createHttpError.isHttpError(error)) {
       logger.error(error, error.message);
       return res

@@ -4,7 +4,6 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import prisma from "@api/prisma";
-import { strToNum } from "@utils/strToNum";
 import { getSession } from "@lib/getSession";
 import { handleError } from "@api/errorHandler";
 import { applyRateLimit } from "@api/rateLimiter";
@@ -26,10 +25,8 @@ const dastSchema = z.object({
 });
 
 const getSchema = z.object({
-  page: z.string().default("1").transform(strToNum),
-  thread: z
-    .string({ required_error: "Thread query param is required." })
-    .transform(strToNum),
+  page: z.coerce.number().positive().min(1).optional().default(1),
+  thread: z.coerce.number({ required_error: "Thread query param is required." }).positive().min(1),
   search: z
     .string()
     .optional()

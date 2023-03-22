@@ -6,12 +6,27 @@ import {
 import {
   FaFlag,
   FaColumns,
+  FaRegTimesCircle
 } from "react-icons/fa";
 import { Tab } from "@headlessui/react";
 import { Threads } from "./panels/Threads";
 import { Reports } from "./panels/Reports";
 
 const MessageBoardManagerPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
+
+  if (!ctx.currentRole.attributes.can_manage_users) {
+    return (
+      <Canvas ctx={ctx}>
+        <div className="flex absolute w-full justify-center items-center h-full">
+          <div className="flex flex-col items-center gap-dato-xl">
+            <FaRegTimesCircle className="h-24 w-24" />
+            <h1 className="text-lg">You are not allow to view this page!</h1>
+          </div>
+        </div>
+      </Canvas>
+    );
+  }
+
   const [mini, setMini] = useState(false);
   return (
     <Canvas ctx={ctx}>

@@ -6,33 +6,26 @@ import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 
-import { fetchCachedQuery } from "@lib/cache";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
+import { fetchCachedQuery } from "@lib/cache";
 
-interface Props extends FullPageProps {}
+interface Props extends FullPageProps { }
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
-  try {
-    const props = await fetchCachedQuery<Props>(
-      "GenericPage",
-      GenericPageQuery
-    );
+  const props = await fetchCachedQuery<Props>(
+    "GenericPage",
+    GenericPageQuery
+  );
 
-    return {
-      props: {
-        ...props,
-        preview: false,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: {
+      ...props,
+      preview: false,
+    },
+  };
 };
 
 const TermsOfService: NextPage<Props> = ({ _site, navbar }) => {

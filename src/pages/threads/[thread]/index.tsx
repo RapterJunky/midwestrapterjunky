@@ -7,6 +7,7 @@ import type {
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
+import { z } from "zod";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
 import type { FullPageProps, Paginate } from "types/page";
@@ -19,7 +20,7 @@ import Footer from "@components/layout/Footer";
 import prisma, { type ThreadPost, type Thread, type User } from "@api/prisma";
 import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
-import { hasFlag } from "@lib/config/hasFlag";
+import { logger } from "@lib/logger";
 
 interface Props extends FullPageProps {
   thread: Thread;
@@ -36,13 +37,15 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
   try {
-    const thread = await prisma.thread.findUniqueOrThrow({
-      where: {
-        id: parseInt(ctx.params?.thread as string) ?? -1,
-      },
-    });
-
-    const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
+    const id = z.coerce.number().positive().min(1).parse(ctx.params?.thread);
+    const [thread, props] = await Promise.all([
+      prisma.thread.findUniqueOrThrow({
+        where: {
+          id,
+        },
+      }),
+      fetchCachedQuery<Props>("GenericPage", GenericPageQuery)
+    ]);
 
     return {
       props: {
@@ -52,7 +55,7 @@ export const getStaticProps = async (
       },
     };
   } catch (error) {
-    console.error(error);
+    logger.error(error, "Failed to get posts page");
     return {
       notFound: true,
     };

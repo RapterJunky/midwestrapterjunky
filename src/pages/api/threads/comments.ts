@@ -4,14 +4,13 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import prisma from "@api/prisma";
-import { strToNum } from "@utils/strToNum";
 import { getSession } from "@lib/getSession";
 import { handleError } from "@api/errorHandler";
 import { applyRateLimit } from "@api/rateLimiter";
 
 const getSchema = z.object({
   post: z.string().uuid(),
-  page: z.string().default("1").transform(strToNum),
+  page: z.coerce.number().positive().min(1).optional().default(1)
 });
 const postSchema = z.object({
   content: z.object({ message: z.string() }),

@@ -6,31 +6,20 @@ import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
 import type { Paginate } from "types/page";
 import type { Authors } from "@api/prisma";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useSWR<Paginate<Authors>, Error, [number]>(
+  const { data, isLoading, error } = useSWR(
     [page],
     async ([index]) => {
-      const token = new URLSearchParams(window.location.search).get("token");
-      if (!token)
-        throw new Error("Failed to fetch data.", {
-          cause: "MISSING_AUTH_TOKEN",
-        });
-
-      const result = await fetch(`/api/plugin/authors?page=${index}`, {
+      const result = await AuthFetch(`/api/plugin/authors?page=${index}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        }
       });
 
-      if (!result.ok)
-        throw new Error("Failed to perform action.", {
-          cause: `FAILED_REQUEST_${result.statusText}`,
-        });
-
-      return result.json();
+      return result.json() as Promise<Paginate<Authors>>;
     }
   );
 

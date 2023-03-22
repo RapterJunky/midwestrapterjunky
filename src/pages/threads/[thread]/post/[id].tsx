@@ -27,6 +27,7 @@ import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
+import { logger } from "@lib/logger";
 
 interface Props extends FullPageProps {
   post: Pick<ThreadPost, "created" | "name" | "id" | "content"> & {
@@ -46,7 +47,7 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
   try {
-    const id = z.string().parse(ctx.params?.id);
+    const id = z.string().uuid().parse(ctx.params?.id);
 
     const post = await prisma.threadPost.findUniqueOrThrow({
       where: {
@@ -86,7 +87,7 @@ export const getStaticProps = async (
       },
     };
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return {
       notFound: true,
     };

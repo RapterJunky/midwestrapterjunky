@@ -2,11 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 import prisma from "@api/prisma";
-import { strToNum } from "@lib/utils/strToNum";
 import { handleError } from "@api/errorHandler";
 
 const getSchema = z.object({
-  page: z.string().default("1").transform(strToNum),
+  page: z.coerce.number().positive().min(1).optional().default(1)
 });
 const postSchema = z.object({
   name: z.string(),
@@ -23,7 +22,7 @@ const auth = (req: NextApiRequest) => {
   if (
     !req.headers.authorization ||
     req.headers.authorization.replace("Bearer ", "") !==
-      process.env.PLUGIN_TOKEN
+    process.env.PLUGIN_TOKEN
   )
     throw createHttpError.Unauthorized();
 };

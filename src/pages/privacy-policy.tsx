@@ -1,5 +1,4 @@
 import type {
-  GetStaticPropsContext,
   GetStaticPropsResult,
   NextPage,
 } from "next";
@@ -13,28 +12,19 @@ import { fetchCachedQuery } from "@lib/cache";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 
-interface Props extends FullPageProps {}
+interface Props extends FullPageProps { }
 
-export const getStaticProps = async (
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<Props>> => {
-  try {
-    const props = await fetchCachedQuery<Props>(
-      "GenericPage",
-      GenericPageQuery
-    );
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
+  const props = await fetchCachedQuery<Props>(
+    "GenericPage",
+    GenericPageQuery
+  );
 
-    return {
-      props: {
-        ...props,
-        preview: false,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      notFound: true,
-    };
+  return {
+    props: {
+      ...props,
+      preview: false,
+    },
   }
 };
 

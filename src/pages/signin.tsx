@@ -1,7 +1,6 @@
 import type {
   NextPage,
   GetStaticPropsResult,
-  GetStaticPropsContext,
 } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
 import { getProviders, signIn } from "next-auth/react";
@@ -10,18 +9,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SiteTags from "@components/SiteTags";
-import { fetchCachedQuery } from "@lib/cache";
+
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
+import { fetchCachedQuery } from "@lib/cache";
 
 interface Props {
   providers: Awaited<ReturnType<typeof getProviders>>;
   seo: Omit<FullPageProps, "preview" | "navbar">["_site"];
 }
 
-export const getStaticProps = async (
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
   const providers = await getProviders();
   const data = await fetchCachedQuery<FullPageProps>(
     "GenericPage",

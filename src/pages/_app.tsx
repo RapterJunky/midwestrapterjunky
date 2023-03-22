@@ -6,14 +6,18 @@ import type { AppProps } from "next/app";
 import "@fontsource/inter/variable-full.css";
 import "../styles/globals.css";
 
+const DefaultHead: React.FC = () => (
+  <Head>
+    <meta charSet="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </Head>
+);
+
 function App({ Component, pageProps, router }: AppProps) {
 
   if (router.pathname !== "/plugins/midwestraptor") return (
     <SessionProvider session={pageProps.session}>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
+      <DefaultHead />
       <GoogleAnalytics
         trackPageViews
         debugMode={process.env.VERCEL_ENV !== "production"}
@@ -24,10 +28,7 @@ function App({ Component, pageProps, router }: AppProps) {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
+      <DefaultHead />
       <Component {...pageProps} />
     </>
   );

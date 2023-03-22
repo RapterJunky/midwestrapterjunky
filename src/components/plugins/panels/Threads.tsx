@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Panel } from './Panel';
 import type { Paginate } from "@type/page";
 import type { Thread } from "@prisma/client";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: React.Dispatch<React.SetStateAction<boolean>> }> = ({ ctx, mini, setMini }) => {
     const [page, setPage] = useState<number>(1);
@@ -23,22 +24,10 @@ export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: Rea
             }) as Thread | undefined;
             if (!result) return;
 
-            const token = new URLSearchParams(window.location.search).get("token");
-            if (!token)
-                throw new Error("Failed to perform action.", {
-                    cause: "MISSING_AUTH_TOKEN",
-                });
-
-            const request = await fetch("/api/threads", {
+            const request = await AuthFetch("/api/threads", {
                 method: "POST",
-                body: JSON.stringify(result),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                json: result
             });
-
-            if (!request.ok) throw request;
 
             const body = await request.json();
             await mutate({ ...data, result: [body, data.result] });
@@ -61,21 +50,10 @@ export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: Rea
             }) as Thread | undefined;
             if (!result) return;
 
-            const token = new URLSearchParams(window.location.search).get("token");
-            if (!token)
-                throw new Error("Failed to perform action.", {
-                    cause: "MISSING_AUTH_TOKEN",
-                });
-
-            const request = await fetch("/api/threads", {
+            await AuthFetch("/api/threads", {
                 method: "PATCH",
-                body: JSON.stringify(result),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                json: result
             });
-            if (!request.ok) throw request;
 
             await mutate({ ...data, result: [result].concat(data.result.filter(value => value.id !== thread.id)) });
 
@@ -105,21 +83,10 @@ export const Threads: React.FC<{ ctx: RenderPageCtx, mini: boolean, setMini: Rea
             })
             if (!confirm) return;
 
-            const token = new URLSearchParams(window.location.search).get("token");
-            if (!token)
-                throw new Error("Failed to perform action.", {
-                    cause: "MISSING_AUTH_TOKEN",
-                });
-
-            const request = await fetch("/api/threads", {
+            await AuthFetch("/api/threads", {
                 method: "DELETE",
-                body: JSON.stringify({ id }),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                json: { id },
             });
-            if (!request.ok) throw request;
 
             await mutate({ ...data, result: data.result.filter(value => value.id !== id) });
         } catch (error) {

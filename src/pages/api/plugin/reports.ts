@@ -3,14 +3,13 @@ import { z } from 'zod';
 
 import prisma from "@api/prisma";
 import { handleError } from "@api/errorHandler";
-import { strToNum } from "@lib/utils/strToNum";
 import createHttpError from "http-errors";
 
 const getSchema = z.object({
     search: z.string().optional(),
     type: z.enum(["Comment", "Post"]).optional(),
-    order: z.enum(["asc", "desc"]).default("asc"),
-    page: z.string().default("1").transform(strToNum)
+    order: z.enum(["asc", "desc"]).optional().default("asc"),
+    page: z.coerce.number().positive().min(1).optional().default(1)
 });
 
 const deleteSchema = z.object({

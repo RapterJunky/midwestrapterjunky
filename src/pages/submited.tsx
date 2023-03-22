@@ -1,17 +1,16 @@
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import type { NextPage } from "next";
 
 import Navbar from "@components/layout/Navbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
-import Query from "@query/queries/generic";
 import type { FullPageProps } from "types/page";
 import { fetchCachedQuery } from "@lib/cache";
+import Query from "@query/queries/generic";
 
 export async function getStaticProps() {
   const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
-
   return {
     props: {
       ...data,
