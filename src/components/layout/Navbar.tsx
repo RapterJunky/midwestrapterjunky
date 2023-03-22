@@ -1,7 +1,7 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Transition } from "@headlessui/react";
+import { Portal, Transition } from "@headlessui/react";
 import { HiMenu, HiX } from "react-icons/hi";
 import IconLink from "@components/IconLink";
 import { capitlize } from "@utils/capitlize";
@@ -68,9 +68,8 @@ export default function Navbar({
   return (
     <nav
       ref={ref}
-      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${
-        navbarMode[mode] ?? ""
-      }`}
+      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${navbarMode[mode] ?? ""
+        }`}
     >
       <Transition
         show={showNav}
