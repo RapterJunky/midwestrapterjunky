@@ -1,7 +1,4 @@
-import type {
-  GetStaticPropsResult,
-  NextPage,
-} from "next";
+import type { GetStaticPropsResult, NextPage } from "next";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi";
 import SiteTags from "@components/SiteTags";
@@ -18,7 +15,7 @@ export const getStaticProps = async (): Promise<
   const data = await fetchCachedQuery<Props>("GenericPage", Query);
   return {
     props: {
-      _site: data._site
+      _site: data._site,
     },
   };
 };

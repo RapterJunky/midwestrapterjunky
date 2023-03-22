@@ -10,7 +10,7 @@ import { applyRateLimit } from "@api/rateLimiter";
 
 const getSchema = z.object({
   post: z.string().uuid(),
-  page: z.coerce.number().positive().min(1).optional().default(1)
+  page: z.coerce.number().positive().min(1).optional().default(1),
 });
 const postSchema = z.object({
   content: z.object({ message: z.string() }),
@@ -80,8 +80,8 @@ export default async function handler(
               ownerId: session.user.id,
               commentId: id,
               reason,
-              type: "Comment"
-            }
+              type: "Comment",
+            },
           });
 
           return res.status(201).json({ message: "Reported" });

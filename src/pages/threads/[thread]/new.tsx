@@ -4,7 +4,15 @@ import type {
   NextPage,
   GetStaticPathsResult,
 } from "next";
-import { createEditor, Text, Node, type Descendant, Editor, Transforms, Range } from "slate";
+import {
+  createEditor,
+  Text,
+  Node,
+  type Descendant,
+  Editor,
+  Transforms,
+  Range,
+} from "slate";
 import { useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Slate, Editable, withReact, useSlate, useFocused } from "slate-react";
@@ -26,12 +34,18 @@ import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
 //https://docs.slatejs.org/concepts/08-plugins
 
-type Format = "strong" | "emphasis" | "underline" | "strikethrough" | "highlight" | "code";
+type Format =
+  | "strong"
+  | "emphasis"
+  | "underline"
+  | "strikethrough"
+  | "highlight"
+  | "code";
 interface FormState {
   title: string;
   document: Descendant[];
 }
-interface Props extends FullPageProps { }
+interface Props extends FullPageProps {}
 
 export const getStaticPaths = (): GetStaticPathsResult => {
   return {
@@ -43,7 +57,11 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const result = z.coerce.number().positive().min(1).safeParse(ctx.params?.thread);
+  const result = z.coerce
+    .number()
+    .positive()
+    .min(1)
+    .safeParse(ctx.params?.thread);
 
   if (!result.success) return { notFound: true };
 
@@ -62,27 +80,34 @@ export const getStaticProps = async (
 
 const toggleFormat = (editor: Editor, format: Format) => {
   const isActive = isFormatActive(editor, format);
-  Transforms.setNodes(editor, { [format]: isActive ? null : true }, { match: Text.isText, split: true });
-}
+  Transforms.setNodes(
+    editor,
+    { [format]: isActive ? null : true },
+    { match: Text.isText, split: true }
+  );
+};
 
 const isFormatActive = (editor: Editor, format: Format): boolean => {
-  const [match] = Editor.nodes(editor, { match: n => (n as never as Record<string, boolean>)[format] === true, mode: "all" });
+  const [match] = Editor.nodes(editor, {
+    match: (n) => (n as never as Record<string, boolean>)[format] === true,
+    mode: "all",
+  });
   return !!match;
-}
+};
 
 const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.strong) {
-    children = (<strong>{children}</strong>);
+    children = <strong>{children}</strong>;
   }
   if (leaf.emphasis) {
-    children = (<em>{children}</em>);
+    children = <em>{children}</em>;
   }
   if (leaf.underline) {
-    children = (<u>{children}</u>);
+    children = <u>{children}</u>;
   }
 
-  return <span {...attributes}>{children}</span>
-}
+  return <span {...attributes}>{children}</span>;
+};
 
 const Element = ({ attributes, children, element }: any) => {
   switch (element.type) {
@@ -147,7 +172,12 @@ const HoveringToolbar = () => {
 
     if (!el) return;
 
-    if (!selection || !inFocus || Range.isCollapsed(selection) || Editor.string(editor, selection) === "") {
+    if (
+      !selection ||
+      !inFocus ||
+      Range.isCollapsed(selection) ||
+      Editor.string(editor, selection) === ""
+    ) {
       el.removeAttribute("style");
       return;
     }
@@ -156,21 +186,48 @@ const HoveringToolbar = () => {
     if (!domSelection) return;
     const domRange = domSelection.getRangeAt(0);
     const rect = domRange.getBoundingClientRect();
-    el.style.opacity = '1';
+    el.style.opacity = "1";
     el.style.top = `${rect.top + window.scrollY - el.offsetHeight}px`;
-    el.style.left = `${rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2}px`;
+    el.style.left = `${
+      rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2
+    }px`;
   });
 
   return (
     <Portal>
-      <div ref={ref} className="absolute z-10 -mt-2 opacity-0 transition-opacity duration-75 p-2 bg-gray-800 text-neutral-400 divide-x-2 divide-neutral-400" onMouseDown={ev => ev.preventDefault()}>
-        <button className={`p-1 ${isFormatActive(editor, "strong") ? "text-white" : ""}`} onClick={() => toggleFormat(editor, "strong")}><FaBold /></button>
-        <button className={`p-1 ${isFormatActive(editor, "emphasis") ? "text-white" : ""}`} onClick={() => toggleFormat(editor, "emphasis")}><FaItalic /></button>
-        <button className={`p-1 ${isFormatActive(editor, "underline") ? "text-white" : ""}`} onClick={() => toggleFormat(editor, "underline")}><FaUnderline /></button>
+      <div
+        ref={ref}
+        className="absolute z-10 -mt-2 divide-x-2 divide-neutral-400 bg-gray-800 p-2 text-neutral-400 opacity-0 transition-opacity duration-75"
+        onMouseDown={(ev) => ev.preventDefault()}
+      >
+        <button
+          className={`p-1 ${
+            isFormatActive(editor, "strong") ? "text-white" : ""
+          }`}
+          onClick={() => toggleFormat(editor, "strong")}
+        >
+          <FaBold />
+        </button>
+        <button
+          className={`p-1 ${
+            isFormatActive(editor, "emphasis") ? "text-white" : ""
+          }`}
+          onClick={() => toggleFormat(editor, "emphasis")}
+        >
+          <FaItalic />
+        </button>
+        <button
+          className={`p-1 ${
+            isFormatActive(editor, "underline") ? "text-white" : ""
+          }`}
+          onClick={() => toggleFormat(editor, "underline")}
+        >
+          <FaUnderline />
+        </button>
       </div>
     </Portal>
   );
-}
+};
 
 const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
   const router = useRouter();
@@ -223,7 +280,7 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
       <header>
         <Navbar {...navbar} mode="none" />
       </header>
-      <main className="flex flex-col flex-grow items-center">
+      <main className="flex flex-grow flex-col items-center">
         <h1 className="mt-4 text-3xl font-bold">Create a post</h1>
         <Tab.Group
           as="div"

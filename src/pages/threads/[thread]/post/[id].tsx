@@ -4,7 +4,7 @@ import type {
   NextPage,
   GetStaticPathsResult,
 } from "next";
-import superjson from 'superjson';
+import superjson from "superjson";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -74,7 +74,10 @@ export const getStaticProps = async (
       },
     });
 
-    const props = await fetchCachedQuery<Omit<Props, "post">>("GenericPage", GenericPageQuery);
+    const props = await fetchCachedQuery<Omit<Props, "post">>(
+      "GenericPage",
+      GenericPageQuery
+    );
 
     // temp for borken swc plugin
     const { json } = superjson.serialize(post);

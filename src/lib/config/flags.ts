@@ -1,3 +1,3 @@
 export const enum Flags {
-    Forms = "FORMS"
-};
+  Forms = "FORMS",
+}

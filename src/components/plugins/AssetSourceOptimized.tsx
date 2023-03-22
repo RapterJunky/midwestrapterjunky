@@ -28,7 +28,7 @@ export default function AssetSourceOptimized({
 
       const req = await AuthFetch("/api/plugin/upload", {
         method: "POST",
-        body: data
+        body: data,
       });
 
       const info = await req.json();

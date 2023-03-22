@@ -95,7 +95,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               >
                 {data.map((product) => (
                   <div
-                    className="cursor-pointer appearance-none overflow-hidden rounded border border-var-border bg-transparent p-1 pb-0 text-center hover:border-dato-accent"
+                    className="border-var-border cursor-pointer appearance-none overflow-hidden rounded border bg-transparent p-1 pb-0 text-center hover:border-dato-accent"
                     key={product.handle}
                     onClick={() =>
                       ctx.resolve(

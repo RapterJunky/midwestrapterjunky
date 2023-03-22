@@ -102,7 +102,7 @@ const Edit = ({
         json: data,
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       });
 
       ctx.resolve(data);
@@ -111,9 +111,10 @@ const Edit = ({
         ctx.alert(`${error.message} | CODE: ${error.cause}`);
       if (error instanceof Response) {
         ctx.alert(
-          `${error.status === 500
-            ? "Internal Server Error"
-            : "Failed to perform action."
+          `${
+            error.status === 500
+              ? "Internal Server Error"
+              : "Failed to perform action."
           } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
         );
       }

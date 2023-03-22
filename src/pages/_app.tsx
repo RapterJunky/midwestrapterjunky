@@ -14,17 +14,17 @@ const DefaultHead: React.FC = () => (
 );
 
 function App({ Component, pageProps, router }: AppProps) {
-
-  if (router.pathname !== "/plugins/midwestraptor") return (
-    <SessionProvider session={pageProps.session}>
-      <DefaultHead />
-      <GoogleAnalytics
-        trackPageViews
-        debugMode={process.env.VERCEL_ENV !== "production"}
-      />
-      <Component {...pageProps} />
-    </SessionProvider>
-  );
+  if (router.pathname !== "/plugins/midwestraptor")
+    return (
+      <SessionProvider session={pageProps.session}>
+        <DefaultHead />
+        <GoogleAnalytics
+          trackPageViews
+          debugMode={process.env.VERCEL_ENV !== "production"}
+        />
+        <Component {...pageProps} />
+      </SessionProvider>
+    );
 
   return (
     <>

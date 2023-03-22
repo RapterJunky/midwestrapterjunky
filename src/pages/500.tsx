@@ -8,7 +8,6 @@ import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
 
-
 type Props = Pick<FullPageProps, "_site">;
 
 export const getStaticProps = async (): Promise<
@@ -17,7 +16,7 @@ export const getStaticProps = async (): Promise<
   const data = await fetchCachedQuery<Props>("GenericPage", Query);
   return {
     props: {
-      _site: data._site
+      _site: data._site,
     },
   };
 };

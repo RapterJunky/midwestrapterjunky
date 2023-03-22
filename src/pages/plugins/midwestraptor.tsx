@@ -1,6 +1,6 @@
 import { type MainNavigationTab } from "datocms-plugin-sdk";
 import type { NextPage } from "next";
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugins/StructuredTextFields";
@@ -15,16 +15,32 @@ const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const MESSAGE_BOARD_PAGE_ID = "message-board-manager";
 
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
-const ShopFieldExtension = dynamic(() => import("@components/plugins/ShopFieldExtension"));
-const AuthorEditorExtension = dynamic(() => import("@components/plugins/AuthorEditorExtension"));
+const ShopFieldExtension = dynamic(
+  () => import("@components/plugins/ShopFieldExtension")
+);
+const AuthorEditorExtension = dynamic(
+  () => import("@components/plugins/AuthorEditorExtension")
+);
 
-const AssetSourceOptimized = dynamic(() => import("@components/plugins/AssetSourceOptimized"));
+const AssetSourceOptimized = dynamic(
+  () => import("@components/plugins/AssetSourceOptimized")
+);
 
-const EditAuthorModal = dynamic(() => import("@components/plugins/EditAuthorModel"));
-const StorefrontModel = dynamic(() => import("@components/plugins/StorefrontModel"));
-const BrowseProductsModel = dynamic(() => import("@components/plugins/BrowseProductsModal"));
-const MessageBoardManagerPage = dynamic(() => import("@components/plugins/MessageBoardManagerPage"));
-const EditThreadModel = dynamic(() => import("@components/plugins/EditThreadModel"));
+const EditAuthorModal = dynamic(
+  () => import("@components/plugins/EditAuthorModel")
+);
+const StorefrontModel = dynamic(
+  () => import("@components/plugins/StorefrontModel")
+);
+const BrowseProductsModel = dynamic(
+  () => import("@components/plugins/BrowseProductsModal")
+);
+const MessageBoardManagerPage = dynamic(
+  () => import("@components/plugins/MessageBoardManagerPage")
+);
+const EditThreadModel = dynamic(
+  () => import("@components/plugins/EditThreadModel")
+);
 
 const MidwestRaptor: NextPage = () => {
   const { id, page, ctx } = useDatoCMS({
@@ -138,15 +154,13 @@ const MidwestRaptor: NextPage = () => {
       const pages: MainNavigationTab[] = [];
 
       if (hasFlag(Flags.Forms)) {
-        pages.push(
-          {
-            label: "Message Board",
-            icon: "comments",
-            pointsTo: {
-              pageId: MESSAGE_BOARD_PAGE_ID,
-            },
+        pages.push({
+          label: "Message Board",
+          icon: "comments",
+          pointsTo: {
+            pageId: MESSAGE_BOARD_PAGE_ID,
           },
-        );
+        });
       }
 
       return pages;
@@ -175,10 +189,10 @@ const MidwestRaptor: NextPage = () => {
       return null;
     }
     case "Modal":
-      if (id === "thread-model") return (<EditThreadModel ctx={ctx} />)
-      if (id === "browseProducts") return (<BrowseProductsModel ctx={ctx} />);
-      if (id === "editAuthor") return (<EditAuthorModal ctx={ctx} />);
-      if (id === "storefrontModel") return (<StorefrontModel ctx={ctx} />);
+      if (id === "thread-model") return <EditThreadModel ctx={ctx} />;
+      if (id === "browseProducts") return <BrowseProductsModel ctx={ctx} />;
+      if (id === "editAuthor") return <EditAuthorModal ctx={ctx} />;
+      if (id === "storefrontModel") return <StorefrontModel ctx={ctx} />;
       return null;
     case "AssetSource": {
       return <AssetSourceOptimized ctx={ctx} />;

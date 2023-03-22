@@ -1,7 +1,4 @@
-import type {
-  GetStaticPropsResult,
-  NextPage,
-} from "next";
+import type { GetStaticPropsResult, NextPage } from "next";
 
 import ScrollToTop from "@components/blog/ScrollToTop";
 import Footer from "@components/layout/Footer";
@@ -12,20 +9,19 @@ import { fetchCachedQuery } from "@lib/cache";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 
-interface Props extends FullPageProps { }
+interface Props extends FullPageProps {}
 
-export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
-  const props = await fetchCachedQuery<Props>(
-    "GenericPage",
-    GenericPageQuery
-  );
+export const getStaticProps = async (): Promise<
+  GetStaticPropsResult<Props>
+> => {
+  const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
 
   return {
     props: {
       ...props,
       preview: false,
     },
-  }
+  };
 };
 
 const PrivacyPolicy: NextPage<Props> = ({ _site, navbar }) => {

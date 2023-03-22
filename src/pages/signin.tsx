@@ -1,7 +1,4 @@
-import type {
-  NextPage,
-  GetStaticPropsResult,
-} from "next";
+import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
 import { getProviders, signIn } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
@@ -19,7 +16,9 @@ interface Props {
   seo: Omit<FullPageProps, "preview" | "navbar">["_site"];
 }
 
-export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps = async (): Promise<
+  GetStaticPropsResult<Props>
+> => {
   const providers = await getProviders();
   const data = await fetchCachedQuery<FullPageProps>(
     "GenericPage",

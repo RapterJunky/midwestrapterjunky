@@ -26,7 +26,10 @@ const dastSchema = z.object({
 
 const getSchema = z.object({
   page: z.coerce.number().positive().min(1).optional().default(1),
-  thread: z.coerce.number({ required_error: "Thread query param is required." }).positive().min(1),
+  thread: z.coerce
+    .number({ required_error: "Thread query param is required." })
+    .positive()
+    .min(1),
   search: z
     .string()
     .optional()
@@ -70,10 +73,10 @@ export default async function handler(
               threadId: thread,
               AND: search
                 ? {
-                  name: {
-                    contains: search,
-                  },
-                }
+                    name: {
+                      contains: search,
+                    },
+                  }
                 : undefined,
             },
             select: {
@@ -107,8 +110,8 @@ export default async function handler(
               type: "Post",
               postId: id,
               reason,
-              ownerId: session.user.id
-            }
+              ownerId: session.user.id,
+            },
           });
 
           return res.status(201).json({ message: "Reported" });

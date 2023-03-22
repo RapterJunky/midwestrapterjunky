@@ -44,7 +44,7 @@ export const getStaticProps = async (
           id,
         },
       }),
-      fetchCachedQuery<Props>("GenericPage", GenericPageQuery)
+      fetchCachedQuery<Props>("GenericPage", GenericPageQuery),
     ]);
 
     return {
@@ -71,7 +71,8 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
     Response,
     string
   >(
-    `/api/threads/post?thread=${thread.id
+    `/api/threads/post?thread=${
+      thread.id
     }&page=${page}&search=${encodeURIComponent(debouncedQuery)}`,
     (url) => fetch(url).then((value) => value.json())
   );
@@ -93,7 +94,7 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
         <Navbar {...navbar} mode="none" />
       </header>
       <main className="flex flex-1 flex-col items-center gap-2">
-        <div className="container sm:px-6 flex flex-col flex-1">
+        <div className="container flex flex-1 flex-col sm:px-6">
           <div className="mt-6 flex w-full justify-start">
             <h1 className="text-4xl font-bold">Thread - {thread.name}</h1>
           </div>
@@ -119,71 +120,73 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
             <hr className="w-full" />
             {!isLoading && error ? (
               <div>
-                <h2 className="text-center text-md">There was an error loading posts!</h2>
+                <h2 className="text-md text-center">
+                  There was an error loading posts!
+                </h2>
               </div>
             ) : null}
 
             {isLoading
               ? Array.from({ length: 2 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="mx-auto flex w-full rounded-sm border-2 p-4 animate-in fade-in-20"
-                >
-                  <div className="flex h-full animate-pulse flex-row items-center justify-center space-x-5">
-                    <div className="flex flex-col gap-2">
-                      <div className="h-12 w-12 rounded-full bg-gray-300"></div>
-                      <span className="h-3 w-12 rounded-md bg-gray-300"></span>
-                    </div>
-                    <div className="flex flex-col space-y-3">
-                      <div className="h-6 w-36 rounded-md bg-gray-300"></div>
-                      <div className="h-6 w-24 rounded-md bg-gray-300"></div>
+                  <div
+                    key={i}
+                    className="mx-auto flex w-full rounded-sm border-2 p-4 animate-in fade-in-20"
+                  >
+                    <div className="flex h-full animate-pulse flex-row items-center justify-center space-x-5">
+                      <div className="flex flex-col gap-2">
+                        <div className="h-12 w-12 rounded-full bg-gray-300"></div>
+                        <span className="h-3 w-12 rounded-md bg-gray-300"></span>
+                      </div>
+                      <div className="flex flex-col space-y-3">
+                        <div className="h-6 w-36 rounded-md bg-gray-300"></div>
+                        <div className="h-6 w-24 rounded-md bg-gray-300"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))
               : null}
 
             {!isLoading && data && data?.result.length
               ? data.result.map((value) => (
-                <div
-                  key={value.id}
-                  className="mx-auto flex w-full flex-col items-center justify-between rounded-sm border-2 p-4 animate-in fade-in-20 sm:flex-row"
-                >
-                  <div className="flex h-full flex-row items-center justify-center space-x-5">
-                    <div className="flex flex-col items-center gap-1">
-                      <Image
-                        height={48}
-                        width={48}
-                        className="h-12 w-12 rounded-full"
-                        src={value.owner?.image ?? ""}
-                        alt="avatar"
-                      />
-                      <span className="h-3 rounded-md text-sm">
-                        {value.owner.name}
-                      </span>
-                    </div>
-                    <div className="flex flex-col space-y-3">
-                      <Link
-                        href={{
-                          pathname: "/threads/[thread]/post/[id]",
-                          query: { thread: thread.id, id: value.id },
-                        }}
-                        className="h-6 rounded-md text-2xl font-bold underline"
-                      >
-                        {value.name}
-                      </Link>
-                      <div className="h-6 rounded-md text-sm text-gray-600">
-                        {new Date(value.created).toLocaleDateString("en-us", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                  <div
+                    key={value.id}
+                    className="mx-auto flex w-full flex-col items-center justify-between rounded-sm border-2 p-4 animate-in fade-in-20 sm:flex-row"
+                  >
+                    <div className="flex h-full flex-row items-center justify-center space-x-5">
+                      <div className="flex flex-col items-center gap-1">
+                        <Image
+                          height={48}
+                          width={48}
+                          className="h-12 w-12 rounded-full"
+                          src={value.owner?.image ?? ""}
+                          alt="avatar"
+                        />
+                        <span className="h-3 rounded-md text-sm">
+                          {value.owner.name}
+                        </span>
+                      </div>
+                      <div className="flex flex-col space-y-3">
+                        <Link
+                          href={{
+                            pathname: "/threads/[thread]/post/[id]",
+                            query: { thread: thread.id, id: value.id },
+                          }}
+                          className="h-6 rounded-md text-2xl font-bold underline"
+                        >
+                          {value.name}
+                        </Link>
+                        <div className="h-6 rounded-md text-sm text-gray-600">
+                          {new Date(value.created).toLocaleDateString("en-us", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))
               : null}
 
             {!isLoading && data && !data.result.length ? (

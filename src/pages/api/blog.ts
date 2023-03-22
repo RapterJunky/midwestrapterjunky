@@ -59,6 +59,6 @@ export default async function handle(
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
     return res.status(200).json({ posts, totalArticles: data.totalArticles });
   } catch (error) {
-    return handleError(error, res)
+    return handleError(error, res);
   }
 }

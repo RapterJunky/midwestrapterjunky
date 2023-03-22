@@ -10,15 +10,12 @@ import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 
-interface Props extends FullPageProps { }
+interface Props extends FullPageProps {}
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
-  const props = await fetchCachedQuery<Props>(
-    "GenericPage",
-    GenericPageQuery
-  );
+  const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
 
   return {
     props: {

@@ -22,7 +22,7 @@ let authorSchema = z.object({
 });
 
 const querySchema = z.object({
-  page: z.coerce.number().positive().min(1).optional().default(1)
+  page: z.coerce.number().positive().min(1).optional().default(1),
 });
 
 export default async function handle(
@@ -33,7 +33,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-      process.env.PLUGIN_TOKEN
+        process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
