@@ -29,23 +29,19 @@ import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
 import { z } from "zod";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
+import { slateToDast } from "datocms-structured-text-slate-utils";
+import type { DefaultMark } from 'datocms-structured-text-utils'
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
 //https://docs.slatejs.org/concepts/08-plugins
 
-type Format =
-  | "strong"
-  | "emphasis"
-  | "underline"
-  | "strikethrough"
-  | "highlight"
-  | "code";
+
 interface FormState {
   title: string;
   document: Descendant[];
 }
-interface Props extends FullPageProps {}
+interface Props extends FullPageProps { }
 
 export const getStaticPaths = (): GetStaticPathsResult => {
   return {
@@ -78,16 +74,16 @@ export const getStaticProps = async (
   };
 };
 
-const toggleFormat = (editor: Editor, format: Format) => {
+const toggleFormat = (editor: Editor, format: DefaultMark) => {
   const isActive = isFormatActive(editor, format);
   Transforms.setNodes(
     editor,
-    { [format]: isActive ? null : true },
+    { [format]: isActive },
     { match: Text.isText, split: true }
   );
 };
 
-const isFormatActive = (editor: Editor, format: Format): boolean => {
+const isFormatActive = (editor: Editor, format: DefaultMark): boolean => {
   const [match] = Editor.nodes(editor, {
     match: (n) => (n as never as Record<string, boolean>)[format] === true,
     mode: "all",
@@ -114,51 +110,6 @@ const Element = ({ attributes, children, element }: any) => {
     default:
       return <p {...attributes}>{children}</p>;
   }
-};
-
-const serialize = (nodes: Descendant[]) => {
-  const document: any[] = [];
-
-  for (const node of nodes) {
-    if (Text.isText(node)) {
-      const marks = Object.keys(node)
-        .map((value) => value)
-        .filter((value) => value !== "text");
-      const span = {
-        type: "span",
-        value: Node.string(node),
-        marks: !marks.length ? undefined : marks,
-      };
-      document.push(span);
-      continue;
-    }
-
-    switch (node.type) {
-      case "paragraph": {
-        const paragraph = {
-          type: "paragraph",
-          children: serialize(node.children),
-        };
-        document.push(paragraph);
-        continue;
-      }
-    }
-  }
-  return document;
-};
-
-const toDast = (nodes: Descendant[]): PrismaJson.Dast => {
-  return {
-    value: {
-      schema: "dast",
-      document: {
-        type: "root",
-        children: serialize(nodes),
-      },
-    },
-    blocks: [],
-    links: [],
-  };
 };
 
 const HoveringToolbar = () => {
@@ -188,9 +139,8 @@ const HoveringToolbar = () => {
     const rect = domRange.getBoundingClientRect();
     el.style.opacity = "1";
     el.style.top = `${rect.top + window.scrollY - el.offsetHeight}px`;
-    el.style.left = `${
-      rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2
-    }px`;
+    el.style.left = `${rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2
+      }px`;
   });
 
   return (
@@ -201,25 +151,22 @@ const HoveringToolbar = () => {
         onMouseDown={(ev) => ev.preventDefault()}
       >
         <button
-          className={`p-1 ${
-            isFormatActive(editor, "strong") ? "text-white" : ""
-          }`}
+          className={`p-1 ${isFormatActive(editor, "strong") ? "text-white" : ""
+            }`}
           onClick={() => toggleFormat(editor, "strong")}
         >
           <FaBold />
         </button>
         <button
-          className={`p-1 ${
-            isFormatActive(editor, "emphasis") ? "text-white" : ""
-          }`}
+          className={`p-1 ${isFormatActive(editor, "emphasis") ? "text-white" : ""
+            }`}
           onClick={() => toggleFormat(editor, "emphasis")}
         >
           <FaItalic />
         </button>
         <button
-          className={`p-1 ${
-            isFormatActive(editor, "underline") ? "text-white" : ""
-          }`}
+          className={`p-1 ${isFormatActive(editor, "underline") ? "text-white" : ""
+            }`}
           onClick={() => toggleFormat(editor, "underline")}
         >
           <FaUnderline />
@@ -255,7 +202,7 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
         body: JSON.stringify({
           name: state.title,
           threadId: parseInt(router.query.thread as string),
-          content: toDast(state.document),
+          content: slateToDast(state.document, {}),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -352,7 +299,7 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
             </Tab.Panel>
             <Tab.Panel>
               <div className="prose mt-2 min-h-[320px] max-w-none bg-neutral-200 p-2 shadow-md">
-                <StructuredText data={toDast(previewDocuemnt)} />
+                <StructuredText data={slateToDast(previewDocuemnt, {})} />
               </div>
             </Tab.Panel>
           </Tab.Panels>
