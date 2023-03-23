@@ -5,28 +5,28 @@ import type {
   GetStaticPathsResult,
   NextPage,
 } from "next";
-import type { SeoOrFaviconTag } from "react-datocms";
 import { StructuredText } from "react-datocms/structured-text";
-import Image from "next/image";
-import Script from "next/script";
-import { z } from "zod";
-import Link from "next/link";
+import type { SeoOrFaviconTag } from "react-datocms";
 import { HiArrowLeft } from "react-icons/hi";
+import Script from "next/script";
+import Image from "next/image";
+import Link from "next/link";
+import Head from "next/head";
+import { z } from "zod";
 
-import ScrollToTop from "@components/blog/ScrollToTop";
 import StoreButtonLink from "@components/StoreButtonLink";
-import IconLink from "@components/IconLink";
+import ScrollToTop from "@components/blog/ScrollToTop";
 import ExitPreview from "@components/ExitPreview";
-import SiteTags from "@components/SiteTags";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
+import IconLink from "@components/IconLink";
+import SiteTags from "@components/SiteTags";
 
-import { logger } from "@lib/logger";
-import { DatoCMS } from "@api/gql";
-
+import { markRules } from "@lib/structuredTextRules";
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
-import { markRules } from "@lib/structuredTextRules";
+import { logger } from "@lib/logger";
+import { DatoCMS } from "@api/gql";
 
 import type {
   ResponsiveImage,
@@ -36,7 +36,6 @@ import type {
 } from "types/page";
 
 import { fetchCacheData } from "@lib/cache";
-import Head from "next/head";
 
 declare const L: {
   map: (
@@ -199,8 +198,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>
@@ -236,10 +235,10 @@ const EventPage: NextPage<EventPageProps> = ({
                               zoom: 15,
                             });
                             L.tileLayer(
-                              "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                               {
                                 attribution:
-                                  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                               }
                             ).addTo(map);
                             L.marker(cord).addTo(map);
