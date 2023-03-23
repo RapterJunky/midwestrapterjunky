@@ -29,8 +29,9 @@ import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
 import { z } from "zod";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
-import { slateToDast } from "datocms-structured-text-slate-utils";
-import type { DefaultMark } from 'datocms-structured-text-utils'
+import type { DefaultMark } from 'datocms-structured-text-utils';
+
+const slateToDastI = import("datocms-structured-text-slate-utils");
 
 //https://www.slatejs.org/examples/richtext
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
@@ -197,12 +198,13 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
 
   const onSubmit = async (state: FormState) => {
     try {
+      const { slateToDast } = await slateToDastI;
       const request = await fetch("/api/threads/post", {
         method: "POST",
         body: JSON.stringify({
           name: state.title,
           threadId: parseInt(router.query.thread as string),
-          content: slateToDast(state.document, {}),
+          content: await slateToDast(state.document, {}),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -299,7 +301,7 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
             </Tab.Panel>
             <Tab.Panel>
               <div className="prose mt-2 min-h-[320px] max-w-none bg-neutral-200 p-2 shadow-md">
-                <StructuredText data={slateToDast(previewDocuemnt, {})} />
+                <StructuredText data={{ schema: "dast", document: { type: "root", children: [] } }} />
               </div>
             </Tab.Panel>
           </Tab.Panels>
