@@ -39,9 +39,15 @@ import { fetchCacheData } from "@lib/cache";
 import Head from "next/head";
 
 declare const L: {
-  map: (el: string, opt?: { center?: [number, number]; zoom?: number; }) => { setView: (view: [number, number], zoom: number) => void };
-  tileLayer: (url: string, opt?: { maxZoom?: number; attribution?: string }) => { addTo: (map: any) => void },
-  marker: (lat: [number, number]) => { addTo: (map: any) => void }
+  map: (
+    el: string,
+    opt?: { center?: [number, number]; zoom?: number }
+  ) => { setView: (view: [number, number], zoom: number) => void };
+  tileLayer: (
+    url: string,
+    opt?: { maxZoom?: number; attribution?: string }
+  ) => { addTo: (map: any) => void };
+  marker: (lat: [number, number]) => { addTo: (map: any) => void };
 };
 
 interface EventPageProps extends FullPageProps {
@@ -193,8 +199,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>
@@ -211,20 +217,38 @@ const EventPage: NextPage<EventPageProps> = ({
                     {event.location ? (
                       <>
                         <Head>
-                          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-                            crossOrigin="" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+                          <link
+                            rel="stylesheet"
+                            href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+                            crossOrigin=""
+                            integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
                           />
                         </Head>
                         <div id="map" className="h-80"></div>
-                        <Script onReady={() => {
-                          const cord: [number, number] = [event.location?.latitude as number, event.location?.longitude as number];
-                          const map = L.map("map", { center: cord, zoom: 15 });
-                          L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                          }).addTo(map);
-                          L.marker(cord).addTo(map);
-
-                        }} crossOrigin="" strategy="lazyOnload" src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" />
+                        <Script
+                          onReady={() => {
+                            const cord: [number, number] = [
+                              event.location?.latitude as number,
+                              event.location?.longitude as number,
+                            ];
+                            const map = L.map("map", {
+                              center: cord,
+                              zoom: 15,
+                            });
+                            L.tileLayer(
+                              "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              {
+                                attribution:
+                                  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                              }
+                            ).addTo(map);
+                            L.marker(cord).addTo(map);
+                          }}
+                          crossOrigin=""
+                          strategy="lazyOnload"
+                          src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+                          integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+                        />
                       </>
                     ) : null}
                   </section>
