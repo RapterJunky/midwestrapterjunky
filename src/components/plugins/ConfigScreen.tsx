@@ -20,7 +20,7 @@ const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
 
 export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
   const [removelQueue, setRemovelQueue] = useState<string[]>([]);
-  const { handleSubmit, control, formState, getValues } = useForm<VaildConfig>({
+  const { handleSubmit, control, formState } = useForm<VaildConfig>({
     defaultValues: normalizeConfig(ctx.plugin.attributes.parameters),
   });
 

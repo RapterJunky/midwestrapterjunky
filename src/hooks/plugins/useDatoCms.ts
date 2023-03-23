@@ -1,6 +1,6 @@
 import { connect } from "datocms-plugin-sdk";
 import { useEffect, useState, useRef } from "react";
-import type { PluginSettings, RenderPage } from "@type/plugin";
+import type { PluginSettings, RenderPage } from "types/plugin";
 
 interface PluginState {
   page: RenderPage;

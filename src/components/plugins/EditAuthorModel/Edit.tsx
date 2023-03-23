@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useEffect } from "react";
 import { FaTrash, FaBackward } from "react-icons/fa";
 import ImageSelect from "./ImageSelect";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 export interface FormState {
   avatar: string;
@@ -96,23 +97,13 @@ const Edit = ({
         id: state?.id ?? crypto.randomUUID(),
       };
 
-      const token = new URLSearchParams(window.location.search).get("token");
-      if (!token)
-        throw new Error("Failed to perform action.", {
-          cause: "MISSING_AUTH_TOKEN",
-        });
-
-      // db update/patch
-      const result = await fetch("/api/plugin/authors", {
+      await AuthFetch("/api/plugin/authors", {
         method: isEdit ? "PATCH" : "POST",
-        body: JSON.stringify(data),
+        json: data,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
-
-      if (!result.ok) throw result;
 
       ctx.resolve(data);
     } catch (error) {

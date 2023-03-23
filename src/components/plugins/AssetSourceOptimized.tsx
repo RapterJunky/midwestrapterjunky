@@ -1,3 +1,4 @@
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import { RenderAssetSourceCtx } from "datocms-plugin-sdk";
 import { Button, Spinner, Canvas } from "datocms-react-ui";
 import Image from "next/image";
@@ -25,21 +26,10 @@ export default function AssetSourceOptimized({
 
       data.append("image", file, file.name);
 
-      const token = new URLSearchParams(window.location.search).get("token");
-      if (!token) throw new Error("No token");
-
-      const req = await fetch("/api/plugin/upload", {
+      const req = await AuthFetch("/api/plugin/upload", {
         method: "POST",
-        headers: {
-          // Don't set this headers when working with this type of form data
-          // fetch will create it for you
-          //"Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        } as any,
         body: data,
       });
-
-      if (!req.ok) throw new Error(req.statusText);
 
       const info = await req.json();
 

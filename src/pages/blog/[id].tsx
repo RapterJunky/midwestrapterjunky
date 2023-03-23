@@ -13,18 +13,18 @@ import dynamic from "next/dynamic";
 import { HiArrowLeft } from "react-icons/hi";
 import { z } from "zod";
 
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import Tag from "@components/blog/tag";
 import ExitPreview from "@components/ExitPreview";
 import ScrollToTop from "@components/blog/ScrollToTop";
 
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
-import type { FullPageProps, StructuredContent } from "@type/page";
+import type { FullPageProps, StructuredContent } from "types/page";
 import { formatLocalDate } from "@lib/utils/timeFormat";
-import { renderBlock, renderInlineRecord } from "@lib/StructuredTextRules";
+import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";
 
 import ArticleQuery from "@query/queries/article";
@@ -134,9 +134,9 @@ export const getStaticProps = async (
     };
   }
 
-  let pages = await fetchCacheData(PAGE_CACHE_KEY, loadBlogPages);
+  let pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadBlogPages);
 
-  if (!(pages.data as string[]).includes(id))
+  if (!pages.includes(id))
     return {
       notFound: true,
     };
@@ -218,7 +218,7 @@ const Article: NextPage<ArticleProps> = ({
                           <dd>
                             {author.social ? (
                               <Link
-                                className="text-red-500 hover:text-red-600"
+                                className="text-blue-500 hover:text-blue-600"
                                 href={author.social.link}
                               >
                                 {author.social.user}
@@ -268,7 +268,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Previous Article
                         </h2>
-                        <div className="text-red-500 hover:text-red-600">
+                        <div className="text-blue-500 hover:text-blue-600">
                           <Link href={`/blog/${prev.slug}`}>{prev.title}</Link>
                         </div>
                       </div>
@@ -278,7 +278,7 @@ const Article: NextPage<ArticleProps> = ({
                         <h2 className="text-xs uppercase tracking-wide text-gray-500">
                           Next Article
                         </h2>
-                        <div className="text-red-500 hover:text-red-600">
+                        <div className="text-blue-500 hover:text-blue-600">
                           <Link href={`/blog/${next.slug}`}>{next.title}</Link>
                         </div>
                       </div>
@@ -288,7 +288,7 @@ const Article: NextPage<ArticleProps> = ({
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href="/blog"
-                    className="flex items-center text-red-500 hover:text-red-600"
+                    className="flex items-center text-blue-500 hover:text-blue-600"
                   >
                     <HiArrowLeft /> Back to the blog
                   </Link>

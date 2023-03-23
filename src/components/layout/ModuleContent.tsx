@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import type { ModulerContent } from "@type/page";
+import type { ModulerContent } from "types/page";
 
 interface ModuleContentProps {
   data: ModulerContent[];

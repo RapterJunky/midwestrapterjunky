@@ -6,17 +6,17 @@ import type {
 import Script from "next/script";
 import type { SeoOrFaviconTag } from "react-datocms";
 
-import Navbar from "@components/Navbar";
-import ModuleContent from "@components/ModuleContent";
+import Navbar from "@components/layout/Navbar";
+import ModuleContent from "@components/layout/ModuleContent";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 
 import { DatoCMS } from "@api/gql";
-import type { FullPageProps, ModulerContent } from "@type/page";
+import type { FullPageProps, ModulerContent } from "types/page";
 import HomePageQuery from "@query/queries/home";
 
-import { REVAILDATE_IN_12H } from "@lib/RevaildateTimings";
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 
 interface HomeContent extends FullPageProps {
   home: {

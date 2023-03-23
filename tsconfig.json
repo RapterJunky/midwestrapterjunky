@@ -19,11 +19,10 @@
     "paths": {
       "@api/*": ["lib/api/*"],
       "@hook/*": ["hooks/*"],
-      "@type/*": ["lib/types/*"],
+      "@type/*": ["types/*"],
       "@lib/*": ["lib/*"],
       "@components/*": ["components/*"],
       "@query/*": ["gql/*"],
-      "@hooks/*": ["lib/hooks/*"],
       "@utils/*": ["lib/utils/*"]
     }
   },

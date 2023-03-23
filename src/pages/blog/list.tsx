@@ -8,17 +8,17 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type { FullPageProps } from "@lib/types/page";
+import type { FullPageProps } from "types/page";
 import { DatoCMS } from "@api/gql";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { getDescriptionTag } from "@lib/utils/description";
 
-import Navbar from "@components/Navbar";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 import Tag from "@components/blog/tag";
 
 import GenericPageQuery from "@query/queries/generic";
-import Footer from "@components/Footer";
+import Footer from "@components/layout/Footer";
 import Pagination from "@components/blog/Pagination";
 import ExitPreview from "@components/ExitPreview";
 
@@ -168,9 +168,7 @@ const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
           total={data?.totalArticles.count ?? 0}
         />
       </main>
-      <div className="h-20">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );

@@ -7,12 +7,12 @@ import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import Image from "next/image";
 
-import Footer from "@components/Footer";
-import Navbar from "@components/Navbar";
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 import ExitPreview from "@components/ExitPreview";
 
-import type { FullPageProps, ResponsiveImage } from "@type/page";
+import type { FullPageProps, ResponsiveImage } from "types/page";
 import { DatoCMS } from "@api/gql";
 import SponsorsQuery from "@query/queries/sponsors";
 
@@ -36,7 +36,10 @@ export const getStaticProps = async (
   });
 
   return {
-    props: data,
+    props: {
+      ...data,
+      preview: ctx?.preview ?? false,
+    },
   };
 };
 
@@ -74,9 +77,7 @@ const SponsorsPage: NextPage<PageProps> = ({
           ))}
         </section>
       </main>
-      <div className="h-20 w-full">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );

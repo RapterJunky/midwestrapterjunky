@@ -1,17 +1,21 @@
-import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
-import Footer from "@components/Footer";
-import Navbar from "@components/Navbar";
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
 import Calendar from "@components/Calendar";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
 
-import { REVAILDATE_IN_12H } from "@lib/RevaildateTimings";
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 import { DatoCMS } from "@api/gql";
 import Query from "@query/queries/calendar";
 
-import type { FullPageProps } from "@type/page";
+import type { FullPageProps } from "types/page";
 
 interface CalendarProps extends FullPageProps {
   allEvents: {
@@ -38,7 +42,7 @@ export const getStaticProps = async (
     preview: ctx.preview,
     variables: {
       first: MAX_FETCH,
-      date: currDate.toISOString(), // moment().subtract(1, "months").toISOString(),
+      date: currDate.toISOString(),
     },
   });
 
@@ -51,20 +55,26 @@ export const getStaticProps = async (
   };
 };
 
-export default function CalendarPage(props: CalendarProps) {
+const CalendarPage: NextPage<CalendarProps> = ({
+  _site,
+  calendar,
+  navbar,
+  allEvents,
+  preview,
+}) => {
   return (
-    <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[props._site.faviconMetaTags, props.calendar._seoMetaTags]}
-      />
+    <div className="flex flex-col">
+      <SiteTags tags={[_site.faviconMetaTags, calendar._seoMetaTags]} />
       <header>
-        <Navbar {...props.navbar} mode="none" />
+        <Navbar {...navbar} mode="none" />
       </header>
-      <main className="flex h-full flex-col">
-        <Calendar data={props.allEvents} />
+      <main className="flex h-full flex-1 flex-col">
+        <Calendar data={allEvents} />
       </main>
       <Footer />
-      {props.preview ? <ExitPreview /> : null}
+      {preview ? <ExitPreview /> : null}
     </div>
   );
-}
+};
+
+export default CalendarPage;

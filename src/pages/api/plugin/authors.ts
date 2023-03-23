@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
-import { z, ZodError } from "zod";
-import { fromZodError } from "zod-validation-error";
+import { z } from "zod";
 import { Prisma } from "@prisma/client";
-import paginator from "prisma-paginate";
 import prisma from "@api/prisma";
-import { logger } from "@lib/logger";
+import { handleError } from "@api/errorHandler";
 
 let authorSchema = z.object({
   avatar: z.string().url(),
@@ -24,7 +22,7 @@ let authorSchema = z.object({
 });
 
 const querySchema = z.object({
-  page: z.string().transform((value) => parseInt(value)),
+  page: z.coerce.number().positive().min(1).optional().default(1),
 });
 
 export default async function handle(
@@ -62,18 +60,15 @@ export default async function handle(
         return res.status(202).json(result);
       }
       case "GET": {
-        const query = await querySchema.parseAsync(req.query);
-        const paginate = paginator(prisma);
+        const { page } = await querySchema.parseAsync(req.query);
 
-        const page = await paginate.authors.paginate(
-          { where: {} },
-          {
-            page: query.page,
-            limit: 10,
-          }
-        );
+        const [authors, meta] = await prisma.authors.paginate().withPages({
+          page,
+          limit: 10,
+          includePageCount: true,
+        });
 
-        return res.status(200).json(page);
+        return res.status(200).json({ result: authors, ...meta });
       }
       case "DELETE": {
         const query = await z.object({ id: z.string() }).parseAsync(req.body);
@@ -90,26 +85,6 @@ export default async function handle(
         throw createHttpError.BadRequest();
     }
   } catch (error) {
-    if (createHttpError.isHttpError(error)) {
-      logger.error(error, error.message);
-      return res.status(error.statusCode).json(error);
-    }
-
-    if (error instanceof ZodError) {
-      const message = fromZodError(error as ZodError);
-      logger.error(error);
-      return res.status(400).json(message);
-    }
-
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      logger.error(error);
-      return res.status(400).json({
-        message: error.message,
-      });
-    }
-
-    const ie = createHttpError.InternalServerError();
-    logger.error(error, ie.message);
-    return res.status(ie.statusCode).json(ie);
+    handleError(error, res);
   }
 }

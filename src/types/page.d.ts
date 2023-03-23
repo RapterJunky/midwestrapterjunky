@@ -1,5 +1,5 @@
 import type { SeoOrFaviconTag } from "react-datocms";
-import type { NavProps } from "@components/Navbar";
+import type { NavProps } from "@components/layout/Navbar";
 
 export type Color = {
   hex: string;
@@ -39,4 +39,14 @@ export interface FullPageProps extends NavProps {
     faviconMetaTags: SeoOrFaviconTag[];
   };
   preview: boolean;
+}
+
+export interface Paginate<T> {
+  currentPage: number;
+  isFirstPage: boolean;
+  isLastPage: boolean;
+  previousPage: number | null;
+  nextPage: number | null;
+  pageCount: number | null;
+  result: T[];
 }

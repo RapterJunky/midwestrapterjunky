@@ -97,7 +97,7 @@ export default function ShopFieldExtension({
   return (
     <Canvas ctx={ctx}>
       {!isLoading && !error && data ? (
-        <div className="relative border border-var-border p-5 text-center transition-opacity duration-[0.2s] ease-in-out">
+        <div className="border-var-border relative border p-5 text-center transition-opacity duration-[0.2s] ease-in-out">
           <RenderProduct data={data} handleReset={handleReset} />
         </div>
       ) : null}
@@ -168,11 +168,11 @@ const RenderProduct = ({ data, handleReset }: any) => {
     <>
       <div className="flex items-center">
         <div
-          className="mr-5 w-36 rounded border-var-border bg-cover bg-center p-1 before:block before:pt-[100%]"
+          className="border-var-border mr-5 w-36 rounded bg-cover bg-center p-1 before:block before:pt-[100%]"
           style={{ backgroundImage: `url(${data.imageUrl})` }}
         />
         <div className="flex-1 text-left">
-          <div className="mb-1 flex items-center gap-2 text-var-accent">
+          <div className="mb-1 flex items-center gap-2 text-dato-accent">
             <a
               className="text-sm font-bold hover:underline"
               target="_blank"
@@ -184,7 +184,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
             <FaExternalLinkAlt className="text-sm" />
           </div>
           <div
-            className="mb-1 overflow-hidden text-var-light"
+            className="text-var-light mb-1 overflow-hidden"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,

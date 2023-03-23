@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
-import { z, ZodError } from "zod";
-import { fromZodError } from "zod-validation-error";
+import { z } from "zod";
 import { logger } from "@lib/logger";
 import { getKeys } from "@lib/dynamic_keys";
 import { Shopify } from "@api/gql";
-import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
+import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
+import { handleError } from "@api/errorHandler";
 
-type Storefront = "S" | "F";
+type Storefront = "S" | "F" | "ST" | "SQ";
 type EncodeProductItem = [Storefront, string, string];
 interface StorefontsProducts {
   keys: string[];
@@ -158,22 +158,6 @@ export default async function handle(
         output.sort((a, b) => a.index - b.index).map((value) => value.product)
       );
   } catch (error) {
-    if (createHttpError.isHttpError(error)) {
-      logger.error(error, error.message);
-      return res.status(error.statusCode).json(error);
-    }
-
-    if (error instanceof ZodError) {
-      const status = createHttpError.BadRequest();
-      const display = fromZodError(error);
-      logger.error(error, display.message);
-      return res
-        .status(status.statusCode)
-        .json({ message: status.message, details: display.details });
-    }
-
-    const ie = createHttpError.InternalServerError();
-    logger.error(error, ie.message);
-    return res.status(ie.statusCode).json(ie);
+    return handleError(error, res);
   }
 }

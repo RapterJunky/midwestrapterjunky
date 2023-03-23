@@ -1,12 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import type { SeoOrFaviconTag, RegularMetaAttributes } from "react-datocms/seo";
-import createHttpError from "http-errors";
-import { z, ZodError } from "zod";
-import { fromZodError } from "zod-validation-error";
-import { logger } from "@lib/logger";
-import { DatoCMS } from "@api/gql";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
+
+import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import PagedArticles from "@query/queries/pagedArticles";
-import { PUBLIC_CACHE_FOR_2H } from "@lib/RevaildateTimings";
+import { handleError } from "@api/errorHandler";
+import { DatoCMS } from "@api/gql";
 
 interface DataResponse {
   totalArticles: {
@@ -27,11 +26,7 @@ interface ErrorResponse {
 }
 
 const MAX_ITEMS = 5;
-const schema = z.string().transform((value, ctx) => {
-  const parsed = parseInt(value);
-  if (isNaN(parsed)) return z.NEVER;
-  return z.number().gte(0).parse(parsed);
-});
+const schema = z.coerce.number().positive().min(1).optional().default(1);
 
 export default async function handle(
   req: NextApiRequest,
@@ -63,18 +58,7 @@ export default async function handle(
     if (!req.preview || process.env.VERCEL_ENV !== "development")
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
     return res.status(200).json({ posts, totalArticles: data.totalArticles });
-  } catch (error: any) {
-    if (error instanceof ZodError) {
-      const output = fromZodError(error);
-      const br = createHttpError.BadRequest();
-      logger.error(output, output.message);
-      return res
-        .status(br.statusCode)
-        .json({ message: br.message, details: output.details });
-    }
-
-    logger.error(error, error?.message);
-    const ie = createHttpError.InternalServerError();
-    return res.status(ie.statusCode).json(ie);
+  } catch (error) {
+    return handleError(error, res);
   }
 }

@@ -1,40 +1,36 @@
-import type { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import type { SeoOrFaviconTag } from "react-datocms";
+import type { GetStaticPropsResult, NextPage } from "next";
+import { HiArrowLeft } from "react-icons/hi";
+import Link from "next/link";
+
 import SiteTags from "@components/SiteTags";
 
-import { DatoCMS } from "@api/gql";
-import Query from "@query/queries/generic_tags";
+import type { FullPageProps } from "@type/page";
+import { fetchCachedQuery } from "@lib/cache";
+import Query from "@query/queries/generic";
 
-type PageProps = {
-  _site: {
-    faviconMetaTags: SeoOrFaviconTag[];
-  };
-};
+type Props = Pick<FullPageProps, "_site">;
 
-export const getStaticProps = async (
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<PageProps>> => {
-  const data = await DatoCMS<PageProps>(Query, {
-    preview: ctx.preview,
-  });
+export const getStaticProps = async (): Promise<
+  GetStaticPropsResult<Props>
+> => {
+  const data = await fetchCachedQuery<Props>("GenericPage", Query);
   return {
-    props: data,
+    props: {
+      _site: data._site,
+    },
   };
 };
 
 /**
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
- *
- * @export
- * @return {*}
  */
-export default function ErrorPage500(props: PageProps) {
+const ErrorPage: NextPage<Props> = ({ _site }) => {
   return (
     <div className="flex h-screen w-full flex-grow items-center justify-center bg-gray-200 px-16 md:px-0">
       <SiteTags
         tags={[
-          props._site.faviconMetaTags,
+          _site.faviconMetaTags,
           [
             { tag: "title", content: "Server Error - Midwest Raptor Junkies" },
             {
@@ -54,7 +50,17 @@ export default function ErrorPage500(props: PageProps) {
         <p className="mt-8 border-y-2 py-2 text-center text-gray-500">
           Whoops, something went wrong on our end.
         </p>
+        <Link
+          href="/"
+          className="mt-6 flex items-center space-x-2 rounded bg-blue-600 px-4 py-2 text-gray-100 transition duration-150 hover:bg-blue-700"
+          title="Return Home"
+        >
+          <HiArrowLeft className="h-5 w-5" />
+          <span>Return Home</span>
+        </Link>
       </div>
     </div>
   );
-}
+};
+
+export default ErrorPage;

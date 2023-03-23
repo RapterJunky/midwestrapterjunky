@@ -1,5 +1,10 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+generator json {
+  provider = "prisma-json-types-generator"
 }
 
 datasource db {
@@ -10,6 +15,7 @@ datasource db {
 model Authors {
   avatar String
   name   String
+  /// [AuthorSocial]
   social Json?
   id     String @unique
 }
@@ -30,4 +36,103 @@ model Settings {
 model MailingList {
   id    Int    @id @default(autoincrement())
   email String @unique
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  TheadPost     ThreadPost[]
+  Comment       Comment[]
+  reports       Report[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Comment {
+  id              String     @id
+  /// [PostComment]
+  content         Json // Dast maybe, for now { message: string }
+  created         DateTime   @default(now())
+  parentCommentId String?
+  ownerId         String
+  owner           User       @relation(fields: [ownerId], references: [id])
+  ThreadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
+  threadPostId    String
+  reports         Report[]
+}
+
+model ThreadPost {
+  id       String    @id
+  name     String
+  ownerId  String
+  created  DateTime  @default(now())
+  /// [Dast]
+  content  Json?     // Dast
+  owner    User      @relation(fields: [ownerId], references: [id])
+  thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
+  threadId Int
+  comments Comment[]
+  reports  Report[]
+}
+
+model Thread {
+  id    Int          @id @default(autoincrement())
+  name  String       @unique
+  posts ThreadPost[]
+}
+
+model Report {
+  id        Int        @id @default(autoincrement())
+  created   DateTime   @default(now())
+  type      ReportType
+  ownerId   String?
+  commentId String?
+  postId    String?
+  reason    String
+  comment   Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post      ThreadPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  owner     User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+}
+
+enum ReportType {
+  Comment
+  Post
 }

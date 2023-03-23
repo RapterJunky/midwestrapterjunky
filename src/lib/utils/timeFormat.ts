@@ -1,10 +1,3 @@
-const postDateTemplate = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-} satisfies Intl.DateTimeFormatOptions;
-
 export const formatTime = (from: string, to: string): string => {
   const fromDate = new Date(from);
   const toDate = new Date(to);
@@ -23,7 +16,20 @@ export const formatTime = (from: string, to: string): string => {
 /**
  * Formats a date string using the toLocalDateString method in format 'Monday, January 30, 2023'
  */
-export const formatLocalDate = (date: string | null, locale?: string) => {
-  const data = date ? new Date(date) : new Date();
-  return data.toLocaleDateString(locale, postDateTemplate);
+export const formatLocalDate = (
+  date: Date | string | null,
+  locale?: string,
+  options?: Intl.DateTimeFormatOptions
+) => {
+  const data = date
+    ? typeof date === "string"
+      ? new Date(date)
+      : date
+    : new Date();
+  return data.toLocaleDateString(locale, {
+    weekday: options?.weekday ?? "long",
+    year: options?.year ?? "numeric",
+    month: options?.month ?? "long",
+    day: options?.day ?? "numeric",
+  });
 };

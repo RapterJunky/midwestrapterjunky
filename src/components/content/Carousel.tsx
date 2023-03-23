@@ -1,6 +1,6 @@
 import { useId } from "react";
 import Image from "next/image";
-import type { ResponsiveImage } from "@type/page";
+import type { ResponsiveImage } from "types/page";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 interface CarouselProps {

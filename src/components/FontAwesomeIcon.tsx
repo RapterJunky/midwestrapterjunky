@@ -1,4 +1,4 @@
-import type { Icon } from "@type/page";
+import type { Icon } from "types/page";
 
 interface Props extends Icon {
   style?: React.CSSProperties;

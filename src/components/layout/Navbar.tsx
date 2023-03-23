@@ -1,12 +1,12 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Transition } from "@headlessui/react";
+import { Portal, Transition } from "@headlessui/react";
 import { HiMenu, HiX } from "react-icons/hi";
 import IconLink from "@components/IconLink";
 import { capitlize } from "@utils/capitlize";
 
-import type { Color, LinkWithIcon, ResponsiveImage } from "@type/page";
+import type { Color, LinkWithIcon, ResponsiveImage } from "types/page";
 
 export interface NavProps {
   navbar: {

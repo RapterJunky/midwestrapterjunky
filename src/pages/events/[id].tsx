@@ -3,6 +3,7 @@ import type {
   GetStaticPropsResult,
   GetStaticPathsContext,
   GetStaticPathsResult,
+  NextPage,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import { StructuredText } from "react-datocms/structured-text";
@@ -15,22 +16,22 @@ import StoreButtonLink from "@components/StoreButtonLink";
 import IconLink from "@components/IconLink";
 import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
-import Footer from "@components/Footer";
-import Navbar from "@components/Navbar";
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
 
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
-import { markRules } from "@lib/StructuredTextRules";
+import { markRules } from "@lib/structuredTextRules";
 
 import type {
   ResponsiveImage,
   StructuredContent,
   LinkWithIcon,
   FullPageProps,
-} from "@type/page";
+} from "types/page";
 
 import { fetchCacheData } from "@lib/cache";
 import ScrollToTop from "@components/blog/ScrollToTop";
@@ -98,9 +99,9 @@ export const getStaticProps = async (
     };
   }
 
-  const pages = await fetchCacheData(PAGE_CACHE_KEY, loadPages);
+  const pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadPages);
 
-  if (!(pages.data as string[]).includes(id))
+  if (!pages.includes(id))
     return {
       notFound: true,
     };
@@ -124,12 +125,12 @@ export async function getStaticPaths(
 }
 // {props.shoptItem ? <Button href={props.shoptItem} link>VIEW SHOP</Button> : null }
 //https://wiki.openstreetmap.org/wiki/Export#Embeddable_HTML
-export default function EventPage({
+const EventPage: NextPage<EventPageProps> = ({
   _site,
   preview,
   event,
   navbar,
-}: EventPageProps) {
+}) => {
   return (
     <div className="flex h-full flex-col">
       <SiteTags tags={[event._seoMetaTags, _site.faviconMetaTags]} />
@@ -224,7 +225,7 @@ export default function EventPage({
                         <li key={i} className="p-1">
                           <IconLink
                             {...value}
-                            className="flex items-center gap-1 text-blue-600 underline hover:text-blue-400"
+                            className="flex items-center gap-1 text-blue-500 underline hover:text-blue-600"
                           />
                         </li>
                       ))}
@@ -234,7 +235,7 @@ export default function EventPage({
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href="/calendar"
-                    className="flex items-center gap-1 text-teal-500 hover:text-teal-600"
+                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600"
                   >
                     <HiArrowLeft /> Back to the calendar
                   </Link>
@@ -244,10 +245,9 @@ export default function EventPage({
           </div>
         </article>
       </main>
-      <div className="h-20">
-        <Footer />
-      </div>
+      <Footer />
       {preview ? <ExitPreview /> : null}
     </div>
   );
-}
+};
+export default EventPage;

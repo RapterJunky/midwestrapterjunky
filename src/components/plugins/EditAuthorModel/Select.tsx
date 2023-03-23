@@ -4,51 +4,21 @@ import { useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
-
-interface AuthorPagiation {
-  limit: number;
-  exceedCount: boolean;
-  exceedTotalPages: boolean;
-  strictLimit: boolean;
-  count: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  page: number;
-  result: {
-    avatar: string;
-    name: string;
-    social: { user: string; link: string } | null;
-    id: string;
-  }[];
-}
+import type { Paginate } from "types/page";
+import type { Authors } from "@api/prisma";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useSWR<AuthorPagiation, Error, [number]>(
-    [page],
-    async ([index]) => {
-      const token = new URLSearchParams(window.location.search).get("token");
-      if (!token)
-        throw new Error("Failed to fetch data.", {
-          cause: "MISSING_AUTH_TOKEN",
-        });
+  const { data, isLoading, error } = useSWR([page], async ([index]) => {
+    const result = await AuthFetch(`/api/plugin/authors?page=${index}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      const result = await fetch(`/api/plugin/authors?page=${index}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!result.ok)
-        throw new Error("Failed to perform action.", {
-          cause: `FAILED_REQUEST_${result.statusText}`,
-        });
-
-      return result.json();
-    }
-  );
+    return result.json() as Promise<Paginate<Authors>>;
+  });
 
   if (isLoading) {
     return (
@@ -58,7 +28,7 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
     );
   }
 
-  if (error) {
+  if ((!data && !isLoading) || error) {
     return (
       <div className="flex w-full flex-col items-center justify-center p-5">
         <span>There was an error, when trying to fetch authors.</span>
@@ -100,17 +70,17 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <Button
-          disabled={!data?.hasPrevPage}
-          onClick={() => setPage((data?.page ?? 1) - 1)}
+          disabled={data?.isFirstPage}
+          onClick={() => setPage(data?.previousPage ?? 1)}
         >
           Prev
         </Button>
         <span style={{ color: "var(--primary-color)" }}>
-          {data?.page} of {(data?.totalPages ?? 0) + 1}
+          {data?.currentPage} of {(data?.pageCount ?? 0) + 1}
         </span>
         <Button
-          disabled={!data?.hasNextPage}
-          onClick={() => setPage((data?.page ?? 0) + 1)}
+          disabled={data?.isLastPage}
+          onClick={() => setPage(data?.nextPage ?? 1)}
         >
           Next
         </Button>
