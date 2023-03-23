@@ -1,6 +1,6 @@
 import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
-import { getProviders, signIn } from "next-auth/react";
+import { type getProviders, signIn } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,15 +11,24 @@ import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 
+type Provider = Awaited<ReturnType<typeof getProviders>>;
 interface Props {
-  providers: Awaited<ReturnType<typeof getProviders>>;
+  providers: Partial<Provider>;
   seo: Omit<FullPageProps, "preview" | "navbar">["_site"];
 }
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
-  const providers = await getProviders();
+  const providers = {
+    "google": {
+      id: "google",
+      name: "Google",
+      type: "oauth",
+      signinUrl: "",
+      callbackUrl: ""
+    }
+  } satisfies Partial<Provider>;
   const data = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
     GenericPageQuery
@@ -105,10 +114,10 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
                 <button
                   className="mb-2 flex w-full items-center justify-center gap-1 rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   type="submit"
-                  key={provider.id}
-                  onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+                  key={provider?.id}
+                  onClick={() => signIn(provider?.id)}
                 >
-                  <FaGoogle /> continue with {provider.name}
+                  <FaGoogle /> continue with {provider?.name}
                 </button>
               ))}
             </div>
