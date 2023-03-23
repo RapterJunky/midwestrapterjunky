@@ -5,7 +5,7 @@ import prisma from "@api/prisma";
 export const fetchCachedQuery = async <R = unknown>(
   key: string,
   query: string,
-  opt?: { ci?: true; preview?: true }
+  opt?: { ci?: boolean; preview?: true }
 ): Promise<R> => {
   const request = async (preview: boolean = false) =>
     DatoCMS(query, { preview });
