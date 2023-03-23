@@ -12,7 +12,9 @@ type Props = Pick<FullPageProps, "_site">;
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
-  const data = await fetchCachedQuery<Props>("GenericPage", Query, { ci: process.env.CI === "true" });
+  const data = await fetchCachedQuery<Props>("GenericPage", Query, {
+    ci: process.env.CI === "true",
+  });
   return {
     props: {
       _site: data._site,

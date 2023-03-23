@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Color } from "types/page";
+import type { Color } from "@type/page";
 
 interface AdvertBlockProps {
   headingleft: string;

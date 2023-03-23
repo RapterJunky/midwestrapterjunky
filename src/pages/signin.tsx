@@ -21,13 +21,13 @@ export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
 > => {
   const providers = {
-    "google": {
+    google: {
       id: "google",
       name: "Google",
       type: "oauth",
       signinUrl: "",
-      callbackUrl: ""
-    }
+      callbackUrl: "",
+    },
   } satisfies Partial<Provider>;
   const data = await fetchCachedQuery<FullPageProps>(
     "GenericPage",

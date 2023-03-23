@@ -1,4 +1,4 @@
-import type { Color } from "types/page";
+import type { Color } from "@type/page";
 import Countdown, { type CountdownRendererFn } from "react-countdown";
 
 interface Props {
