@@ -4,11 +4,12 @@ import type {
   NextPage,
   GetStaticPathsResult,
 } from "next";
+import { useSession } from "next-auth/react";
 import superjson from "superjson";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { HiFlag } from "react-icons/hi";
+import { HiFlag, HiTrash } from "react-icons/hi";
 import { StructuredText } from "react-datocms/structured-text";
 import { z } from "zod";
 
@@ -28,6 +29,7 @@ import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
 import { logger } from "@lib/logger";
+import { useRouter } from "next/router";
 
 interface Props extends FullPageProps {
   post: Pick<ThreadPost, "created" | "name" | "id" | "content"> & {
@@ -288,6 +290,24 @@ const ExampleDast: any = {
 
 const Post: NextPage<Props> = ({ preview, _site, navbar, post }) => {
   const [show, setShow] = useState<boolean>(false);
+  const session = useSession();
+  const router = useRouter();
+
+  const deletePost = async () => {
+    try {
+      const request = await fetch("/api/threads/post", {
+        method: "DELETE",
+        body: JSON.stringify({ id: post.id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!request.ok) throw request;
+      router.push(`/threads/${post.thread.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -356,12 +376,26 @@ const Post: NextPage<Props> = ({ preview, _site, navbar, post }) => {
           <hr className="w-full" />
           <div className="mt-4 flex justify-between text-sm text-gray-600">
             <span>Tags: No Tags</span>
-            <button
-              onClick={() => setShow(true)}
-              className="flex items-center gap-1 text-red-500 hover:text-red-700"
-            >
-              <HiFlag /> Report
-            </button>
+
+            <div className="flex gap-1 text-red-500">
+              {session.data?.user.id === post.owner.id ? (
+                <>
+                  <button
+                    onClick={deletePost}
+                    className="flex items-center gap-1 hover:text-red-700"
+                  >
+                    <HiTrash /> Delete
+                  </button>
+                  •
+                </>
+              ) : null}
+              <button
+                onClick={() => setShow(true)}
+                className="flex items-center gap-1 hover:text-red-700"
+              >
+                <HiFlag /> Report
+              </button>
+            </div>
           </div>
           <hr className="mt-4 w-full" />
         </div>

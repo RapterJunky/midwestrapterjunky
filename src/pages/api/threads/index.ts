@@ -22,7 +22,7 @@ const auth = (req: NextApiRequest) => {
   if (
     !req.headers.authorization ||
     req.headers.authorization.replace("Bearer ", "") !==
-    process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
   )
     throw createHttpError.Unauthorized();
 };
@@ -84,7 +84,6 @@ export default async function handler(
           }),
           prisma.threadPost.deleteMany({ where: { threadId: id } }),
         ]);
-
 
         return res.status(200).json(result);
       }
