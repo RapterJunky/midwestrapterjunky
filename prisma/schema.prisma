@@ -10,6 +10,7 @@ generator json {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Authors {
@@ -55,6 +56,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -63,6 +65,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -93,10 +97,13 @@ model Comment {
   created         DateTime   @default(now())
   parentCommentId String?
   ownerId         String
-  owner           User       @relation(fields: [ownerId], references: [id])
+  owner           User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ThreadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
   threadPostId    String
   reports         Report[]
+
+  @@index([ownerId])
+  @@index([threadPostId])
 }
 
 model ThreadPost {
@@ -106,11 +113,14 @@ model ThreadPost {
   created  DateTime  @default(now())
   /// [Dast]
   content  Json?     // Dast
-  owner    User      @relation(fields: [ownerId], references: [id])
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
   threadId Int
   comments Comment[]
   reports  Report[]
+
+  @@index([threadId])
+  @@index([ownerId])
 }
 
 model Thread {
@@ -130,6 +140,10 @@ model Report {
   comment   Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
   post      ThreadPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
   owner     User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+
+  @@index([commentId])
+  @@index([ownerId])
+  @@index([postId])
 }
 
 enum ReportType {

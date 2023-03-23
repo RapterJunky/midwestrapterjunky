@@ -75,7 +75,7 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
         >
           Prev
         </Button>
-        <span style={{ color: "var(--primary-color)" }}>
+        <span className="text-dato-primary">
           {data?.currentPage} of {(data?.pageCount ?? 0) + 1}
         </span>
         <Button
