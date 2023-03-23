@@ -10,6 +10,7 @@ import { Flags } from "@lib/config/flags";
 
 import "datocms-react-ui/styles.css";
 
+const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const MESSAGE_BOARD_PAGE_ID = "message-board-manager";
@@ -40,6 +41,10 @@ const MessageBoardManagerPage = dynamic(
 );
 const EditThreadModel = dynamic(
   () => import("@components/plugins/EditThreadModel")
+);
+
+const DocxImportFieldAddon = dynamic(
+  () => import("@components/plugins/DocxImportFieldAddon")
 );
 
 const MidwestRaptor: NextPage = () => {
@@ -99,8 +104,8 @@ const MidwestRaptor: NextPage = () => {
       if (someUpgraded) ctx.notice("Plugin upgraded successfully!");
     },
     overrideFieldExtensions(field, ctx) {
+      if (!["json"].includes(field.attributes.field_type)) return;
       const config = normalizeConfig(ctx.plugin.attributes.parameters);
-      if (!["string", "json"].includes(field.attributes.field_type)) return;
 
       if (
         !config.autoApplyToFieldsWithApiKey ||
@@ -116,6 +121,13 @@ const MidwestRaptor: NextPage = () => {
     },
     manualFieldExtensions(ctx) {
       return [
+        {
+          id: FIELD_ADDON_ID_DOCX,
+          name: "Docx Import",
+          type: "addon",
+          fieldTypes: ["structured_text"],
+          configurable: false,
+        },
         {
           id: FIELD_EXTENSION_ID_AUTHOR,
           name: "Edit Authors",
@@ -173,11 +185,14 @@ const MidwestRaptor: NextPage = () => {
     }
     case "FieldExtension": {
       switch (id) {
-        case "shopProduct": {
+        case FIELD_EXTENSION_ID: {
           return <ShopFieldExtension ctx={ctx} />;
         }
-        case "RJ_AUTHOR_EDITOR": {
+        case FIELD_EXTENSION_ID_AUTHOR: {
           return <AuthorEditorExtension ctx={ctx} />;
+        }
+        case FIELD_ADDON_ID_DOCX: {
+          return <DocxImportFieldAddon ctx={ctx} />;
         }
         default:
           return null;

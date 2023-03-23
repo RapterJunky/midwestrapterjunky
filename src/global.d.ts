@@ -5,6 +5,10 @@ declare module React {
   }
 }
 
+declare module "mammoth/mammoth.browser" {
+  export default (await import("mammoth")).default;
+}
+
 declare interface Window {
   te: any;
 }
