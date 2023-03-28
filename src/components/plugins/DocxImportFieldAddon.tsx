@@ -1,6 +1,7 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { useRef, useState } from "react";
 import { Canvas } from "datocms-react-ui";
+import type { NonTextNode } from "datocms-structured-text-slate-utils";
 
 const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
   ctx,
@@ -17,10 +18,10 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             if (!inputFile.current || !inputFile.current.files) return;
             const file = inputFile.current.files.item(0);
             if (!file) return;
-            const { default: mammonth } = await import(
-              "mammoth/mammoth.browser"
-            );
-            const { jsx } = await import("slate-hyperscript");
+            const [{ default: mammonth }, { jsx }] = await Promise.all([
+              import("mammoth/mammoth.browser"),
+              import("slate-hyperscript")
+            ]);
 
             const deserialize = (el: any, markAttributes = {}): any => {
               if (el.nodeType === Node.TEXT_NODE) {
@@ -113,7 +114,10 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                     children
                   );
                 case "LI":
-                  return jsx("element", { type: "listItem" }, children);
+                  return jsx("element", { type: "listItem" }, children.map(value => {
+                    if ((value as NonTextNode)?.type === "list") return value;
+                    return jsx("element", { type: "paragraph" }, value);
+                  }));
                 case "BR":
                   return "\n";
                 case "BLOCKQUOTE":
