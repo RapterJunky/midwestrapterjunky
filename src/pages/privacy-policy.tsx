@@ -42,7 +42,7 @@ export const getStaticProps = async (
 
   props.policy._seoMetaTags = props.policy._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {
-      return { ...tag, content: props.policy.privacyPolicySeo.title };
+      return { ...tag, content: props.policy.privacyPolicySeo?.title ?? "Rapter" };
     }
     if (
       tag.tag === "meta" &&
@@ -50,7 +50,7 @@ export const getStaticProps = async (
         (tag.attributes as RegularMetaAttributes).name === "twitter:title")
     ) {
       tag.attributes.content =
-        props.policy.privacyPolicySeo.title ?? "Midwest Rapter Junkies";
+        props.policy.privacyPolicySeo?.title ?? "Rapter";
       return tag;
     }
     if (

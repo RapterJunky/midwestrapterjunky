@@ -44,7 +44,7 @@ export const getStaticProps = async (
 
   props.terms._seoMetaTags = props.terms._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {
-      return { ...tag, content: props.terms.termsOfServiceSeo.title };
+      return { ...tag, content: props.terms.termsOfServiceSeo?.title ?? "Raptor" };
     }
     if (
       tag.tag === "meta" &&
@@ -52,7 +52,7 @@ export const getStaticProps = async (
         (tag.attributes as RegularMetaAttributes).name === "twitter:title")
     ) {
       tag.attributes.content =
-        props.terms.termsOfServiceSeo.title ?? "Midwest Rapter Junkies";
+        props.terms.termsOfServiceSeo?.title ?? "Rapter";
       return tag;
     }
     if (
