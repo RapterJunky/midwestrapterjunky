@@ -5,7 +5,10 @@ import type {
   GetStaticPathsResult,
   NextPage,
 } from "next";
-import { StructuredText } from "react-datocms/structured-text";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 import type { SeoOrFaviconTag } from "react-datocms";
 import { HiArrowLeft } from "react-icons/hi";
 import Script from "next/script";
@@ -28,12 +31,7 @@ import EventsQuery from "@query/queries/events";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 
-import type {
-  ResponsiveImage,
-  StructuredContent,
-  LinkWithIcon,
-  FullPageProps,
-} from "types/page";
+import type { ResponsiveImage, LinkWithIcon, FullPageProps } from "types/page";
 
 import { fetchCacheData } from "@lib/cache";
 
@@ -59,7 +57,7 @@ interface EventPageProps extends FullPageProps {
     id: string;
     slug: string;
     extraLocationDetails: string | null;
-    description: StructuredContent;
+    description: StructuredTextGraphQlResponse;
     links: LinkWithIcon[];
     gallery: ResponsiveImage[];
     location: {
@@ -129,7 +127,7 @@ export const getStaticProps = async (
 export async function getStaticPaths(
   ctx: GetStaticPathsContext
 ): Promise<GetStaticPathsResult<{ id: string }>> {
-  await fetchCacheData(PAGE_CACHE_KEY, loadPages, !!process.env?.CI);
+  await fetchCacheData(PAGE_CACHE_KEY, loadPages, true);
 
   return {
     paths: [],
@@ -198,8 +196,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

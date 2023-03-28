@@ -1,8 +1,5 @@
 const NavbarFragment = `
     fragment NavbarRecordFragment on NavbarRecord {
-        bgColor {
-            hex
-        }
         pageLinks {
             icon
             iconPosition

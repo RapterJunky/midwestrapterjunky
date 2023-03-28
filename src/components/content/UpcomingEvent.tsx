@@ -1,11 +1,11 @@
-import { StructuredText } from "react-datocms/structured-text";
+import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import { markRules } from "@lib/structuredTextRules";
-import type { Color, StructuredContent } from "@type/page";
+import type { Color } from "@type/page";
 
 interface UpcomingEventProps {
   event: {
     title: string;
-    description: StructuredContent;
+    description: StructuredTextGraphQlResponse;
   };
   backgroundColor?: Color;
   textColor?: Color;

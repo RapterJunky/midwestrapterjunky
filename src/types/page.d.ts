@@ -32,8 +32,6 @@ export type ResponsiveImage<E = never> = {
 
 export type ModulerContent = { _modelApiKey: string; [key: string]: any };
 
-export type StructuredContent = any;
-
 export interface FullPageProps extends NavProps {
   _site: {
     faviconMetaTags: SeoOrFaviconTag[];

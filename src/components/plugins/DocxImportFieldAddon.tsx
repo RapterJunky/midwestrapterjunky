@@ -20,7 +20,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             if (!file) return;
             const [{ default: mammonth }, { jsx }] = await Promise.all([
               import("mammoth/mammoth.browser"),
-              import("slate-hyperscript")
+              import("slate-hyperscript"),
             ]);
 
             const deserialize = (el: any, markAttributes = {}): any => {
@@ -114,10 +114,14 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                     children
                   );
                 case "LI":
-                  return jsx("element", { type: "listItem" }, children.map(value => {
-                    if ((value as NonTextNode)?.type === "list") return value;
-                    return jsx("element", { type: "paragraph" }, value);
-                  }));
+                  return jsx(
+                    "element",
+                    { type: "listItem" },
+                    children.map((value) => {
+                      if ((value as NonTextNode)?.type === "list") return value;
+                      return jsx("element", { type: "paragraph" }, value);
+                    })
+                  );
                 case "BR":
                   return "\n";
                 case "BLOCKQUOTE":

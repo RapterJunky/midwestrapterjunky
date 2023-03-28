@@ -6,7 +6,7 @@ import type {
   NextPage,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
-import { StructuredText } from "react-datocms/structured-text";
+import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -22,7 +22,7 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
-import type { FullPageProps, StructuredContent } from "types/page";
+import type { FullPageProps } from "types/page";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";
@@ -38,7 +38,7 @@ interface ArticleProps extends FullPageProps {
   prev: { slug: string; title: string } | null;
   post: {
     title: string;
-    content: StructuredContent;
+    content: StructuredTextGraphQlResponse;
     publishedAt: string;
     prev: {
       slug: string;

@@ -1,4 +1,4 @@
-import { StructuredText } from "react-datocms/structured-text";
+import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import { markRules } from "@lib/structuredTextRules";
 import Button from "@components/Button";
 
@@ -8,7 +8,7 @@ import YoutubeFrame from "@components/YoutubeFrame";
 interface VideoWithLinksProps {
   videoLink: string;
   isYoutubeVideo: boolean;
-  content: any;
+  content: StructuredTextGraphQlResponse;
   color: Color;
   youtubeid: string;
 }

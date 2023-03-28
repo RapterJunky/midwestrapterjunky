@@ -29,7 +29,7 @@ import GenericPageQuery from "@query/queries/generic";
 import { fetchCachedQuery } from "@lib/cache";
 import { z } from "zod";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
-import type { DefaultMark } from 'datocms-structured-text-utils';
+import type { DefaultMark } from "datocms-structured-text-utils";
 
 const slateToDastI = import("datocms-structured-text-slate-utils");
 
@@ -37,12 +37,11 @@ const slateToDastI = import("datocms-structured-text-slate-utils");
 //https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx#L111
 //https://docs.slatejs.org/concepts/08-plugins
 
-
 interface FormState {
   title: string;
   document: Descendant[];
 }
-interface Props extends FullPageProps { }
+interface Props extends FullPageProps {}
 
 export const getStaticPaths = (): GetStaticPathsResult => {
   return {
@@ -140,8 +139,9 @@ const HoveringToolbar = () => {
     const rect = domRange.getBoundingClientRect();
     el.style.opacity = "1";
     el.style.top = `${rect.top + window.scrollY - el.offsetHeight}px`;
-    el.style.left = `${rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2
-      }px`;
+    el.style.left = `${
+      rect.left + window.scrollX - el.offsetWidth / 2 + rect.width / 2
+    }px`;
   });
 
   return (
@@ -152,22 +152,25 @@ const HoveringToolbar = () => {
         onMouseDown={(ev) => ev.preventDefault()}
       >
         <button
-          className={`p-1 ${isFormatActive(editor, "strong") ? "text-white" : ""
-            }`}
+          className={`p-1 ${
+            isFormatActive(editor, "strong") ? "text-white" : ""
+          }`}
           onClick={() => toggleFormat(editor, "strong")}
         >
           <FaBold />
         </button>
         <button
-          className={`p-1 ${isFormatActive(editor, "emphasis") ? "text-white" : ""
-            }`}
+          className={`p-1 ${
+            isFormatActive(editor, "emphasis") ? "text-white" : ""
+          }`}
           onClick={() => toggleFormat(editor, "emphasis")}
         >
           <FaItalic />
         </button>
         <button
-          className={`p-1 ${isFormatActive(editor, "underline") ? "text-white" : ""
-            }`}
+          className={`p-1 ${
+            isFormatActive(editor, "underline") ? "text-white" : ""
+          }`}
           onClick={() => toggleFormat(editor, "underline")}
         >
           <FaUnderline />
@@ -301,7 +304,12 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
             </Tab.Panel>
             <Tab.Panel>
               <div className="prose mt-2 min-h-[320px] max-w-none bg-neutral-200 p-2 shadow-md">
-                <StructuredText data={{ schema: "dast", document: { type: "root", children: [] } }} />
+                <StructuredText
+                  data={{
+                    schema: "dast",
+                    document: { type: "root", children: [] },
+                  }}
+                />
               </div>
             </Tab.Panel>
           </Tab.Panels>

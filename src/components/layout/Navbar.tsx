@@ -1,16 +1,14 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Transition } from "@headlessui/react";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 import IconLink from "@components/IconLink";
-import { capitlize } from "@utils/capitlize";
 
-import type { Color, LinkWithIcon, ResponsiveImage } from "@type/page";
+import type { LinkWithIcon, ResponsiveImage } from "@type/page";
+import Sidenav from "./Sidenav";
 
 export interface NavProps {
   navbar: {
-    bgColor: Color;
     pageLinks: LinkWithIcon[];
     logo: ResponsiveImage;
   };
@@ -18,7 +16,6 @@ export interface NavProps {
 
 interface NavbarProps {
   mode: "fade-scroll" | "only-scroll" | "none";
-  bgColor?: Color;
   pageLinks: LinkWithIcon[];
   logo: ResponsiveImage;
 }
@@ -26,7 +23,7 @@ interface NavbarProps {
 const navbarMode = {
   "fade-scroll":
     "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out",
-  "only-scroll": "fixed bg-opacity-100 text-black",
+  "only-scroll": "fixed bg-opacity-100 text-black shadow",
   none: "text-black bg-opacity-100",
 };
 
@@ -42,21 +39,21 @@ export default function Navbar({
   const onScroll = useCallback(() => {
     if (!ref.current || mode !== "fade-scroll") return;
     if (window.scrollY > 0) {
-      ref.current.classList.remove("bg-opacity-0");
-      ref.current.classList.remove("text-white");
-      ref.current.classList.add("bg-opacity-100");
-      ref.current.classList.add("text-black");
+      ref.current.classList.remove("bg-opacity-0", "text-white");
+      ref.current.classList.add("bg-opacity-100", "text-black", "shadow");
     } else {
-      ref.current.classList.add("bg-opacity-0");
-      ref.current.classList.add("text-white");
-      ref.current.classList.remove("bg-opacity-100");
-      ref.current.classList.remove("text-black");
+      ref.current.classList.add("bg-opacity-0", "text-white");
+      ref.current.classList.remove("bg-opacity-100", "text-black", "shadow");
     }
   }, [mode]);
 
-  const close = () => {
-    document.body.classList.remove("h-full", "overflow-hidden");
-  };
+  useEffect(() => {
+    if (showNav) {
+      document.body.classList.add("h-full", "overflow-hidden");
+    } else {
+      document.body.classList.remove("h-full", "overflow-hidden");
+    }
+  }, [showNav]);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -68,65 +65,16 @@ export default function Navbar({
   return (
     <nav
       ref={ref}
-      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-gray-50 px-6 py-2 md:flex-row ${
+      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${
         navbarMode[mode] ?? ""
       }`}
     >
-      <Transition
+      <Sidenav
         show={showNav}
-        as="aside"
-        className="absolute top-0 left-0 z-50 flex h-screen w-full"
-        enter="transition ease-in-out duration-300 transform"
-        enterFrom="-translate-x-full"
-        enterTo="translate-x-0"
-        leave="transition ease-in-out duration-300 transform"
-        leaveFrom="translate-x-0"
-        leaveTo="-translate-x-full"
-      >
-        <nav className="flex h-screen w-3/4 flex-col overflow-y-hidden bg-zinc-800 opacity-100">
-          <div className="relative flex justify-center pt-2 pb-2">
-            <button
-              role="button"
-              aria-label="Close sidenav"
-              data-cy="sidenav-toggle"
-              className="absolute right-4 top-4"
-              onClick={() => {
-                setShowNav(false);
-                close();
-              }}
-            >
-              <HiX className="text-4xl text-gray-50" />
-            </button>
-            <div className="relative h-28 w-28 object-contain">
-              <Image
-                blurDataURL={logo?.blurUpThumb ?? ""}
-                src={logo?.responsiveImage?.src ?? "/new_logo.webp"}
-                alt={logo?.responsiveImage?.alt ?? "site logo"}
-                sizes={logo?.responsiveImage?.sizes ?? "100vw"}
-                fill
-                className="object-cover object-center"
-              />
-            </div>
-          </div>
-          <ul className="[&>:not(:last-child)]:border-b">
-            {pageLinks.map((value, i) => (
-              <li key={i} className="flex" onClick={close}>
-                <IconLink
-                  data-cy="nav-top-link"
-                  className="flex w-full items-center gap-1 pt-5 pb-5 pr-4 pl-4 text-white"
-                  key={i}
-                  title={capitlize(value.title)}
-                  useIcon={value.useIcon}
-                  icon={value.icon}
-                  iconPosition={value.iconPosition}
-                  link={value.link}
-                />
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="w-1/4 bg-gray-700 opacity-50"></div>
-      </Transition>
+        pageLinks={pageLinks}
+        logo={logo}
+        onClose={() => setShowNav(false)}
+      />
       <div className="mx-auto md:mx-0">
         <Image
           src={logo?.responsiveImage?.src ?? "/new_logo.webp"}
@@ -143,10 +91,7 @@ export default function Navbar({
           data-cy="mobile-sidenav-toggle"
           aria-label="Sidenav Toggle"
           className="active:translate-x-1 active:translate-y-1 active:transform"
-          onClick={() => {
-            setShowNav(!showNav);
-            document.body.classList.add("h-full", "overflow-hidden");
-          }}
+          onClick={() => setShowNav((state) => !state)}
         >
           <HiMenu className="text-4xl" />
         </button>

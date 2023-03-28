@@ -4,7 +4,7 @@ import { buildClient } from "@datocms/cma-client-node";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 export interface RevaildateSettings {
-  type: "page" | "cache" | "page-cache" | "build";
+  type: "page" | "cache" | "page-cache" | "rebuild";
   slug?: string;
   cache?: string;
 }
@@ -83,15 +83,17 @@ export default async function handler(
           data: { isDirty: true },
         });
         return res.status(200).json({ revalidated: true });
-      case "build":
+      case "rebuild":
         await prisma.cache.updateMany({
           where: { isDirty: false },
           data: { isDirty: true },
         });
-        const client = buildClient({
-          apiToken: process.env.DATOCMS_API_TOKEN,
-        });
-        await client.buildTriggers.trigger(BUILD_TRIGGER_ID);
+        if (process.env.VERCEL_ENV === "production") {
+          const client = buildClient({
+            apiToken: process.env.DATOCMS_API_TOKEN,
+          });
+          await client.buildTriggers.trigger(BUILD_TRIGGER_ID);
+        }
         return res.status(200).json({ revalidated: true });
       case "page-cache":
         if (!data?.slug || !data?.cache) throw createHttpError.BadRequest();
@@ -110,15 +112,12 @@ export default async function handler(
         return res.status(200).json({ revalidated: false });
     }
   } catch (error) {
+    logger.error(error);
     if (createHttpError.isHttpError(error)) {
-      logger.error(error, error.message);
       return res
         .status(error.statusCode)
         .json({ ...error, revaildated: false });
     }
-
-    logger.error(error, "Internal Server Error");
-
     res.status(500).json({
       revalidated: false,
     });
