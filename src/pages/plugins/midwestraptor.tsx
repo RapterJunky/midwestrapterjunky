@@ -10,6 +10,7 @@ import { Flags } from "@lib/config/flags";
 
 import "datocms-react-ui/styles.css";
 
+const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
@@ -46,6 +47,8 @@ const EditThreadModel = dynamic(
 const DocxImportFieldAddon = dynamic(
   () => import("@components/plugins/DocxImportFieldAddon")
 );
+
+const PreviewLinkExtension = dynamic(() => import("@components/plugins/PreviewLinkExtension"));
 
 const MidwestRaptor: NextPage = () => {
   const { id, page, ctx } = useDatoCMS({
@@ -122,6 +125,16 @@ const MidwestRaptor: NextPage = () => {
     manualFieldExtensions(ctx) {
       return [
         {
+          id: FIELD_EXTENSION_ID_PREVIEW,
+          name: "Preview Links",
+          type: "editor",
+          fieldTypes: ["json"],
+          configurable: false,
+          asSidebarPanel: {
+            startOpen: true
+          }
+        },
+        {
           id: FIELD_ADDON_ID_DOCX,
           name: "Docx Import",
           type: "addon",
@@ -144,6 +157,16 @@ const MidwestRaptor: NextPage = () => {
     },
     customMarksForStructuredTextField(field, ctx) {
       return StructuredTextFields;
+    },
+    validateManualFieldExtensionParameters(fieldExtensionId, parameters) {
+      if (fieldExtensionId === FIELD_EXTENSION_ID_PREVIEW) {
+        const errors: Record<string, string> = {};
+        if (!parameters.entity_path) {
+          errors.entity_path = 'Please provide an entity path';
+        }
+        return errors
+      }
+      return {};
     },
     assetSources(ctx) {
       return [
@@ -193,6 +216,9 @@ const MidwestRaptor: NextPage = () => {
         }
         case FIELD_ADDON_ID_DOCX: {
           return <DocxImportFieldAddon ctx={ctx} />;
+        }
+        case FIELD_EXTENSION_ID_PREVIEW: {
+          return <PreviewLinkExtension ctx={ctx} />;
         }
         default:
           return null;

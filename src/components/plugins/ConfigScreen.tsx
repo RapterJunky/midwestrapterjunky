@@ -228,6 +228,63 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
             </>
           )}
         />
+        <h1 className="text-2xl font-bold">Preview Settings</h1>
+        <FieldGroup>
+          <Controller
+            control={control}
+            rules={{ required: 'Site url is required' }}
+            name="siteUrl"
+            render={({ field: { ref, ...field }, formState }) => (
+              <TextField
+                error={formState.errors?.siteUrl?.message}
+                id={field.name}
+                label="Site URL"
+                placeholder="https://google.com"
+                hint="The url of your Next.js site deployment"
+                required
+                {...field}
+              />
+            )}
+          />
+        </FieldGroup>
+        <FieldGroup>
+          <Controller
+            control={control}
+            name="previewPath"
+            rules={{ required: 'Preview path is required' }}
+            render={({ field: { ref: inputRef, ...field }, fieldState }) => {
+              return (
+                <TextField
+                  {...field}
+                  required
+                  placeholder="/api/preview"
+                  error={fieldState.error?.message}
+                  id="previewPath"
+                  label="Preview API path"
+                  hint="Next.js API path to link to to enable previews"
+                />
+              );
+            }}
+          />
+        </FieldGroup>
+        <FieldGroup>
+          <Controller
+            control={control}
+            name="previewSecret"
+            render={({ field: { ref: inputRef, ...field }, fieldState }) => {
+              return (
+                <TextField
+                  {...field}
+                  placeholder="API preview secret"
+                  error={fieldState.error?.message}
+                  id="previewSecret"
+                  label="Preview secret"
+                  hint="Secret to append to preview link query parameter, leave blank if none is needed"
+                />
+              );
+            }}
+          />
+        </FieldGroup>
         <Button
           type="submit"
           fullWidth

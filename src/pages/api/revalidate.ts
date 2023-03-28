@@ -3,12 +3,14 @@ import createHttpError from "http-errors";
 import { buildClient } from "@datocms/cma-client-node";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
-export interface RevaildateSettings {
-  type: "page" | "cache" | "page-cache" | "rebuild" | "pages";
-  slug?: string;
-  cache?: string;
-  slugs?: string[]
-}
+
+type PageRevaildate = { type: "page"; slug: string; };
+type CacheRevaildate = { type: "cache"; cache: string };
+type CachePageRevaildate = { type: "page-cache", slug: string; cache: string; };
+type RebuildRevaildate = { type: "rebuild" };
+type PagesRevaildate = { type: "pages", slugs: string[] };
+
+export type RevaildateSettings = PageRevaildate | CacheRevaildate | CachePageRevaildate | RebuildRevaildate | PagesRevaildate;
 
 export interface WebhookRequest {
   environment: string;
@@ -72,7 +74,7 @@ export default async function handler(
         if (!data.slug) throw createHttpError.BadRequest();
         if (body.event_type === "publish")
           await res.revalidate(
-            data.slug
+            data.slug.replace("[title]", "[slug]") // patch
               .replace("[slug]", body.entity.attributes?.slug ?? "")
               .replace("[id]", body.entity.attributes.id)
           );
