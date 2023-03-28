@@ -4,9 +4,10 @@ import { buildClient } from "@datocms/cma-client-node";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 export interface RevaildateSettings {
-  type: "page" | "cache" | "page-cache" | "rebuild";
+  type: "page" | "cache" | "page-cache" | "rebuild" | "pages";
   slug?: string;
   cache?: string;
+  slugs?: string[]
 }
 
 export interface WebhookRequest {
@@ -83,6 +84,12 @@ export default async function handler(
           data: { isDirty: true },
         });
         return res.status(200).json({ revalidated: true });
+      case "pages": {
+        const slugs = data.slugs;
+        if (!slugs?.length || !slugs[0] || !slugs[1]) throw createHttpError.BadRequest();
+        await Promise.all([res.revalidate(slugs[0]), res.revalidate(slugs[1])]);
+        return res.status(200).json({ revalidated: true });
+      }
       case "rebuild":
         await prisma.cache.updateMany({
           where: { isDirty: false },
