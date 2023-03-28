@@ -77,7 +77,7 @@ export const getStaticProps = async (
 
 const PrivacyPolicy: NextPage<Props> = ({ _site, navbar, policy }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <SiteTags tags={[_site.faviconMetaTags, policy._seoMetaTags]} />
       <header>
         <Navbar {...navbar} mode="only-scroll" />
