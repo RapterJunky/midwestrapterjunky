@@ -17,7 +17,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
     <div className="mb-4 flex flex-wrap items-center justify-center gap-4">
       <div className="flex w-28 flex-col items-center">
         <div className="mb-2 uppercase text-white">Days</div>
-        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
+        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow">
           <div className="duration-500 animate-in slide-in-from-bottom-6">
             {formatted.days}
           </div>
@@ -25,7 +25,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
       </div>
       <div className="flex w-28 flex-col items-center">
         <div className="mb-2 uppercase text-white">Hours</div>
-        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
+        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow">
           <div className="duration-500 animate-in slide-in-from-bottom-6">
             {formatted.hours}
           </div>
@@ -33,7 +33,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
       </div>
       <div className="flex w-28 flex-col items-center">
         <div className="mb-2 uppercase text-white">Minutes</div>
-        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
+        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow">
           <div
             key={formatted.minutes}
             className="duration-500 animate-in slide-in-from-bottom-6"
@@ -44,7 +44,7 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
       </div>
       <div className="flex w-28 flex-col items-center">
         <div className="mb-2 uppercase text-white">Seconds</div>
-        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow-lg">
+        <div className="w-full overflow-hidden rounded-sm bg-white p-2 text-center font-sans text-7xl font-light text-neutral-700 shadow">
           <div
             key={formatted.seconds}
             className="animate-in slide-in-from-bottom-6"

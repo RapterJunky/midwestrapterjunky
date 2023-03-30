@@ -28,7 +28,7 @@ type SquareRelatedObjects = Array<{
     }
 } | { type: "CATEGORY", id: string; category_data: { name: string; } }>
 
-type SquareCatalogObjects = {
+export type SquareCatalogObjects = {
     objects: SquareObject[];
     related_objects?: SquareRelatedObjects;
 }
@@ -38,66 +38,79 @@ type SquareRetrieveCatalogObject = {
     related_objects?: SquareRelatedObjects;
 }
 
+export const squareToShopifyProduct = (node: SquareObject, related?: SquareRelatedObjects, featured: boolean = false) => {
+    let productType = "";
+    let image: string | undefined;
+    let amount = "$??";
+    if (related && node.item_data?.category_id) {
+        const pt = related.find(value => value.id === node.item_data?.category_id);
+        if (pt?.type === "CATEGORY") {
+            productType = pt.category_data.name;
+        }
+    }
 
+    if (related && node.item_data?.image_ids) {
+        const url = related.find(value => value.id === node.item_data.image_ids?.at(0));
+        if (url?.type === "IMAGE") {
+            image = url.image_data.url;
+        }
+    } else {
+        image = `https://api.dicebear.com/6.x/initials/png?seed=${encodeURIComponent(node.item_data.name)}`;
+    }
+
+
+
+    const price = node.item_data.variations.at(0)?.item_variation_data.price_money;
+    if (price) {
+        const formatter = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: price.currency,
+        });
+        amount = formatter.format(price.amount / 100);
+    }
+
+    const data: Record<string, unknown> = {
+        handle: node.id,
+        title: node.item_data.name,
+        description: node.item_data.description,
+        productType,
+        onlineStoreUrl: `https://admin.midwestraptorjunkies.com/shop/${node.id}`,
+        priceRange: {
+            maxVariantPrice: {
+                amount,
+                currencyCode: price?.currency ?? "USD"
+            },
+            minVariantPrice: {
+                amount,
+                currencyCode: price?.currency ?? "USD"
+            }
+        }
+    }
+
+    if (featured) {
+        data["featuredImage"] = {
+            altText: node.item_data.name,
+            url: image
+        };
+    } else {
+        data["imageUrl"] = image;
+    }
+
+    return data;
+}
 class SquareClient {
     constructor(private merchant_id: string, private token: string, private is_dev: boolean = false) { }
     async productsMatching(search: string) {
         const data = await this.fetch("list", { search }) as SquareCatalogObjects;
         if (!data?.objects) return [];
-        return data.objects.map(item => this.asShopify(item, data.related_objects));
+        return data.objects.map(item => squareToShopifyProduct(item, data.related_objects) as Product);
     }
 
-    private asShopify(node: SquareObject, related?: SquareRelatedObjects): Product {
-        let productType = "";
-        let image: string | undefined;
-        let amount = "$??";
-        if (related && node.item_data?.category_id) {
-            const pt = related.find(value => value.id === node.item_data?.category_id);
-            if (pt?.type === "CATEGORY") {
-                productType = pt.category_data.name;
-            }
-        }
-
-        if (related && node.item_data?.image_ids) {
-            const url = related.find(value => value.id === node.item_data.image_ids?.at(0));
-            if (url?.type === "IMAGE") {
-                image = url.image_data.url;
-            }
-        }
-        const price = node.item_data.variations.at(0)?.item_variation_data.price_money;
-        if (price) {
-            const formatter = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: price.currency,
-            });
-            amount = formatter.format(price.amount / 100);
-        }
-
-        return {
-            handle: node.id,
-            title: node.item_data.name,
-            description: node.item_data.description,
-            productType,
-            imageUrl: image ?? `https://api.dicebear.com/6.x/initials/png?seed=${encodeURIComponent(node.item_data.name)}`,
-            onlineStoreUrl: "https://admin.midwestraptorjunkies.com",
-            priceRange: {
-                maxVariantPrice: {
-                    amount,
-                    currencyCode: price?.currency ?? "USD"
-                },
-                minVariantPrice: {
-                    amount,
-                    currencyCode: price?.currency ?? "USD"
-                }
-            },
-            images: { edges: [{ node: { src: "" } }] }
-        }
-    }
 
     async productByHandle(handle: string) {
         const data = await this.fetch("item", { id: handle }) as SquareRetrieveCatalogObject;
         if (!data.object) return null;
-        return this.asShopify(data.object, data.related_objects);
+        return squareToShopifyProduct(data.object, data.related_objects) as Product;
     }
 
     async fetch(mode: "list" | "item", data: Record<string, unknown>) {

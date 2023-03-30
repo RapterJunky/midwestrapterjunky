@@ -18,18 +18,21 @@ export default function UpcomingEvent({
 }: UpcomingEventProps) {
   return (
     <section className="my-2 flex flex-col items-center gap-3 py-5">
-      <h1 className="my-4 w-1/2 border-b-2 pb-2 text-center text-4xl font-bold sm:w-1/3 md:w-1/4">
-        {event.title}
-      </h1>
-      <article
-        className="container mx-auto flex flex-col gap-3 text-center"
-        style={{
-          backgroundColor: backgroundColor?.hex,
-          color: textColor?.hex,
-        }}
-      >
-        <StructuredText customMarkRules={markRules} data={event.description} />
-      </article>
+      <div className="p-4">
+        <h1 className="my-4 text-center font-bold text-xl sm:text-2xl md:text-4xl">
+          {event.title}
+        </h1>
+        <hr />
+        <article
+          className="container mx-auto max-w-6xl text-center my-4"
+          style={{
+            backgroundColor: backgroundColor?.hex,
+            color: textColor?.hex,
+          }}
+        >
+          <StructuredText customMarkRules={markRules} data={event.description} />
+        </article>
+      </div>
     </section>
   );
 }

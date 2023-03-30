@@ -28,64 +28,71 @@ interface FeatureShopItems {
 //https://shopify.dev/custom-storefronts/tools/graphiql-storefront-api
 //https://shopify.dev/api/admin-graphql/2022-10/queries/products#examples-Get_two_specific_products_by_their_ID_using_aliases
 
-const formatter = (locale: string = "en", currency: string, value: string) =>
-  Intl.NumberFormat(locale, { style: "currency", currency }).format(
-    parseFloat(value)
-  );
+const formatter = (range: StoreItem["priceRange"], locale?: string) => {
+  const handler = Intl.NumberFormat(locale, { style: "currency", currency: range.maxVariantPrice.currencyCode });
+  if (range.maxVariantPrice.amount === range.minVariantPrice.amount) {
+    if (range.maxVariantPrice.amount.startsWith("$")) return `${range.maxVariantPrice.currencyCode} ${range.maxVariantPrice.amount}`;
+    return handler.format(
+      parseFloat(range.maxVariantPrice.amount)
+    );
+  }
+
+  return `${handler.format(
+    parseFloat(range.minVariantPrice.amount)
+  )} - ${handler.format(
+    parseFloat(range.maxVariantPrice.amount)
+  )}`;
+}
 
 export default function FeaturedShopItems(props: FeatureShopItems) {
-  const { data, error } = useSWR<StoreItem[]>(
+  const { data, error, isLoading } = useSWR<StoreItem[]>(
     [
       `/api/products?find=${btoa(
         props.items.map((value) => value.item.value).join(",")
-      )}`,
+      )}`, "19"
     ],
     (url: string) => fetch(url).then((value) => value.json())
   );
 
-  if (!data)
+  if (!data && isLoading)
     return (
       <section className="flex flex-col bg-zinc-100 py-8 px-4">
         <div className="flex items-center justify-center">
           <div
-            className="spinner-border inline-block h-8 w-8 animate-spin rounded-full border-4"
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status"
           >
-            <span className="visually-hidden">Loading...</span>
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
           </div>
         </div>
       </section>
     );
 
-  if (error || "message" in data) return null;
+  if (!data || error || "message" in data || !data.length) return null;
 
   return (
-    <section className="flex flex-col bg-zinc-100 py-8 px-4">
-      <div className="flex flex-wrap justify-center">
+    <section className="flex flex-col bg-zinc-100 max-h-max">
+      <div className="flex flex-wrap justify-center gap-4 my-4 p-4">
         {data.map(
-          ({ handle, featuredImage, priceRange, title, onlineStoreUrl }) => (
+          ({ handle, featuredImage, priceRange, title, onlineStoreUrl }, i) => (
             <Link
               key={handle}
-              className="mb-11 flex flex-col items-center gap-2"
+              className={`p-4 flex flex-col items-center gap-2 hover:shadow hover:outline hover:outline-1 hover:outline-gray-300 fill-mode-forwards animate-in fade-in-0 ${["delay-75", "delay-150", "delay-300", "delay-500"].at(i)}`}
               href={onlineStoreUrl}
             >
               <div className="relative h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 lg:h-96 lg:w-96">
                 <Image
-                  className="h-full w-full object-contain object-center"
+                  className="object-contain object-center"
                   src={featuredImage.url}
                   alt={featuredImage.altText ?? "Store Item"}
-                  sizes="100vw"
+                  sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
                   fill
                 />
               </div>
               <div className="py-4 text-center text-sm">
                 <span>{title}</span>
                 <p className="pt-2">
-                  {formatter(
-                    "en",
-                    priceRange.maxVariantPrice.currencyCode,
-                    priceRange.maxVariantPrice.amount
-                  )}
+                  {formatter(priceRange)}
                 </p>
               </div>
             </Link>

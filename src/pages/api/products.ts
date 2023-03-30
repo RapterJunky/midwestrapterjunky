@@ -6,6 +6,7 @@ import { getKeys } from "@lib/dynamic_keys";
 import { Shopify } from "@api/gql";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import { handleError } from "@api/errorHandler";
+import { type SquareCatalogObjects, squareToShopifyProduct } from "@/lib/plugin/SquareClient";
 
 type EncodeProductItem = [Storefront.StorefrontType, string, string];
 interface StorefontsProducts {
@@ -23,6 +24,8 @@ const keyGeneration = (storefront: Storefront.StorefrontType, tenant: string) =>
   switch (storefront) {
     case "S":
       return [`${tenant}_SHOPIFY_ACCESS_TOKEN`, `${tenant}_SHOPIFY_DOMAIN`];
+    case "SQ":
+      return [`${tenant}_SQAURE_ACCESS_TOKEN`, `${tenant}_SQAURE_MODE`];
     default:
       return [];
   }
@@ -33,7 +36,7 @@ const shopifyData = async (arg: StorefontsProducts) => {
 
   const items = Object.entries(keys);
   const access_token = items.find((value) =>
-    value[0].endsWith("_ACCESS_TOKEN")
+    value.at(0)?.endsWith("_ACCESS_TOKEN")
   );
   const domain = items.find((value) => value[0].endsWith("_SHOPIFY_DOMAIN"));
 
@@ -80,6 +83,45 @@ const shopifyData = async (arg: StorefontsProducts) => {
     };
   });
 };
+
+const squareData = async (arg: StorefontsProducts) => {
+  const keys = await getKeys(arg.keys);
+  const items = Object.entries(keys);
+  const access_token = items.find((value) =>
+    value.at(0)?.endsWith("_ACCESS_TOKEN")
+  );
+
+  const mode = items.find((value) =>
+    value.at(0)?.endsWith("_SQAURE_MODE")
+  );
+
+  if (!access_token || !mode) throw new Error("Failed to get keys");
+  if (!["connect.squareupsandbox.com", "connect.squareup.com"].includes(mode[1])) throw new Error("Invaild mode");
+
+  const request = await fetch(`https://${mode[1]}/v2/catalog/batch-retrieve `, {
+    method: "POST",
+    headers: {
+      "Square-Version": "2023-03-15",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token[1]}`
+    },
+    body: JSON.stringify({
+      object_ids: arg.products.map(value => value.item),
+      include_deleted_objects: false,
+      include_related_objects: true
+    })
+  });
+
+  if (!request.ok) throw new Error("Failed to fetch products");
+  const body = await request.json() as SquareCatalogObjects;
+
+  if (!body.objects) throw new Error("No items returned!");
+
+  return body.objects.map((item, i) => ({
+    index: i,
+    product: squareToShopifyProduct(item, body?.related_objects, true)
+  }));
+}
 
 export default async function handle(
   req: NextApiRequest,
@@ -133,6 +175,11 @@ export default async function handle(
           for (const tenant of Object.values(values))
             data.push(shopifyData(tenant));
           break;
+        case "SQ":
+          for (const tenant of Object.values(values)) {
+            data.push(squareData(tenant));
+          }
+          break;
         default:
           logger.warn({ storefront }, `Using unspported storefront!`);
           continue;
@@ -144,7 +191,10 @@ export default async function handle(
     const output: any[] = [];
 
     for (const item of results) {
-      if (item.status === "rejected") continue;
+      if (item.status === "rejected") {
+        logger.error(item.reason, "Item Rejected");
+        continue;
+      }
       output.push(...item.value);
     }
 

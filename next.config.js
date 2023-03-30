@@ -19,6 +19,8 @@ const nextConfig = withBundleAnalyzer({
       "api.dicebear.com",
       "img.youtube.com",
       "lh3.googleusercontent.com",
+      "square-catalog-sandbox.s3.amazonaws.com",
+      "square-catalog.s3.amazonaws.com",
     ],
   },
   async redirects() {

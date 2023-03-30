@@ -46,6 +46,15 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
                 { key: `${value.domain}_SHOPIFY_DOMAIN`, value: value.domain },
               ];
             }
+            if (value.type === "SQ") {
+              return [
+                {
+                  key: `${value.domain}_SQAURE_ACCESS_TOKEN`,
+                  value: value.token,
+                },
+                { key: `${value.domain}_SQAURE_MODE`, value: value.test ? "connect.squareupsandbox.com" : "connect.squareup.com" }
+              ]
+            }
             return [];
           })
           .flat();
