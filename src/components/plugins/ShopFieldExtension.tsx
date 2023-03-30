@@ -9,12 +9,13 @@ import {
   FaWrench,
   FaSync,
 } from "react-icons/fa";
-import { normalizeConfig } from "@lib/utils/plugin/types";
+import { normalizeConfig } from "@/lib/utils/plugin/config";
 
 import ShopifyClient, {
   APIError,
   type Product as ShopifyProduct,
-} from "@utils/plugin/ShopifyClient";
+} from "@/lib/plugin/ShopifyClient";
+import SquareClient from "@/lib/plugin/SquareClient";
 
 export default function ShopFieldExtension({
   ctx,
@@ -47,12 +48,24 @@ export default function ShopFieldExtension({
         cause: "NO_STOREFRONT_FOUND",
       });
 
-    const client = new ShopifyClient({
-      shopifyDomain: store.domain,
-      storefrontAccessToken: store.token,
-    });
+    switch (store.type) {
+      case "SQ": {
+        const client = new SquareClient(store.domain, store.token, store.test);
+        return client.productByHandle(item);
+      }
+      case "S": {
+        const client = new ShopifyClient({
+          shopifyDomain: store.domain,
+          storefrontAccessToken: store.token,
+        });
+        return client.productByHandle(item);
+      }
 
-    return client.productByHandle(item);
+      default:
+        throw new APIError("Unable to process request", {
+          cause: "NO_STOREFRONT_HANDLER",
+        });
+    }
   });
 
   const handleReset = () => ctx.setFieldValue(ctx.fieldPath, null);
@@ -137,7 +150,7 @@ const RenderError = ({
         <h4 className="mb-2 font-bold">{message}</h4>
         <code className="text-sm">{cause}</code>
       </div>
-      <Button onClick={() => {}} buttonSize="s" leftIcon={<FaSync />}>
+      <Button onClick={() => { }} buttonSize="s" leftIcon={<FaSync />}>
         Reset Item
       </Button>
     </div>
@@ -204,7 +217,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
             <strong>Price:</strong>
             &nbsp;
             {data.priceRange?.maxVariantPrice?.amount !==
-            data.priceRange?.minVariantPrice?.amount ? (
+              data.priceRange?.minVariantPrice?.amount ? (
               <span>
                 <span>
                   {data.priceRange.minVariantPrice.currencyCode}

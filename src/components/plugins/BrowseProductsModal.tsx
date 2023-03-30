@@ -9,8 +9,9 @@ import {
 import useSWR from "swr";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { normalizeConfig, type VaildConfig } from "@utils/plugin/types";
-import ShopifyClient, { type Product } from "@utils/plugin/ShopifyClient";
+import { normalizeConfig, type VaildConfig } from "@/lib/utils/plugin/config";
+import ShopifyClient, { type Product } from "@/lib/plugin/ShopifyClient";
+import SquareClient from "@/lib/plugin/SquareClient";
 
 type RequestValue = [string, string | undefined, string | undefined];
 
@@ -26,16 +27,25 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
   const [query, setQuery] = useState<string>("");
   const { data, isLoading, error } = useSWR<Product[], Error, RequestValue>(
     [query, shop?.type, shop?.domain],
-    (args) => {
+    ([search, type]) => {
       if (!shop)
         throw new Error("No storefront to use.", { cause: "NO_STOREFRONT" });
 
-      const client = new ShopifyClient({
-        shopifyDomain: shop?.domain,
-        storefrontAccessToken: shop?.token,
-      });
-
-      return client.productsMatching(query);
+      switch (type) {
+        case "SQ": {
+          const client = new SquareClient(shop.domain, shop.token, shop.test);
+          return client.productsMatching(search);
+        }
+        case "S": {
+          const client = new ShopifyClient({
+            shopifyDomain: shop.domain,
+            storefrontAccessToken: shop.token,
+          });
+          return client.productsMatching(search);
+        }
+        default:
+          throw new Error("Unable to process request.", { cause: "NO_STOREFRONT_HANDLER" });
+      }
     }
   );
 
@@ -48,7 +58,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
   return (
     <Canvas ctx={ctx}>
       {shop && config.storefronts.length ? (
-        <div className="max-h-52">
+        <div>
           <form className="flex items-stretch" onSubmit={handleSubmit}>
             <SelectInput
               options={config.storefronts.map((value) => asOption(value))}
@@ -87,11 +97,10 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               Search
             </Button>
           </form>
-          <div className="relative" style={{ marginTop: "var(--spacing-l)" }}>
+          <div className="relative mt-dato-l">
             {!isLoading && !error && data?.length ? (
               <div
-                className={`grid grid-cols-5 opacity-100 duration-700 ease-in-out`}
-                style={{ gap: "var(--spacing-m)" }}
+                className={`grid grid-cols-5 opacity-100 duration-700 ease-in-out gap-dato-m`}
               >
                 {data.map((product) => (
                   <div
@@ -115,10 +124,9 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                       style={{ lineHeight: "1.2" }}
                     >
                       <div
-                        className="overflow-hidden text-ellipsis whitespace-nowrap text-center"
+                        className="overflow-hidden text-ellipsis whitespace-nowrap text-center my-dato-s"
                         style={{
                           lineHeight: "1.2",
-                          margin: "var(--spacing-s) 0",
                         }}
                       >
                         {product.title}
@@ -135,10 +143,9 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && !error && !data?.length ? (
               <div
-                className="flex h-52 items-center justify-center text-center"
+                className="flex h-52 items-center justify-center text-center text-dato-light-body"
                 style={{
                   backgroundColor: "var(--light-bg-color)",
-                  color: "var(--light-body-color)",
                   fontSize: "var(--font-size-xl)",
                 }}
               >
@@ -147,10 +154,9 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && error ? (
               <div
-                className="flex h-52 items-center justify-center text-center"
+                className="flex h-52 items-center justify-center text-center text-dato-light-body"
                 style={{
                   backgroundColor: "var(--light-bg-color)",
-                  color: "var(--light-body-color)",
                   fontSize: "var(--font-size-xl)",
                 }}
               >

@@ -3,8 +3,8 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
-import StructuredTextFields from "@lib/plugins/StructuredTextFields";
-import { isVaildConfig, normalizeConfig } from "@utils/plugin/types";
+import StructuredTextFields from "@/lib/plugin/StructuredTextFields";
+import { isVaildConfig, normalizeConfig } from "@/lib/utils/plugin/config";
 import { hasFlag } from "@lib/config/hasFlag";
 import { Flags } from "@lib/config/flags";
 

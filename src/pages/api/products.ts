@@ -7,8 +7,7 @@ import { Shopify } from "@api/gql";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import { handleError } from "@api/errorHandler";
 
-type Storefront = "S" | "F" | "ST" | "SQ";
-type EncodeProductItem = [Storefront, string, string];
+type EncodeProductItem = [Storefront.StorefrontType, string, string];
 interface StorefontsProducts {
   keys: string[];
   products: { idx: number; item: string }[];
@@ -20,7 +19,7 @@ const inputValidation = z
     Buffer.from(value, "base64").toString("utf-8").split(",")
   );
 
-const keyGeneration = (storefront: Storefront, tenant: string) => {
+const keyGeneration = (storefront: Storefront.StorefrontType, tenant: string) => {
   switch (storefront) {
     case "S":
       return [`${tenant}_SHOPIFY_ACCESS_TOKEN`, `${tenant}_SHOPIFY_DOMAIN`];
@@ -93,7 +92,7 @@ export default async function handle(
     // FORMAT: storeFront$TENANT$ProductHandle
     const request = inputValidation.parse(req.query?.find);
 
-    const query = new Map<Storefront, { [key: string]: StorefontsProducts }>();
+    const query = new Map<Storefront.StorefrontType, { [key: string]: StorefontsProducts }>();
 
     // sort data into their storefronts and tenants
     for (const [idx, data] of request.entries()) {

@@ -2,7 +2,7 @@ import { ItemAttributes } from 'datocms-plugin-sdk/dist/types/SiteApiSchema';
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas, ButtonLink } from "datocms-react-ui";
 import { useMemo } from 'react';
-import { normalizeConfig } from '@lib/utils/plugin/types';
+import { normalizeConfig } from '@/lib/utils/plugin/config';
 
 import type { RevaildateSettings } from "@/pages/api/revalidate";
 import { capitlize } from '@/lib/utils/capitlize';

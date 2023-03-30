@@ -1,7 +1,7 @@
 import type { RenderConfigScreenCtx } from "datocms-plugin-sdk";
 import { Button, Canvas, TextField, Form, FieldGroup } from "datocms-react-ui";
 import { useForm, Controller } from "react-hook-form";
-import { normalizeConfig, type VaildConfig } from "@utils/plugin/types";
+import { normalizeConfig, type VaildConfig } from "@/lib/utils/plugin/config";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 

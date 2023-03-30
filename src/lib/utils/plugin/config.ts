@@ -1,13 +1,16 @@
+export type StorefrontPluginConfig = {
+  type: Storefront.StorefrontType;
+  token: string;
+  label: string;
+  test: boolean;
+  domain: string;
+}
+
 export type VaildConfig = {
   siteUrl: string;
   previewPath: string;
   previewSecret?: string;
-  storefronts: {
-    type: string;
-    token: string;
-    label: string;
-    domain: string;
-  }[];
+  storefronts: StorefrontPluginConfig[];
   keyToken: string;
   paramsVersion: "8";
   autoApplyToFieldsWithApiKey: string;

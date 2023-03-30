@@ -1,5 +1,5 @@
 export type PriceTypes = {
-  amount: number;
+  amount: number | string;
   currencyCode: string;
 };
 
@@ -56,7 +56,7 @@ const productFragment = `
   }
 `;
 
-export class APIError extends Error {}
+export class APIError extends Error { }
 
 const normalizeProduct = (product: any): Product => {
   if (!product || typeof product !== "object") {

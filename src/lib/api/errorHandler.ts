@@ -31,5 +31,5 @@ export const handleError = (error: unknown, res: NextApiResponse) => {
     return res.status(ie.statusCode).json(ie);
   }
 
-  res.status(ie.statusCode).json(ie);
+  return res.status(ie.statusCode).json(ie);
 };
