@@ -8,6 +8,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
+  if (request.nextUrl.pathname.startsWith("/shop")) {
+    if (hasFlag(Flags.Shop)) return NextResponse.next();
+    return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
+  }
+
   if (request.nextUrl.pathname.startsWith("/plugins")) {
     const token = request.nextUrl.searchParams.get("token");
     if (!token || token !== process.env.PLUGIN_TOKEN)
@@ -18,5 +23,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/plugins/(.*)", "/threads/:path*"],
+  matcher: ["/plugins/(.*)", "/threads/:path*", "/shop/:path*"],
 };
