@@ -1,18 +1,27 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { HiPlus, HiPlusCircle, HiSearch } from 'react-icons/hi';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import useSWR from 'swr';
+
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import GenericPageQuery from '@/gql/queries/generic';
 
+
 import { fetchCachedQuery } from '@/lib/cache';
-import type { FullPageProps } from '@/types/page';
+import type { FullPageProps, CursorPaginate } from '@/types/page';
 import SiteTags from '@/components/SiteTags';
-import Link from 'next/link';
-import Image from 'next/image';
 import ShopCard from '@/components/shop/ShopCard';
 
-
-
+type ShopItem = {
+    name: string,
+    id: string,
+    image: null | { url: string; alt: string; },
+    price: string;
+    category: string | null
+}
 
 interface Props extends FullPageProps { }
 
@@ -27,9 +36,24 @@ export const getStaticProps = async (
 }
 
 const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
+    const router = useRouter();
+    const { data, error, isLoading } = useSWR([`/api/shop/catalog`, router.query?.cursor], ([url, cursor]) => {
+        const api = new URL(url, window.location.origin);
+
+        if (cursor) {
+            api.searchParams.set("cursor", cursor as string);
+
+            const search = new URLSearchParams(window.location.search);
+            if (search.has("last")) {
+                api.searchParams.set("last", search.get("last") ?? "");
+            }
+        }
+
+        return fetch(api).then(value => value.json()) as Promise<CursorPaginate<ShopItem>>;
+    });
     return (
         <div className="flex flex-col h-full">
-            <SiteTags tags={[_site.faviconMetaTags]} />
+            <SiteTags tags={[_site.faviconMetaTags, [{ tag: "title", content: "Shop - Midwest Raptor Junkies" }]]} />
             <Navbar mode="none" {...navbar} />
             <div className='flex justify-center rounded-sm mb-4 w-full'>
                 <form className="border border-gray-500 flex items-center w-1/4">
@@ -101,26 +125,32 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
 
                     <div className="col-span-8 order-3 lg:order-none">
                         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                            {Array.from({ length: 15 }).map((_, i) => (
+                            {data && !error && !isLoading ? (
+                                data.result.map((item: any, i: number) => (
+                                    <ShopCard key={i} {...item} />
+                                ))
+                            ) : Array.from({ length: 15 }).map((_, i) => (
                                 <ShopCard key={i} />
                             ))}
                         </div>
                         <div className="w-full flex justify-center mt-10">
                             <ul className="list-style-none flex space-x-4">
                                 <li>
-                                    <Link className="relative block rounded bg-transparent py-1.5 px-3 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100" href="#">Previous</Link>
+                                    <Link data-headlessui-state={data?.hasPreviousPage ? "active" : "disabled"} className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70" href={{
+                                        pathname: "/shop/search",
+                                        query: data?.hasPreviousPage ? {
+                                            cursor: data?.startCursor
+                                        } : undefined
+                                    }}>Previous</Link>
                                 </li>
                                 <li>
-                                    <Link className="relative block rounded bg-transparent py-1.5 px-3 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100" href="#">1</Link>
-                                </li>
-                                <li aria-current="page">
-                                    <Link className="relative block rounded bg-transparent py-1.5 px-3 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100" href="#">2</Link>
-                                </li>
-                                <li>
-                                    <Link className="relative block rounded bg-transparent py-1.5 px-3 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100" href="#">3</Link>
-                                </li>
-                                <li>
-                                    <Link className="relative block rounded bg-transparent py-1.5 px-3 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100" href="#">Next</Link>
+                                    <Link data-headlessui-state={data?.hasNextPage ? "active" : "disabled"} href={{
+                                        pathname: "/shop/search",
+                                        query: {
+                                            cursor: data?.hasNextPage ? data?.endCursor : router.query.cursor,
+                                            last: router.query.cursor
+                                        }
+                                    }} className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70" >Next</Link>
                                 </li>
                             </ul>
                         </div>
