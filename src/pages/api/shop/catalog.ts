@@ -7,11 +7,9 @@ import { logger } from "@/lib/logger";
 
 const schema = z.object({
     cursor: z.string().optional(),
-    last: z.string().optional(),
     query: z.string().optional(),
-    order: z.enum(["trending", "latest", "lth", "htl"]).optional(),
+    sort: z.enum(["latest", "lth", "htl"]).optional(),
     category: z.string().optional(),
-    merchent: z.string().optional()
 });
 
 interface SquareResponse {
@@ -19,6 +17,7 @@ interface SquareResponse {
     cursor?: string;
     objects?: {
         id: string;
+        created_at: string;
         item_data: {
             name: string;
             description: string;
@@ -47,7 +46,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     try {
         if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
 
-        const { cursor, query, order, category, merchent, last } = schema.parse(req.query);
+        const { cursor, query, sort, category } = schema.parse(req.query);
 
         const access_token = `${process.env.SHOP_ID}_SQAURE_ACCESS_TOKEN`;
         const mode = `${process.env.SHOP_ID}_SQAURE_MODE`;
@@ -74,7 +73,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     "ITEM"
                 ],
                 cursor: cursor ? cursor : undefined,
-                query: query || order || category || merchent ? {
+                query: query || category ? {
                     exact_query: category ? {
                         attribute_name: "category_id",
                         attribute_value: category
@@ -96,7 +95,11 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
         const items = [];
 
-        if (!content?.objects) return res.status(200).json({ result: [], cursor: null });
+        if (!content?.objects) return res.status(200).json({
+            result: [],
+            hasNextPage: false,
+            nextCursor: null,
+        });
 
         for (const item of content.objects) {
 
@@ -131,13 +134,34 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 image,
                 price: format.format((item.item_data.variations.at(0)?.item_variation_data.price_money.amount ?? 0) / 100),
                 category: categoryName,
+                price_int: item.item_data.variations.at(0)?.item_variation_data.price_money.amount ?? 0,
+                created_at: item.created_at
             };
-
             items.push(data);
         }
 
         // cursor === current
         // 
+
+        switch (sort) {
+            case "htl":
+                items.sort((a, b) => b.price_int - a.price_int);
+                break;
+            case "lth":
+                items.sort((a, b) => a.price_int - b.price_int);
+                break;
+            case "latest":
+                items.sort((a, b) => {
+                    const ad = new Date(a.created_at);
+                    const ac = new Date(b.created_at);
+                    if (ad > ac) return -1;
+                    if (ad < ac) return 1;
+                    return 0;
+                });
+                break;
+            default:
+                break;
+        }
 
         return res.status(200).json({
             result: items,

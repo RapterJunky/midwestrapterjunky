@@ -1,3 +1,4 @@
+/// <reference types="@total-typescript/ts-reset"/>
 declare module React {
   interface CSSProperties {
     "-webkit-line-clamp"?: number;
