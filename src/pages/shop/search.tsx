@@ -43,10 +43,10 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
         if (cursor) {
             api.searchParams.set("cursor", cursor as string);
 
-            const search = new URLSearchParams(window.location.search);
+            /*const search = new URLSearchParams(window.location.search);
             if (search.has("last")) {
                 api.searchParams.set("last", search.get("last") ?? "");
-            }
+            }*/
         }
 
         return fetch(api).then(value => value.json()) as Promise<CursorPaginate<ShopItem>>;
@@ -136,19 +136,14 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
                         <div className="w-full flex justify-center mt-10">
                             <ul className="list-style-none flex space-x-4">
                                 <li>
-                                    <Link data-headlessui-state={data?.hasPreviousPage ? "active" : "disabled"} className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70" href={{
-                                        pathname: "/shop/search",
-                                        query: data?.hasPreviousPage ? {
-                                            cursor: data?.startCursor
-                                        } : undefined
-                                    }}>Previous</Link>
+                                    <Link onClick={() => router.back()} aria-disabled={router.query.last === "true" ? "true" : "false"} data-headlessui-state={router.query.last === "true" ? "active" : "disabled"} className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70" href="/shop/search">Previous</Link>
                                 </li>
                                 <li>
-                                    <Link data-headlessui-state={data?.hasNextPage ? "active" : "disabled"} href={{
+                                    <Link data-headlessui-state={data?.hasNextPage ? "active" : "disabled"} aria-disabled={data?.hasNextPage ? "true" : "false"} href={{
                                         pathname: "/shop/search",
                                         query: {
-                                            cursor: data?.hasNextPage ? data?.endCursor : router.query.cursor,
-                                            last: router.query.cursor
+                                            cursor: data?.hasNextPage ? data?.nextCursor : router.query.cursor,
+                                            last: true
                                         }
                                     }} className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70" >Next</Link>
                                 </li>

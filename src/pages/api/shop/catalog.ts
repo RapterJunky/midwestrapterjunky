@@ -69,7 +69,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             body: JSON.stringify({
                 include_deleted_objects: false,
                 include_related_objects: true,
-                limit: 1,
+                limit: 15,
                 object_types: [
                     "ITEM"
                 ],
@@ -142,9 +142,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         return res.status(200).json({
             result: items,
             hasNextPage: Boolean(content?.cursor),
-            hasPreviousPage: last === "" ? true : Boolean(last),
-            endCursor: content?.cursor ?? null,
-            startCursor: last ?? null
+            nextCursor: content?.cursor ?? null,
         });
     } catch (error) {
         return handleError(error, res);

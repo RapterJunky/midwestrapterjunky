@@ -50,10 +50,8 @@ export interface Paginate<T> {
 }
 
 export interface CursorPaginate<T> {
-  hasPreviousPage: boolean;
   hasNextPage: boolean;
-  startCursor: string | null;
-  endCursor: string | null;
+  nextCursor: string | null;
   result: T[];
 }
 
