@@ -1,5 +1,8 @@
 import type { SeoOrFaviconTag } from "react-datocms";
 import type { NavProps } from "@components/layout/Navbar";
+import type { NextPage } from 'next';
+
+export type NextPageWithProvider<P = {}, I = {}> = NextPage<P, I> & { provider?: React.FC };
 
 export type Color = {
   hex: string;

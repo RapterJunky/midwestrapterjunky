@@ -10,6 +10,19 @@ declare module "mammoth/mammoth.browser" {
   export default (await import("mammoth")).default;
 }
 
+declare module "body-scroll-lock" {
+  export type BodyScrollOptions = {
+    reserveScrollBarGap?: boolean;
+    allowTouchMove?: (el: HTMLElement) => boolean
+  }
+  /** Disables body scroll while enabling scroll on target element */
+  export function disableBodyScroll(el: HTMLElement, options?: BodyScrollOptions): void;
+  /** Enables body scroll and removing listeners on target element */
+  export function enableBodyScroll(el: HTMLElement, options?: BodyScrollOptions): void;
+  /** Clears all scroll locks */
+  export function clearAllBodyScrollLocks(): void;
+}
+
 declare interface Window {
   te: any;
 }

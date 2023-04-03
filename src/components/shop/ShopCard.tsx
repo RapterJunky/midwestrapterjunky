@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { HiPlusCircle } from "react-icons/hi";
+import useCart from "@/hooks/useCart";
 
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const ShopCard: React.FC<Props> = ({ name = "Title", id = "", image, price, category }) => {
+    const { addToCart } = useCart();
     return (
         <Link className="animate-in fade-in shadow z-0" href={`/shop/product/${id}`}>
             <div className="relative w-full h-56">
@@ -23,13 +25,7 @@ const ShopCard: React.FC<Props> = ({ name = "Title", id = "", image, price, cate
             <div className="p-2">
                 <h1 className="font-bold">{name}</h1>
                 <span className="text-xs text-gray-800">{category ?? "General"}</span>
-                <div className='w-full flex justify-between mt-4'>
-                    <button onClick={(ev) => {
-                        ev.preventDefault();
-                        console.log("Data")
-                    }} className="hover:text-gray-600 text-gray-700">
-                        <HiPlusCircle className="h-8 w-8" />
-                    </button>
+                <div className='w-full flex justify-end mt-4'>
                     <span>{price ?? "$??.??"}</span>
                 </div>
             </div>

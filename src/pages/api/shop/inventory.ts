@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         if (!("counts" in item.result)) {
-            throw createHttpError.InternalServerError("No counts in response.");
+            return res.status(200).json([]);
         }
 
         if (!req.preview || process.env.VERCEL_ENV !== "development")

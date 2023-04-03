@@ -18,3 +18,11 @@ body {
 #__next {
   height: 100%;
 }
+
+.backdrop-blur-08 {
+  --tw-backdrop-blur: 0.8px;
+}
+
+.scrolling-touch {
+  -webkit-overflow-scrolling: touch !important;
+}

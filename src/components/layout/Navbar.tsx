@@ -1,11 +1,12 @@
-import Image from "next/image";
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { HiMenu } from "react-icons/hi";
-import IconLink from "@components/IconLink";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 
 import type { LinkWithIcon, ResponsiveImage } from "@type/page";
-import Sidenav from "./Sidenav";
+import Sidenav from "@components/layout/Sidenav";
+import Sidebar from "@components/ui/Sidebar";
+import IconLink from "@components/IconLink";
 
 export interface NavProps {
   navbar: {
@@ -15,7 +16,7 @@ export interface NavProps {
 }
 
 interface NavbarProps {
-  mode: "fade-scroll" | "only-scroll" | "none";
+  mode: keyof typeof navbarMode;
   pageLinks: LinkWithIcon[];
   logo: ResponsiveImage;
 }
@@ -29,11 +30,7 @@ const navbarMode = {
 
 const NavDropdown = dynamic(() => import("@components/NavDropdown"));
 
-export default function Navbar({
-  mode = "fade-scroll",
-  pageLinks = [],
-  logo,
-}: NavbarProps) {
+const Navbar: React.FC<NavbarProps> = ({ logo, pageLinks = [], mode = "fade-scroll" }) => {
   const [showNav, setShowNav] = useState<boolean>(false);
   const ref = useRef<HTMLElement>(null);
   const onScroll = useCallback(() => {
@@ -47,13 +44,7 @@ export default function Navbar({
     }
   }, [mode]);
 
-  useEffect(() => {
-    if (showNav) {
-      document.body.classList.add("h-full", "overflow-hidden");
-    } else {
-      document.body.classList.remove("h-full", "overflow-hidden");
-    }
-  }, [showNav]);
+  const closeNav = () => setShowNav(false);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -63,50 +54,51 @@ export default function Navbar({
   }, [onScroll]);
 
   return (
-    <nav
-      ref={ref}
-      className={`top-0 z-50 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${
-        navbarMode[mode] ?? ""
-      }`}
-    >
-      <Sidenav
-        show={showNav}
-        pageLinks={pageLinks}
-        logo={logo}
-        onClose={() => setShowNav(false)}
-      />
-      <div className="mx-auto md:mx-0">
-        <Image
-          src={logo?.responsiveImage?.src ?? "/new_logo.webp"}
-          alt={logo?.responsiveImage?.alt ?? "site logo"}
-          sizes={logo?.responsiveImage?.sizes ?? "100vw"}
-          blurDataURL={logo?.blurUpThumb ?? ""}
-          width={65}
-          height={65}
-          className="object-cover object-center"
-        />
-      </div>
-      <div className="flex lg:hidden">
-        <button
-          data-cy="mobile-sidenav-toggle"
-          aria-label="Sidenav Toggle"
-          className="active:translate-x-1 active:translate-y-1 active:transform"
-          onClick={() => setShowNav((state) => !state)}
-        >
-          <HiMenu className="text-4xl" />
-        </button>
-      </div>
-      <div className="hidden content-center items-center justify-between lg:flex">
-        {pageLinks.slice(0, 7).map((value, i) => (
-          <IconLink
-            data-cy="sidenav-link"
-            className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
-            key={i}
-            {...value}
+    <>
+      {showNav ? (
+        <Sidebar onClose={closeNav} side="left">
+          <Sidenav onClose={closeNav} logo={logo} pageLinks={pageLinks} />
+        </Sidebar>
+      ) : null}
+      <nav
+        ref={ref}
+        className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]
+          }`}
+      >
+        <div className="mx-auto md:mx-0">
+          <Image
+            src={logo?.responsiveImage?.src ?? "/new_logo.webp"}
+            alt={logo?.responsiveImage?.alt ?? "site logo"}
+            sizes={logo?.responsiveImage?.sizes ?? "100vw"}
+            blurDataURL={logo?.blurUpThumb ?? ""}
+            width={65}
+            height={65}
+            className="object-cover object-center"
           />
-        ))}
-        {pageLinks.length > 7 ? <NavDropdown links={pageLinks} /> : null}
-      </div>
-    </nav>
+        </div>
+        <div className="flex lg:hidden">
+          <button
+            data-cy="mobile-sidenav-toggle"
+            aria-label="Sidenav Toggle"
+            className="active:translate-x-1 active:translate-y-1 active:transform"
+            onClick={() => setShowNav((state) => !state)}
+          >
+            <HiMenu className="text-4xl" />
+          </button>
+        </div>
+        <div className="hidden content-center items-center justify-between lg:flex">
+          {pageLinks.slice(0, 7).map((value, i) => (
+            <IconLink
+              data-cy="sidenav-link"
+              className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
+              key={i}
+              {...value}
+            />
+          ))}
+          {pageLinks.length > 7 ? <NavDropdown links={pageLinks} /> : null}
+        </div>
+      </nav>
+    </>
   );
 }
+export default Navbar;

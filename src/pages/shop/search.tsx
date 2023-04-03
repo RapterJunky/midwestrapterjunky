@@ -11,11 +11,13 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import SiteTags from '@/components/SiteTags';
 
+import type { FullPageProps, NextPageWithProvider } from '@/types/page';
 import GenericPageQuery from '@/gql/queries/generic';
-import type { FullPageProps } from '@/types/page';
-import useSearchMeta from '@/hooks/useSearchMeta';
-import { fetchCachedQuery } from '@/lib/cache';
-import useCatalog from '@/hooks/useCatalog';
+import useSearchMeta from '@hook/useSearchMeta';
+import { fetchCachedQuery } from '@lib/cache';
+import { CartProvider } from '@hook/useCart';
+import useCatalog from '@hook/useCatalog';
+
 
 interface Props extends FullPageProps { }
 
@@ -37,7 +39,7 @@ const filterQuery = (query: any) =>
         return obj;
     }, {} as Record<string, string>);
 
-const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
+const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar }) => {
     const router = useRouter();
     const meta = useSearchMeta();
     const { data: categories, error: categoriesError, isLoading: categoriesIsLoading } = useSWR(["/api/shop/categories"], ([url]) => fetch(url).then(r => r.json()) as Promise<Array<{ name: string; id: string; }>>);
@@ -117,5 +119,7 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
         </div>
     );
 }
+
+ShopSearch.provider = CartProvider;
 
 export default ShopSearch;

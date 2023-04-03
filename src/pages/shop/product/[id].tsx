@@ -1,22 +1,27 @@
 import type { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { Client, Environment, type CatalogCustomAttributeValue } from "square";
+import { useForm, Controller } from 'react-hook-form';
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { Listbox, Transition } from '@headlessui/react';
-import Link from 'next/link';
 import { useState } from 'react';
+import Image from "next/image";
+import Link from 'next/link';
 import { z } from 'zod';
 
-import { fetchCachedQuery } from "@/lib/cache";
-import { FullPageProps } from "@/types/page";
+import ShopNavbar from "@components/shop/ShopNavbar";
+import Navbar from "@components/layout/Navbar";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
+
+import useInventory from "@hook/useInventory";
+import useCatalog from "@hook/useCatalog";
+import useCart, { CartProvider } from "@hook/useCart";
+
+import { FullPageProps, NextPageWithProvider } from "@type/page";
 import GenericPageQuery from "@/gql/queries/generic";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import SiteTags from "@/components/SiteTags";
-import { logger } from "@/lib/logger";
-import { HiChevronLeft, HiChevronRight, HiSearch, HiSelector } from "react-icons/hi";
-import Image from "next/image";
-import ShopNavbar from "@/components/shop/ShopNavbar";
-import useInventory from "@/hooks/useInventory";
-import useCatalog from "@/hooks/useCatalog";
+import { fetchCachedQuery } from "@lib/cache";
+import { logger } from "@lib/logger";
+import useFormatPrice from "@/hooks/useFormatPrice";
 
 interface Props extends FullPageProps {
     product: {
@@ -26,13 +31,26 @@ interface Props extends FullPageProps {
         name: string;
         description: string | null
         labelColor: string;
-        images: { url: string; alt: string; }[] | null;
+        images: { url: string; alt: string; }[];
         category: {
             name: string;
             id: string;
         } | null;
-        variations: any[]
+        variations: {
+            id: string;
+            name: string | null;
+            sku: string | null;
+            ordinal: number;
+            price: number;
+            currency: string;
+            itemOptionValues: any[] | null;
+        }[]
     }
+}
+
+type FormState = {
+    quantity: number;
+    variation: Props["product"]["variations"][0]
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -81,7 +99,7 @@ export const getStaticProps = async (
         }
     }
 
-    let images: { alt: string; url: string; }[] | null = null;
+    let images: { alt: string; url: string; }[] = [];
     if (itemData?.imageIds && relatedObjects) {
         images = itemData.imageIds.map(image => {
             const data = relatedObjects.find(item => item.id === image);
@@ -93,6 +111,12 @@ export const getStaticProps = async (
         }).filter(Boolean);
     }
 
+    if (!images.length) {
+        images = [
+            { url: `https://api.dicebear.com/6.x/icons/png?seed=${itemData?.name!}`, alt: "Product Image" }
+        ]
+    }
+
     const variations = [];
     if (itemData?.variations) {
         for (const variation of itemData?.variations) {
@@ -101,25 +125,18 @@ export const getStaticProps = async (
 
             if (variation.isDeleted || !itemVariationData.sellable) continue;
 
-            let price = "$??";
+            let price: number = 999999;
+            let currency = "USD";
             if (!itemVariationData?.priceMoney) {
                 const first = itemData.variations?.at(0)?.itemVariationData?.priceMoney;
                 if (first) {
-                    const formatter = new Intl.NumberFormat(undefined, {
-                        style: "currency",
-                        currency: first.currency
-                    });
-                    price = formatter.format((Number(first.amount) ?? 0) / 100)
+                    price = Number(first.amount);
+                    currency = first.currency ?? "USD";
                 }
             } else {
-                const formatter = new Intl.NumberFormat(undefined, {
-                    style: "currency",
-                    currency: itemVariationData?.priceMoney?.currency
-                });
-                price = formatter.format((Number(itemVariationData?.priceMoney?.amount) ?? 0) / 100)
+                currency = itemVariationData.priceMoney.currency ?? "USD";
+                price = Number(itemVariationData?.priceMoney?.amount);
             }
-
-
 
             variations.push({
                 id: variation.id,
@@ -127,11 +144,11 @@ export const getStaticProps = async (
                 sku: itemVariationData?.sku ?? null,
                 ordinal: itemVariationData?.ordinal ?? 0,
                 price,
+                currency,
                 itemOptionValues: itemVariationData?.itemOptionValues ?? null
             });
         }
     }
-
 
     return {
         props: {
@@ -152,13 +169,38 @@ export const getStaticProps = async (
     };
 }
 
-const Product: React.FC<Props> = ({ _site, navbar, product }) => {
+const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
+    const { addToCart, openCart } = useCart();
     const { data, isLoading, error } = useCatalog({ category: product.category?.id ?? undefined, limit: 4 });
-    const [variation, setVariation] = useState(product.variations[0]);
+    const { control, handleSubmit, watch, register, formState: { isSubmitting } } = useForm<FormState>({
+        defaultValues: {
+            quantity: 1,
+            variation: product.variations[0]!
+        }
+    });
+    const variation = watch("variation");
     const { inStock, stockError, stockLoading } = useInventory(variation.id);
+    const formatPrice = useFormatPrice(variation.currency);
     const [image, setImage] = useState<number>(0);
     const [dir, setDir] = useState<"slide-in-from-left" | "slide-in-from-right">("slide-in-from-left")
     const merchent = Object.values(product.customAttributeValues ?? {}).find(value => value.name === "Vendor" && value.type === "STRING");
+
+    const add = (state: FormState) => {
+        addToCart({
+            labelColor: product.labelColor,
+            id: product.id,
+            name: product.name,
+            image: product?.images.at(0)!,
+            price: state.variation.price,
+            quantity: state.quantity,
+            currency: state.variation.currency,
+            option: {
+                id: state.variation.id,
+                name: state.variation?.name ?? state.variation?.sku ?? ""
+            }
+        });
+        openCart();
+    }
 
     return (
         <div className="flex flex-col">
@@ -203,47 +245,49 @@ const Product: React.FC<Props> = ({ _site, navbar, product }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-span-1 lg:col-span-4 p-6 flex flex-col">
+                    <form className="col-span-1 lg:col-span-4 p-6 flex flex-col" onSubmit={handleSubmit(add)}>
                         <h1 className="font-bold text-4xl">{product.name}{variation.sku ? <span className="text-gray-400 text-base">#{variation.sku}</span> : null}</h1>
                         <div className="flex gap-1 mb-4">
                             <span className="text-sm text-gray-600">{product.category?.name}</span>
                             {merchent?.stringValue ? <span className="text-sm text-gray-600">| {merchent?.stringValue}</span> : null}
                         </div>
-                        <h3 className="text-xl font-semibold">{variation.price}</h3>
+                        <h3 className="text-xl font-semibold">{formatPrice(variation.price)}</h3>
 
                         <p className="mt-4">{product.description}</p>
 
                         <div className="mt-4 flex flex-col">
                             <label className="mb-2 text-gray-500" htmlFor="options">Options</label>
-                            <Listbox value={variation} onChange={setVariation}>
-                                <div id="options" className="relative mt-1">
-                                    <Listbox.Button className="relative form-select w-full text-left">
-                                        <span className="block truncate">{variation.name}</span>
-                                    </Listbox.Button>
-                                    <Transition enter="transition duration-100 ease-out" enterFrom="transform scale-95 opacity-0" enterTo="transform scale-100 opacity-100" leave="transition duration-75 ease-out" leaveFrom="transform scale-100 opacity-100" leaveTo="transform scale-95 opacity-0">
-                                        <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                            {product.variations.map(value => (
-                                                <Listbox.Option className="relative cursor-default select-none py-2 pl-4 text-gray-900 hover:bg-gray-100" key={value.id} value={value}>
-                                                    <span className="block truncate font-normal">{value.name}</span>
-                                                </Listbox.Option>
-                                            ))}
-                                        </Listbox.Options>
-                                    </Transition>
-                                </div>
-                            </Listbox>
+                            <Controller control={control} name="variation" render={({ field }) => (
+                                <Listbox value={field.value} onChange={field.onChange}>
+                                    <div id="options" className="relative mt-1">
+                                        <Listbox.Button className="relative form-select w-full text-left">
+                                            <span className="block truncate">{field.value.name}</span>
+                                        </Listbox.Button>
+                                        <Transition enter="transition duration-100 ease-out" enterFrom="transform scale-95 opacity-0" enterTo="transform scale-100 opacity-100" leave="transition duration-75 ease-out" leaveFrom="transform scale-100 opacity-100" leaveTo="transform scale-95 opacity-0">
+                                            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                {product.variations.map(value => (
+                                                    <Listbox.Option className="relative cursor-default select-none py-2 pl-4 text-gray-900 hover:bg-gray-100" key={value.id} value={value}>
+                                                        <span className="block truncate font-normal">{value.name}</span>
+                                                    </Listbox.Option>
+                                                ))}
+                                            </Listbox.Options>
+                                        </Transition>
+                                    </div>
+                                </Listbox>
+                            )} />
                         </div>
 
                         <div className="mt-4 flex flex-col">
                             <label className="mb-2 text-gray-500" htmlFor="quantity">Quantity</label>
-                            <input type="number" id="quantity" name="quantity" min={1} defaultValue={1} />
+                            <input {...register("quantity")} type="number" id="quantity" name="quantity" min={1} defaultValue={1} />
                         </div>
 
                         <div className="mt-4 lg:mt-auto">
-                            <button disabled={!inStock || stockLoading} type="button" className="mb-2 text-center block w-full rounded bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
+                            <button type="submit" disabled={!inStock || stockLoading || isSubmitting} className="mb-2 text-center block w-full rounded bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
                                 {stockLoading ? "Loading..." : inStock ? "Add to cart" : "Sold out"}
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <hr className="mt-7" />
                 <section className="py-12 px-6 mb-10">
@@ -269,5 +313,7 @@ const Product: React.FC<Props> = ({ _site, navbar, product }) => {
         </div>
     );
 }
+
+Product.provider = CartProvider;
 
 export default Product;
