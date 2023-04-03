@@ -1,26 +1,21 @@
 import type { GetStaticPropsContext, GetStaticPropsResult } from 'next';
-import { HiSearch } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useSWR from 'swr';
 
+import ShopNavbar from '@/components/shop/ShopNavbar';
+import ShopOption from '@/components/shop/ShopOption';
+import Skeleton from '@/components/shop/Skeleton';
+import ShopCard from '@/components/shop/ShopCard';
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import GenericPageQuery from '@/gql/queries/generic';
-
-
-import { fetchCachedQuery } from '@/lib/cache';
-import type { FullPageProps, CursorPaginate } from '@/types/page';
 import SiteTags from '@/components/SiteTags';
-import ShopCard from '@/components/shop/ShopCard';
 
-type ShopItem = {
-    name: string,
-    id: string,
-    image: null | { url: string; alt: string; },
-    price: string;
-    category: string | null
-}
+import GenericPageQuery from '@/gql/queries/generic';
+import type { FullPageProps } from '@/types/page';
+import useSearchMeta from '@/hooks/useSearchMeta';
+import { fetchCachedQuery } from '@/lib/cache';
+import useCatalog from '@/hooks/useCatalog';
 
 interface Props extends FullPageProps { }
 
@@ -44,104 +39,26 @@ const filterQuery = (query: any) =>
 
 const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
     const router = useRouter();
+    const meta = useSearchMeta();
     const { data: categories, error: categoriesError, isLoading: categoriesIsLoading } = useSWR(["/api/shop/categories"], ([url]) => fetch(url).then(r => r.json()) as Promise<Array<{ name: string; id: string; }>>);
-    const { data, error, isLoading } = useSWR([`/api/shop/catalog`, router.query?.cursor, router.query?.category, router.query?.query, router.query?.sort], async ([url, cursor, category, query, sort]) => {
-        const api = new URL(url, window.location.origin);
-        if (cursor) api.searchParams.set("cursor", cursor as string);
-        if (category) api.searchParams.set("category", category as string);
-        if (query) api.searchParams.set("query", query as string);
-        if (sort) api.searchParams.set("sort", sort as string);
-        const response = await fetch(api);
-        if (!response.ok) throw response;
-        return response.json() as Promise<CursorPaginate<ShopItem>>
-    });
+    const { data, error, isLoading } = useCatalog(meta);
+
     return (
         <div className="flex flex-col h-full">
             <SiteTags tags={[_site.faviconMetaTags, [{ tag: "title", content: "Shop - Midwest Raptor Junkies" }]]} />
             <Navbar mode="none" {...navbar} />
-            <div className='flex justify-center rounded-sm mb-4 w-full px-4'>
-                <form className="border-2 border-gray-300 flex items-center w-full lg:w-1/3 rounded-sm relative" onSubmit={(ev) => {
-                    ev.preventDefault();
-                    const data = new FormData(ev.target as HTMLFormElement);
-                    const query = data.get("query")?.toString();
-                    const params = new URLSearchParams(window.location.search);
-
-                    if (query) {
-                        params.set("query", query);
-                        router.push(`/shop/search?${params.toString()}`);
-                    } else {
-                        params.delete("query");
-                        router.push(`/shop/search?${params.toString()}`);
-                    }
-                }}>
-                    <label htmlFor="search" className="hidden">Search</label>
-                    <input id="search" name="query" placeholder='Search for products...' type="text" className="border-none placeholder:text-sm focus:outline-none focus:shadow-none focus:ring-0 w-full" />
-                    <div className="absolute flex right-0 pointer-events-none">
-                        <HiSearch className="h-5 w-5 mx-2 text-gray-800" />
-                    </div>
-                </form>
-            </div>
+            <ShopNavbar />
             <main className="flex-grow flex flex-col items-center w-full px-4">
                 <div className='w-full mx-auto grid grid-cols-1 lg:grid-cols-12 max-w-7xl gap-4 mt-3 mb-10 flex-1'>
                     <div className="col-span-8 lg:col-span-2 order-1 lg:order-none">
-                        <div className="relative inline-block w-full">
-                            <div className="lg:hidden">
-                                <span className="rounded-md shadow-sm">
-                                    <button type="button" className="flex justify-between w-full rounded-sm border border-accent-3 px-4 py-3 bg-accent-0 text-sm leading-5 font-medium text-accent-4 hover:text-accent-5 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-accent-1 active:text-accent-8 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded="true">All Categories
-                                        <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </span>
-                            </div>
-                            <div className="origin-top-left absolute lg:relative left-0 mt-2 w-full rounded-md shadow-lg lg:shadow-none z-10 mb-10 lg:block hidden">
-                                <div className="rounded-sm bg-accent-0 shadow-xs lg:bg-none lg:shadow-none">
-                                    <div role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                        <ul>
-                                            <li className="block text-sm leading-5 text-zinc-600 lg:text-base lg:no-underline lg:font-bold lg:tracking-wide hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8 underline">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href="/shop/search">All Categories</Link>
-                                            </li>
-                                            {!categories || categoriesError || categoriesIsLoading ? (null) : (
-                                                categories.map((item: any) => (
-                                                    <li key={item.id} className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                        <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href={`/shop/search?category=${item.id}`}>{item.name}</Link>
-                                                    </li>
-                                                ))
-                                            )}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="relative inline-block w-full">
-                            <div className="lg:hidden mt-3">
-                                <span className="rounded-md shadow-sm">
-                                    <button type="button" className="flex justify-between w-full rounded-sm border border-accent-3 px-4 py-3 bg-accent-0 text-sm leading-5 font-medium text-accent-8 hover:text-accent-5 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-accent-1 active:text-accent-8 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded="true">All Designs
-                                        <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path>
-                                        </svg>
-                                    </button>
-                                </span>
-                            </div>
-                            <div className="origin-top-left absolute lg:relative left-0 mt-2 w-full rounded-md shadow-lg lg:shadow-none z-10 mb-10 lg:block hidden">
-                                <div className="rounded-sm bg-accent-0 shadow-xs lg:bg-none lg:shadow-none">
-                                    <div role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                        <ul>
-                                            <li className="block text-sm leading-5 text-zinc-600 lg:text-base lg:no-underline lg:font-bold lg:tracking-wide hover:bg-accent-1 lg:hover:bg-transparent hover:text-accent-8 focus:outline-none focus:bg-accent-1 focus:text-accent-8 underline">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href="/shop/search">All Designers</Link>
-                                            </li>
-                                            <li className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href="/shop/search?merchant=acme">ACME</Link>
-                                            </li>
-                                            <li className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href="/shop/search?merchant=next.js">Next.js</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {!categories || categoriesError || categoriesIsLoading ? (null) : (
+                            <ShopOption name="All Categories" selectedName='Category' option="category" data={
+                                categories.map((item) => ({ name: item.name, id: item.id, link: `/shop/search?category=${item.id}` }))
+                            } />
+                        )}
+                        <ShopOption name="All Vendors" selectedName='Vendor' data={[
+                            { name: "Midwest", id: "midwest", link: "/shop/search?vendor=midwest" }
+                        ]} option="vendor" />
                     </div>
 
                     <div className="col-span-8 order-3 lg:order-none">
@@ -166,7 +83,7 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
                                     <ShopCard key={i} {...item} />
                                 ))
                             ) : Array.from({ length: 15 }).map((_, i) => (
-                                <ShopCard key={i} />
+                                <Skeleton key={i} />
                             ))}
                         </div>
                         <div className="w-full flex justify-center mt-10">
@@ -188,37 +105,11 @@ const ShopSearch: React.FC<Props> = ({ _site, navbar }) => {
                     </div>
 
                     <div className="col-span-8 lg:col-span-2 order-2 lg:order-none">
-                        <div className="relative inline-block w-full">
-                            <div className="lg:hidden">
-                                <span className="rounded-md shadow-sm">
-                                    <button type="button" className="flex justify-between w-full rounded-sm border border-accent-3 px-4 py-3 bg-accent-0 text-sm leading-5 font-medium text-accent-4 hover:text-accent-5 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-accent-1 active:text-accent-8 transition ease-in-out duration-150" id="options-menu" aria-haspopup="true" aria-expanded="true">Relevance
-                                        <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"></path>
-                                        </svg>
-                                    </button>
-                                </span>
-                            </div>
-                            <div className="origin-top-left absolute lg:relative left-0 mt-2 w-full rounded-md shadow-lg lg:shadow-none z-10 mb-10 lg:block hidden">
-                                <div className="rounded-sm bg-accent-0 shadow-xs lg:bg-none lg:shadow-none">
-                                    <div role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                        <ul>
-                                            <li className="block text-sm leading-5 text-accent-4 lg:text-base lg:no-underline lg:font-bold lg:tracking-wide hover:bg-accent-1 lg:hover:bg-transparent hover:text-accent-8 focus:outline-none focus:bg-accent-1 focus:text-accent-8 underline">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href="/search">Relevance</Link>
-                                            </li>
-                                            <li className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href={{ pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "latest" }) }}>Latest arrivals</Link>
-                                            </li>
-                                            <li className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href={{ pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "lth" }) }}>Price: Low to high</Link>
-                                            </li>
-                                            <li className="block text-sm leading-5 text-zinc-600 hover:bg-accent-1 lg:hover:bg-transparent hover:text-zinc-900 focus:outline-none focus:bg-accent-1 focus:text-accent-8">
-                                                <Link className="block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4" href={{ pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "htl" }) }}>Price: High to low</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ShopOption name="Relevance" selectedName="Relevance" option="sort" data={[
+                            { name: "Latest arrivals", id: "latest", link: { pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "latest" }) } },
+                            { name: "Price: Low to high", id: "lth", link: { pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "lth" }) } },
+                            { name: "Price: High to low", id: "htl", link: { pathname: "/shop/search", query: filterQuery({ query: router.query?.query, sort: "htl" }) } },
+                        ]} />
                     </div>
                 </div>
             </main>

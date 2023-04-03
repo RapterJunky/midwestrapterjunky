@@ -16,7 +16,7 @@ interface Props {
 
 const ShopCard: React.FC<Props> = ({ name = "Title", id = "", image, price, category }) => {
     return (
-        <Link className="animate-in fade-in shadow" href={`/shop/product/${id}`}>
+        <Link className="animate-in fade-in shadow z-0" href={`/shop/product/${id}`}>
             <div className="relative w-full h-56">
                 <Image className="object-center object-cover" src={image?.url ?? `https://api.dicebear.com/6.x/icons/png?seed=${name}`} fill alt={image?.alt ?? "product"} sizes='((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em' />
             </div>

@@ -10,6 +10,7 @@ const schema = z.object({
     query: z.string().optional(),
     sort: z.enum(["latest", "lth", "htl"]).optional(),
     category: z.string().optional(),
+    limit: z.coerce.number().positive().int().max(15).min(4).optional().default(15)
 });
 
 interface SquareResponse {

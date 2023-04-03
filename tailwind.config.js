@@ -129,6 +129,7 @@ const animatePlugin = plugin(
         }),
         animationDuration: ({ theme }) => ({
           0: "0ms",
+          1: "1ms",
           ...theme("transitionDuration"),
         }),
         animationTimingFunction: ({ theme }) => ({
