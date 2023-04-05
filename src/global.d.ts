@@ -1,8 +1,11 @@
 /// <reference types="@total-typescript/ts-reset"/>
 declare module React {
-  interface CSSProperties {
-    "-webkit-line-clamp"?: number;
-    "-webkit-box-orient"?: "vertical";
+  type EnterKeyHintOptions = "enter" | "done" | "go" | "next" | "previous" | "search" | "send";
+  interface InputHTMLAttributes {
+    enterKeyHint?: EnterKeyHintOptions
+  }
+  interface SelectHTMLAttributes {
+    enterKeyHint?: EnterKeyHintOptions
   }
 }
 

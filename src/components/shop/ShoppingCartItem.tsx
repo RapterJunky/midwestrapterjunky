@@ -4,7 +4,7 @@ import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 import useCart, { type CartItem } from "@hook/useCart";
 import useFormatPrice from "@/hooks/useFormatPrice";
 
-const ShoppingCartItem: React.FC<{ data: CartItem }> = ({ data }) => {
+const ShoppingCartItem: React.FC<{ data: CartItem, editable?: boolean }> = ({ data, editable = true }) => {
     const formatPrice = useFormatPrice(data.currency);
     const { removeFromCart, addQuantity, removeQuantity } = useCart();
     return (
@@ -30,20 +30,21 @@ const ShoppingCartItem: React.FC<{ data: CartItem }> = ({ data }) => {
                 </div>
             </div>
             {/** Quantity */}
-            <div className="flex flex-row h-9">
-                <button className="flex p-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => removeFromCart(data.id, data.option.id)}>
-                    <HiX className="h-5 w-5" />
-                </button>
-                <label className="w-full border-accent-2 border ml-2">
-                    <input value={data.quantity} className="border-gray-300 bg-transparent px-4 w-full h-full focus:outline-none focus:ring-0 select-none pointer-events-auto" type="number" readOnly min={0} max={100} />
-                </label>
-                <button type="button" className="flex p-1 ml-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => removeQuantity(data.id, data.option.id)}>
-                    <HiMinus className="h-5 w-5" />
-                </button>
-                <button className="flex p-1 ml-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => addQuantity(data.id, data.option.id)}>
-                    <HiPlus className="h-5 w-5" />
-                </button>
-            </div>
+            {editable ? (
+                <div className="flex flex-row h-9">
+                    <button className="flex p-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => removeFromCart(data.id, data.option.id)}>
+                        <HiX className="h-5 w-5" />
+                    </button>
+                    <label className="w-full border-accent-2 border ml-2">
+                        <input value={data.quantity} className="border-gray-300 bg-transparent px-4 w-full h-full focus:outline-none focus:ring-0 select-none pointer-events-auto" type="number" readOnly min={0} max={100} />
+                    </label>
+                    <button type="button" className="flex p-1 ml-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => removeQuantity(data.id, data.option.id)}>
+                        <HiMinus className="h-5 w-5" />
+                    </button>
+                    <button className="flex p-1 ml-1 border-gray-300 border items-center justify-center w-12 select-none hover:border-black focus:outline-none disabled:cursor-not-allowed transition-colors" onClick={() => addQuantity(data.id, data.option.id)}>
+                        <HiPlus className="h-5 w-5" />
+                    </button>
+                </div>) : null}
         </li>
     );
 }

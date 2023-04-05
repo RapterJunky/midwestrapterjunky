@@ -6,6 +6,9 @@
 }
 
 @layer components {
+  .shadow-square-input > div > div.sq-card-iframe-container {
+    @apply shadow-sm;
+  }
 }
 
 html,
