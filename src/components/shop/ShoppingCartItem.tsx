@@ -8,7 +8,7 @@ const ShoppingCartItem: React.FC<{ data: CartItem, editable?: boolean }> = ({ da
     const formatPrice = useFormatPrice(data.currency);
     const { removeFromCart, addQuantity, removeQuantity } = useCart();
     return (
-        <li className="flex flex-col py-4">
+        <li className="flex flex-col pb-2">
             <div className="flex flex-row space-x-4 py-4">
                 <div className="w-16 h-16 relative overflow-hidden cursor-pointer" style={{ backgroundColor: `#${data.labelColor}` }}>
                     <Image className="w-full h-full object-cover" height={64} width={64} src={data.image.url} alt={data.image.alt} />

@@ -12,7 +12,7 @@ type Props = {
 }
 
 const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state }) => {
-    const { handleSubmit, register } = useForm<CheckoutFormState>({
+    const { handleSubmit, register, formState: { errors } } = useForm<CheckoutFormState>({
         defaultValues: state
     });
 
@@ -21,6 +21,10 @@ const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state 
         setGlobalState((current) => {
             return {
                 ...current,
+                ready: {
+                    shipping: true,
+                    user: current.ready?.user ?? false
+                },
                 shipping_details: state.shipping_details
             }
         });
@@ -29,9 +33,9 @@ const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state 
     }
 
     return (
-        <Tab.Panel className="flex flex-col w-full">
+        <Tab.Panel>
             <form onSubmit={handleSubmit(handleShipping)}>
-                <AddressForm disabled={selected !== 1} name="shipping" register={register} ids={{
+                <AddressForm errors={errors} disabled={false} name="shipping" register={register} ids={{
                     name: "shipping_details.name",
                     address1: "shipping_details.address_line1",
                     address2: "shipping_details.address_line2",
@@ -42,7 +46,7 @@ const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state 
                     postal: "shipping_details.postal",
                     notes: "shipping_details.comments"
                 }} />
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                     <button onClick={() => next(0)} type="button" className="flex justify-center items-center text-primary">
                         <HiChevronLeft />
                         <span className="hover:underline">Back</span>

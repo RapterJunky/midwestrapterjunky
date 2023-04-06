@@ -18,6 +18,7 @@ export type CartItem = {
 };
 type CartCtx = {
     count: number;
+    loading: boolean;
     subtotal: number;
     items: CartItem[],
     addToCart(item: CartItem): Promise<void>
@@ -35,7 +36,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     const setData = (data: ((prevState: CartItem[]) => CartItem[])) => {
         setItems((current) => {
             const item = data(current);
-            window.localStorage.setItem("cart", JSON.stringify(item));
+            if (!!item.length) window.localStorage.setItem("cart", JSON.stringify(item));
             return item;
         });
     }
@@ -61,6 +62,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
             items,
             count,
             subtotal,
+            loading,
             async addToCart(item) {
                 setData((current) => {
                     const exists = current.find(value => value.id === item.id && value.option.id === item.option.id);
@@ -124,7 +126,8 @@ const useCart = () => {
         addToCart: ctx.addToCart,
         removeFromCart: ctx.removeFromCart,
         addQuantity: ctx.addQuantity,
-        removeQuantity: ctx.removeQuantity
+        removeQuantity: ctx.removeQuantity,
+        loading: ctx.loading
     }
 }
 

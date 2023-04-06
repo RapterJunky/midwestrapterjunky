@@ -1,12 +1,14 @@
-import type { UseFormRegister, FieldPath } from 'react-hook-form';
+import type { UseFormRegister, FieldPath, FieldErrors, FieldError } from 'react-hook-form';
 import type { CheckoutFormState } from '@/pages/shop/checkout';
 import { capitlize } from '@/lib/utils/capitlize';
+import get from '@lib/utils/get';
 
 export type UseFormValues = FieldPath<CheckoutFormState>;
 
 type Props = {
     register: UseFormRegister<CheckoutFormState>;
     disabled: boolean;
+    errors: FieldErrors<CheckoutFormState>,
     ids: {
         name: UseFormValues,
         address1: UseFormValues,
@@ -21,7 +23,17 @@ type Props = {
     name: string;
 }
 
-const AddressForm: React.FC<Props> = ({ ids, name, disabled, register }) => {
+const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors }) => {
+
+    const nameError = get(errors, ids.name) as FieldError | undefined;
+    const address1Error = get(errors, ids.address1) as FieldError | undefined;
+    const cityError = get(errors, ids.city) as FieldError | undefined;
+    const countryError = get(errors, ids.country) as FieldError | undefined;
+    const stateError = get(errors, ids.state) as FieldError | undefined;
+    const postalError = get(errors, ids.postal) as FieldError | undefined;
+    const phoneError = get(errors, ids.phone) as FieldError | undefined;
+    const notesError = ids.notes ? get(errors, ids.notes) as FieldError | undefined : undefined;
+
     return (
         <>
             <div className='mb-4'>
@@ -29,17 +41,19 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register }) => {
                 <hr className='w-full' />
             </div>
             <div className='w-full mb-4'>
-                <label htmlFor={`${name}-fullname`}>
-                    <span className="text-gray-700">Full Name</span>
+                <label htmlFor={`${name}-fullname`} className="text-gray-700">
+                    Full Name
                 </label>
-                <input {...register(ids.name, { disabled, required: true, maxLength: 100 })} autoComplete="name" id={`${name}-fullname`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='John Doe' />
+                <input required {...register(ids.name, { disabled, required: "A name is required.", maxLength: { message: "Max length is 100 characters.", value: 100 } })} autoComplete="name" id={`${name}-fullname`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='John Doe' />
+                {nameError ? (<span className="text-red-500 mt-1 block">{nameError.message}</span>) : null}
             </div>
             <div>
                 <div className="mb-4">
                     <label htmlFor={`${name}-address1`}>
                         <span className="text-gray-700">Address line 1 (or company name)</span>
                     </label>
-                    <input {...register(ids.address1, { disabled, required: true })} autoComplete="address-line-1" id={`${name}-address1`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='542 W. 15th Street' />
+                    <input required {...register(ids.address1, { disabled, required: "An address is required." })} autoComplete="address-line-1" id={`${name}-address1`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='542 W. 15th Street' />
+                    {address1Error ? (<span className="text-red-500 mt-1 block">{address1Error.message}</span>) : null}
                 </div>
                 <div className="mb-4">
                     <label htmlFor={`${name}-address2`}>
@@ -50,16 +64,17 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register }) => {
             </div>
             <div className="mb-4">
                 <label htmlFor={`${name}-city`}>
-                    <span className="text-gray-700">City:</span>
+                    <span className="text-gray-700">City</span>
                 </label>
-                <input {...register(ids.city, { required: true, disabled })} autoComplete='city' id={`${name}-city`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='city' />
+                <input required {...register(ids.city, { required: "A city is required.", disabled })} autoComplete='city' id={`${name}-city`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='city' />
+                {cityError ? (<span className="text-red-500 mt-1 block">{cityError.message}</span>) : null}
             </div>
             <div className="flex gap-2">
                 <div className="mb-4 w-full">
                     <label htmlFor={`${name}-country`}>
                         <span className="text-gray-700">Country or region</span>
                     </label>
-                    <select defaultValue="US" {...register(ids.country, { required: true, disabled })} id={`${name}-country`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" autoComplete="country" placeholder='New York' enterKeyHint="done">
+                    <select required defaultValue="US" {...register(ids.country, { required: "Please select a country.", disabled })} id={`${name}-country`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" autoComplete="country" placeholder='New York' enterKeyHint="done">
                         <option value="" disabled>Country</option>
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
@@ -311,12 +326,13 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register }) => {
                         <option value="ZM">Zambia</option>
                         <option value="ZW">Zimbabwe</option>
                     </select>
+                    {countryError ? (<span className="text-red-500 mt-1 block">{countryError.message}</span>) : null}
                 </div>
                 <div className="mb-4 w-full">
                     <label htmlFor={`${name}-state`}>
                         <span className="text-gray-700">State</span>
                     </label>
-                    <select autoComplete="state" {...register(ids.state, { required: true, disabled })} id={`${name}-state`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <select enterKeyHint="done" required {...register(ids.state, { required: "Please select a state.", disabled })} id={`${name}-state`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <option value="" disabled>State</option>
                         <option value="AL" label="Alabama">Alabama</option>
                         <option value="AK" label="Alaska">Alaska</option>
@@ -381,26 +397,41 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register }) => {
                         <option value="PR" label="Puerto Rico">Puerto Rico</option>
                         <option value="VI" label="Virgin Islands">Virgin Islands</option>
                     </select>
+                    {stateError ? (<span className="text-red-500 mt-1 block">{stateError.message}</span>) : null}
                 </div>
                 <div className="mb-4 w-full">
                     <label htmlFor={`${name}-postal`}>
                         <span className="text-gray-700">Zip / Postal Code</span>
                     </label>
-                    <input {...register(ids.postal, { disabled, maxLength: 20 })} autoComplete="postal-code" id={`${name}-postal`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='10001' />
+                    <input required {...register(ids.postal, { disabled, maxLength: { value: 20, message: "Max length is 20 characters." }, required: "Please enter a postal code" })} autoComplete="postal-code" id={`${name}-postal`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='10001' />
+                    {postalError ? (<span className="text-red-500 mt-1 block">{postalError.message}</span>) : null}
                 </div>
             </div>
             <div className="mb-4">
                 <label htmlFor={`${name}-phone`}>
-                    <span className="text-gray-700">Phone</span>
+                    <span className="text-gray-700">Phone (optonal)</span>
                 </label>
-                <input inputMode="numeric" {...register(ids.phone, { disabled, required: true, pattern: /[\d \-\+]+/, maxLength: 30 })} autoComplete='tel' id={`${name}-phone`} type="tel" className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder='phone' />
+                <input inputMode="numeric" {...register(ids.phone, {
+                    disabled,
+                    required: false,
+                    pattern: {
+                        value: /[\d \-\+]+/,
+                        message: "Please only enter numbers."
+                    },
+                    maxLength: {
+                        value: 30,
+                        message: "Max length is 30 characters."
+                    }
+                })} autoComplete='tel' id={`${name}-phone`} type="tel" className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder='+1 855 555 6502' />
+                {phoneError ? (<span className="text-red-500 mt-1 block">{phoneError.message}</span>) : null}
             </div>
             {ids.notes ? (
                 <div className="mb-4">
                     <label htmlFor={`${name}-comments`}>
                         <span className="text-gray-700">Comments</span>
                     </label>
-                    <textarea {...register(ids.notes, { maxLength: 200 })} autoComplete='tel' id={`${name}-phone`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder='Comments (optonal)' />
+                    <textarea {...register(ids.notes, { maxLength: { value: 200, message: "Please enter a message that is less then 200 characters." } })} autoComplete='tel' id={`${name}-phone`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder='Comments (optonal)' />
+                    {notesError ? (<span className="text-red-500 mt-1 block">{notesError.message}</span>) : null}
                 </div>
             ) : null}
         </>

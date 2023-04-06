@@ -1,7 +1,9 @@
 import type { TokenDetails } from "@square/web-payments-sdk-types";
+import type { Order } from "square";
 import { useState, useEffect } from 'react';
 import { Tab } from '@headlessui/react';
 import Script from 'next/script';
+import useSWR from 'swr';
 
 import useCart, { CartProvider } from "@/hooks/useCart";
 import { NextPageWithProvider } from "@/types/page";
@@ -14,6 +16,10 @@ import useFormatPrice from "@/hooks/useFormatPrice";
 import { useRouter } from "next/router";
 
 export type CheckoutFormState = {
+    ready: {
+        shipping: boolean;
+        user: boolean;
+    };
     user: "account" | "guest",
     email: string;
     shipping_details: {
@@ -49,17 +55,46 @@ export type CheckoutFormState = {
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
 const Checkout: NextPageWithProvider = () => {
     const router = useRouter();
-    const { data, subtotal, isEmpty } = useCart();
+    const { data, subtotal, isEmpty, loading } = useCart();
     const formatPrice = useFormatPrice("USD");
-    const [discount, setDiscount] = useState<{ code: string; value: number; } | undefined>();
-    const [final, setFinal] = useState<Partial<CheckoutFormState>>({});
+    const [discount, setDiscount] = useState<Array<{ name: string; catalogObjectId: string; scope: "ORDER" }>>([]);
+    const { data: order, isLoading, error } = useSWR(router.query.checkoutId || !loading ? [discount, data] : null, async ([code, items]) => {
+        const response = await fetch("/api/shop/order-calculate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                checkout_id: router.query.checkoutId,
+                location_id: "L730KS46N8B3Y",
+                order: items.map(value => ({
+                    name: value.name,
+                    catalogObjectId: value.option.id,
+                    quantity: value.quantity,
+                    basePriceMoney: {
+                        amount: value.price,
+                        currency: "USD"
+                    }
+                })),
+                discounts: code
+            })
+        });
+        if (!response.ok) throw response;
+        return response.json() as Promise<Order>;
+    });
+    const [final, setFinal] = useState<Partial<CheckoutFormState>>({
+        ready: {
+            shipping: false,
+            user: false
+        }
+    });
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     useEffect(() => {
-        if (!router.query.checkoutId || isEmpty) {
-            router.push("/shop/search");
+        if (!loading && (!router.query.checkoutId || isEmpty)) {
+            router.replace("/shop/search");
         }
-    }, []);
+    }, [loading]);
 
     return (
         <div className='flex flex-col h-full'>
@@ -81,7 +116,7 @@ const Checkout: NextPageWithProvider = () => {
                                     <Tab.Panels className="container max-w-5xl h-full">
                                         <CustomerInfo next={() => setSelectedIndex(1)} setGlobalState={setFinal} state={final} />
                                         <ShippingPanel next={setSelectedIndex} state={final} setGlobalState={setFinal} selected={selectedIndex} />
-                                        <BillingPanel discount={[discount, setDiscount]} next={setSelectedIndex} state={final} setGlobalState={setFinal} selected={selectedIndex} />
+                                        <BillingPanel netTotal={Number(order?.netAmountDueMoney?.amount)} discount={[discount, setDiscount]} next={setSelectedIndex} state={final} selected={selectedIndex} />
                                     </Tab.Panels>
                                 </div>
                             </Tab.Group>
@@ -91,7 +126,7 @@ const Checkout: NextPageWithProvider = () => {
                                 <h1 className="text-4xl font-bold">Cart</h1>
                                 <hr />
                                 {data.map((item, i) => (
-                                    <ShoppingCartItem key={i} data={item} editable={false} />
+                                    <ShoppingCartItem key={i} data={item} />
                                 ))}
                                 <hr />
                                 <ul className="pb-2">
@@ -99,22 +134,24 @@ const Checkout: NextPageWithProvider = () => {
                                         <span>Subtotal</span>
                                         <span>{formatPrice(subtotal)}</span>
                                     </li>
-                                    {discount ? (<li className="flex justify-between py-1">
-                                        <span>Discount</span>
-                                        <span>{formatPrice(discount.value)}</span>
-                                    </li>) : null}
+                                    {!!discount.length ? (
+                                        <li className="flex justify-between py-1">
+                                            <span>Discount</span>
+                                            <span>-{isLoading ? "Calculating..." : formatPrice(Number(order?.totalDiscountMoney?.amount))}</span>
+                                        </li>
+                                    ) : null}
                                     <li className="flex justify-between py-1">
                                         <span>Taxes</span>
-                                        <span>{formatPrice(100)}</span>
+                                        <span>{isLoading ? "Calculating..." : formatPrice(Number(order?.totalTaxMoney?.amount))}</span>
                                     </li>
                                     <li className="flex justify-between py-1">
                                         <span>Shipping</span>
-                                        <span>{formatPrice(100)}</span>
+                                        <span>{isLoading ? "Calculating..." : formatPrice(Number(order?.totalServiceChargeMoney?.amount))}</span>
                                     </li>
                                 </ul>
                                 <div className="flex justify-between border-t border-accent-2 py-3 mb-2">
                                     <span>Total</span>
-                                    <span>USD <span className="font-bold tracking-wide">{formatPrice(subtotal)}</span>
+                                    <span>USD <span className="font-bold tracking-wide">{isLoading ? "Calculating..." : formatPrice(Number(order?.netAmountDueMoney?.amount))}</span>
                                     </span>
                                 </div>
                             </div>

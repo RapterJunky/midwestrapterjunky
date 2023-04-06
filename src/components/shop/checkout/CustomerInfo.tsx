@@ -1,5 +1,5 @@
 import type { CheckoutFormState } from '@/pages/shop/checkout';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useForm, Controller } from 'react-hook-form';
 import { Tab, RadioGroup } from '@headlessui/react';
 import { HiCheck } from 'react-icons/hi';
@@ -13,7 +13,7 @@ type Props = {
 const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
     const session = useSession();
     const { handleSubmit, register, formState, watch, control } = useForm<CheckoutFormState>({
-        defaultValues: state
+        defaultValues: { user: "guest" } ?? state
     });
 
     const user = watch("user");
@@ -21,13 +21,19 @@ const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
     const handleRecipets = async (state: CheckoutFormState) => {
         if (state.user === "account") {
             state.email = session.data?.user.email!;
-
             // load other values
         }
 
-        setGlobalState({
-            user: state.user,
-            email: state.email
+        setGlobalState((current) => {
+            return {
+                ...current,
+                ready: {
+                    user: true,
+                    shipping: current.ready?.shipping ?? false
+                },
+                user: state.user,
+                email: state.email
+            }
         });
         next();
     }
@@ -39,7 +45,7 @@ const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
             <form onSubmit={handleSubmit(handleRecipets)} className="flex flex-col">
                 <Controller control={control} rules={{ required: "Please select a option." }} name="user" render={({ field, fieldState }) => (
                     <>
-                        <RadioGroup className="flex flex-col gap-2 w-full mb-2" value={field.value} onChange={field.onChange}>
+                        <RadioGroup className="flex flex-col gap-2 w-full mb-2 shadow-sm" value={field.value} onChange={field.onChange}>
                             <RadioGroup.Option value="account" className="border p-2 w-full">
                                 {({ checked }) => (
                                     <div className='flex items-center gap-4 w-full'>
@@ -84,7 +90,7 @@ const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
                     session.status === "loading" ? ("loading...") : session.status === "authenticated" ? (
                         <button className="mb-2 text-center block w-full rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">Continue as {session.data.user.name}</button>
                     ) : (
-                        <button className="mb-2 text-center block w-full rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="button">Register</button>
+                        <button onClick={() => signIn()} className="mb-2 text-center block w-full rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="button">Register</button>
                     )
                 }
 
