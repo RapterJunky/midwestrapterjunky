@@ -43,6 +43,7 @@ interface Props extends FullPageProps {
             ordinal: number;
             price: number;
             currency: string;
+            pricingType: string;
             itemOptionValues: any[] | null;
         }[]
     }
@@ -144,6 +145,7 @@ export const getStaticProps = async (
                 sku: itemVariationData?.sku ?? null,
                 ordinal: itemVariationData?.ordinal ?? 0,
                 price,
+                pricingType: itemVariationData?.pricingType!,
                 currency,
                 itemOptionValues: itemVariationData?.itemOptionValues ?? null
             });
@@ -195,6 +197,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
             quantity: state.quantity,
             currency: state.variation.currency,
             option: {
+                pricingType: state.variation.pricingType,
                 id: state.variation.id,
                 name: state.variation?.name ?? state.variation?.sku ?? ""
             }

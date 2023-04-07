@@ -4,55 +4,50 @@ import { serialize } from "superjson";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from 'zod';
 import { handleError } from "@/lib/api/errorHandler";
-import { logger } from "@/lib/logger";
 import { applyRateLimit } from "@/lib/api/rateLimiter";
+import getPricingForVarable from "@/lib/shop/getPricingForVarable";
 
 const schema = z.object({
-    location_id: z.string(),
+    location_id: z.string().nonempty(),
     customer_id: z.string().optional(),
-    source_id: z.string().min(1),
-    checkout_id: z.string().uuid().min(1).max(45),
-    order: z.array(z.object({
-        name: z.string().max(512),
+    source_id: z.string().min(1).nonempty(),
+    source_verification: z.string().min(1).nonempty(),
+    checkout_id: z.string().uuid().min(1).max(45).nonempty(),
+    items: z.array(z.object({
+        pricingType: z.string(),
         catalogObjectId: z.string().max(192),
-        quantity: z.coerce.string().max(12).min(1),
-        /*basePriceMoney: z.object({
-            amount: z.coerce.bigint(),
-            currency: z.string()
-        })*/
+        quantity: z.coerce.string().max(12).min(1).refine((arg) => arg !== "0", { message: "Quantity should not be 0" }),
     })).nonempty(),
     discounts: z.array(z.object({
         catalogObjectId: z.string(),
         scope: z.literal("ORDER")
     })),
-    details: z.object({
-        user: z.enum(["account", "guest"]),
-        email: z.string().email(),
-        shipping_details: z.object({
-            name: z.string().max(100),
+    email: z.string().email().max(255).nonempty(),
+    address: z.object({
+        billing_as_shipping: z.boolean(),
+        shipping: z.object({
+            firstname: z.string().max(100),
+            lastname: z.string().max(100),
             address_line1: z.string(),
             address_line2: z.string().optional(),
             country: z.string(),
             postal: z.string().max(20),
-            phone: z.string().max(30).regex(/[\d \-\+]+/).optional(),
+            phone: z.string().max(30).regex(/[\d \-\+]+/),
             city: z.string(),
             state: z.string(),
             comments: z.string().optional()
         }),
         billing: z.object({
-            billing_as_shipping: z.boolean(),
-            name: z.string().max(100),
-            address: z.object({
-                name: z.string().max(100),
-                address_line1: z.string(),
-                address_line2: z.string().optional(),
-                country: z.string(),
-                postal: z.string().max(20),
-                phone: z.string().max(30).regex(/[\d \-\+]+/).optional(),
-                city: z.string(),
-                state: z.string(),
-            }).optional()
-        })
+            firstname: z.string().max(100),
+            lastname: z.string().max(100),
+            address_line1: z.string(),
+            address_line2: z.string().optional(),
+            country: z.string(),
+            postal: z.string().max(20),
+            phone: z.string().max(30).regex(/[\d \-\+]+/),
+            city: z.string(),
+            state: z.string(),
+        }).optional()
     }),
 });
 
@@ -61,26 +56,66 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
         await applyRateLimit(req, res);
 
-        const order = schema.parse(req.body);
+        const { email, items, checkout_id, location_id, source_id, source_verification, customer_id, discounts, address } = schema.parse(req.body);
 
         const client = new Client({
             accessToken: process.env.SQAURE_ACCESS_TOKEN,
             environment: process.env.SQUARE_MODE as Environment
         });
 
+        const lineItems = await getPricingForVarable(client, items);
 
         const clientOrder = await client.ordersApi.createOrder({
-            idempotencyKey: order.checkout_id,
+            idempotencyKey: checkout_id,
             order: {
-                locationId: order.location_id,
-                customerId: order.customer_id,
-                discounts: order.discounts,
-                lineItems: order.order,
+                source: {
+                    name: "Website"
+                },
+                fulfillments: [
+                    {
+                        type: "SHIPMENT",
+                        shipmentDetails: {
+                            shippingNote: address.shipping?.comments,
+                            recipient: {
+                                displayName: `${address.shipping.firstname} ${address.shipping.lastname}`,
+                                emailAddress: email,
+                                phoneNumber: address.shipping.phone,
+                                address: {
+                                    addressLine1: address.shipping.address_line1,
+                                    addressLine2: address.shipping.address_line2,
+                                    country: address.shipping.country,
+                                    postalCode: address.shipping.postal,
+                                    firstName: address.shipping.firstname,
+                                    lastName: address.shipping.lastname,
+                                    locality: address.shipping.city,
+                                    administrativeDistrictLevel1: address.shipping.state
+                                }
+                            }
+                        }
+                    }
+                ],
+                customerId: customer_id,
+                locationId: location_id,
+                lineItems,
+                discounts: discounts,
                 serviceCharges: [
+                    {
+                        name: "Provider Charge Persent",
+                        percentage: "2.9",
+                        calculationPhase: "TOTAL_PHASE"
+                    },
                     {
                         name: "Shipping",
                         amountMoney: {
                             amount: BigInt(500),
+                            currency: "USD"
+                        },
+                        calculationPhase: "TOTAL_PHASE"
+                    },
+                    {
+                        name: "Provider Charge Flat",
+                        amountMoney: {
+                            amount: BigInt(30),
                             currency: "USD"
                         },
                         calculationPhase: "TOTAL_PHASE"
@@ -91,50 +126,52 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     autoApplyTaxes: true
                 }
             }
-
         });
 
-        if (!clientOrder.result.order || !clientOrder.result.order?.id) {
-            throw clientOrder.result.errors;
-        }
+        if (!clientOrder.result.order) throw createHttpError.InternalServerError("Failed to get order: 1");
+        const { netAmountDueMoney, id: orderId } = clientOrder.result.order;
+        if (!orderId || !netAmountDueMoney) throw createHttpError.InternalServerError("Failed to get order: 2");
 
         const payment = await client.paymentsApi.createPayment({
-            sourceId: order.source_id,
-            idempotencyKey: order.checkout_id,
-            amountMoney: clientOrder.result.order.netAmountDueMoney!,
-            customerId: order.customer_id,
-            locationId: order.location_id,
-            buyerEmailAddress: order.details.email,
+            idempotencyKey: checkout_id,
+            locationId: location_id,
+            customerId: customer_id,
+            sourceId: source_id,
+            verificationToken: source_verification,
+            orderId,
+            autocomplete: true,
+            amountMoney: netAmountDueMoney,
+            buyerEmailAddress: email,
             shippingAddress: {
-                addressLine1: order.details.shipping_details.address_line1,
-                addressLine2: order.details.shipping_details.address_line2,
-                locality: order.details.shipping_details.city,
-                administrativeDistrictLevel1: order.details.shipping_details.state,
-                postalCode: order.details.shipping_details.postal,
-                country: order.details.shipping_details.country,
-                firstName: order.details.shipping_details.name
+                addressLine1: address.shipping.address_line1,
+                addressLine2: address.shipping.address_line2,
+                country: address.shipping.country,
+                postalCode: address.shipping.postal,
+                firstName: address.shipping.firstname,
+                lastName: address.shipping.lastname,
+                locality: address.shipping.city,
+                administrativeDistrictLevel1: address.shipping.state
             },
             billingAddress: {
-                addressLine1: !order.details.billing.billing_as_shipping ? order.details.billing.address?.address_line1 : order.details.shipping_details.address_line1,
-                addressLine2: !order.details.billing.billing_as_shipping ? order.details.billing.address?.address_line2 : order.details.shipping_details.address_line2,
-                locality: !order.details.billing.billing_as_shipping ? order.details.billing.address?.city : order.details.shipping_details.city,
-                administrativeDistrictLevel1: !order.details.billing.billing_as_shipping ? order.details.billing.address?.state : order.details.shipping_details.state,
-                postalCode: !order.details.billing.billing_as_shipping ? order.details.billing.address?.postal : order.details.shipping_details.postal,
-                country: !order.details.billing.billing_as_shipping ? order.details.billing.address?.country : order.details.shipping_details.country,
-                firstName: !order.details.billing.billing_as_shipping ? order.details.billing.address?.name : order.details.shipping_details.name
+                addressLine1: address.billing_as_shipping ? address.shipping.address_line1 : address.billing?.address_line1!,
+                addressLine2: address.billing_as_shipping ? address.shipping.address_line2 : address.billing?.address_line2,
+                country: address.billing_as_shipping ? address.shipping.country : address.billing?.country,
+                postalCode: address.billing_as_shipping ? address.shipping.postal : address.billing?.postal,
+                firstName: address.billing_as_shipping ? address.shipping.firstname : address.billing?.firstname,
+                lastName: address.billing_as_shipping ? address.shipping.lastname : address.billing?.lastname,
+                locality: address.billing_as_shipping ? address.shipping.city : address.billing?.city,
+                administrativeDistrictLevel1: address.billing_as_shipping ? address.shipping.state : address.billing?.state
             }
         });
 
-
-        if ("errors" in payment.result) {
-
-        }
+        if (!payment.result.payment) throw createHttpError.InternalServerError("Failed to get payment data: 1");
+        const { receiptNumber, receiptUrl, totalMoney, status } = payment.result.payment;
 
         const data = {
-            receipt_number: payment.result.payment?.receiptNumber,
-            url: payment.result.payment?.receiptUrl,
-            total_money: payment.result.payment?.totalMoney,
-            status: payment.result.payment?.status
+            receiptNumber,
+            receiptUrl,
+            totalMoney,
+            status
         };
 
         const { json } = serialize(data);

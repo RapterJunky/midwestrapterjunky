@@ -1,24 +1,21 @@
 import createHttpError from "http-errors";
 import { Client, Environment } from "square";
 import { serialize } from "superjson";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from 'zod';
 import { handleError } from "@/lib/api/errorHandler";
 import { logger } from "@/lib/logger";
 import { applyRateLimit } from "@/lib/api/rateLimiter";
+import getPricingForVarable from "@/lib/shop/getPricingForVarable";
 
 const schema = z.object({
     checkout_id: z.string().uuid(),
     location_id: z.string(),
     customer_id: z.string().optional(),
     order: z.array(z.object({
-        name: z.string(),
         catalogObjectId: z.string(),
-        quantity: z.number().min(1).transform(value => value.toString()),
-        basePriceMoney: z.object({
-            amount: z.coerce.bigint(),
-            currency: z.string()
-        })
+        quantity: z.coerce.string().max(12).min(1).refine((arg) => arg !== "0", { message: "Quantity should not be 0" }),
+        pricingType: z.string(),
     })).nonempty(),
     discounts: z.array(z.object({
         catalogObjectId: z.string(),
@@ -37,18 +34,33 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             environment: process.env.SQUARE_MODE as Environment
         });
 
+        const lineItems = await getPricingForVarable(client, order);
+
         const response = await client.ordersApi.calculateOrder({
             order: {
                 locationId: location_id,
                 referenceId: checkout_id,
                 customerId: customer_id,
-                lineItems: order,
+                lineItems,
                 discounts,
                 serviceCharges: [
+                    {
+                        name: "Provider Charge Persent",
+                        percentage: "2.9",
+                        calculationPhase: "TOTAL_PHASE"
+                    },
                     {
                         name: "Shipping",
                         amountMoney: {
                             amount: BigInt(500),
+                            currency: "USD"
+                        },
+                        calculationPhase: "TOTAL_PHASE"
+                    },
+                    {
+                        name: "Provider Charge Flat",
+                        amountMoney: {
+                            amount: BigInt(30),
                             currency: "USD"
                         },
                         calculationPhase: "TOTAL_PHASE"

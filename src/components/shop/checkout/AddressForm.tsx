@@ -1,31 +1,34 @@
 import type { UseFormRegister, FieldPath, FieldErrors, FieldError } from 'react-hook-form';
-import type { CheckoutFormState } from '@/pages/shop/checkout';
-import { capitlize } from '@/lib/utils/capitlize';
+import type { CheckoutState } from '@/pages/shop/checkout';
+import { capitlize } from '@lib/utils/capitlize';
 import get from '@lib/utils/get';
 
-export type UseFormValues = FieldPath<CheckoutFormState>;
+export type UseFormValues = FieldPath<CheckoutState>;
 
 type Props = {
-    register: UseFormRegister<CheckoutFormState>;
-    disabled: boolean;
-    errors: FieldErrors<CheckoutFormState>,
+    register: UseFormRegister<CheckoutState>;
+    disabled?: boolean;
+    errors: FieldErrors<CheckoutState>,
     ids: {
-        name: UseFormValues,
         address1: UseFormValues,
         address2: UseFormValues,
         city: UseFormValues,
         country: UseFormValues,
         state: UseFormValues,
         postal: UseFormValues,
+        firstname: UseFormValues,
+        lastname: UseFormValues,
         phone: UseFormValues,
-        notes?: UseFormValues
+        notes?: UseFormValues,
     }
     name: string;
 }
 
-const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors }) => {
+//https://web.dev/payment-and-address-form-best-practices/#html-elements
+const AddressForm: React.FC<Props> = ({ ids, name, disabled = false, register, errors }) => {
 
-    const nameError = get(errors, ids.name) as FieldError | undefined;
+    const firstnameError = get(errors, ids.firstname) as FieldError | undefined;
+    const lastnameError = get(errors, ids.lastname) as FieldError | undefined;
     const address1Error = get(errors, ids.address1) as FieldError | undefined;
     const cityError = get(errors, ids.city) as FieldError | undefined;
     const countryError = get(errors, ids.country) as FieldError | undefined;
@@ -40,33 +43,62 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors })
                 <h1 className="font-semibold mb-1 text-3xl">{capitlize(name)} Address</h1>
                 <hr className='w-full' />
             </div>
-            <div className='w-full mb-4'>
-                <label htmlFor={`${name}-fullname`} className="text-gray-700">
-                    Full Name
-                </label>
-                <input required {...register(ids.name, { disabled, required: "A name is required.", maxLength: { message: "Max length is 100 characters.", value: 100 } })} autoComplete="name" id={`${name}-fullname`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='John Doe' />
-                {nameError ? (<span className="text-red-500 mt-1 block">{nameError.message}</span>) : null}
+            <div className="flex gap-2">
+                <div className='w-full mb-4'>
+                    <label htmlFor={`${name}-firstname`} className="text-gray-700">
+                        First Name
+                    </label>
+                    <input {...register(ids.firstname, {
+                        disabled,
+                        required: "A name is required.",
+                        maxLength: {
+                            message: "Max length is 100 characters.",
+                            value: 100
+                        }
+                    })} maxLength={100} required autoComplete="given-name" id={`${name}-firstname`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='John Doe' />
+                    {firstnameError ? (<span className="text-red-500 mt-1 block">{firstnameError.message}</span>) : null}
+                </div>
+                <div className='w-full mb-4'>
+                    <label htmlFor={`${name}-lastname`} className="text-gray-700">
+                        Last Name
+                    </label>
+                    <input {...register(ids.lastname, {
+                        disabled,
+                        required: "A name is required.",
+                        maxLength: {
+                            message: "Max length is 100 characters.",
+                            value: 100
+                        }
+                    })} maxLength={100} required autoComplete="family-name" id={`${name}-lastname`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='John Doe' />
+                    {lastnameError ? (<span className="text-red-500 mt-1 block">{lastnameError.message}</span>) : null}
+                </div>
             </div>
             <div>
                 <div className="mb-4">
                     <label htmlFor={`${name}-address1`}>
                         <span className="text-gray-700">Address line 1 (or company name)</span>
                     </label>
-                    <input required {...register(ids.address1, { disabled, required: "An address is required." })} autoComplete="address-line-1" id={`${name}-address1`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='542 W. 15th Street' />
+                    <input {...register(ids.address1, {
+                        disabled,
+                        required: "An address is required."
+                    })} required autoComplete={`${name} address-line-1`} id={`${name}-address1`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='542 W. 15th Street' />
                     {address1Error ? (<span className="text-red-500 mt-1 block">{address1Error.message}</span>) : null}
                 </div>
                 <div className="mb-4">
                     <label htmlFor={`${name}-address2`}>
                         <span className="text-gray-700">Address line 2 (optional)</span>
                     </label>
-                    <input {...register(ids.address2)} autoComplete="address-line-2" id={`${name}-address2`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='Apt. (optional)' />
+                    <input {...register(ids.address2)} autoComplete={`${name} address-line-2`} id={`${name}-address2`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='Apt. (optional)' />
                 </div>
             </div>
             <div className="mb-4">
                 <label htmlFor={`${name}-city`}>
                     <span className="text-gray-700">City</span>
                 </label>
-                <input required {...register(ids.city, { required: "A city is required.", disabled })} autoComplete='city' id={`${name}-city`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='city' />
+                <input {...register(ids.city, {
+                    disabled,
+                    required: "A city is required."
+                })} required autoComplete='city' id={`${name}-city`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='city' />
                 {cityError ? (<span className="text-red-500 mt-1 block">{cityError.message}</span>) : null}
             </div>
             <div className="flex gap-2">
@@ -74,7 +106,10 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors })
                     <label htmlFor={`${name}-country`}>
                         <span className="text-gray-700">Country or region</span>
                     </label>
-                    <select required defaultValue="US" {...register(ids.country, { required: "Please select a country.", disabled })} id={`${name}-country`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" autoComplete="country" placeholder='New York' enterKeyHint="done">
+                    <select required defaultValue="US" {...register(ids.country, {
+                        disabled,
+                        required: "Please select a country."
+                    })} id={`${name}-country`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" autoComplete="country" placeholder='New York' enterKeyHint="done">
                         <option value="" disabled>Country</option>
                         <option value="AF">Afghanistan</option>
                         <option value="AX">Åland Islands</option>
@@ -332,7 +367,10 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors })
                     <label htmlFor={`${name}-state`}>
                         <span className="text-gray-700">State</span>
                     </label>
-                    <select enterKeyHint="done" required {...register(ids.state, { required: "Please select a state.", disabled })} id={`${name}-state`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <select {...register(ids.state, {
+                        disabled,
+                        required: "Please select a state."
+                    })} required id={`${name}-state`} enterKeyHint="done" className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <option value="" disabled>State</option>
                         <option value="AL" label="Alabama">Alabama</option>
                         <option value="AK" label="Alaska">Alaska</option>
@@ -403,26 +441,33 @@ const AddressForm: React.FC<Props> = ({ ids, name, disabled, register, errors })
                     <label htmlFor={`${name}-postal`}>
                         <span className="text-gray-700">Zip / Postal Code</span>
                     </label>
-                    <input required {...register(ids.postal, { disabled, maxLength: { value: 20, message: "Max length is 20 characters." }, required: "Please enter a postal code" })} autoComplete="postal-code" id={`${name}-postal`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='10001' />
+                    <input {...register(ids.postal, {
+                        disabled,
+                        required: "Please enter a postal code",
+                        maxLength: {
+                            value: 20,
+                            message: "Max length is 20 characters."
+                        }
+                    })} maxLength={20} required autoComplete="postal-code" id={`${name}-postal`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" placeholder='10001' />
                     {postalError ? (<span className="text-red-500 mt-1 block">{postalError.message}</span>) : null}
                 </div>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-full">
                 <label htmlFor={`${name}-phone`}>
-                    <span className="text-gray-700">Phone (optonal)</span>
+                    <span className="text-gray-700">Phone</span>
                 </label>
-                <input inputMode="numeric" {...register(ids.phone, {
+                <input {...register(ids.phone, {
                     disabled,
-                    required: false,
+                    required: "Please enter a phone number",
                     pattern: {
                         value: /[\d \-\+]+/,
-                        message: "Please only enter numbers."
+                        message: "",
                     },
                     maxLength: {
                         value: 30,
                         message: "Max length is 30 characters."
                     }
-                })} autoComplete='tel' id={`${name}-phone`} type="tel" className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder='+1 855 555 6502' />
+                })} pattern='[\d \-\+]+' maxLength={30} required autoComplete="tel" id={`${name}-phone`} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="tel" placeholder='+1 321 456 3987' />
                 {phoneError ? (<span className="text-red-500 mt-1 block">{phoneError.message}</span>) : null}
             </div>
             {ids.notes ? (

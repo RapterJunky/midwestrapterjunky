@@ -7,6 +7,7 @@ export type CartItem = {
     option: {
         id: string;
         name: string;
+        pricingType: string;
     }
     image: {
         url: string;

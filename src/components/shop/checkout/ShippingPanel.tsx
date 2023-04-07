@@ -1,33 +1,23 @@
 import { Tab } from "@headlessui/react";
 import AddressForm from "./AddressForm";
 import { useForm } from "react-hook-form";
-import type { CheckoutFormState } from "@/pages/shop/checkout";
+import type { CheckoutState, CheckoutAction } from "@/pages/shop/checkout";
 import { HiChevronLeft } from "react-icons/hi";
 
 type Props = {
     next: React.Dispatch<React.SetStateAction<number>>,
-    selected: number;
-    setGlobalState: React.Dispatch<React.SetStateAction<Partial<CheckoutFormState>>>,
-    state: Partial<CheckoutFormState>
+    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>]
 }
 
-const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state }) => {
-    const { handleSubmit, register, formState: { errors } } = useForm<CheckoutFormState>({
-        defaultValues: state
+const ShippingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch] }) => {
+    const { handleSubmit, register, formState: { errors } } = useForm<CheckoutState>({
+        defaultValues: checkoutState
     });
 
-    const handleShipping = async (state: CheckoutFormState) => {
+    const handleShipping = async (state: CheckoutState) => {
 
-        setGlobalState((current) => {
-            return {
-                ...current,
-                ready: {
-                    shipping: true,
-                    user: current.ready?.user ?? false
-                },
-                shipping_details: state.shipping_details
-            }
-        });
+        dispatch({ type: "setCompleted", payload: { type: "shipping", value: true } });
+        dispatch({ type: "setAddressShipping", payload: state.address.shipping });
 
         next(2);
     }
@@ -35,16 +25,17 @@ const ShippingPanel: React.FC<Props> = ({ selected, next, setGlobalState, state 
     return (
         <Tab.Panel>
             <form onSubmit={handleSubmit(handleShipping)}>
-                <AddressForm errors={errors} disabled={false} name="shipping" register={register} ids={{
-                    name: "shipping_details.name",
-                    address1: "shipping_details.address_line1",
-                    address2: "shipping_details.address_line2",
-                    city: "shipping_details.city",
-                    country: "shipping_details.country",
-                    phone: "shipping_details.phone",
-                    state: "shipping_details.state",
-                    postal: "shipping_details.postal",
-                    notes: "shipping_details.comments"
+                <AddressForm errors={errors} name="shipping" register={register} ids={{
+                    firstname: "address.shipping.firstname",
+                    lastname: "address.shipping.lastname",
+                    address1: "address.shipping.address_line1",
+                    address2: "address.shipping.address_line2",
+                    city: "address.shipping.city",
+                    country: "address.shipping.country",
+                    state: "address.shipping.state",
+                    postal: "address.shipping.postal",
+                    phone: "address.shipping.phone",
+                    notes: "address.shipping.comments"
                 }} />
                 <div className="flex justify-between items-center">
                     <button onClick={() => next(0)} type="button" className="flex justify-center items-center text-primary">

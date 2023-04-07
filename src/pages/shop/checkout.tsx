@@ -1,6 +1,5 @@
-import type { TokenDetails } from "@square/web-payments-sdk-types";
 import type { Order } from "square";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { Tab } from '@headlessui/react';
 import Script from 'next/script';
 import useSWR from 'swr';
@@ -15,50 +14,100 @@ import ShoppingCartItem from "@/components/shop/ShoppingCartItem";
 import useFormatPrice from "@/hooks/useFormatPrice";
 import { useRouter } from "next/router";
 
-export type CheckoutFormState = {
-    ready: {
+export type Address = {
+    firstname: string;
+    lastname: string;
+    address_line1: string;
+    address_line2: string;
+    country: string;
+    postal: string;
+    phone: string;
+    city: string;
+    state: string;
+    comments?: string;
+};
+
+export type CheckoutAction = "removeDiscount" | "addDiscount" | "setUserEmail" | "setAddressShipping" | "setUserType" | "setCompleted";
+export type CheckoutState = {
+    completed: {
         shipping: boolean;
         user: boolean;
     };
     user: "account" | "guest",
-    email: string;
-    shipping_details: {
-        name: string;
-        address_line1: string;
-        address_line2: string;
-        country: string;
-        postal: number;
-        phone: string;
-        city: string;
-        state: string;
-        comments?: string
-    },
-    billing: {
-        name: string;
-        token: string;
+    email?: string;
+    discounts: Array<{ name: string; catalogObjectId: string; scope: "ORDER" }>,
+    address: {
         billing_as_shipping: boolean;
-        details: TokenDetails | undefined;
-        address: {
-            name: string;
-            address_line1: string;
-            address_line2: string;
-            country: string;
-            postal: number;
-            phone: string;
-            city: string;
-            state: string;
-        } | undefined;
+        shipping?: Address;
+        billing?: Address;
     }
 };
+
+const checkoutReducer = (state: CheckoutState, action: { type: CheckoutAction, payload: any }): CheckoutState => {
+    switch (action.type) {
+        case "addDiscount":
+            return {
+                ...state,
+                discounts: [action.payload, ...state.discounts]
+            }
+        case "removeDiscount": {
+            return {
+                ...state,
+                discounts: state.discounts.filter(value => value.catalogObjectId !== action.payload)
+            }
+        }
+        case "setAddressShipping":
+            return {
+                ...state,
+                address: {
+                    ...state.address,
+                    shipping: action.payload
+                }
+            }
+        case "setCompleted":
+            const completed = {
+                ...state.completed
+            }
+            completed[action.payload.type as keyof CheckoutState["completed"]] = action.payload.value;
+            return {
+                ...state,
+                completed,
+            }
+        case "setUserEmail":
+            return {
+                email: action.payload,
+                ...state
+            }
+        case "setUserType":
+            return {
+                ...state,
+                user: action.payload
+            }
+        default:
+            return state;
+    }
+}
 
 //https://bootsnipp.com/snippets/ypqoW
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
 const Checkout: NextPageWithProvider = () => {
+    const [checkoutState, dispatch] = useReducer(checkoutReducer, {
+        completed: {
+            shipping: false,
+            user: false
+        },
+        user: "guest",
+        address: {
+            billing_as_shipping: true
+        },
+        discounts: []
+    });
+
+
     const router = useRouter();
     const { data, subtotal, isEmpty, loading } = useCart();
     const formatPrice = useFormatPrice("USD");
-    const [discount, setDiscount] = useState<Array<{ name: string; catalogObjectId: string; scope: "ORDER" }>>([]);
-    const { data: order, isLoading, error } = useSWR(router.query.checkoutId || !loading ? [discount, data] : null, async ([code, items]) => {
+    const { data: order, isLoading, error } = useSWR(router.query.checkoutId || !loading ? [checkoutState.discounts, data] : null, async ([code, items]) => {
         const response = await fetch("/api/shop/order-calculate", {
             method: "POST",
             headers: {
@@ -68,13 +117,9 @@ const Checkout: NextPageWithProvider = () => {
                 checkout_id: router.query.checkoutId,
                 location_id: "L730KS46N8B3Y",
                 order: items.map(value => ({
-                    name: value.name,
                     catalogObjectId: value.option.id,
                     quantity: value.quantity,
-                    basePriceMoney: {
-                        amount: value.price,
-                        currency: "USD"
-                    }
+                    pricingType: value.option.pricingType,
                 })),
                 discounts: code
             })
@@ -82,12 +127,7 @@ const Checkout: NextPageWithProvider = () => {
         if (!response.ok) throw response;
         return response.json() as Promise<Order>;
     });
-    const [final, setFinal] = useState<Partial<CheckoutFormState>>({
-        ready: {
-            shipping: false,
-            user: false
-        }
-    });
+
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     useEffect(() => {
@@ -114,9 +154,9 @@ const Checkout: NextPageWithProvider = () => {
                                 </div>
                                 <div className="mt-4 flex justify-center h-full">
                                     <Tab.Panels className="container max-w-5xl h-full">
-                                        <CustomerInfo next={() => setSelectedIndex(1)} setGlobalState={setFinal} state={final} />
-                                        <ShippingPanel next={setSelectedIndex} state={final} setGlobalState={setFinal} selected={selectedIndex} />
-                                        <BillingPanel netTotal={Number(order?.netAmountDueMoney?.amount)} discount={[discount, setDiscount]} next={setSelectedIndex} state={final} selected={selectedIndex} />
+                                        <CustomerInfo next={() => setSelectedIndex(1)} checkout={[checkoutState, dispatch]} />
+                                        <ShippingPanel next={setSelectedIndex} checkout={[checkoutState, dispatch]} />
+                                        <BillingPanel netTotal={Number(order?.netAmountDueMoney?.amount)} checkout={[checkoutState, dispatch]} next={setSelectedIndex} selected={selectedIndex} />
                                     </Tab.Panels>
                                 </div>
                             </Tab.Group>
@@ -134,7 +174,7 @@ const Checkout: NextPageWithProvider = () => {
                                         <span>Subtotal</span>
                                         <span>{formatPrice(subtotal)}</span>
                                     </li>
-                                    {!!discount.length ? (
+                                    {!!checkoutState.discounts.length ? (
                                         <li className="flex justify-between py-1">
                                             <span>Discount</span>
                                             <span>-{isLoading ? "Calculating..." : formatPrice(Number(order?.totalDiscountMoney?.amount))}</span>
@@ -145,7 +185,7 @@ const Checkout: NextPageWithProvider = () => {
                                         <span>{isLoading ? "Calculating..." : formatPrice(Number(order?.totalTaxMoney?.amount))}</span>
                                     </li>
                                     <li className="flex justify-between py-1">
-                                        <span>Shipping</span>
+                                        <span>Service Charges</span>
                                         <span>{isLoading ? "Calculating..." : formatPrice(Number(order?.totalServiceChargeMoney?.amount))}</span>
                                     </li>
                                 </ul>

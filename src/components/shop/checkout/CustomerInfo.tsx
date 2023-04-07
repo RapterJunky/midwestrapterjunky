@@ -1,4 +1,4 @@
-import type { CheckoutFormState } from '@/pages/shop/checkout';
+import type { CheckoutState, CheckoutAction } from '@/pages/shop/checkout';
 import { signIn, useSession } from 'next-auth/react';
 import { useForm, Controller } from 'react-hook-form';
 import { Tab, RadioGroup } from '@headlessui/react';
@@ -6,35 +6,26 @@ import { HiCheck } from 'react-icons/hi';
 
 type Props = {
     next: () => void,
-    setGlobalState: React.Dispatch<React.SetStateAction<Partial<CheckoutFormState>>>,
-    state: Partial<CheckoutFormState>
+    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>]
 }
 
-const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
+const CustomerInfo: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch] }) => {
     const session = useSession();
-    const { handleSubmit, register, formState, watch, control } = useForm<CheckoutFormState>({
-        defaultValues: { user: "guest" } ?? state
+    const { handleSubmit, register, formState, watch, control } = useForm<CheckoutState>({
+        defaultValues: checkoutState
     });
 
     const user = watch("user");
 
-    const handleRecipets = async (state: CheckoutFormState) => {
+    const handleRecipets = async (state: CheckoutState) => {
         if (state.user === "account") {
             state.email = session.data?.user.email!;
-            // load other values
         }
 
-        setGlobalState((current) => {
-            return {
-                ...current,
-                ready: {
-                    user: true,
-                    shipping: current.ready?.shipping ?? false
-                },
-                user: state.user,
-                email: state.email
-            }
-        });
+        dispatch({ type: "setCompleted", payload: { type: "user", value: true } });
+        dispatch({ type: "setUserType", payload: state.user });
+        dispatch({ type: "setUserEmail", payload: state.email });
+
         next();
     }
 
@@ -46,7 +37,7 @@ const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
                 <Controller control={control} rules={{ required: "Please select a option." }} name="user" render={({ field, fieldState }) => (
                     <>
                         <RadioGroup className="flex flex-col gap-2 w-full mb-2 shadow-sm" value={field.value} onChange={field.onChange}>
-                            <RadioGroup.Option value="account" className="border p-2 w-full">
+                            <RadioGroup.Option value="account" className="border p-2 w-full cursor-pointer hover:shadow">
                                 {({ checked }) => (
                                     <div className='flex items-center gap-4 w-full'>
                                         <div>
@@ -58,7 +49,7 @@ const CustomerInfo: React.FC<Props> = ({ next, setGlobalState, state }) => {
                                     </div>
                                 )}
                             </RadioGroup.Option>
-                            <RadioGroup.Option value="guest" className="border p-2 w-full">
+                            <RadioGroup.Option value="guest" className="border p-2 w-full cursor-pointer hover:shadow">
                                 {({ checked }) => (
                                     <div className='flex items-center gap-4 w-full'>
                                         <div>
