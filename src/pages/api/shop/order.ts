@@ -1,11 +1,12 @@
 import createHttpError from "http-errors";
-import { Client, Environment } from "square";
+import { Client, Environment, ApiError } from "square";
 import { serialize } from "superjson";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from 'zod';
 import { handleError } from "@/lib/api/errorHandler";
 import { applyRateLimit } from "@/lib/api/rateLimiter";
 import getPricingForVarable from "@/lib/shop/getPricingForVarable";
+import { logger } from "@/lib/logger";
 
 const schema = z.object({
     location_id: z.string().nonempty(),
@@ -126,6 +127,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     autoApplyTaxes: true
                 }
             }
+        }).catch(e => {
+            // instanceof does not seem to work, so flag this a type of `ApiError`
+            e.isSqaureError = true;
+            throw e;
         });
 
         if (!clientOrder.result.order) throw createHttpError.InternalServerError("Failed to get order: 1");
@@ -162,9 +167,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 locality: address.billing_as_shipping ? address.shipping.city : address.billing?.city,
                 administrativeDistrictLevel1: address.billing_as_shipping ? address.shipping.state : address.billing?.state
             }
+        }).catch(async e => {
+            e.isSqaureError = true;
+            throw e;
         });
 
-        if (!payment.result.payment) throw createHttpError.InternalServerError("Failed to get payment data: 1");
+        if (!payment || !payment.result.payment) throw createHttpError.InternalServerError("Failed to get payment data: 1");
         const { receiptNumber, receiptUrl, totalMoney, status } = payment.result.payment;
 
         const data = {
@@ -178,6 +186,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
         return res.status(200).json(json);
     } catch (error) {
+        if (error instanceof ApiError || "isSqaureError" in (error as ApiError)) {
+            logger.error(error, "Sqaure ApiError");
+            return res.status((error as ApiError).statusCode).json({ message: (error as ApiError).message, details: (error as ApiError).errors });
+        }
         handleError(error, res);
     }
 }

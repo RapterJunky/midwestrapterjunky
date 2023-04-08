@@ -1,42 +1,189 @@
+import { Dialog, Transition } from '@headlessui/react'
+import { HiChevronLeft } from "react-icons/hi";
 import { useForm } from "react-hook-form";
-import { Tab } from "@headlessui/react";
-import { useRef, useState } from 'react';
-
-import type { CheckoutState, CheckoutAction, Address } from "@/pages/shop/checkout";
-import AddressForm from "./AddressForm";
-import { HiChevronLeft, HiX } from "react-icons/hi";
-import useFormatPrice from "@/hooks/useFormatPrice";
-import useCart from "@/hooks/useCart";
 import { useRouter } from "next/router";
-import SquareCardForm from "./SquareCardForm";
+
+import type { CheckoutState, CheckoutAction } from "@/pages/shop/checkout";
+import AddressForm from "./AddressForm";
+import useFormatPrice from "@hook/useFormatPrice";
+import useCart from "@hook/useCart";
 import DiscountForm from "./DiscountForm";
+import useSquareSDK from "@hook/useSquareSDK";
+import { useState, Fragment } from 'react';
+import CheckoutModal from './CheckoutModal';
 
 type Props = {
     next: React.Dispatch<React.SetStateAction<number>>,
     selected: number;
     netTotal: number,
-    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>]
+    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>],
+    active: boolean
 }
+
+const errorResponses = {
+    "ADDRESS_VERIFICATION_FAILURE": {
+        message: "The card issuer declined the request because the postal code is invaild.",
+        type: "user"
+    },
+    "CARDHOLDER_INSUFFICIENT_PERMISSIONS": {
+        message: "The card issuer has declined the transaction due to restrictions on where the card can be used.",
+        type: "user"
+    },
+    "CARD_EXPIRED": {
+        message: "The card issuer declned the request because the card is expired.",
+        type: "user"
+    },
+    "CARD_NOT_SUPPORTED": {
+        message: "The card is not supported either in the geographic region or by the MCC.",
+        type: "user"
+    },
+    "CVV_FAILURE": {
+        message: "The card issuer declined the request because the CVV value is invaild.",
+        type: "user"
+    },
+    "EXPIRATION_FAILURE": {
+        message: "The card issuer declined the request because the CVV value is invaild.",
+        type: "user"
+    },
+    "GENERIC_DECLINE": {
+        message: "The card was declined.",
+        type: "user"
+    },
+    "INSUFFICIENT_FUNDS": {
+        message: "Insufficient Funds",
+        type: "user"
+    },
+    "INVALID_ACCOUNT": {
+        message: "The issuer was not able to locate the account on record",
+        type: "user"
+    },
+    "INVALID_CARD": {
+        message: "The credit card cannot be validated based on the provided details.",
+        type: "user"
+    },
+    "INVALID_CARD_DATA": {
+        message: "The provided card data is invaild.",
+        type: "user"
+    },
+    "INVALID_EXPIRATION": {
+        message: "The expiration date for the payment card is invaild.",
+        type: "user"
+    },
+    "INVALID_PIN": {
+        message: "The card issuer declined the request because the PIN is invaild.",
+        type: "user"
+    },
+    "INVALID_POSTAL_CODE": {
+        message: "The postal code is incorrectyl formatted.",
+        type: "user"
+    },
+    "PAN_FAILURE": {
+        message: "The specified card number is invaild.",
+        type: "user"
+    },
+    "TRANSACTION_LIMIT": {
+        message: "The card issuer has determined the payment amount is either too hight or too low.",
+        type: "user"
+    },
+    "VOICE_FAILURE": {
+        message: "The card issuer declined the request because the issuer requires voice authorization from cardholder.",
+        type: "user"
+    },
+    "ALLOWABLE_PIN_TRIES_EXCEEDED": {
+        message: "The card has exhausted its available pin entry retries set by the card issuer.",
+        type: "user"
+    },
+    "BAD_EXPIRATION": {
+        message: "The card expiration date is either missing or incorrectyl formatted.",
+        type: "user"
+    },
+    "CARD_DECLINED_VERIFICATION_REQUIRED": {
+        message: "The payment card was declined with a request for additional verification.",
+        type: "user"
+    },
+    "INVALID_EMAIL_ADDRESS": {
+        message: "The provider email address is invaild",
+        type: "user-other"
+    },
+    "PAYMENT_LIMIT_EXCEEDED": {
+        message: "The payment was declined because the payment amount execeeded the processing limit for this merchant.",
+        type: "service"
+    },
+    "MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED": {
+        message: "The card must be swiped, tapped or dipped.",
+        type: "retry"
+    },
+    "IDEMPOTENCY_KEY_REUSED": {
+        message: "There was an temporary internal error. Please try again.",
+        type: "retry"
+    },
+    "TEMPORARY_ERROR": {
+        message: "There was an temporary internal error. Please try again.",
+        type: "retry"
+    },
+    "CARD_TOKEN_EXPIRED": {
+        message: "Please try again. Checkout was expired.",
+        type: "retry"
+    },
+    "CHIP_INSERTION_REQUIRED": {
+        message: "The card issuer requires that the card be read using a chip reader.",
+        type: "retry"
+    },
+    "GIFT_CARD_AVAILABLE_AMOUNT": {
+        message: "Cannot take partial payment with a tip with a gift card.",
+        type: "retry"
+    },
+    "CARD_TOKEN_USED": {
+        message: "The payment was already processed.",
+        type: "exit"
+    },
+    "INSUFFICIENT_PERMISSIONS": {
+        message: "The payment processer does not have permissions to accept this payment.",
+        type: "exit"
+    },
+    "INVALID_FEES": {
+        message: "Unable to process payment.",
+        type: "exit"
+    },
+    "INVALID_LOCATION": {
+        message: "Can not take payments from the specified region.",
+        type: "exit"
+    },
+    "PAYMENT_AMOUNT_MISMATCH": {
+        message: "The payment was declined because there was a payment amount mismatch.",
+        type: "exit"
+    },
+    "CARD_PROCESSING_NOT_ENABLED": {
+        message: "Unable to be processed due to card processing not being enabled.",
+        type: "exit"
+    },
+};
+
 
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
 //https://web.dev/payment-and-address-form-best-practices/#html-elements
 //https://developer.squareup.com/docs/devtools/sandbox/payments
-const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch], netTotal }) => {
-    const paymentHandle = useRef<{ loading: () => boolean, tokenize: (email: string, billing: Address, amount: number, currencyCode: string) => Promise<{ token: string; verificationToken: string; }>; }>();
+const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch], netTotal, active }) => {
     const { handleSubmit, register, watch, formState: { errors, isSubmitting, isValidating } } = useForm<CheckoutState>({
         defaultValues: checkoutState
     });
     const sameShpppingAddress = watch("address.billing_as_shipping");
+    const { tokenize, container, loading, error, setError } = useSquareSDK(active);
     const formatPrice = useFormatPrice("USD");
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalData, setModalData] = useState<{ message: string; type: string; }>({ message: "An error occured when trying to process the payment.", type: "service" });
     const router = useRouter();
     const { data } = useCart();
 
     const handleBilling = async (formState: CheckoutState) => {
         try {
-            if (!paymentHandle.current) throw new Error("Payment service is not set!");
+            setError(undefined);
+            if (loading) throw new Error("Payment service is not set!");
             if (!checkoutState.email || !checkoutState.completed.shipping || !router.query.checkoutId) throw new Error("Misssing form values");
 
-            const { verificationToken, token } = await paymentHandle.current.tokenize(
+            setIsOpen(true);
+
+            const { sourceVerification, source } = await tokenize(
                 checkoutState.email,
                 formState.address.billing_as_shipping ? checkoutState.address.shipping! : formState.address.billing!,
                 netTotal,
@@ -49,9 +196,9 @@ const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    source_verification: verificationToken,
+                    source_verification: sourceVerification,
                     location_id: "L730KS46N8B3Y",
-                    source_id: token,
+                    source_id: source,
                     checkout_id: router.query.checkoutId,
                     items: data.map((item => ({
                         pricingType: item.option.pricingType,
@@ -69,26 +216,70 @@ const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
             });
 
             if (!response.ok) {
+                const errors = await response.json() as { message: string; details: [{ code: string; detail: string; category: string; }] }
+
+                const error = errorResponses[errors.details[0].code as keyof typeof errorResponses] ?? { message: "An error occured when trying to process.", type: "service" };
+
+                switch (error.type) {
+                    case "exit":
+                        break;
+                    case "user":
+                        container.current?.focus();
+                        setError(error.message);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (error.type !== "exit") router.push({
+                    pathname: "/shop/checkout",
+                    query: {
+                        checkoutId: crypto.randomUUID()
+                    }
+                }, undefined, { shallow: true });
+
+                setModalData(error);
+
                 throw response;
             }
 
             const result = await response.json() as { receiptNumber: string; receiptUrl: string; totalMoney: { amount: string; currency: string; }, status: string; };
             window.localStorage.removeItem("cart");
-            router.replace(`/shop/search?receiptNumber=${result.receiptNumber}`);
+
+            router.replace(result.receiptUrl);
         } catch (error) {
             console.error(error);
+            if (error instanceof Response) return;
+            setModalData({ type: "retry", message: "There was an error. Please try again." })
         }
     }
 
     return (
-        <Tab.Panel className="flex flex-col justify-center items-center">
+        <div id="tab-3" role="tabpanel" aria-labelledby="tab-btn-3" tabIndex={2} data-headlessui-state={active ? "selected" : undefined} className={`${active ? "flex" : "hidden"} flex-col justify-center items-center`}>
+            <CheckoutModal asLoading={isSubmitting} isOpen={isOpen} setIsOpen={setIsOpen} message={modalData.message} type={modalData.type} />
             <form className='w-full' onSubmit={handleSubmit(handleBilling)}>
                 <section>
                     <div className='mb-4'>
                         <h1 className="font-semibold mb-1 text-3xl">Billing</h1>
                         <hr className='w-full' />
                     </div>
-                    <SquareCardForm ref={paymentHandle} />
+
+                    <div className="w-full">
+                        <label className="text-gray-700" htmlFor="card-container">Card Details</label>
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center h-36 lg:h-[93px]">
+                                <div
+                                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                                    role="status">
+                                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]" >Loading...</span>
+                                </div>
+                                <span className="text-xs mt-2 block">Loading payment service.</span>
+                            </div>
+                        ) : null}
+                        <div className="shadow-square-input mt-1" id="card-container" ref={container} />
+                        {error ? <div className="text-red-500 w-full text-center p-2">{error}</div> : null}
+                    </div>
+
                     <div className="block">
                         <div className="my-2">
                             <div>
@@ -133,16 +324,15 @@ const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
                 {(!checkoutState.completed.shipping || !checkoutState.completed.user) ? (
                     <div className="text-red-500 my-2 p-1">Please complete Shipping and Customer information forms to finalize order.</div>
                 ) : null}
-                {paymentHandle.current?.loading()}
                 <div className="flex justify-between items-center">
                     <button onClick={() => next(1)} type="button" className="flex justify-center items-center text-primary">
                         <HiChevronLeft />
                         <span className="hover:underline">Back</span>
                     </button>
-                    <button disabled={isSubmitting || isValidating || !paymentHandle.current?.loading() || !checkoutState.completed.shipping || !checkoutState.completed.user} className="mb-2 text-center block rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">Pay {formatPrice(netTotal ?? 0)}</button>
+                    <button disabled={isSubmitting || isValidating || loading || !checkoutState.completed.shipping || !checkoutState.completed.user} className="mb-2 text-center block rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">Pay {formatPrice(netTotal ?? 0)}</button>
                 </div>
             </form>
-        </Tab.Panel>
+        </div>
     );
 }
 

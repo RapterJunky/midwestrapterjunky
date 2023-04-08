@@ -63,7 +63,7 @@ const ShoppingCart: React.FC<Props> = ({ onClose }) => {
                                 </li>
                                 <li className="flex justify-between py-1">
                                     <span>Shipping</span>
-                                    <span className="font-bold tracking-wide">FREE</span>
+                                    <span>Calculated at checkout</span>
                                 </li>
                             </ul>
                             <div className="flex justify-between border-t border-accent-2 py-3 font-bold mb-2">

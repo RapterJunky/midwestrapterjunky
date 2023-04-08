@@ -16,7 +16,7 @@ const useInventory = (item: string | undefined) => {
 
     return {
         inStock,
-        inventory: data,
+        inventory: data?.at(0),
         stockLoading: isLoading,
         stockError: error
     }

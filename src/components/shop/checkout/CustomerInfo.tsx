@@ -6,10 +6,11 @@ import { HiCheck } from 'react-icons/hi';
 
 type Props = {
     next: () => void,
-    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>]
+    checkout: [CheckoutState, React.Dispatch<{ type: CheckoutAction, payload: any }>],
+    active: boolean;
 }
 
-const CustomerInfo: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch] }) => {
+const CustomerInfo: React.FC<Props> = ({ next, checkout: [checkoutState, dispatch], active }) => {
     const session = useSession();
     const { handleSubmit, register, formState, watch, control } = useForm<CheckoutState>({
         defaultValues: checkoutState
@@ -21,16 +22,14 @@ const CustomerInfo: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
         if (state.user === "account") {
             state.email = session.data?.user.email!;
         }
-
         dispatch({ type: "setCompleted", payload: { type: "user", value: true } });
         dispatch({ type: "setUserType", payload: state.user });
         dispatch({ type: "setUserEmail", payload: state.email });
-
         next();
     }
 
     return (
-        <Tab.Panel className="flex flex-col w-full">
+        <div id="tab-1" className={`${active ? "flex" : "hidden"} flex-col w-full`} aria-labelledby="tab-btn-1" role="tabpanel" tabIndex={0} data-headlessui-state={active ? "selected" : undefined}>
             <h1 className="font-bold text-3xl">Customer information</h1>
             <hr className="w-full mb-4" />
             <form onSubmit={handleSubmit(handleRecipets)} className="flex flex-col">
@@ -86,7 +85,7 @@ const CustomerInfo: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
                 }
 
             </form>
-        </Tab.Panel>
+        </div>
     );
 }
 

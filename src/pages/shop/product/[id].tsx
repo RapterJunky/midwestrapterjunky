@@ -50,7 +50,7 @@ interface Props extends FullPageProps {
 }
 
 type FormState = {
-    quantity: number;
+    quantity: number | string;
     variation: Props["product"]["variations"][0]
 }
 
@@ -181,7 +181,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
         }
     });
     const variation = watch("variation");
-    const { inStock, stockError, stockLoading } = useInventory(variation.id);
+    const { inStock, stockError, stockLoading, inventory } = useInventory(variation.id);
     const formatPrice = useFormatPrice(variation.currency);
     const [image, setImage] = useState<number>(0);
     const [dir, setDir] = useState<"slide-in-from-left" | "slide-in-from-right">("slide-in-from-left")
@@ -194,7 +194,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
             name: product.name,
             image: product?.images.at(0)!,
             price: state.variation.price,
-            quantity: state.quantity,
+            quantity: parseInt(state.quantity as string),
             currency: state.variation.currency,
             option: {
                 pricingType: state.variation.pricingType,
@@ -282,12 +282,12 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
 
                         <div className="mt-4 flex flex-col">
                             <label className="mb-2 text-gray-500" htmlFor="quantity">Quantity</label>
-                            <input {...register("quantity")} type="number" id="quantity" name="quantity" min={1} defaultValue={1} />
+                            <input {...register("quantity")} type="number" id="quantity" name="quantity" min={1} defaultValue={1} max={inventory?.quantity ?? undefined} />
                         </div>
 
                         <div className="mt-4 lg:mt-auto">
                             <button type="submit" disabled={!inStock || stockLoading || isSubmitting} className="mb-2 text-center block w-full rounded-sm bg-primary px-6 py-4 text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
-                                {stockLoading ? "Loading..." : inStock ? "Add to cart" : "Sold out"}
+                                {stockLoading ? "Loading..." : inStock ? "Add to cart" : "Out of stock"}
                             </button>
                         </div>
                     </form>
