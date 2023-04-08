@@ -1,16 +1,16 @@
-import { Dialog, Transition } from '@headlessui/react'
 import { HiChevronLeft } from "react-icons/hi";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { useState } from 'react';
+
+import CheckoutModal from './CheckoutModal';
+import DiscountForm from "./DiscountForm";
+import AddressForm from "./AddressForm";
 
 import type { CheckoutState, CheckoutAction } from "@/pages/shop/checkout";
-import AddressForm from "./AddressForm";
 import useFormatPrice from "@hook/useFormatPrice";
-import useCart from "@hook/useCart";
-import DiscountForm from "./DiscountForm";
 import useSquareSDK from "@hook/useSquareSDK";
-import { useState, Fragment } from 'react';
-import CheckoutModal from './CheckoutModal';
+import useCart from "@hook/useCart";
 
 type Props = {
     next: React.Dispatch<React.SetStateAction<number>>,
@@ -159,7 +159,6 @@ const errorResponses = {
     },
 };
 
-
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
 //https://web.dev/payment-and-address-form-best-practices/#html-elements
 //https://developer.squareup.com/docs/devtools/sandbox/payments
@@ -197,7 +196,7 @@ const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
                 },
                 body: JSON.stringify({
                     source_verification: sourceVerification,
-                    location_id: "L730KS46N8B3Y",
+                    location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
                     source_id: source,
                     checkout_id: router.query.checkoutId,
                     items: data.map((item => ({
@@ -246,7 +245,16 @@ const BillingPanel: React.FC<Props> = ({ next, checkout: [checkoutState, dispatc
             const result = await response.json() as { receiptNumber: string; receiptUrl: string; totalMoney: { amount: string; currency: string; }, status: string; };
             window.localStorage.removeItem("cart");
 
-            router.replace(result.receiptUrl);
+            router.replace({
+                pathname: "/confirmation",
+                query: {
+                    mode: "shop",
+                    status: "ok",
+                    message: encodeURIComponent(""),
+                    shop_recipt_id: result.receiptNumber,
+                    shop_receipt: encodeURIComponent(result.receiptUrl)
+                }
+            });
         } catch (error) {
             console.error(error);
             if (error instanceof Response) return;

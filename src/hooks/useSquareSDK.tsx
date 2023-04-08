@@ -60,7 +60,7 @@ export const SquareSDKProvider: React.FC<React.PropsWithChildren> = ({ children 
             <Script onReady={() => {
                 try {
                     if (!window.Square) throw new Error("Failed to init Square SDK");
-                    setPayments(window.Square.payments("sandbox-sq0idb-POkWEAAb7R06B2B7BOBZ0g", "L730KS46N8B3Y"));
+                    setPayments(window.Square.payments(process.env.NEXT_PUBLIC_SQUARE_APPID, process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID));
                 } catch (e) {
                     console.error(e);
                 }

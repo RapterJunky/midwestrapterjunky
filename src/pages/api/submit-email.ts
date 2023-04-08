@@ -15,7 +15,7 @@ const formatRedirect = (res: NextApiResponse, ok: boolean, error?: string) => {
   //https://stackoverflow.com/questions/72924162/next-js-error-405-method-not-allowed-on-redirect-after-form-submission-post
   return res.redirect(
     301,
-    `/submited?ok=${ok}${error ? `${error}=${encodeURIComponent(error)}` : ""}`
+    `/confirmation?status=${error ? "error" : "ok"}&message=${error ? `${encodeURIComponent(error)}` : "Your email was add to the mailing list."}`
   );
 };
 

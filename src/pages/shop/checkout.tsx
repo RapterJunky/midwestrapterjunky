@@ -1,6 +1,5 @@
 import { useState, useEffect, useReducer } from 'react';
 import { useRouter } from "next/router";
-import { Tab } from '@headlessui/react';
 import type { Order } from "square";
 import useSWR from 'swr';
 
@@ -9,11 +8,14 @@ import CustomerInfo from '@/components/shop/checkout/CustomerInfo';
 import BillingPanel from '@/components/shop/checkout/BillingPanel';
 import ShoppingCartItem from "@/components/shop/ShoppingCartItem";
 import Footer from '@/components/layout/Footer';
+import SiteTags from '@components/SiteTags'
 
-import useFormatPrice from "@hook/useFormatPrice";
-import useCart, { CartProvider } from "@hook/useCart";
+import type { FullPageProps, NextPageWithProvider } from "@type/page";
 import { SquareSDKProvider } from "@hook/useSquareSDK";
-import { NextPageWithProvider } from "@/types/page";
+import useCart, { CartProvider } from "@hook/useCart";
+import GenericPageQuery from '@/gql/queries/generic';
+import useFormatPrice from "@hook/useFormatPrice";
+import { fetchCachedQuery } from '@lib/cache';
 
 export type Address = {
     firstname: string;
@@ -43,6 +45,16 @@ export type CheckoutState = {
         billing?: Address;
     }
 };
+
+export async function getStaticProps() {
+    const data = await fetchCachedQuery<Omit<FullPageProps, "preview">>("GenericPage", GenericPageQuery);
+    return {
+        props: {
+            _site: data._site,
+            preview: false,
+        },
+    };
+}
 
 const checkoutReducer = (state: CheckoutState, action: { type: CheckoutAction, payload: any }): CheckoutState => {
     switch (action.type) {
@@ -91,7 +103,7 @@ const checkoutReducer = (state: CheckoutState, action: { type: CheckoutAction, p
 
 //https://bootsnipp.com/snippets/ypqoW
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
-const Checkout: NextPageWithProvider = () => {
+const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({ _site }) => {
     const [checkoutState, dispatch] = useReducer(checkoutReducer, {
         completed: {
             shipping: false,
@@ -115,7 +127,7 @@ const Checkout: NextPageWithProvider = () => {
             },
             body: JSON.stringify({
                 checkout_id: router.query.checkoutId,
-                location_id: "L730KS46N8B3Y",
+                location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
                 order: items.map(value => ({
                     catalogObjectId: value.option.id,
                     quantity: value.quantity,
@@ -131,11 +143,21 @@ const Checkout: NextPageWithProvider = () => {
     useEffect(() => {
         // on page reload `query.checkoutId` this maybe a bug but it does force
         // client to restart checkout.
-        //if (!loading && (!router.query.checkoutId || isEmpty)) router.replace("/shop/search");
+        if (!loading && isEmpty) router.replace("/shop");
     }, [loading]);
 
     return (
         <div className='flex flex-col h-full'>
+            <SiteTags tags={[
+                _site.faviconMetaTags,
+                [
+                    { tag: "title", content: "Checkout - Midwest Raptor Junkies" },
+                    {
+                        tag: "meta",
+                        attributes: { name: "robots", content: "noindex,nofollow" },
+                    }
+                ]
+            ]} />
             <div className="flex justify-center flex-1">
                 <div className="container max-w-6xl h-full">
                     <main className="grid grid-cols-1 lg:grid-cols-3 flex-1">

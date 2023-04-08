@@ -1,12 +1,13 @@
-import createHttpError from "http-errors";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, Environment, ApiError } from "square";
+import createHttpError from "http-errors";
 import { serialize } from "superjson";
-import { NextApiRequest, NextApiResponse } from "next";
 import { z } from 'zod';
-import { handleError } from "@/lib/api/errorHandler";
-import { applyRateLimit } from "@/lib/api/rateLimiter";
-import getPricingForVarable from "@/lib/shop/getPricingForVarable";
-import { logger } from "@/lib/logger";
+
+import getPricingForVarable from "@lib/shop/getPricingForVarable";
+import { applyRateLimit } from "@lib/api/rateLimiter";
+import { handleError } from "@lib/api/errorHandler";
+import { logger } from "@lib/logger";
 
 const schema = z.object({
     location_id: z.string().nonempty(),

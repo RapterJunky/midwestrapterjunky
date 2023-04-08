@@ -1,9 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Client, Environment } from "square";
 import createHttpError from "http-errors";
-import { NextApiRequest, NextApiResponse } from "next";
 import { z } from 'zod';
+
 import { handleError } from "@/lib/api/errorHandler";
-import { getKeys } from "@lib/dynamic_keys";
-import { logger } from "@/lib/logger";
 
 const schema = z.object({
     cursor: z.string().optional(),
@@ -13,130 +13,81 @@ const schema = z.object({
     limit: z.coerce.number().positive().int().max(15).min(4).optional().default(15)
 });
 
-interface SquareResponse {
-    errors?: { category: string; code: string; detail: string; field: string; }[]
-    cursor?: string;
-    objects?: {
-        id: string;
-        created_at: string;
-        item_data: {
-            name: string;
-            description: string;
-            category_id?: string;
-            variations: {
-                id: string;
-                item_variation_data: {
-                    name: string;
-                    sku: string;
-                    price_money: {
-                        amount: number;
-                        currency: string;
-                    }
-                }
-            }[]
-            image_ids?: string[]
-        }
-    }[]
-    related_objects?: ({
-        type: "IMAGE"; id: string; image_data: { url: string; name: string; }
-    } | { type: "CATEGORY", id: string; category_data: { name: string; } })[]
-    latest_time?: string;
-}
-
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     try {
         if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
 
-        const { cursor, query, sort, category } = schema.parse(req.query);
+        const { cursor, query, sort, category, limit } = schema.parse(req.query);
 
-        const access_token = `${process.env.SHOP_ID}_SQAURE_ACCESS_TOKEN`;
-        const mode = `${process.env.SHOP_ID}_SQAURE_MODE`;
-
-        const keys = await getKeys([
-            access_token,
-            mode
-        ]);
-
-        if (!keys[mode] || !keys[access_token]) throw createHttpError.InternalServerError("Failed to get shop provider");
-
-        const request = await fetch(`https://${keys[mode]}/v2/catalog/search`, {
-            method: "POST",
-            headers: {
-                "Square-Version": "2023-03-15",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${keys[access_token]}`
-            },
-            body: JSON.stringify({
-                include_deleted_objects: false,
-                include_related_objects: true,
-                limit: 15,
-                object_types: [
-                    "ITEM"
-                ],
-                cursor: cursor ? cursor : undefined,
-                query: query || category ? {
-                    exact_query: category ? {
-                        attribute_name: "category_id",
-                        attribute_value: category
-                    } : undefined,
-                    text_query: query ? {
-                        keywords: [query]
-                    } : undefined
-                } : undefined
-            })
+        const client = new Client({
+            accessToken: process.env.SQAURE_ACCESS_TOKEN,
+            environment: process.env.SQUARE_MODE as Environment
         });
 
-        const content = await request.json() as SquareResponse;
 
-        if (!request.ok) {
-            logger.error(content.errors);
-            throw createHttpError.InternalServerError();
-        }
+        const content = await client.catalogApi.searchCatalogObjects({
+            includeDeletedObjects: false,
+            includeRelatedObjects: true,
+            limit,
+            objectTypes: [
+                "ITEM"
+            ],
+            cursor,
+            query: query || category ? {
+                exactQuery: category ? {
+                    attributeName: "category_id",
+                    attributeValue: category
+                } : undefined,
+                textQuery: query ? {
+                    keywords: query.split(" ")
+                } : undefined
+            } : undefined
 
+        });
 
         const items = [];
 
-        if (!content?.objects) return res.status(200).json({
+        if (!content?.result.objects) return res.status(200).json({
             result: [],
             hasNextPage: false,
             nextCursor: null,
         });
 
-        for (const item of content.objects) {
+        for (const item of content.result.objects) {
 
             const format = Intl.NumberFormat(undefined, {
                 style: "currency",
-                currency: item.item_data.variations.at(0)?.item_variation_data.price_money.currency ?? "USD"
+                currency: item.itemData?.variations?.at(0)?.itemVariationData?.priceMoney?.currency ?? "USD"
             });
 
             let image = null;
-            if (item.item_data?.image_ids && content?.related_objects) {
-                const imageId = item.item_data.image_ids.at(0);
-                const imageData = content.related_objects.find(value => value.id === imageId);
+            if (item.itemData?.imageIds && content?.result.relatedObjects) {
+                const imageId = item.itemData.imageIds.at(0);
+                const imageData = content.result.relatedObjects.find(value => value.id === imageId);
                 if (imageData && imageData.type === "IMAGE") {
                     image = {
-                        url: imageData.image_data.url,
-                        alt: imageData.image_data.name
+                        url: imageData?.imageData?.url!,
+                        alt: imageData?.imageData?.name!
                     }
                 }
             }
 
             let categoryName = null;
-            if (item.item_data?.category_id && content?.related_objects) {
-                const category = content.related_objects.find(value => value.id === item.item_data.category_id);
+            if (item.itemData?.categoryId && content?.result.relatedObjects) {
+                const category = content.result.relatedObjects.find(value => value.id === item.itemData?.categoryId);
                 if (category && category.type === "CATEGORY") {
-                    categoryName = category.category_data.name;
+                    categoryName = category.categoryData?.name;
                 }
             }
 
             const data = {
-                name: item.item_data.name,
+                name: item.itemData?.name,
                 id: item.id,
                 image,
-                price: format.format((item.item_data.variations.at(0)?.item_variation_data.price_money.amount ?? 0) / 100),
+                price: format.format((Number(item.itemData?.variations?.at(0)?.itemVariationData?.priceMoney?.amount) ?? 0) / 100),
                 category: categoryName,
-                price_int: item.item_data.variations.at(0)?.item_variation_data.price_money.amount ?? 0,
-                created_at: item.created_at
+                price_int: Number(item.itemData?.variations?.at(0)?.itemVariationData?.priceMoney?.amount) ?? 0,
+                created_at: item.updatedAt!
             };
             items.push(data);
         }
@@ -166,8 +117,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
         return res.status(200).json({
             result: items,
-            hasNextPage: Boolean(content?.cursor),
-            nextCursor: content?.cursor ?? null,
+            hasNextPage: Boolean(content?.result.cursor),
+            nextCursor: content?.result.cursor ?? null,
         });
     } catch (error) {
         return handleError(error, res);

@@ -27,7 +27,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             includeDeletedObjects: false,
             query: {
                 textQuery: {
-                    keywords: [discount]
+                    keywords: discount.split(" ")
                 }
             },
             limit: 1
