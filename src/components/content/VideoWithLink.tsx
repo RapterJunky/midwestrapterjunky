@@ -1,17 +1,20 @@
-import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 import { markRules } from "@lib/structuredTextRules";
 import Button from "@components/Button";
 
 import type { Color } from "@type/page";
 import YoutubeFrame from "@components/YoutubeFrame";
 
-interface VideoWithLinksProps {
+export type VideoWithLinksProps = {
   videoLink: string;
   isYoutubeVideo: boolean;
   content: StructuredTextGraphQlResponse;
   color: Color;
   youtubeid: string;
-}
+};
 
 export default function VideoWithLinks(props: VideoWithLinksProps) {
   return (

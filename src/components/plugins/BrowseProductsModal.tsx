@@ -9,13 +9,17 @@ import {
 import useSWR from "swr";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { normalizeConfig, type VaildConfig } from "@/lib/utils/plugin/config";
-import ShopifyClient, { type Product } from "@/lib/plugin/ShopifyClient";
+import {
+  normalizeConfig,
+  type StorefrontPluginConfig,
+  type VaildConfig,
+} from "@lib/utils/plugin/config";
+import ShopifyClient, { type Product } from "@lib/plugin/ShopifyClient";
 import SquareClient from "@/lib/plugin/SquareClient";
 
 type RequestValue = [string, string | undefined, string | undefined];
 
-const asOption = (arg: any) => {
+const asOption = (arg: StorefrontPluginConfig) => {
   return { label: arg.label, value: arg.domain };
 };
 
@@ -44,7 +48,9 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
           return client.productsMatching(search);
         }
         default:
-          throw new Error("Unable to process request.", { cause: "NO_STOREFRONT_HANDLER" });
+          throw new Error("Unable to process request.", {
+            cause: "NO_STOREFRONT_HANDLER",
+          });
       }
     }
   );
@@ -77,7 +83,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               value={asOption(
                 config.storefronts.find(
                   (option) => option.domain === shop?.domain
-                ) ?? config.storefronts[0]
+                ) ?? (config.storefronts[0] as StorefrontPluginConfig)
               )}
             />
             <TextInput
@@ -100,7 +106,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
           <div className="relative mt-dato-l">
             {!isLoading && !error && data?.length ? (
               <div
-                className={`grid grid-cols-5 opacity-100 duration-700 ease-in-out gap-dato-m`}
+                className={`grid grid-cols-5 gap-dato-m opacity-100 duration-700 ease-in-out`}
               >
                 {data.map((product) => (
                   <div
@@ -124,7 +130,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                       style={{ lineHeight: "1.2" }}
                     >
                       <div
-                        className="overflow-hidden text-ellipsis whitespace-nowrap text-center my-dato-s"
+                        className="my-dato-s overflow-hidden text-ellipsis whitespace-nowrap text-center"
                         style={{
                           lineHeight: "1.2",
                         }}

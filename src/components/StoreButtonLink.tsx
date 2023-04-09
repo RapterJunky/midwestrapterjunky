@@ -3,9 +3,9 @@ import Button from "@components/Button";
 import type { StoreItem } from "@components/content/FeaturedShopItems";
 
 export default function StoreButtonLink(props: { value: string }) {
-  const { data, error } = useSWR<StoreItem[], Response>(
+  const { data, error } = useSWR<StoreItem[], Response, string>(
     `/api/products?find=${btoa(props.value)}`,
-    (key: string) => fetch(key).then((value) => value.json())
+    (key) => fetch(key).then((value) => value.json()) as Promise<StoreItem[]>
   );
   const loading = !data && !error;
 
@@ -13,7 +13,7 @@ export default function StoreButtonLink(props: { value: string }) {
   if (error || !data || !data.length || "message" in data) return null;
 
   return (
-    <Button full href={(data as any)?.at(0).onlineStoreUrl ?? "/404"} link>
+    <Button full href={data?.at(0)?.onlineStoreUrl ?? "/404"} link>
       View Store Page
     </Button>
   );

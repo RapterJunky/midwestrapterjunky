@@ -3,7 +3,7 @@ import Button from "@components/Button";
 import { formatTime } from "@utils/timeFormat";
 import type { ResponsiveImage } from "@type/page";
 
-interface UpcomingEventsProps {
+export type UpcomingEventsProps = {
   events: {
     linkTitle: string;
     eventLink: {
@@ -15,7 +15,7 @@ interface UpcomingEventsProps {
     };
     bgImage: ResponsiveImage<{ width: number; height: number }>;
   }[];
-}
+};
 
 export default function UpcomingEvents(props: UpcomingEventsProps) {
   return (

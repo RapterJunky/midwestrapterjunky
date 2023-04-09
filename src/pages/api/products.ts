@@ -6,9 +6,16 @@ import { getKeys } from "@lib/dynamic_keys";
 import { Shopify } from "@api/gql";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import { handleError } from "@api/errorHandler";
-import { type SquareCatalogObjects, squareToShopifyProduct } from "@/lib/plugin/SquareClient";
+import {
+  type SquareCatalogObjects,
+  squareToShopifyProduct,
+} from "@/lib/plugin/SquareClient";
 
 type EncodeProductItem = [Storefront.StorefrontType, string, string];
+type Products = {
+  index: number;
+  product: Record<string, unknown>;
+};
 interface StorefontsProducts {
   keys: string[];
   products: { idx: number; item: string }[];
@@ -20,7 +27,10 @@ const inputValidation = z
     Buffer.from(value, "base64").toString("utf-8").split(",")
   );
 
-const keyGeneration = (storefront: Storefront.StorefrontType, tenant: string) => {
+const keyGeneration = (
+  storefront: Storefront.StorefrontType,
+  tenant: string
+) => {
   switch (storefront) {
     case "S":
       return [`${tenant}_SHOPIFY_ACCESS_TOKEN`, `${tenant}_SHOPIFY_DOMAIN`];
@@ -71,7 +81,7 @@ const shopifyData = async (arg: StorefontsProducts) => {
 
   const query = `query GetStoreItems {${shopify_query}}`;
 
-  const data = await Shopify(query, {
+  const data = await Shopify<Record<string, Record<string, unknown>>>(query, {
     SHOPIFY_DOMAIN: domain[1],
     SHOPIFY_STOREFRONT_ACCESS_TOKEN: access_token[1],
   });
@@ -91,37 +101,38 @@ const squareData = async (arg: StorefontsProducts) => {
     value.at(0)?.endsWith("_ACCESS_TOKEN")
   );
 
-  const mode = items.find((value) =>
-    value.at(0)?.endsWith("_SQAURE_MODE")
-  );
+  const mode = items.find((value) => value.at(0)?.endsWith("_SQAURE_MODE"));
 
   if (!access_token || !mode) throw new Error("Failed to get keys");
-  if (!["connect.squareupsandbox.com", "connect.squareup.com"].includes(mode[1])) throw new Error("Invaild mode");
+  if (
+    !["connect.squareupsandbox.com", "connect.squareup.com"].includes(mode[1])
+  )
+    throw new Error("Invaild mode");
 
   const request = await fetch(`https://${mode[1]}/v2/catalog/batch-retrieve `, {
     method: "POST",
     headers: {
       "Square-Version": "2023-03-15",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token[1]}`
+      Authorization: `Bearer ${access_token[1]}`,
     },
     body: JSON.stringify({
-      object_ids: arg.products.map(value => value.item),
+      object_ids: arg.products.map((value) => value.item),
       include_deleted_objects: false,
-      include_related_objects: true
-    })
+      include_related_objects: true,
+    }),
   });
 
   if (!request.ok) throw new Error("Failed to fetch products");
-  const body = await request.json() as SquareCatalogObjects;
+  const body = (await request.json()) as SquareCatalogObjects;
 
   if (!body.objects) throw new Error("No items returned!");
 
   return body.objects.map((item, i) => ({
     index: i,
-    product: squareToShopifyProduct(item, body?.related_objects, true)
+    product: squareToShopifyProduct(item, body?.related_objects, true),
   }));
-}
+};
 
 export default async function handle(
   req: NextApiRequest,
@@ -134,7 +145,10 @@ export default async function handle(
     // FORMAT: storeFront$TENANT$ProductHandle
     const request = inputValidation.parse(req.query?.find);
 
-    const query = new Map<Storefront.StorefrontType, { [key: string]: StorefontsProducts }>();
+    const query = new Map<
+      Storefront.StorefrontType,
+      { [key: string]: StorefontsProducts }
+    >();
 
     // sort data into their storefronts and tenants
     for (const [idx, data] of request.entries()) {
@@ -167,7 +181,7 @@ export default async function handle(
     }
 
     // generate fetch promies
-    const data: Promise<any[]>[] = [];
+    const data: Promise<Products[]>[] = [];
 
     for (const [storefront, values] of query.entries()) {
       switch (storefront) {
@@ -188,7 +202,7 @@ export default async function handle(
 
     const results = await Promise.allSettled(data);
 
-    const output: any[] = [];
+    const output: Products[] = [];
 
     for (const item of results) {
       if (item.status === "rejected") {

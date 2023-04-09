@@ -1,4 +1,9 @@
-import { isParagraph, isHeading } from "datocms-structured-text-utils";
+import {
+  isParagraph,
+  isHeading,
+  type RenderRule,
+  type TrasformFn,
+} from "datocms-structured-text-utils";
 import {
   renderNodeRule,
   renderMarkRule,
@@ -7,6 +12,7 @@ import {
 } from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
+import type { ResponsiveImage } from "@type/page";
 
 //https://github.com/datocms/react-datocms/blob/master/docs/structured-text.md
 export const markRules = [
@@ -17,14 +23,19 @@ export const markRules = [
         key: props.key,
         className: props.mark,
         children: props.children,
-      });
+      }) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
     }
   ),
 ];
 
 export const renderInlineRecord = ({
   record,
-}: RenderInlineRecordContext<any>) => {
+}: RenderInlineRecordContext<{
+  __typename: string;
+  id: string;
+  title: string;
+  slug: string;
+}>) => {
   switch (record.__typename) {
     case "EventRecord":
       return (
@@ -51,7 +62,13 @@ export const renderInlineRecord = ({
   }
 };
 
-export const renderBlock = ({ record }: RenderBlockContext<any>) => {
+export const renderBlock = ({
+  record,
+}: RenderBlockContext<{
+  __typename: string;
+  id: string;
+  content: ResponsiveImage<{ width: number; height: number }>;
+}>) => {
   switch (record.__typename) {
     case "ImageRecord":
       return (
@@ -79,7 +96,7 @@ export const rules = [
         `h${node.level}`,
         { key, className: node.style },
         children
-      );
+      ) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
     }
   ),
   renderNodeRule(isParagraph, (props) => {
@@ -87,6 +104,6 @@ export const rules = [
       "p",
       { key: props.key, className: props.node?.style },
       props.children
-    );
+    ) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
   }),
 ];

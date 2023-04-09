@@ -1,4 +1,4 @@
-import { GraphQLClient, type Variables } from "graphql-request";
+import { GraphQLClient, type Variables, ClientError } from "graphql-request";
 import type { RequestConfig } from "graphql-request/src/types";
 import { logger } from "@lib/logger";
 
@@ -11,7 +11,7 @@ interface FetchOptions {
   preview?: boolean;
 }
 
-export async function DatoCMS<T extends Object>(
+export async function DatoCMS<T extends object>(
   query: string,
   opts?: FetchOptions
 ): Promise<T> {
@@ -33,7 +33,7 @@ export async function DatoCMS<T extends Object>(
     }
   );
 }
-export async function Shopify<T extends Object>(
+export async function Shopify<T extends object>(
   query: string,
   args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string },
   opts?: FetchOptions
@@ -51,7 +51,7 @@ export async function Shopify<T extends Object>(
   );
 }
 
-async function GQLFetch<T extends Object>(
+async function GQLFetch<T extends object>(
   url: string,
   query: string,
   { variables }: FetchOptions = {},
@@ -65,11 +65,11 @@ async function GQLFetch<T extends Object>(
     if (request?.errors) throw request.errors;
 
     return request.data;
-  } catch (error: any) {
-    if ("response" in error) {
+  } catch (error) {
+    if (error instanceof ClientError) {
       logger.error(
         {
-          errors: error?.response.errors,
+          errors: error.response.errors,
           url: url,
         },
         "GraphQL Error"

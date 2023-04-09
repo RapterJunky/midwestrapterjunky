@@ -21,7 +21,7 @@ export interface StoreItem {
     };
   };
 }
-interface FeatureShopItems {
+export interface FeatureShopItems {
   items: { item: { value: string } }[];
 }
 
@@ -29,29 +29,28 @@ interface FeatureShopItems {
 //https://shopify.dev/api/admin-graphql/2022-10/queries/products#examples-Get_two_specific_products_by_their_ID_using_aliases
 
 const formatter = (range: StoreItem["priceRange"], locale?: string) => {
-  const handler = Intl.NumberFormat(locale, { style: "currency", currency: range.maxVariantPrice.currencyCode });
+  const handler = Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: range.maxVariantPrice.currencyCode,
+  });
   if (range.maxVariantPrice.amount === range.minVariantPrice.amount) {
-    if (range.maxVariantPrice.amount.startsWith("$")) return `${range.maxVariantPrice.currencyCode} ${range.maxVariantPrice.amount}`;
-    return handler.format(
-      parseFloat(range.maxVariantPrice.amount)
-    );
+    if (range.maxVariantPrice.amount.startsWith("$"))
+      return `${range.maxVariantPrice.currencyCode} ${range.maxVariantPrice.amount}`;
+    return handler.format(parseFloat(range.maxVariantPrice.amount));
   }
 
   return `${handler.format(
     parseFloat(range.minVariantPrice.amount)
-  )} - ${handler.format(
-    parseFloat(range.maxVariantPrice.amount)
-  )}`;
-}
+  )} - ${handler.format(parseFloat(range.maxVariantPrice.amount))}`;
+};
 
 export default function FeaturedShopItems(props: FeatureShopItems) {
-  const { data, error, isLoading } = useSWR<StoreItem[]>(
-    [
-      `/api/products?find=${btoa(
-        props.items.map((value) => value.item.value).join(",")
-      )}`, "19"
-    ],
-    (url: string) => fetch(url).then((value) => value.json())
+  const { data, error, isLoading } = useSWR<StoreItem[], Response, string>(
+    `/api/products?find=${btoa(
+      props.items.map((value) => value.item.value).join(",")
+    )}`,
+    (url: string) =>
+      fetch(url).then((value) => value.json()) as Promise<StoreItem[]>
   );
 
   if (!data && isLoading)
@@ -62,7 +61,9 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
             className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status"
           >
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
           </div>
         </div>
       </section>
@@ -71,13 +72,18 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
   if (!data || error || "message" in data || !data.length) return null;
 
   return (
-    <section className="flex flex-col bg-zinc-100 max-h-max">
-      <div className="flex flex-wrap justify-center gap-4 my-4 p-4">
+    <section className="flex max-h-max flex-col bg-zinc-100">
+      <div className="my-4 flex flex-wrap justify-center gap-4 p-4">
         {data.map(
           ({ handle, featuredImage, priceRange, title, onlineStoreUrl }, i) => (
             <Link
               key={handle}
-              className={`p-4 flex flex-col items-center gap-2 hover:shadow hover:outline hover:outline-1 hover:outline-gray-300 fill-mode-forwards animate-in fade-in-0 ${["delay-75", "delay-150", "delay-300", "delay-500"].at(i)}`}
+              className={`flex flex-col items-center gap-2 p-4 animate-in fade-in-0 fill-mode-forwards hover:shadow hover:outline hover:outline-1 hover:outline-gray-300 ${[
+                "delay-75",
+                "delay-150",
+                "delay-300",
+                "delay-500",
+              ].at(i)}`}
               href={onlineStoreUrl}
             >
               <div className="relative h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 lg:h-96 lg:w-96">
@@ -91,9 +97,7 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
               </div>
               <div className="py-4 text-center text-sm">
                 <span>{title}</span>
-                <p className="pt-2">
-                  {formatter(priceRange)}
-                </p>
+                <p className="pt-2">{formatter(priceRange)}</p>
               </div>
             </Link>
           )

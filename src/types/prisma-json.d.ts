@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 module PrismaJson {
   type AuthorSocial = { link: string; user: string };
 
@@ -11,7 +13,7 @@ module PrismaJson {
     | import("datocms-structured-text-utils").ThematicBreak
   >;
 
-  type Dast = import("react-datocms").StructuredTextGraphQlResponse;
+  type Dast<B = import("react-datocms").Record, L = import("react-datocms").Record> = import("react-datocms").StructuredTextGraphQlResponse<B, L>;
 
   type PostComment = { message: string };
 }

@@ -1,12 +1,19 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { TooManyRequests } from "http-errors";
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
-import { TooManyRequests } from "http-errors";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { Request } from "express";
 
-const getIP = (request: any) =>
-  request.headers["x-forwarded-for"] ||
-  request.headers["x-real-ip"] ||
-  request.socket.remoteAddress;
+type MiddlewareHandler = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  result: (err?: unknown) => void
+) => void;
+
+const getIP = (request: Request) =>
+  (request?.headers["x-forwarded-for"] as string) ??
+  (request?.headers["x-real-ip"] as string) ??
+  (request.socket.remoteAddress as string);
 
 export const getRateLimitMiddlewares = ({
   limit = 10,
@@ -15,10 +22,19 @@ export const getRateLimitMiddlewares = ({
   delayMs = 500,
 } = {}) =>
   [
-    slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
-    rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
+    slowDown({
+      keyGenerator: getIP,
+      windowMs,
+      delayAfter,
+      delayMs,
+    }) as never as MiddlewareHandler,
+    rateLimit({
+      keyGenerator: getIP,
+      windowMs,
+      max: limit,
+    }) as never as MiddlewareHandler,
   ].map(
-    (middleware) => (req: any, res: any) =>
+    (middleware) => (req: NextApiRequest, res: NextApiResponse) =>
       new Promise((ok, rej) => {
         middleware(req, res, (result) =>
           result instanceof Error ? rej(result) : ok(result)

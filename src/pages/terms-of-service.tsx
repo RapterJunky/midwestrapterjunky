@@ -44,15 +44,17 @@ export const getStaticProps = async (
 
   props.terms._seoMetaTags = props.terms._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {
-      return { ...tag, content: props.terms.termsOfServiceSeo?.title ?? "Raptor" };
+      return {
+        ...tag,
+        content: props.terms.termsOfServiceSeo?.title ?? "Raptor",
+      };
     }
     if (
       tag.tag === "meta" &&
       ((tag.attributes as OgMetaAttributes)?.property === "og:title" ||
         (tag.attributes as RegularMetaAttributes).name === "twitter:title")
     ) {
-      tag.attributes.content =
-        props.terms.termsOfServiceSeo?.title ?? "Rapter";
+      tag.attributes.content = props.terms.termsOfServiceSeo?.title ?? "Rapter";
       return tag;
     }
     if (
@@ -79,7 +81,7 @@ export const getStaticProps = async (
 
 const TermsOfService: NextPage<Props> = ({ _site, navbar, terms }) => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <SiteTags tags={[_site.faviconMetaTags, terms._seoMetaTags]} />
       <header>
         <Navbar {...navbar} mode="only-scroll" />

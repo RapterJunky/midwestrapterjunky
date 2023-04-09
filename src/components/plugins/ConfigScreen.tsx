@@ -18,7 +18,7 @@ const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
   return keys;
 };
 
-export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
+const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
   const [removelQueue, setRemovelQueue] = useState<string[]>([]);
   const { handleSubmit, control, formState } = useForm<VaildConfig>({
     defaultValues: normalizeConfig(ctx.plugin.attributes.parameters),
@@ -30,7 +30,7 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
         "User does not have the permission to perform the operation."
       );
     }
-    await ctx.updatePluginParameters(state as VaildConfig);
+    await ctx.updatePluginParameters(state);
 
     await new Promise<void>(async (ok) => {
       if (state.storefronts.length < 0 || !state.keyToken) return ok();
@@ -52,8 +52,13 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
                   key: `${value.domain}_SQAURE_ACCESS_TOKEN`,
                   value: value.token,
                 },
-                { key: `${value.domain}_SQAURE_MODE`, value: value.test ? "connect.squareupsandbox.com" : "connect.squareup.com" }
-              ]
+                {
+                  key: `${value.domain}_SQAURE_MODE`,
+                  value: value.test
+                    ? "connect.squareupsandbox.com"
+                    : "connect.squareup.com",
+                },
+              ];
             }
             return [];
           })
@@ -88,15 +93,14 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
           body: JSON.stringify(removelQueue),
         });
         setRemovelQueue([]);
-
-        ok();
       } catch (error) {
         console.error(error);
+      } finally {
         ok();
       }
     });
 
-    ctx.notice("Settings updated successfully!");
+    await ctx.notice("Settings updated successfully!");
   };
 
   return (
@@ -108,7 +112,7 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
             control={control}
             rules={{ required: "This field is required!" }}
             name="keyToken"
-            render={({ field: { ref, ...field }, formState }) => (
+            render={({ field: { ref: _ref, ...field }, formState }) => (
               <TextField
                 error={formState.errors?.keyToken?.message}
                 id={field.name}
@@ -124,7 +128,7 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
         <Controller
           control={control}
           name="storefronts"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <>
               <table className="w-full divide-y">
                 <thead>
@@ -221,9 +225,11 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
                     if (
                       field.value.some((value) => value.domain === data.domain)
                     ) {
-                      ctx.alert(
-                        `A storefront with domain ${data.domain} already exits.`
-                      );
+                      ctx
+                        .alert(
+                          `A storefront with domain ${data.domain} already exits.`
+                        )
+                        .catch((e) => console.error(e));
                       return;
                     }
                     field.onChange([...field.value, data]);
@@ -241,9 +247,9 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
         <FieldGroup>
           <Controller
             control={control}
-            rules={{ required: 'Site url is required' }}
+            rules={{ required: "Site url is required" }}
             name="siteUrl"
-            render={({ field: { ref, ...field }, formState }) => (
+            render={({ field: { ref: _ref, ...field }, formState }) => (
               <TextField
                 error={formState.errors?.siteUrl?.message}
                 id={field.name}
@@ -260,8 +266,8 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
           <Controller
             control={control}
             name="previewPath"
-            rules={{ required: 'Preview path is required' }}
-            render={({ field: { ref: inputRef, ...field }, fieldState }) => {
+            rules={{ required: "Preview path is required" }}
+            render={({ field: { ref: _ref, ...field }, fieldState }) => {
               return (
                 <TextField
                   {...field}
@@ -280,7 +286,7 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
           <Controller
             control={control}
             name="previewSecret"
-            render={({ field: { ref: inputRef, ...field }, fieldState }) => {
+            render={({ field: { ref: _ref, ...field }, fieldState }) => {
               return (
                 <TextField
                   {...field}
@@ -306,4 +312,6 @@ export default function ConfigScreen({ ctx }: { ctx: RenderConfigScreenCtx }) {
       </Form>
     </Canvas>
   );
-}
+};
+
+export default ConfigScreen;

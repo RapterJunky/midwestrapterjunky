@@ -1,14 +1,13 @@
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
-import { RenderAssetSourceCtx } from "datocms-plugin-sdk";
+import type { RenderAssetSourceCtx } from "datocms-plugin-sdk";
 import { Button, Spinner, Canvas } from "datocms-react-ui";
-import Image from "next/image";
 import { useState, useRef } from "react";
+import Image from "next/image";
 
-export default function AssetSourceOptimized({
-  ctx,
-}: {
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+
+const AssetSourceOptimized: React.FC<{
   ctx: RenderAssetSourceCtx;
-}) {
+}> = ({ ctx }) => {
   const [image, setImage] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [filename, setFilename] = useState<string>();
@@ -31,14 +30,15 @@ export default function AssetSourceOptimized({
         body: data,
       });
 
-      const info = await req.json();
+      const info = (await req.json()) as { base64: string; filename: string };
 
-      await ctx.select({
+      ctx.select({
         resource: {
           base64: info.base64,
           filename: info.filename,
         },
       });
+
       await ctx.notice("Uploaded and optimized image.");
     } catch (error) {
       console.error(error);
@@ -107,4 +107,6 @@ export default function AssetSourceOptimized({
       </form>
     </Canvas>
   );
-}
+};
+
+export default AssetSourceOptimized;

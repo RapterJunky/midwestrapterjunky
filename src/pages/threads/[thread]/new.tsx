@@ -7,7 +7,6 @@ import type {
 import {
   createEditor,
   Text,
-  Node,
   type Descendant,
   Editor,
   Transforms,
@@ -15,7 +14,15 @@ import {
 } from "slate";
 import { useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Slate, Editable, withReact, useSlate, useFocused } from "slate-react";
+import {
+  Slate,
+  Editable,
+  withReact,
+  useSlate,
+  useFocused,
+  type RenderLeafProps,
+  type RenderElementProps,
+} from "slate-react";
 import { StructuredText } from "react-datocms/structured-text";
 import { useForm, Controller } from "react-hook-form";
 import { Portal, Tab } from "@headlessui/react";
@@ -41,7 +48,6 @@ interface FormState {
   title: string;
   document: Descendant[];
 }
-interface Props extends FullPageProps {}
 
 export const getStaticPaths = (): GetStaticPathsResult => {
   return {
@@ -52,7 +58,7 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<Props>> => {
+): Promise<GetStaticPropsResult<FullPageProps>> => {
   const result = z.coerce
     .number()
     .positive()
@@ -64,7 +70,10 @@ export const getStaticProps = async (
   const exists = await prisma.thread.exists({ where: { id: result.data } });
   if (!exists) return { notFound: true };
 
-  const props = await fetchCachedQuery<Props>("GenericPage", GenericPageQuery);
+  const props = await fetchCachedQuery<FullPageProps>(
+    "GenericPage",
+    GenericPageQuery
+  );
 
   return {
     props: {
@@ -91,7 +100,7 @@ const isFormatActive = (editor: Editor, format: DefaultMark): boolean => {
   return !!match;
 };
 
-const Leaf = ({ attributes, children, leaf }: any) => {
+const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   if (leaf.strong) {
     children = <strong>{children}</strong>;
   }
@@ -105,7 +114,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const Element = ({ attributes, children, element }: any) => {
+const Element = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     default:
       return <p {...attributes}>{children}</p>;
@@ -180,9 +189,9 @@ const HoveringToolbar = () => {
   );
 };
 
-const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
+const NewThreadPost: NextPage<FullPageProps> = ({ _site, navbar, preview }) => {
   const router = useRouter();
-  const { handleSubmit, register, control, watch } = useForm<FormState>({
+  const { handleSubmit, register, control } = useForm<FormState>({
     defaultValues: {
       document: [
         {
@@ -194,10 +203,16 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
     },
   });
   const editor = useMemo(() => withReact(createEditor()), []);
-  const renderElement = useCallback((props: any) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
+  const renderElement = useCallback(
+    (props: RenderElementProps) => <Element {...props} />,
+    []
+  );
+  const renderLeaf = useCallback(
+    (props: RenderLeafProps) => <Leaf {...props} />,
+    []
+  );
 
-  const previewDocuemnt = watch("document");
+  //const previewDocuemnt = watch("document");
 
   const onSubmit = async (state: FormState) => {
     try {
@@ -207,7 +222,7 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
         body: JSON.stringify({
           name: state.title,
           threadId: parseInt(router.query.thread as string),
-          content: await slateToDast(state.document, {}),
+          content: slateToDast(state.document, {}),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +230,12 @@ const NewThreadPost: NextPage<Props> = ({ _site, navbar, preview }) => {
       });
       if (!request.ok) throw request;
 
-      router.replace(`/threads/${router.query.thread}`);
+      await router.replace({
+        pathname: `/threads/[thread]`,
+        query: {
+          thread: router.query.thread,
+        },
+      });
     } catch (error) {
       console.error(error);
     }

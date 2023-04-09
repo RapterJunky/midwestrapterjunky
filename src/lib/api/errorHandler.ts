@@ -6,7 +6,15 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
 
-export const handleError = (error: unknown, res: NextApiResponse) => {
+export type ApiErrorResponse = {
+  message: string;
+  details?: unknown[];
+};
+
+export const handleError = (
+  error: unknown,
+  res: NextApiResponse<ApiErrorResponse>
+) => {
   logger.error(error);
 
   if (error instanceof ZodError) {

@@ -23,8 +23,12 @@ export default function ShopFieldExtension({
   ctx: RenderFieldExtensionCtx;
 }) {
   const config = normalizeConfig(ctx.plugin.attributes.parameters);
-  const product = (JSON.parse(get(ctx.formValues, ctx.fieldPath) as string)
-    ?.value ?? null) as string | null;
+  const product =
+    (
+      JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) as {
+        value: string;
+      }
+    )?.value ?? null;
   const { data, isLoading, error } = useSWR<
     ShopifyProduct | null,
     APIError | Error,
@@ -68,7 +72,8 @@ export default function ShopFieldExtension({
     }
   });
 
-  const handleReset = () => ctx.setFieldValue(ctx.fieldPath, null);
+  const handleReset = () =>
+    ctx.setFieldValue(ctx.fieldPath, null).catch((e) => console.error(e));
 
   const handleOpenModel = async () => {
     const product = (await ctx.openModal({
@@ -77,25 +82,29 @@ export default function ShopFieldExtension({
       width: "xl",
     })) as string | null;
     if (product)
-      ctx.setFieldValue(ctx.fieldPath, JSON.stringify({ value: product }));
+      await ctx.setFieldValue(
+        ctx.fieldPath,
+        JSON.stringify({ value: product })
+      );
   };
 
   if (!config.storefronts.length) {
     return (
       <Canvas ctx={ctx}>
         <div
-          className="border text-center"
+          className="border p-dato-l text-center"
           style={{
-            padding: "var(--spacing-l)",
             borderColor: "var(--border-color)",
           }}
         >
-          <div className="mb-5" style={{ color: "var(--light-body-color)" }}>
+          <div className="mb-5 text-dato-light-body">
             No storefronts available.
           </div>
           <Button
             onClick={() =>
-              ctx.navigateTo(`/admin/plugins/${ctx.plugin.id}/edit`)
+              ctx
+                .navigateTo(`/admin/plugins/${ctx.plugin.id}/edit`)
+                .catch((e) => console.error(e))
             }
             buttonSize="s"
             leftIcon={<FaWrench />}
@@ -118,39 +127,40 @@ export default function ShopFieldExtension({
         <NoProduct handleOpenModel={handleOpenModel} />
       ) : null}
       {!isLoading && error && !data ? (
-        <RenderError product={product} error={error} />
+        <RenderError
+          product={product}
+          error={error}
+          handleReset={handleReset}
+        />
       ) : null}
     </Canvas>
   );
 }
 
-const RenderError = ({
-  error,
-  product,
-}: {
+const RenderError: React.FC<{
   error: Error;
   product: string | null;
-}) => {
+  handleReset: () => void;
+}> = ({ error, product, handleReset }) => {
   const message =
     error instanceof APIError
       ? error.message
       : "API Error! Could not fetch details for product:&nbsp;";
   const cause =
-    error instanceof APIError ? (`Code: ${error.cause}` as string) : product;
+    error instanceof APIError ? `Code: ${error?.cause as string}` : product;
 
   return (
     <div
-      className="border text-center"
+      className="border p-dato-l text-center"
       style={{
-        padding: "var(--spacing-l)",
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mb-5" style={{ color: "var(--light-body-color)" }}>
+      <div className="mb-5 text-dato-light-body">
         <h4 className="mb-2 font-bold">{message}</h4>
         <code className="text-sm">{cause}</code>
       </div>
-      <Button onClick={() => { }} buttonSize="s" leftIcon={<FaSync />}>
+      <Button onClick={handleReset} buttonSize="s" leftIcon={<FaSync />}>
         Reset Item
       </Button>
     </div>
@@ -160,15 +170,12 @@ const RenderError = ({
 const NoProduct = ({ handleOpenModel }: { handleOpenModel: () => void }) => {
   return (
     <div
-      className="border text-center"
+      className="border p-dato-l text-center"
       style={{
-        padding: "var(--spacing-l)",
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mb-5" style={{ color: "var(--light-body-color)" }}>
-        No product selected!
-      </div>
+      <div className="mb-5 text-dato-light-body">No product selected!</div>
       <Button onClick={handleOpenModel} buttonSize="s" leftIcon={<FaSearch />}>
         Browse products
       </Button>
@@ -176,7 +183,10 @@ const NoProduct = ({ handleOpenModel }: { handleOpenModel: () => void }) => {
   );
 };
 
-const RenderProduct = ({ data, handleReset }: any) => {
+const RenderProduct: React.FC<{
+  data: ShopifyProduct;
+  handleReset: () => void;
+}> = ({ data, handleReset }) => {
   return (
     <>
       <div className="flex items-center">
@@ -196,14 +206,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
             </a>
             <FaExternalLinkAlt className="text-sm" />
           </div>
-          <div
-            className="text-var-light mb-1 overflow-hidden"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
+          <div className="text-var-light mb-1 overflow-hidden line-clamp-2">
             {data.description}
           </div>
           {data.productType ? (
@@ -217,7 +220,7 @@ const RenderProduct = ({ data, handleReset }: any) => {
             <strong>Price:</strong>
             &nbsp;
             {data.priceRange?.maxVariantPrice?.amount !==
-              data.priceRange?.minVariantPrice?.amount ? (
+            data.priceRange?.minVariantPrice?.amount ? (
               <span>
                 <span>
                   {data.priceRange.minVariantPrice.currencyCode}

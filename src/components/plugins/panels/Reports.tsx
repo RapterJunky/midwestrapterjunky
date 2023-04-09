@@ -221,24 +221,25 @@ export const Reports: React.FC<{
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [type, setType] = useState<"Comment" | "Post" | undefined>();
   const [query, setQuery] = useDebounce<string>("", 500);
-  const { data, isLoading, error, mutate } = useSWR(
-    [page, query, order, type],
-    async (params) => {
-      const url = new URL("/api/plugin/reports", window.location.origin);
-      url.searchParams.set("page", params[0].toString());
-      if (params[1] && !!params[1].length) {
-        url.searchParams.set("search", params[1]);
-      }
-      url.searchParams.set("order", params[2]);
-      if (params[3]) {
-        url.searchParams.set("type", params[3]);
-      }
-
-      const reports = await AuthFetch(url);
-
-      return reports.json() as Promise<ContentType>;
+  const { data, isLoading, error, mutate } = useSWR<
+    ContentType,
+    Response,
+    [number, string, "asc" | "desc", "Comment" | "Post" | undefined]
+  >([page, query, order, type], async (params) => {
+    const url = new URL("/api/plugin/reports", window.location.origin);
+    url.searchParams.set("page", params[0].toString());
+    if (params[1] && !!params[1].length) {
+      url.searchParams.set("search", params[1]);
     }
-  );
+    url.searchParams.set("order", params[2]);
+    if (params[3]) {
+      url.searchParams.set("type", params[3]);
+    }
+
+    const reports = await AuthFetch(url);
+
+    return reports.json() as Promise<ContentType>;
+  });
 
   const handleDelete = async (id: number) => {
     try {
@@ -255,7 +256,7 @@ export const Reports: React.FC<{
       });
     } catch (error) {
       console.error(error);
-      ctx.alert("Failed to delete report!");
+      ctx.alert("Failed to delete report!").catch((e) => console.error(e));
     }
   };
 

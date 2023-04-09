@@ -42,15 +42,17 @@ export const getStaticProps = async (
 
   props.policy._seoMetaTags = props.policy._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {
-      return { ...tag, content: props.policy.privacyPolicySeo?.title ?? "Rapter" };
+      return {
+        ...tag,
+        content: props.policy.privacyPolicySeo?.title ?? "Rapter",
+      };
     }
     if (
       tag.tag === "meta" &&
       ((tag.attributes as OgMetaAttributes)?.property === "og:title" ||
         (tag.attributes as RegularMetaAttributes).name === "twitter:title")
     ) {
-      tag.attributes.content =
-        props.policy.privacyPolicySeo?.title ?? "Rapter";
+      tag.attributes.content = props.policy.privacyPolicySeo?.title ?? "Rapter";
       return tag;
     }
     if (
@@ -77,7 +79,7 @@ export const getStaticProps = async (
 
 const PrivacyPolicy: NextPage<Props> = ({ _site, navbar, policy }) => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <SiteTags tags={[_site.faviconMetaTags, policy._seoMetaTags]} />
       <header>
         <Navbar {...navbar} mode="only-scroll" />

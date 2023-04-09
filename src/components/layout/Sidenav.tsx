@@ -14,7 +14,7 @@ interface Props {
 
 const Sidenav: React.FC<Props> = ({ onClose, logo, pageLinks }) => {
   return (
-    <nav className="flex flex-col h-full">
+    <nav className="flex h-full flex-col">
       <div className="relative flex justify-center pt-2 pb-2">
         <button
           role="button"

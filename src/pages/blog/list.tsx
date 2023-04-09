@@ -22,9 +22,7 @@ import Footer from "@components/layout/Footer";
 import Pagination from "@components/blog/Pagination";
 import ExitPreview from "@components/ExitPreview";
 
-interface BlogListProps extends FullPageProps {}
-
-interface Post {
+interface Posts {
   posts: {
     id: string;
     slug: string;
@@ -40,8 +38,8 @@ interface Post {
 
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<BlogListProps>> => {
-  const data = await DatoCMS<BlogListProps>(GenericPageQuery, {
+): Promise<GetStaticPropsResult<FullPageProps>> => {
+  const data = await DatoCMS<FullPageProps>(GenericPageQuery, {
     preview: ctx.preview,
   });
 
@@ -53,11 +51,11 @@ export const getStaticProps = async (
   };
 };
 
-const BlogList: NextPage<BlogListProps> = ({ preview, navbar, _site }) => {
+const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const { data, error, isLoading } = useSWR<Post, Response>(
+  const { data, error, isLoading } = useSWR<Posts, Response, string>(
     `/api/blog?page=${pageIndex}`,
-    (uri) => fetch(uri).then((value) => value.json())
+    (uri) => fetch(uri).then((value) => value.json() as Promise<Posts>)
   );
 
   return (

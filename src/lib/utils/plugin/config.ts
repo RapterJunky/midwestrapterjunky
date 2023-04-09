@@ -4,7 +4,7 @@ export type StorefrontPluginConfig = {
   label: string;
   test: boolean;
   domain: string;
-}
+};
 
 export type VaildConfig = {
   siteUrl: string;

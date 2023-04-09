@@ -1,5 +1,6 @@
 import HTMLReactParser from "html-react-parser";
 
-export default function HtmlSection({ content }: any) {
+const HtmlSection: React.FC<{ content: string }> = ({ content }) => {
   return <section>{HTMLReactParser(content)}</section>;
-}
+};
+export default HtmlSection;

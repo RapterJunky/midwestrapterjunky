@@ -13,13 +13,10 @@ export interface FormState {
   id: string;
 }
 
-const Edit = ({
-  ctx,
-  setEdit,
-}: {
+const Edit: React.FC<{
   setEdit: React.Dispatch<React.SetStateAction<boolean>>;
   ctx: RenderModalCtx;
-}) => {
+}> = ({ ctx, setEdit }) => {
   const isEdit = !!Object.keys(ctx.parameters).length;
   const {
     control,
@@ -74,14 +71,14 @@ const Edit = ({
 
       if (!result.ok) throw result;
 
-      ctx.resolve({ type: "delete", id: ctx.parameters.id });
+      await ctx.resolve({ type: "delete", id: ctx.parameters.id });
     } catch (error) {
       let code = "";
       if (error instanceof Response) {
         code = error.statusText.toUpperCase().replaceAll(" ", "_");
       }
       console.error(error);
-      ctx.alert(`Internal Server Error | CODE: ${code}`);
+      await ctx.alert(`Internal Server Error | CODE: ${code}`);
     }
   };
 
@@ -105,12 +102,14 @@ const Edit = ({
         },
       });
 
-      ctx.resolve(data);
+      await ctx.resolve(data);
     } catch (error) {
       if (error instanceof Error)
-        ctx.alert(`${error.message} | CODE: ${error.cause}`);
+        await ctx.alert(
+          `${error.message} | CODE: ${error?.cause as string | undefined}`
+        );
       if (error instanceof Response) {
-        ctx.alert(
+        await ctx.alert(
           `${
             error.status === 500
               ? "Internal Server Error"

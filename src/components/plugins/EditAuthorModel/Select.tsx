@@ -10,7 +10,11 @@ import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useSWR([page], async ([index]) => {
+  const { data, isLoading, error } = useSWR<
+    Paginate<Authors>,
+    Response,
+    [number]
+  >([page], async ([index]) => {
     const result = await AuthFetch(`/api/plugin/authors?page=${index}`, {
       headers: {
         "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 import type { Color } from "@type/page";
 import Countdown, { type CountdownRendererFn } from "react-countdown";
 
-interface Props {
+export type CountDownProps = {
   id: string;
   heading: string;
   bgColor: Color;
@@ -10,7 +10,7 @@ interface Props {
     slug: string;
   };
   _modelApiKey: string;
-}
+};
 
 const renderer: CountdownRendererFn = ({ formatted }) => {
   return (
@@ -57,7 +57,11 @@ const renderer: CountdownRendererFn = ({ formatted }) => {
   );
 };
 
-const CountdownSection = ({ heading, event, bgColor }: Props) => {
+const CountdownSection: React.FC<CountDownProps> = ({
+  heading,
+  event,
+  bgColor,
+}) => {
   return (
     <section
       className="flex flex-col items-center justify-center pt-10 pb-20 duration-150 animate-in fade-in ease-in"

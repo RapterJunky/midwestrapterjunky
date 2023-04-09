@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import PagedArticles from "@query/queries/pagedArticles";
-import { handleError } from "@api/errorHandler";
+import { handleError, type ApiErrorResponse } from "@api/errorHandler";
 import { DatoCMS } from "@api/gql";
 
 interface DataResponse {
@@ -20,17 +20,12 @@ interface DataResponse {
   }[];
 }
 
-interface ErrorResponse {
-  message: string;
-  details?: any;
-}
-
 const MAX_ITEMS = 5;
 const schema = z.coerce.number().positive().min(1).optional().default(1);
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse<DataResponse | ErrorResponse>
+  res: NextApiResponse<DataResponse | ApiErrorResponse>
 ) {
   try {
     const page = schema.parse(req.query?.page ?? "0");

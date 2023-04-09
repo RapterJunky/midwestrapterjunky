@@ -17,14 +17,17 @@ const Comments: React.FC<Props> = ({ post }) => {
   const [page, setPage] = useState(1);
   const { data, isLoading, error, mutate } = useSWR<
     Paginate<TComment>,
-    Response
-  >(`/api/threads/comments?post=${post}&page=${page}`, (url) =>
-    fetch(url)
-      .then((value) => {
-        if (value.ok) return value;
-        throw value;
-      })
-      .then((res) => res.json())
+    Response,
+    string
+  >(
+    `/api/threads/comments?post=${post}&page=${page}`,
+    (url) =>
+      fetch(url)
+        .then((value) => {
+          if (value.ok) return value;
+          throw value;
+        })
+        .then((res) => res.json()) as Promise<Paginate<TComment>>
   );
 
   const deleteComment = async (id: string) => {
@@ -48,7 +51,7 @@ const Comments: React.FC<Props> = ({ post }) => {
     }
   };
 
-  const reportComment = async (id: string) => {
+  const reportComment = (id: string) => {
     commentId.current = id;
     setShow(true);
   };
@@ -98,7 +101,7 @@ const Comments: React.FC<Props> = ({ post }) => {
       });
 
       if (!result.ok) throw result;
-      const content = await result.json();
+      const content = (await result.json()) as TComment;
 
       await mutate({ ...data, result: [...data.result, content] });
     } catch (error) {

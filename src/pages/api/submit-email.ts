@@ -15,7 +15,11 @@ const formatRedirect = (res: NextApiResponse, ok: boolean, error?: string) => {
   //https://stackoverflow.com/questions/72924162/next-js-error-405-method-not-allowed-on-redirect-after-form-submission-post
   return res.redirect(
     301,
-    `/confirmation?status=${error ? "error" : "ok"}&message=${error ? `${encodeURIComponent(error)}` : "Your email was add to the mailing list."}`
+    `/confirmation?status=${error ? "error" : "ok"}&message=${
+      error
+        ? `${encodeURIComponent(error)}`
+        : "Your email was add to the mailing list."
+    }`
   );
 };
 
@@ -35,7 +39,7 @@ export default async function handle(
     });
 
     return formatRedirect(res, true);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof ZodError) {
       const status = fromZodError(error);
       logger.error(status, status.message);
@@ -49,7 +53,9 @@ export default async function handle(
           return formatRedirect(
             res,
             false,
-            `${req.body.email} has already been added to the mailing list.`
+            `${
+              (req.body as { email: string }).email
+            } has already been added to the mailing list.`
           );
         default:
           return formatRedirect(res, false, defaultResponse);

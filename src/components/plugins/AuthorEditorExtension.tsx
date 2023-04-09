@@ -4,7 +4,7 @@ import { FaPlusCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { Canvas } from "datocms-react-ui";
 import { useMemo } from "react";
 
-interface AuthorItem {
+export interface AuthorItem {
   avatar: string | null;
   name: string;
   social: { link: string; user: string } | null;
@@ -16,10 +16,7 @@ const Author = ({
   updateField,
   drop,
 }: {
-  updateField: (
-    editing: boolean,
-    parameters?: Record<string, any>
-  ) => Promise<void>;
+  updateField: (editing: boolean, parameters?: AuthorItem) => Promise<void>;
   data: AuthorItem;
   drop: (id: string) => void;
 }) => {
@@ -63,9 +60,9 @@ export default function AuthorEditorExtension({
 }: {
   ctx: RenderFieldExtensionCtx;
 }) {
-  const data = ctx.formValues[ctx.fieldPath];
+  const data = ctx.formValues[ctx.fieldPath] as string;
   const value = useMemo<AuthorItem[]>(
-    () => JSON.parse(data as string) ?? [],
+    () => (JSON.parse(data) as AuthorItem[]) ?? [],
     [data]
   );
 
@@ -77,14 +74,11 @@ export default function AuthorEditorExtension({
     await setField(nextData);
   };
 
-  const updateField = async (
-    editing: boolean,
-    parameters?: Record<string, any>
-  ) => {
+  const updateField = async (editing: boolean, parameters?: AuthorItem) => {
     const data = (await ctx.openModal({
       id: "editAuthor",
       title: editing ? "Edit Author" : "Add Author",
-      parameters,
+      parameters: parameters as never as Record<string, unknown>,
     })) as AuthorItem | { type: "delete"; id: string } | undefined;
     if (!data) return;
 
@@ -98,10 +92,8 @@ export default function AuthorEditorExtension({
     }
 
     const exists = value.some((value) => value.id === data.id);
-    if (exists) {
-      ctx.alert(`Author ${data.name} has already been selected!`);
-      return;
-    }
+    if (exists)
+      return ctx.alert(`Author ${data.name} has already been selected!`);
 
     value.push(data);
     await setField(value);

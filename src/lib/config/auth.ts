@@ -1,9 +1,10 @@
 import { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import prisma from "@api/prisma";
-import { logger } from "@lib/logger";
+
 import type { PrismaClient } from "@prisma/client";
+import { logger } from "@lib/logger";
+import prisma from "@api/prisma";
 
 export const authConfig = {
   pages: {
@@ -22,7 +23,7 @@ export const authConfig = {
     },
   },
   callbacks: {
-    session: async ({ session, user }) => {
+    session: ({ session, user }) => {
       if (session?.user) {
         session.user.id = user.id;
       }
@@ -32,8 +33,8 @@ export const authConfig = {
   adapter: PrismaAdapter(prisma as never as PrismaClient),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
 } satisfies NextAuthOptions;

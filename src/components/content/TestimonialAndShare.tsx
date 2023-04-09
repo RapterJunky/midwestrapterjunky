@@ -1,12 +1,15 @@
 import Image from "next/image";
-import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 import { Parallax, Background } from "react-parallax";
 import { HiStar } from "react-icons/hi";
 import Button from "@components/Button";
 import { markRules } from "@lib/structuredTextRules";
 import type { Color, ResponsiveImage } from "@type/page";
 
-interface TestimonialAndShareProps {
+export type TestimonialAndShareProps = {
   description: StructuredTextGraphQlResponse;
   bgImage: ResponsiveImage;
   linkTitle: string;
@@ -17,7 +20,7 @@ interface TestimonialAndShareProps {
     rating: number;
     author: string;
   }[];
-}
+};
 
 export default function TestimonialAndShare(props: TestimonialAndShareProps) {
   return (

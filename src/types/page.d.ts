@@ -1,8 +1,10 @@
 import type { SeoOrFaviconTag } from "react-datocms";
 import type { NavProps } from "@components/layout/Navbar";
-import type { NextPage } from 'next';
+import type { NextPage } from "next";
 
-export type NextPageWithProvider<P = {}, I = {}> = NextPage<P, I> & { provider?: React.FC };
+export type NextPageWithProvider<P = object, I = object> = NextPage<P, I> & {
+  provider?: React.FC;
+};
 
 export type Color = {
   hex: string;
@@ -11,7 +13,7 @@ export type Color = {
 export type Icon = {
   prefix: string;
   iconName: string;
-  icon: [number, number, any[], string, string];
+  icon: [number, number, unknown[], string, string];
 };
 
 export type LinkWithIcon = {
@@ -33,7 +35,7 @@ export type ResponsiveImage<E = never> = {
   responsiveImage: [E] extends [never] ? Image : Image & E;
 };
 
-export type ModulerContent = { _modelApiKey: string;[key: string]: any };
+export type ModulerContent = { _modelApiKey: string; [key: string]: unknown };
 
 export interface FullPageProps extends NavProps {
   _site: {
@@ -57,4 +59,3 @@ export interface CursorPaginate<T> {
   nextCursor: string | null;
   result: T[];
 }
-

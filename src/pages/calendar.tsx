@@ -22,7 +22,7 @@ interface CalendarProps extends FullPageProps {
     id: string;
     slug: string;
     title: string;
-    dateForm: string;
+    dateFrom: string;
     dateTo: string;
   }[];
   calendar: {

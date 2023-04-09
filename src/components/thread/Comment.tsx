@@ -1,11 +1,11 @@
-import type { User, Comment } from "@api/prisma";
+import type { User, Comment as DbComment } from "@api/prisma";
 import type { useSession } from "next-auth/react";
 import Image from "next/image";
 import { HiFlag, HiTrash } from "react-icons/hi";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 
 type Session = ReturnType<typeof useSession>;
-export type TComment = Omit<Comment, "ownerId" | "threadPostId"> & {
+export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
   owner: Omit<User, "email" | "emailVerified">;
 };
 
@@ -15,7 +15,7 @@ interface Props {
   handleEdit?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleCreate?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
-  reportComment: (id: string) => Promise<void>;
+  reportComment: (id: string) => void;
 }
 
 /**

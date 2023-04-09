@@ -1,9 +1,11 @@
-import SiteTags from "@components/SiteTags";
-import { fetchCachedQuery } from "@lib/cache";
-import GenericPageQuery from "@query/queries/generic";
-import { FullPageProps } from "@type/page";
 import type { GetStaticPropsResult, NextPage } from "next";
 import { signOut } from "next-auth/react";
+
+import SiteTags from "@components/SiteTags";
+
+import GenericPageQuery from "@query/queries/generic";
+import type { FullPageProps } from "@type/page";
+import { fetchCachedQuery } from "@lib/cache";
 
 type Props = Omit<FullPageProps, "navbar" | "preview">;
 

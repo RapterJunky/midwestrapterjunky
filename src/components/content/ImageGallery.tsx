@@ -1,17 +1,17 @@
 import Image from "next/image";
 import type { ResponsiveImage } from "@type/page";
 
-interface ImageGalleryProps {
+export type ImageGalleryProps = {
   displayHeading: boolean;
   heading: string;
   images: ResponsiveImage<{ height: number; width: number }>[];
-}
+};
 
 export default function ImageGallery(props: ImageGalleryProps) {
   return (
     <section className="flex flex-col items-center">
       {props.displayHeading ? (
-        <h1 className="py-4 my-4 text-2xl md:text-4xl font-bold text-neutral-700">
+        <h1 className="my-4 py-4 text-2xl font-bold text-neutral-700 md:text-4xl">
           {props.heading}
         </h1>
       ) : null}

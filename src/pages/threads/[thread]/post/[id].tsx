@@ -23,7 +23,7 @@ import Comments from "@components/thread/Comments";
 
 import prisma, { type User, type Thread, type ThreadPost } from "@api/prisma";
 import GenericPageQuery from "@query/queries/generic";
-import type { FullPageProps } from "@type/page";
+import type { FullPageProps, ResponsiveImage } from "@type/page";
 
 import { fetchCachedQuery } from "@lib/cache";
 import { formatLocalDate } from "@lib/utils/timeFormat";
@@ -87,7 +87,7 @@ export const getStaticProps = async (
     return {
       props: {
         ...props,
-        post: json as any,
+        post: json as unknown as typeof post,
         preview: ctx?.preview ?? false,
       },
     };
@@ -99,7 +99,7 @@ export const getStaticProps = async (
   }
 };
 
-const doc = [
+const doc: PrismaJson.Dast["value"]["document"]["children"] = [
   {
     type: "heading",
     level: 1,
@@ -171,10 +171,6 @@ const doc = [
     ],
   },
   {
-    type: "span",
-    value: "Im a span",
-  },
-  {
     type: "paragraph",
     children: [
       {
@@ -232,16 +228,21 @@ const doc = [
     type: "thematicBreak",
   },
   {
-    type: "link",
-    url: "https://www.datocms.com/",
-    meta: [
-      { id: "rel", value: "nofollow" },
-      { id: "target", value: "_blank" },
-    ],
+    type: "paragraph",
     children: [
       {
-        type: "span",
-        value: "Link",
+        type: "link",
+        url: "https://www.datocms.com/",
+        meta: [
+          { id: "rel", value: "nofollow" },
+          { id: "target", value: "_blank" },
+        ],
+        children: [
+          {
+            type: "span",
+            value: "Link",
+          },
+        ],
       },
     ],
   },
@@ -262,13 +263,14 @@ const doc = [
   },
 ];
 
-const ExampleDast: any = {
+const ExampleDast: PrismaJson.Dast<{ __typename: string; id: string; content: ResponsiveImage<{ width: number; height: number }> }> = {
   links: [],
   blocks: [
     {
       id: "119716320",
       __typename: "ImageRecord",
       content: {
+        blurUpThumb: "",
         responsiveImage: {
           src: "https://www.datocms-assets.com/77949/1668115755-fg5_2100x.webp",
           sizes: "(max-width: 960px) 100vw, 960px",
@@ -303,7 +305,7 @@ const Post: NextPage<Props> = ({ preview, _site, navbar, post }) => {
         },
       });
       if (!request.ok) throw request;
-      router.push(`/threads/${post.thread.id}`);
+      await router.push(`/threads/${post.thread.id}`);
     } catch (error) {
       console.error(error);
     }

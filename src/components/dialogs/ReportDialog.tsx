@@ -38,7 +38,9 @@ const ReportDialog: React.FC<DialogProps> = ({
                 className="my-4 flex flex-col justify-center px-4"
                 onSubmit={(ev) => {
                   ev.preventDefault();
-                  reportHandle(new FormData(ev.target as HTMLFormElement));
+                  reportHandle(
+                    new FormData(ev.target as HTMLFormElement)
+                  ).catch((e) => console.error(e));
                 }}
               >
                 <label className="block">

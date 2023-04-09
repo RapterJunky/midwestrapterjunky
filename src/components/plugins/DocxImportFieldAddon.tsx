@@ -1,7 +1,10 @@
-import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { useRef, useState } from "react";
-import { Canvas } from "datocms-react-ui";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
+import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import { Canvas } from "datocms-react-ui";
+import { useRef, useState } from "react";
+import type { Text } from "slate";
+
+type NewLine = "\n";
 
 const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
   ctx,
@@ -13,7 +16,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
       <input
         onChange={async () => {
           try {
-            ctx.notice("Importing Document");
+            ctx.notice("Importing Document").catch((e) => console.error(e));
             setLoading(true);
             if (!inputFile.current || !inputFile.current.files) return;
             const file = inputFile.current.files.item(0);
@@ -23,14 +26,29 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
               import("slate-hyperscript"),
             ]);
 
-            const deserialize = (el: any, markAttributes = {}): any => {
+            const deserialize = (
+              el: HTMLElement | ChildNode,
+              markAttributes = {}
+            ):
+              | null
+              | Text
+              | NonTextNode
+              | NewLine
+              | (Text | NonTextNode | NewLine | null)[] => {
               if (el.nodeType === Node.TEXT_NODE) {
                 return jsx("text", markAttributes, el.textContent);
               } else if (el.nodeType !== Node.ELEMENT_NODE) {
                 return null;
               }
 
-              const nodeAttributes: any = { ...markAttributes };
+              const nodeAttributes: {
+                highlight?: boolean;
+                strikethrough?: boolean;
+                underline?: boolean;
+                strong?: boolean;
+                code?: boolean;
+                emphasis?: boolean;
+              } = { ...markAttributes };
 
               // define attributes for text nodes
               switch (el.nodeName) {
@@ -131,7 +149,10 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                 case "A":
                   return jsx(
                     "element",
-                    { type: "link", url: el.getAttribute("href") },
+                    {
+                      type: "link",
+                      url: (el as HTMLElement).getAttribute("href"),
+                    },
                     children
                   );
                 default:
@@ -154,10 +175,12 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             );
             const content = deserialize(document.body);
             await ctx.setFieldValue(ctx.fieldPath, content);
-            ctx.notice("Document Imported!");
+            await ctx.notice("Document Imported!");
           } catch (error) {
             console.error(error);
-            ctx.alert((error as Error)?.message ?? "Failed to parse document");
+            await ctx.alert(
+              (error as Error)?.message ?? "Failed to parse document"
+            );
           } finally {
             setLoading(false);
           }

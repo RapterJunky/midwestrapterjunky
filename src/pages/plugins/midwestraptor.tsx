@@ -1,4 +1,11 @@
-import { type MainNavigationTab } from "datocms-plugin-sdk";
+import type {
+  RenderConfigScreenCtx,
+  RenderFieldExtensionCtx,
+  RenderPageCtx,
+  RenderModalCtx,
+  MainNavigationTab,
+  RenderAssetSourceCtx,
+} from "datocms-plugin-sdk";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 
@@ -48,7 +55,9 @@ const DocxImportFieldAddon = dynamic(
   () => import("@components/plugins/DocxImportFieldAddon")
 );
 
-const PreviewLinkExtension = dynamic(() => import("@components/plugins/PreviewLinkExtension"));
+const PreviewLinkExtension = dynamic(
+  () => import("@components/plugins/PreviewLinkExtension")
+);
 
 const MidwestRaptor: NextPage = () => {
   const { id, page, ctx } = useDatoCMS({
@@ -104,7 +113,7 @@ const MidwestRaptor: NextPage = () => {
         normalizeConfig(ctx.plugin.attributes.parameters)
       );
 
-      if (someUpgraded) ctx.notice("Plugin upgraded successfully!");
+      if (someUpgraded) await ctx.notice("Plugin upgraded successfully!");
     },
     overrideFieldExtensions(field, ctx) {
       if (!["json"].includes(field.attributes.field_type)) return;
@@ -122,7 +131,7 @@ const MidwestRaptor: NextPage = () => {
         editor: { id: FIELD_EXTENSION_ID },
       };
     },
-    manualFieldExtensions(ctx) {
+    manualFieldExtensions() {
       return [
         {
           id: FIELD_EXTENSION_ID_PREVIEW,
@@ -131,8 +140,8 @@ const MidwestRaptor: NextPage = () => {
           fieldTypes: ["json"],
           configurable: false,
           asSidebarPanel: {
-            startOpen: true
-          }
+            startOpen: true,
+          },
         },
         {
           id: FIELD_ADDON_ID_DOCX,
@@ -155,20 +164,20 @@ const MidwestRaptor: NextPage = () => {
         },
       ];
     },
-    customMarksForStructuredTextField(field, ctx) {
+    customMarksForStructuredTextField() {
       return StructuredTextFields;
     },
     validateManualFieldExtensionParameters(fieldExtensionId, parameters) {
       if (fieldExtensionId === FIELD_EXTENSION_ID_PREVIEW) {
         const errors: Record<string, string> = {};
         if (!parameters.entity_path) {
-          errors.entity_path = 'Please provide an entity path';
+          errors.entity_path = "Please provide an entity path";
         }
-        return errors
+        return errors;
       }
       return {};
     },
-    assetSources(ctx) {
+    assetSources() {
       return [
         {
           id: "optwebp",
@@ -185,7 +194,7 @@ const MidwestRaptor: NextPage = () => {
         },
       ];
     },
-    mainNavigationTabs(ctx) {
+    mainNavigationTabs() {
       const pages: MainNavigationTab[] = [];
 
       if (hasFlag(Flags.Forms)) {
@@ -202,23 +211,24 @@ const MidwestRaptor: NextPage = () => {
     },
   });
 
+  if (!ctx) return null;
   switch (page) {
     case "ConfigScreen": {
-      return <ConfigScreen ctx={ctx} />;
+      return <ConfigScreen ctx={ctx as RenderConfigScreenCtx} />;
     }
     case "FieldExtension": {
       switch (id) {
         case FIELD_EXTENSION_ID: {
-          return <ShopFieldExtension ctx={ctx} />;
+          return <ShopFieldExtension ctx={ctx as RenderFieldExtensionCtx} />;
         }
         case FIELD_EXTENSION_ID_AUTHOR: {
-          return <AuthorEditorExtension ctx={ctx} />;
+          return <AuthorEditorExtension ctx={ctx as RenderFieldExtensionCtx} />;
         }
         case FIELD_ADDON_ID_DOCX: {
-          return <DocxImportFieldAddon ctx={ctx} />;
+          return <DocxImportFieldAddon ctx={ctx as RenderFieldExtensionCtx} />;
         }
         case FIELD_EXTENSION_ID_PREVIEW: {
-          return <PreviewLinkExtension ctx={ctx} />;
+          return <PreviewLinkExtension ctx={ctx as RenderFieldExtensionCtx} />;
         }
         default:
           return null;
@@ -226,17 +236,21 @@ const MidwestRaptor: NextPage = () => {
     }
     case "Page": {
       if (id === MESSAGE_BOARD_PAGE_ID)
-        return <MessageBoardManagerPage ctx={ctx} />;
+        return <MessageBoardManagerPage ctx={ctx as RenderPageCtx} />;
       return null;
     }
     case "Modal":
-      if (id === "thread-model") return <EditThreadModel ctx={ctx} />;
-      if (id === "browseProducts") return <BrowseProductsModel ctx={ctx} />;
-      if (id === "editAuthor") return <EditAuthorModal ctx={ctx} />;
-      if (id === "storefrontModel") return <StorefrontModel ctx={ctx} />;
+      if (id === "thread-model")
+        return <EditThreadModel ctx={ctx as RenderModalCtx} />;
+      if (id === "browseProducts")
+        return <BrowseProductsModel ctx={ctx as RenderModalCtx} />;
+      if (id === "editAuthor")
+        return <EditAuthorModal ctx={ctx as RenderModalCtx} />;
+      if (id === "storefrontModel")
+        return <StorefrontModel ctx={ctx as RenderModalCtx} />;
       return null;
     case "AssetSource": {
-      return <AssetSourceOptimized ctx={ctx} />;
+      return <AssetSourceOptimized ctx={ctx as RenderAssetSourceCtx} />;
     }
     default:
       return null;

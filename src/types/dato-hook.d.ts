@@ -1,21 +1,41 @@
-import {
-  type OnBootCtx,
-  type IntentCtx,
-  type MainNavigationTab,
-  type SettingsAreaSidebarItemGroup,
-  type ContentAreaSidebarItem,
-  type ManualFieldExtension,
-  type AssetSource,
-  type ItemType,
-  type ItemFormSidebarPanel,
-  type ItemFormOutlet,
-  type Field,
-  type FieldExtensionOverride,
-  type FieldIntentCtx,
-  type StructuredTextCustomMark,
-  type StructuredTextCustomBlockStyle,
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type {
+  OnBootCtx,
+  IntentCtx,
+  MainNavigationTab,
+  SettingsAreaSidebarItemGroup,
+  ContentAreaSidebarItem,
+  ManualFieldExtension,
+  AssetSource,
+  ItemType,
+  ItemFormSidebarPanel,
+  ItemFormOutlet,
+  Field,
+  FieldExtensionOverride,
+  FieldIntentCtx,
+  StructuredTextCustomMark,
+  StructuredTextCustomBlockStyle,
   FullConnectParameters,
+  RenderFieldExtensionCtx,
+  RenderPageCtx,
+  RenderModalCtx,
+  RenderConfigScreenCtx,
+  RenderItemFormOutletCtx,
+  RenderAssetSourceCtx,
+  RenderItemFormSidebarPanelCtx,
+  RenderManualFieldExtensionConfigScreenCtx,
 } from "datocms-plugin-sdk";
+
+export type Context =
+  | RenderFieldExtensionCtx
+  | RenderPageCtx
+  | RenderModalCtx
+  | RenderConfigScreenCtx
+  | RenderItemFormOutletCtx
+  | RenderAssetSourceCtx
+  | RenderItemFormSidebarPanelCtx
+  | RenderManualFieldExtensionConfigScreenCtx
+  | undefined;
 
 export type RenderPage =
   | "ItemFormOutlet"

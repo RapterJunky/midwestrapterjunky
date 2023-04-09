@@ -6,10 +6,7 @@ import { handleError } from "@api/errorHandler";
 const PreviewTimeWindow = 60 * 60;
 const slugValidation = z.string().startsWith("/");
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     //Check that the secret matches and that the slug parameter exists (if not, the request should fail)
     if (req.query.secret !== process.env.PREVIEW_TOKEN)

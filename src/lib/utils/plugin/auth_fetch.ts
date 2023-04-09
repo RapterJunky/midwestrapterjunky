@@ -11,7 +11,7 @@ export class RequestError extends Error {
  */
 export const AuthFetch = async (
   input: RequestInfo | URL,
-  init?: (RequestInit & { json?: any }) | undefined
+  init?: (RequestInit & { json?: object }) | undefined
 ): Promise<Response> => {
   const token = new URLSearchParams(window.location.search).get("token");
   if (!token)

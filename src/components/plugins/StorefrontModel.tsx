@@ -6,22 +6,25 @@ import {
   TextField,
   SelectField,
   Button,
-  SwitchField
+  SwitchField,
 } from "datocms-react-ui";
 import { useForm, Controller } from "react-hook-form";
 import ShopifyClient from "@lib/plugin/ShopifyClient";
 import SquareClient from "@lib/plugin/SquareClient";
 import type { StorefrontPluginConfig } from "@lib/utils/plugin/config";
 
-const options = [{ label: "Shopify", value: "S" }, { label: "Sqaure", value: "SQ" }] as const;
-
+const options = [
+  { label: "Shopify", value: "S" },
+  { label: "Sqaure", value: "SQ" },
+] as const;
 
 export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
-  const { control, handleSubmit, formState, setError } = useForm<StorefrontPluginConfig>({
-    defaultValues: Object.keys(ctx.parameters).length
-      ? ctx.parameters
-      : { type: "S", domain: "", token: "", label: "", test: false },
-  });
+  const { control, handleSubmit, formState, setError } =
+    useForm<StorefrontPluginConfig>({
+      defaultValues: Object.keys(ctx.parameters).length
+        ? ctx.parameters
+        : { type: "S", domain: "", token: "", label: "", test: false },
+    });
 
   const submit = async (params: StorefrontPluginConfig) => {
     if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
@@ -50,11 +53,17 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
       }
       case "SQ": {
         try {
-          const client = new SquareClient(params.domain, params.token, params.test);
+          const client = new SquareClient(
+            params.domain,
+            params.token,
+            params.test
+          );
           await client.productsMatching("foo");
         } catch (error) {
           setError("token", {
-            message: (error as Error)?.message ?? "The API Key seems to be invaild for the specified square domain!",
+            message:
+              (error as Error)?.message ??
+              "The API Key seems to be invaild for the specified square domain!",
             type: "validate",
           });
         }
@@ -64,7 +73,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
         break;
     }
 
-    ctx.resolve(params);
+    await ctx.resolve(params);
   };
 
   return (
@@ -84,7 +93,8 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
                 }}
                 onChange={(value) => field.onChange(value?.value)}
                 value={
-                  options.find((value) => value.value === field.value) ?? options[0]
+                  options.find((value) => value.value === field.value) ??
+                  options[0]
                 }
                 label="Storefront Type"
                 id="storefront-type"
@@ -117,7 +127,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
             control={control}
             rules={{ required: "This field is required!" }}
             name="domain"
-            render={({ field: { ref, ...field }, formState }) => (
+            render={({ field: { ref: _, ...field }, formState }) => (
               <TextField
                 error={formState.errors?.domain?.message}
                 hint={
@@ -138,7 +148,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
             control={control}
             rules={{ required: "This field is required!" }}
             name="token"
-            render={({ field: { ref, ...field }, formState }) => (
+            render={({ field: { ref: _, ...field }, formState }) => (
               <TextField
                 id={field.name}
                 label="Storefront access token"
@@ -167,14 +177,18 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
           />
         </FieldGroup>
         <FieldGroup>
-          <Controller control={control} name="test" render={({ field: { ref, ...field }, formState }) => (
-            <SwitchField
-              {...field}
-              id="testMode"
-              label="Test mode active?"
-              hint="Enables dev mode on storefront"
-            />
-          )} />
+          <Controller
+            control={control}
+            name="test"
+            render={({ field: { ref: _, ...field } }) => (
+              <SwitchField
+                {...field}
+                id="testMode"
+                label="Test mode active?"
+                hint="Enables dev mode on storefront"
+              />
+            )}
+          />
         </FieldGroup>
         <Button
           type="submit"

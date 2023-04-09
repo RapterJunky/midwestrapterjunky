@@ -1,7 +1,6 @@
 import type {
   GetStaticPropsContext,
   GetStaticPropsResult,
-  GetStaticPathsContext,
   GetStaticPathsResult,
   NextPage,
 } from "next";
@@ -43,8 +42,8 @@ declare const L: {
   tileLayer: (
     url: string,
     opt?: { maxZoom?: number; attribution?: string }
-  ) => { addTo: (map: any) => void };
-  marker: (lat: [number, number]) => { addTo: (map: any) => void };
+  ) => { addTo: (map: object) => void };
+  marker: (lat: [number, number]) => { addTo: (map: object) => void };
 };
 
 interface EventPageProps extends FullPageProps {
@@ -78,7 +77,7 @@ const loadPages = async () => {
   return data.allEvents.map((value) => value.slug);
 };
 
-const getPage = async (id: string = "", preview: boolean = false) => {
+const getPage = async (id = "", preview = false) => {
   logger.info(`Event page (${id}) - preview(${preview}) | Generating`);
   const data = await DatoCMS<EventPageProps>(EventPageQuery, {
     variables: {
@@ -124,9 +123,9 @@ export const getStaticProps = async (
   };
 };
 
-export async function getStaticPaths(
-  ctx: GetStaticPathsContext
-): Promise<GetStaticPathsResult<{ id: string }>> {
+export async function getStaticPaths(): Promise<
+  GetStaticPathsResult<{ id: string }>
+> {
   await fetchCacheData(PAGE_CACHE_KEY, loadPages, true);
 
   return {
@@ -214,6 +213,7 @@ const EventPage: NextPage<EventPageProps> = ({
                     {event.location ? (
                       <>
                         <Head>
+                          {/* NextJS gets mad about this, but theres no reason to load this when the page does not need it and we arnt using app dir. */}
                           <link
                             rel="stylesheet"
                             href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"

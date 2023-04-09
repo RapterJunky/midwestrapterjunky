@@ -16,12 +16,12 @@ const existsExtension = Prisma.defineExtension({
   name: "exists",
   model: {
     $allModels: {
-      exists: async function <T, A, E extends Error>(
+      exists: async function <T, E extends Error>(
         this: T,
         where: Prisma.Args<T, "findFirst">,
         throws?: E
       ): Promise<boolean> {
-        const result = await (this as PrismaModel).findFirst(where);
+        const result = (await (this as PrismaModel).findFirst(where)) as object;
         if (throws && !result) throw throws;
         return !!result;
       },
@@ -37,6 +37,7 @@ const getExtendPrismaClient = () => {
 type ExtendPrismaClient = ReturnType<typeof getExtendPrismaClient>;
 
 declare global {
+  // eslint-disable-next-line no-var
   var prisma: ExtendPrismaClient;
 }
 

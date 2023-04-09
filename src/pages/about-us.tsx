@@ -5,7 +5,10 @@ import type {
 } from "next";
 import Image from "next/image";
 import type { SeoOrFaviconTag } from "react-datocms";
-import { StructuredText } from "react-datocms/structured-text";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
@@ -20,15 +23,31 @@ import {
   renderBlock,
   renderInlineRecord,
 } from "@lib/structuredTextRules";
-import type { FullPageProps } from "types/page";
+import type {
+  FullPageProps,
+  ModulerContent,
+  ResponsiveImage,
+} from "types/page";
 
 interface AboutUsProps extends FullPageProps {
   aboutUsModel: {
     _seoMetaTags: SeoOrFaviconTag[];
     imageTitle: string;
     title: string;
-    content: any;
-    footerContent: any;
+    content: StructuredTextGraphQlResponse<
+      {
+        content: ResponsiveImage<{ width: number; height: number }>;
+        __typename: string;
+        id: string;
+      },
+      {
+        title: string;
+        slug: string;
+        __typename: string;
+        id: string;
+      }
+    >;
+    footerContent: ModulerContent[];
     image: {
       alt: string | null;
       blurUpThumb: string;

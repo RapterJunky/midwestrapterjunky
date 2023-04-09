@@ -14,9 +14,14 @@ export const Threads: React.FC<{
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ ctx, mini, setMini }) => {
   const [page, setPage] = useState<number>(1);
-  const { data, error, isLoading, mutate } = useSWR<Paginate<Thread>>(
+  const { data, error, isLoading, mutate } = useSWR<
+    Paginate<Thread>,
+    Response,
+    string
+  >(
     `/api/threads?page=${page}`,
-    (url) => fetch(url).then((value) => value.json())
+    (url) =>
+      fetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>
   );
 
   const createModel = async () => {
@@ -36,11 +41,11 @@ export const Threads: React.FC<{
         json: result,
       });
 
-      const body = await request.json();
-      await mutate({ ...data, result: [body, data.result] });
+      const body = (await request.json()) as Thread;
+      await mutate({ ...data, result: [body, ...data.result] });
     } catch (error) {
       console.error(error);
-      ctx.alert("Was unable to edit thread.");
+      ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
     }
   };
 
@@ -70,7 +75,7 @@ export const Threads: React.FC<{
       });
     } catch (error) {
       console.error(error);
-      ctx.alert("Was unable to create thread.");
+      ctx.alert("Was unable to create thread.").catch((e) => console.error(e));
     }
   };
   const deleteModel = async (id: number) => {
@@ -105,7 +110,7 @@ export const Threads: React.FC<{
       });
     } catch (error) {
       console.error(error);
-      ctx.alert("Was unable to delete thread.");
+      ctx.alert("Was unable to delete thread.").catch((e) => console.error(e));
     }
   };
 

@@ -56,9 +56,9 @@ const productFragment = `
   }
 `;
 
-export class APIError extends Error { }
+export class APIError extends Error {}
 
-const normalizeProduct = (product: any): Product => {
+const normalizeProduct = (product: Product): Product => {
   if (!product || typeof product !== "object") {
     throw new Error("Invalid product");
   }
@@ -69,8 +69,8 @@ const normalizeProduct = (product: any): Product => {
   };
 };
 
-const normalizeProducts = (products: any): Product[] =>
-  products.edges.map((edge: any) => normalizeProduct(edge.node));
+const normalizeProducts = (products: Products): Product[] =>
+  products.edges.map((edge) => normalizeProduct(edge.node));
 
 export default class ShopifyClient {
   private storefrontAccessToken: string;
@@ -88,7 +88,7 @@ export default class ShopifyClient {
   }
 
   async productsMatching(query: string) {
-    const response = await this.fetch({
+    const response = await this.fetch<{ products: Products }>({
       query: `
           query getProducts($query: String) {
             shop {
@@ -109,7 +109,7 @@ export default class ShopifyClient {
   }
 
   async productByHandle(handle: string) {
-    const response = await this.fetch({
+    const response = await this.fetch<{ product: Product }>({
       query: `
           query getProduct($handle: String!) {
             shop {
@@ -125,7 +125,7 @@ export default class ShopifyClient {
     return normalizeProduct(response.shop.product);
   }
 
-  async fetch(requestBody: any) {
+  async fetch<T extends object>(requestBody: object) {
     const res = await fetch(
       `https://${this.shopifyDomain}.myshopify.com/api/graphql`,
       {
@@ -152,7 +152,7 @@ export default class ShopifyClient {
       });
     }
 
-    const body = await res.json();
+    const body = (await res.json()) as { data: { shop: T } };
 
     return body.data;
   }

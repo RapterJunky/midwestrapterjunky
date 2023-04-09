@@ -74,7 +74,10 @@ const Thread: NextPage<Props> = ({ _site, navbar, preview, thread }) => {
     `/api/threads/post?thread=${
       thread.id
     }&page=${page}&search=${encodeURIComponent(debouncedQuery)}`,
-    (url) => fetch(url).then((value) => value.json())
+    (url) =>
+      fetch(url).then((value) => value.json()) as Promise<
+        Paginate<ThreadPost & { owner: User }>
+      >
   );
 
   return (

@@ -30,7 +30,11 @@ const navbarMode = {
 
 const NavDropdown = dynamic(() => import("@components/NavDropdown"));
 
-const Navbar: React.FC<NavbarProps> = ({ logo, pageLinks = [], mode = "fade-scroll" }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  logo,
+  pageLinks = [],
+  mode = "fade-scroll",
+}) => {
   const [showNav, setShowNav] = useState<boolean>(false);
   const ref = useRef<HTMLElement>(null);
   const onScroll = useCallback(() => {
@@ -62,8 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ logo, pageLinks = [], mode = "fade-scro
       ) : null}
       <nav
         ref={ref}
-        className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]
-          }`}
+        className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
       >
         <div className="mx-auto md:mx-0">
           <Image
@@ -100,5 +103,5 @@ const Navbar: React.FC<NavbarProps> = ({ logo, pageLinks = [], mode = "fade-scro
       </nav>
     </>
   );
-}
+};
 export default Navbar;

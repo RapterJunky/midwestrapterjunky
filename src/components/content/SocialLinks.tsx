@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Color, Icon } from "@type/page";
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
 
-interface SocialLinksProps {
+export type SocialLinksProps = {
   sociallinks: { iconColor: Color | null; logo: Icon; link: string }[];
-}
+};
 
 export default function SocialLinks(props: SocialLinksProps) {
   return (

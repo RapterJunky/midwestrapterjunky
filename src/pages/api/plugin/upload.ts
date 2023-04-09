@@ -55,7 +55,7 @@ export default async function handle(
       throw createHttpError.Unauthorized();
 
     await new Promise<void>((ok, rej) => {
-      upload.single("image")(req as any, res as any, (err: any) => {
+      upload.single("image")(req, res, (err) => {
         if (err) return rej(err);
         return ok();
       });

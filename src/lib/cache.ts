@@ -7,8 +7,7 @@ export const fetchCachedQuery = async <R = unknown>(
   query: string,
   opt?: { ci?: boolean; preview?: true }
 ): Promise<R> => {
-  const request = async (preview: boolean = false) =>
-    DatoCMS(query, { preview });
+  const request = async (preview = false) => DatoCMS(query, { preview });
   if (opt?.preview) return request(true) as Promise<R>;
 
   let cache = await prisma.cache.findFirst({ where: { key } });
@@ -36,8 +35,8 @@ export const fetchCachedQuery = async <R = unknown>(
 
 export const fetchCacheData = async <R = unknown>(
   key: string,
-  fetch: () => Promise<any>,
-  ci: boolean = false
+  fetch: () => Promise<object>,
+  ci = false
 ): Promise<R> => {
   let pages = await prisma.cache.findFirst({ where: { key } });
   if (!pages || pages.isDirty || ci) {

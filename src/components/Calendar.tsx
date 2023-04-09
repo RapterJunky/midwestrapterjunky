@@ -3,10 +3,16 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 
 interface CalenderProps {
-  data: any[];
+  data: {
+    id: string;
+    slug: string;
+    title: string;
+    dateFrom: string;
+    dateTo: string;
+  }[];
 }
 
-const monthNames = [
+const mouthNames = [
   "January",
   "February",
   "March",
@@ -27,7 +33,7 @@ const monthNames = [
  * @see https://tailwindcomponents.com/component/calendar-ui-with-tailwindcss-and-alpinejs
  *
  */
-export default function Calendar(props: CalenderProps) {
+const Calendar: React.FC<CalenderProps> = (props) => {
   const today = useMemo(() => {
     const data = new Date();
     return {
@@ -53,7 +59,7 @@ export default function Calendar(props: CalenderProps) {
       start: offset,
       end: offsetEnd,
       days_in_month: daysInMonth,
-      name: monthNames[date.getMonth()],
+      name: mouthNames[date.getMonth()],
       days_last_month: new Date(
         current.year,
         (current.month === 0 ? 11 : current.month - 1) + 1,
@@ -63,7 +69,13 @@ export default function Calendar(props: CalenderProps) {
   }, [current]);
 
   const vaildEvents = (
-    value: { dateFrom: string; dateTo: string },
+    value: {
+      id: string;
+      slug: string;
+      title: string;
+      dateFrom: string;
+      dateTo: string;
+    },
     day: number
   ) => {
     const start = new Date(value.dateFrom);
@@ -165,9 +177,8 @@ export default function Calendar(props: CalenderProps) {
                     className="relative h-30 w-1/7 border-r border-b bg-slate-100 px-4 pt-2"
                   >
                     <div
-                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
-                        isToday(day, -1) ? "bg-gray-500 text-white" : ""
-                      }`}
+                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(day, -1) ? "bg-gray-500 text-white" : ""
+                        }`}
                     >
                       {day}
                     </div>
@@ -182,11 +193,10 @@ export default function Calendar(props: CalenderProps) {
                   className="relative h-30 w-1/7 border-r border-b px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${
-                      isToday(day)
-                        ? "bg-blue-500 text-white"
-                        : "text-gray-700 hover:bg-blue-200"
-                    }`}
+                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${isToday(day)
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-700 hover:bg-blue-200"
+                      }`}
                   >
                     {day}
                   </div>
@@ -219,9 +229,8 @@ export default function Calendar(props: CalenderProps) {
                   className="h-30 w-1/7 border-r border-b bg-slate-100 px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
-                      isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
-                    }`}
+                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
+                      }`}
                   >
                     {i + 1}
                   </div>
@@ -233,4 +242,6 @@ export default function Calendar(props: CalenderProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Calendar;

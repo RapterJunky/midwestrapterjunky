@@ -3,12 +3,12 @@ import Image from "next/image";
 import type { ResponsiveImage } from "@type/page";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
-interface CarouselProps {
+export type CarouselProps = {
   images: ResponsiveImage<{
     alt: string | null;
     title: string | null;
   }>[];
-}
+};
 
 export default function Carousel(props: CarouselProps) {
   const id = useId();

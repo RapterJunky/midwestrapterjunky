@@ -1,12 +1,14 @@
 import type {
-  GetStaticPathsContext,
   GetStaticPathsResult,
   GetStaticPropsContext,
   GetStaticPropsResult,
   NextPage,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
-import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -22,7 +24,7 @@ import ScrollToTop from "@components/blog/ScrollToTop";
 
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
-import type { FullPageProps } from "types/page";
+import type { FullPageProps, ResponsiveImage } from "types/page";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";
@@ -38,7 +40,7 @@ interface ArticleProps extends FullPageProps {
   prev: { slug: string; title: string } | null;
   post: {
     title: string;
-    content: StructuredTextGraphQlResponse;
+    content: StructuredTextGraphQlResponse<{ __typename: string; id: string; content: ResponsiveImage<{ width: number; height: number; }>; }, { title: string; slug: string; __typename: string; id: string; }>;
     publishedAt: string;
     prev: {
       slug: string;
@@ -106,9 +108,7 @@ const loadBlogPages = async () => {
   return data.articles.map((value) => value.slug);
 };
 
-export const getStaticPaths = async (
-  ctx: GetStaticPathsContext
-): Promise<GetStaticPathsResult> => {
+export const getStaticPaths = async (): Promise<GetStaticPathsResult> => {
   await fetchCacheData(PAGE_CACHE_KEY, loadBlogPages, !!process.env?.CI);
   return {
     paths: [],
@@ -134,7 +134,7 @@ export const getStaticProps = async (
     };
   }
 
-  let pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadBlogPages);
+  const pages = await fetchCacheData<string[]>(PAGE_CACHE_KEY, loadBlogPages);
 
   if (!pages.includes(id))
     return {

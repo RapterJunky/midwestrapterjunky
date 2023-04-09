@@ -1,14 +1,14 @@
 import Link from "next/link";
 import type { Color } from "@type/page";
 
-interface AdvertBlockProps {
+export type AdvertBlockProps = {
   headingleft: string;
   textleft: string;
   link: string;
   headingright: string;
   textright: string;
   bgcolor: Color;
-}
+};
 
 export default function AdvertBlock(props: AdvertBlockProps) {
   return (
