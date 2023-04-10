@@ -21,6 +21,7 @@ const ShopCard: React.FC<Props> = ({
 }) => {
   return (
     <Link
+      data-cy="product-tag"
       className="z-0 shadow animate-in fade-in"
       href={`/shop/product/${id}`}
     >
@@ -36,10 +37,14 @@ const ShopCard: React.FC<Props> = ({
         />
       </div>
       <div className="p-2">
-        <h1 className="font-bold">{name}</h1>
-        <span className="text-xs text-gray-800">{category ?? "General"}</span>
+        <h1 className="font-bold" data-cy="product-name">
+          {name}
+        </h1>
+        <span className="text-xs text-gray-800" data-cy="product-category">
+          {category ?? "General"}
+        </span>
         <div className="mt-4 flex w-full justify-end">
-          <span>{price ?? "$??.??"}</span>
+          <span data-cy="product-price">{price ?? "$??.??"}</span>
         </div>
       </div>
     </Link>

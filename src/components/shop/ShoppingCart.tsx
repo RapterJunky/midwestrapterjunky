@@ -29,7 +29,7 @@ const ShoppingCart: React.FC<Props> = ({ onClose }) => {
         <div className="relative">
           <HiShoppingBag className="h-7 w-7" />
           {count >= 1 ? (
-            <span className="absolute -left-4 -bottom-2 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-xs font-bold leading-none text-danger-700">
+            <span className="absolute -bottom-2 -left-4 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-xs font-bold leading-none text-danger-700">
               {count}
             </span>
           ) : null}
@@ -58,7 +58,7 @@ const ShoppingCart: React.FC<Props> = ({ onClose }) => {
                 ))}
               </ul>
             </div>
-            <div className="sticky bottom-0 right-0 left-0 z-20 w-full flex-shrink-0 border-t bg-white px-6 py-6 text-sm sm:px-6">
+            <div className="sticky bottom-0 left-0 right-0 z-20 w-full flex-shrink-0 border-t bg-white px-6 py-6 text-sm sm:px-6">
               <ul className="pb-2">
                 <li className="flex justify-between py-1">
                   <span>Subtotal</span>

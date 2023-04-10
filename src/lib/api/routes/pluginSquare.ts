@@ -1,91 +1,63 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Client, Environment } from "square";
 import createHttpError from "http-errors";
 import { z } from "zod";
-import { applyRateLimit } from "../rateLimiter";
 
-const ProductionOrigin = "connect.squareup.com";
-const SandboxOrigin = "connect.squareupsandbox.com";
+import { applyRateLimit } from "@lib/api/rateLimiter";
 
 const modeQuery = z.enum(["item", "list"]).describe("Type of request");
 
 const request = z.object({
   token: z.string().nonempty().describe("Auth token"),
-  sandbox: z.boolean().describe("Is this request to be in sandbox mode"),
+  sandbox: z
+    .boolean()
+    .describe("Is this request to be in sandbox mode")
+    .transform((arg) => (arg ? Environment.Sandbox : Environment.Production)),
 });
 
-const searchRequest = request.extend({
+const searchRequest = z.object({
   search: z.string().describe("Search query"),
 });
-const fetchItem = request.extend({
+const fetchItem = z.object({
   id: z.string().nonempty().describe("Id of product to fetch"),
 });
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
-  const mode = modeQuery.parse(req.query.mode);
   await applyRateLimit(req, res);
 
+  const mode = modeQuery.parse(req.query.mode);
+  const { token, sandbox } = request.parse(req.body);
+
+  const client = new Client({
+    accessToken: token,
+    environment: sandbox,
+  });
+
   if (mode === "list") {
-    const { token, search, sandbox } = searchRequest.parse(req.body);
+    const { search } = searchRequest.parse(req.body);
+    const objects = await client.catalogApi.searchCatalogObjects({
+      limit: 10,
+      includeDeletedObjects: false,
+      includeRelatedObjects: true,
+      objectTypes: ["ITEM"],
+      query: search.length
+        ? {
+            textQuery: {
+              keywords: search.split(" "),
+            },
+          }
+        : undefined,
+    });
 
-    const request = await fetch(
-      `https://${sandbox ? SandboxOrigin : ProductionOrigin}/v2/catalog/search`,
-      {
-        method: "POST",
-        headers: {
-          "Square-Version": "2023-03-15",
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          limit: 10,
-          include_deleted_objects: false,
-          include_related_objects: true,
-          object_types: ["ITEM"],
-          query: search.length
-            ? {
-                text_query: {
-                  keywords: [search],
-                },
-              }
-            : undefined,
-        }),
-      }
-    );
-
-    const body = (await request.json()) as { errors?: { detail: string }[] };
-
-    if (!request.ok)
-      throw createHttpError.BadRequest(
-        body?.errors?.at(0)?.detail ?? "Failed Square API request."
-      );
-
-    return res.status(200).json(body);
+    return res.status(200).json(objects.result);
   }
 
-  const { token, id, sandbox } = fetchItem.parse(req.body);
+  const { id } = fetchItem.parse(req.body);
 
-  const request = await fetch(
-    `https://${
-      sandbox ? SandboxOrigin : ProductionOrigin
-    }/v2/catalog/object/${id}?include_related_objects=true`,
-    {
-      headers: {
-        "Square-Version": "2023-03-15",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const item = await client.catalogApi.retrieveCatalogObject(id, true);
 
-  const body = (await request.json()) as { errors?: { detail: string }[] };
-
-  if (!request.ok)
-    throw createHttpError.BadRequest(
-      body?.errors?.at(0)?.detail ?? "Failed Square API request."
-    );
-
-  return res.status(200).json(body);
+  return res.status(200).json(item.result);
 };
 
 export default handle;

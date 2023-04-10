@@ -1,4 +1,3 @@
-import type { RenderModalCtx } from "datocms-plugin-sdk";
 import {
   Canvas,
   Spinner,
@@ -6,16 +5,18 @@ import {
   TextInput,
   SelectInput,
 } from "datocms-react-ui";
-import useSWR from "swr";
-import { useState } from "react";
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { FaSearch } from "react-icons/fa";
+import { useState } from "react";
+import useSWR from "swr";
+
 import {
   normalizeConfig,
   type StorefrontPluginConfig,
   type VaildConfig,
 } from "@lib/utils/plugin/config";
-import ShopifyClient, { type Product } from "@lib/plugin/ShopifyClient";
-import SquareClient from "@/lib/plugin/SquareClient";
+import ShopifyClient from "@lib/plugin/ShopifyClient";
+import SquareClient from "@lib/plugin/SquareClient";
 
 type RequestValue = [string, string | undefined, string | undefined];
 
@@ -29,31 +30,32 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
     config.storefronts[0]
   );
   const [query, setQuery] = useState<string>("");
-  const { data, isLoading, error } = useSWR<Product[], Error, RequestValue>(
-    [query, shop?.type, shop?.domain],
-    ([search, type]) => {
-      if (!shop)
-        throw new Error("No storefront to use.", { cause: "NO_STOREFRONT" });
+  const { data, isLoading, error } = useSWR<
+    Storefront.Product[],
+    Error,
+    RequestValue
+  >([query, shop?.type, shop?.domain], ([search, type]) => {
+    if (!shop)
+      throw new Error("No storefront to use.", { cause: "NO_STOREFRONT" });
 
-      switch (type) {
-        case "SQ": {
-          const client = new SquareClient(shop.domain, shop.token, shop.test);
-          return client.productsMatching(search);
-        }
-        case "S": {
-          const client = new ShopifyClient({
-            shopifyDomain: shop.domain,
-            storefrontAccessToken: shop.token,
-          });
-          return client.productsMatching(search);
-        }
-        default:
-          throw new Error("Unable to process request.", {
-            cause: "NO_STOREFRONT_HANDLER",
-          });
+    switch (type) {
+      case "SQ": {
+        const client = new SquareClient(shop.domain, shop.token, shop.test);
+        return client.productsMatching(search);
       }
+      case "S": {
+        const client = new ShopifyClient({
+          shopifyDomain: shop.domain,
+          storefrontAccessToken: shop.token,
+        });
+        return client.productsMatching(search);
+      }
+      default:
+        throw new Error("Unable to process request.", {
+          cause: "NO_STOREFRONT_HANDLER",
+        });
     }
-  );
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -119,10 +121,9 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                     }
                   >
                     <div
-                      className="block bg-cover pt-[100%]"
+                      className="block bg-dato-light bg-cover pt-[100%]"
                       style={{
-                        backgroundColor: "var(--light-bg-color)",
-                        backgroundImage: `url(${product.imageUrl})`,
+                        backgroundImage: `url(${product.image.url})`,
                       }}
                     />
                     <div
@@ -149,9 +150,8 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && !error && !data?.length ? (
               <div
-                className="flex h-52 items-center justify-center text-center text-dato-light-body"
+                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
                 style={{
-                  backgroundColor: "var(--light-bg-color)",
                   fontSize: "var(--font-size-xl)",
                 }}
               >
@@ -160,9 +160,8 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && error ? (
               <div
-                className="flex h-52 items-center justify-center text-center text-dato-light-body"
+                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
                 style={{
-                  backgroundColor: "var(--light-bg-color)",
                   fontSize: "var(--font-size-xl)",
                 }}
               >

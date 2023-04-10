@@ -1,24 +1,10 @@
-export type PriceTypes = {
-  amount: number | string;
-  currencyCode: string;
-};
-
-export type Product = {
-  handle: string;
-  description: string;
-  title: string;
-  productType: string;
-  onlineStoreUrl: string;
-  imageUrl: string;
-  priceRange: {
-    maxVariantPrice: PriceTypes;
-    minVariantPrice: PriceTypes;
-  };
+export type ShopifyProduct = Storefront.Product & {
   images: {
     edges: [
       {
         node: {
           src: string;
+          alt: string;
         };
       }
     ];
@@ -26,7 +12,7 @@ export type Product = {
 };
 
 export type Products = {
-  edges: [{ node: Product }];
+  edges: [{ node: ShopifyProduct }];
 };
 
 const productFragment = `
@@ -51,6 +37,7 @@ const productFragment = `
     edges {
       node {
         src: transformedSrc(crop: CENTER, maxWidth: 200, maxHeight: 200)
+        alt
       }
     }
   }
@@ -58,18 +45,21 @@ const productFragment = `
 
 export class APIError extends Error {}
 
-const normalizeProduct = (product: Product): Product => {
+const normalizeProduct = (product: ShopifyProduct): Storefront.Product => {
   if (!product || typeof product !== "object") {
     throw new Error("Invalid product");
   }
 
   return {
     ...product,
-    imageUrl: product.images.edges[0]?.node.src || "",
+    image: {
+      url: product.images.edges[0]?.node.src ?? "",
+      alt: product.images.edges[0]?.node?.alt ?? "Product Image",
+    },
   };
 };
 
-const normalizeProducts = (products: Products): Product[] =>
+const normalizeProducts = (products: Products): Storefront.Product[] =>
   products.edges.map((edge) => normalizeProduct(edge.node));
 
 export default class ShopifyClient {
@@ -109,7 +99,7 @@ export default class ShopifyClient {
   }
 
   async productByHandle(handle: string) {
-    const response = await this.fetch<{ product: Product }>({
+    const response = await this.fetch<{ product: ShopifyProduct }>({
       query: `
           query getProduct($handle: String!) {
             shop {

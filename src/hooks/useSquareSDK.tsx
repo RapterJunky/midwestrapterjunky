@@ -3,7 +3,14 @@ import type {
   Card,
   Payments,
 } from "@square/web-payments-sdk-types";
-import { useRef, useEffect, useState, createContext, useContext } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  useCallback,
+} from "react";
 import type { Address } from "@/pages/shop/checkout";
 import Script from "next/script";
 
@@ -92,24 +99,30 @@ const useSquareSDK = (active: boolean) => {
   const container = useRef<HTMLDivElement>(null);
   const ctx = useContext(SquareSDKContext);
   if (!ctx) throw new Error("useSquareSDK needs to be wrapped in a provider.");
+  const setLoading = ctx.setLoading;
+  const setError = ctx.setError;
+  const payment = ctx.payments;
 
-  useEffect(() => {
-    const wrapper = container.current;
-    const init = async () => {
+  const init = useCallback(
+    async (wrapper: HTMLDivElement | null) => {
       try {
-        ctx.setLoading(true);
-        if (!wrapper || !ctx.payments) return;
-        card.current = await ctx.payments.card({ style: darkModeCardStyle });
+        setLoading(true);
+        if (!wrapper || !payment) return;
+        card.current = await payment.card({ style: darkModeCardStyle });
         await card.current.attach(wrapper);
       } catch (e) {
         console.error(e);
-        ctx.setError((e as Error).message);
+        setError((e as Error).message);
       } finally {
-        ctx.setLoading(false);
+        setLoading(false);
       }
-    };
-    if (!card.current) init().catch((e) => console.error(e));
+    },
+    [payment, setLoading, setError]
+  );
 
+  useEffect(() => {
+    const wrapper = container.current;
+    if (!card.current) init(wrapper).catch((e) => console.error(e));
     return () => {
       card.current?.destroy().catch((e) => console.error(e));
       if (wrapper) {
@@ -123,13 +136,13 @@ const useSquareSDK = (active: boolean) => {
       }
       card.current = undefined;
     };
-  }, [active, ctx]);
+  }, [active, init]);
 
   return {
     loading: ctx.loading,
     container,
     error: ctx.error,
-    setError: ctx.setError,
+    setError,
     tokenize: async (
       email: string,
       billing: Address,

@@ -5,7 +5,7 @@ import { HiShoppingBag } from "react-icons/hi2";
 
 import Sidebar from "@components/ui/Sidebar";
 import ShoppingCart from "@components/shop/ShoppingCart";
-import useCart from "@/hooks/useCart";
+import useCart from "@hook/useCart";
 
 const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
   const [show, setShow] = useState<boolean>(false);
@@ -30,16 +30,12 @@ const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
 
     if (query) {
       params.set("query", query);
-      router
-        .push(`/shop/search?${params.toString()}`)
-        .catch((e) => console.error(e));
+      router.push(`/shop?${params.toString()}`).catch((e) => console.error(e));
       return;
     }
 
     params.delete("query");
-    router
-      .push(`/shop/search?${params.toString()}`)
-      .catch((e) => console.error(e));
+    router.push(`/shop?${params.toString()}`).catch((e) => console.error(e));
   };
 
   return (
@@ -58,6 +54,7 @@ const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
             Search
           </label>
           <input
+            data-cy="shop-search-input"
             id="search"
             name="query"
             placeholder="Search for products..."
@@ -71,12 +68,12 @@ const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
         <div className="order-1 mb-4 flex w-full items-center justify-end pr-4 lg:order-none lg:mb-0">
           <button
             onClick={() => setShow(true)}
-            aria-label="Shopping Cart"
+            aria-label={`Cart items: ${count}`}
             className="relative transition-transform hover:scale-110 hover:transform"
           >
             <HiShoppingBag className="h-7 w-7" />
             {count >= 1 ? (
-              <span className="absolute -left-4 -bottom-2 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-xs font-bold leading-none text-danger-700">
+              <span className="absolute -bottom-2 -left-4 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-xs font-bold leading-none text-danger-700">
                 {count}
               </span>
             ) : null}

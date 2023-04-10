@@ -5,6 +5,7 @@ import Navbar from "@components/layout/Navbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import type { FullPageProps } from "types/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
@@ -23,18 +24,20 @@ export async function getStaticProps() {
 const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
   const router = useRouter();
 
+  const shop_receipt_url = decodeURIComponent(
+    (Array.isArray(router.query.shop_receipt)
+      ? router.query.shop_receipt[0]
+      : router.query.shop_receipt) ?? ""
+  );
+
+  console.log(shop_receipt_url);
+
   return (
     <div className="flex h-full flex-col">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            { tag: "title", content: "Confirmation - Midwest Raptor Junkies" },
-            {
-              tag: "meta",
-              attributes: { name: "robots", content: "noindex,nofollow" },
-            },
-          ],
+          genericSeoTags({ title: "Confirmation", robots: false }),
         ]}
       />
       <Navbar mode="none" {...navbar} />
@@ -60,12 +63,17 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                (router.query.shop_receipt as string)?.startsWith(
-                  "https://squareup.com/receipt/"
-                ) ? (
+                (shop_receipt_url.startsWith(
+                  "https://squareupsandbox.com/receipt"
+                ) ||
+                  shop_receipt_url.startsWith(
+                    "https://squareup.com/receipt"
+                  )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
-                    href={router.query.shop_receipt as string}
+                    target="_blank"
+                    rel="noopener"
+                    href={shop_receipt_url}
                   >
                     View Receipt
                   </Link>

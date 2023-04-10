@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Client } from "square";
 import createHttpError from "http-errors";
-import { handleError } from "@/lib/api/errorHandler";
+import { Client } from "square";
 
-import { logger } from "@/lib/logger";
+import { handleError } from "@lib/api/errorHandler";
+import { logger } from "@lib/logger";
 
 export default async function handle(
   req: NextApiRequest,

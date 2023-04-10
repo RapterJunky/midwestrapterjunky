@@ -35,7 +35,7 @@ const Comments = ({
   }, []);
 
   return (
-    <div className="pt-6 pb-6 text-center text-gray-700">
+    <div className="pb-6 pt-6 text-center text-gray-700">
       {loadComments ? (
         <button onClick={LoadComments}>Load Comments</button>
       ) : null}

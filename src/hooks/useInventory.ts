@@ -17,7 +17,9 @@ const useInventory = (item: string | undefined) => {
   const inStock = useMemo(() => {
     if (!data) return false;
     if (!data.length) return true;
-    return data.some((value) => value.state === "IN_STOCK");
+    return data.some(
+      (value) => value.state === "IN_STOCK" && value.quantity !== "0"
+    );
   }, [data]);
 
   return {

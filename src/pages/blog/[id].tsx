@@ -40,7 +40,14 @@ interface ArticleProps extends FullPageProps {
   prev: { slug: string; title: string } | null;
   post: {
     title: string;
-    content: StructuredTextGraphQlResponse<{ __typename: string; id: string; content: ResponsiveImage<{ width: number; height: number; }>; }, { title: string; slug: string; __typename: string; id: string; }>;
+    content: StructuredTextGraphQlResponse<
+      {
+        __typename: string;
+        id: string;
+        content: ResponsiveImage<{ width: number; height: number }>;
+      },
+      { title: string; slug: string; __typename: string; id: string }
+    >;
     publishedAt: string;
     prev: {
       slug: string;
@@ -196,7 +203,7 @@ const Article: NextPage<ArticleProps> = ({
               className="divide-y divide-gray-200 pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0"
               style={{ gridTemplateRows: "auto 1fr" }}
             >
-              <dl className="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11">
+              <dl className="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11">
                 <dt className="sr-only">Authors</dt>
                 <dd>
                   <ul className="flex justify-center space-x-8 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
@@ -232,7 +239,7 @@ const Article: NextPage<ArticleProps> = ({
                 </dd>
               </dl>
               <section className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0">
-                <div className="prose max-w-none pt-10 pb-8">
+                <div className="prose max-w-none pb-8 pt-10">
                   <StructuredText
                     renderInlineRecord={renderInlineRecord}
                     renderBlock={renderBlock}

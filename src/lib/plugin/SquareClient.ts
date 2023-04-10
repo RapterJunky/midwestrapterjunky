@@ -1,113 +1,76 @@
+import type {
+  CatalogObject,
+  ApiResponse,
+  RetrieveCatalogObjectResponse,
+  SearchCatalogObjectsResponse,
+} from "square";
+
+import getPlaceholderImage from "@lib/utils/getPlaceholderImage";
 import { AuthFetch } from "../utils/plugin/auth_fetch";
-import { APIError, type Product } from "./ShopifyClient";
-
-type SquareObject = {
-  id: string;
-  item_data: {
-    image_ids?: string[];
-    name: string;
-    description: string;
-    category_id?: string;
-    variations: {
-      item_variation_data: {
-        sku: string;
-        price_money: {
-          amount: number;
-          currency: string;
-        };
-      };
-    }[];
-  };
-};
-
-type SquareRelatedObjects = Array<
-  | {
-      type: "IMAGE";
-      id: string;
-      image_data: {
-        url: string;
-      };
-    }
-  | { type: "CATEGORY"; id: string; category_data: { name: string } }
->;
-
-export type SquareCatalogObjects = {
-  objects: SquareObject[];
-  related_objects?: SquareRelatedObjects;
-};
-
-type SquareRetrieveCatalogObject = {
-  object: SquareObject;
-  related_objects?: SquareRelatedObjects;
-};
+import { APIError } from "./ShopifyClient";
 
 export const squareToShopifyProduct = (
-  node: SquareObject,
-  related?: SquareRelatedObjects,
-  featured = false
-) => {
+  product: CatalogObject,
+  related?: CatalogObject[]
+): Storefront.Product => {
   let productType = "";
   let image: string | undefined;
   let amount = "$??";
-  if (related && node.item_data?.category_id) {
-    const pt = related.find(
-      (value) => value.id === node.item_data?.category_id
+  let imageAlt: string | undefined;
+
+  if (related && product.itemData?.categoryId) {
+    const category = related.find(
+      (item) => item.id === product.itemData?.categoryId
     );
-    if (pt?.type === "CATEGORY") {
-      productType = pt.category_data.name;
+    if (category?.type === "CATEGORY" && category.categoryData?.name) {
+      productType = category.categoryData.name;
     }
   }
 
-  if (related && node.item_data?.image_ids) {
-    const url = related.find(
-      (value) => value.id === node.item_data.image_ids?.at(0)
+  if (related && product.itemData?.imageIds?.length) {
+    const data = related.find(
+      (item) => item.id === product.itemData?.imageIds?.at(0)
     );
-    if (url?.type === "IMAGE") {
-      image = url.image_data.url;
+    if (data?.type === "IMAGE" && data.imageData?.url) {
+      image = data.imageData.url;
+      imageAlt = data.imageData?.caption ?? data.imageData?.name ?? undefined;
     }
-  } else {
-    image = `https://api.dicebear.com/6.x/initials/png?seed=${encodeURIComponent(
-      node.item_data.name
-    )}`;
   }
 
-  const price =
-    node.item_data.variations.at(0)?.item_variation_data.price_money;
-  if (price) {
+  const priceMoney =
+    product.itemData?.variations?.at(0)?.itemVariationData?.priceMoney;
+  const priceCode =
+    product.itemData?.variations?.at(0)?.itemVariationData?.priceMoney
+      ?.currency ?? "USD";
+  if (priceMoney) {
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: price.currency,
+      currency: priceCode,
     });
-    amount = formatter.format(price.amount / 100);
+    amount = formatter.format(Number(priceMoney.amount) / 100) ?? "$??.??";
   }
 
-  const data: Record<string, unknown> = {
-    handle: node.id,
-    title: node.item_data.name,
-    description: node.item_data.description,
+  const data = {
+    handle: product.id,
+    title: product.itemData?.name ?? "Unknown Product Name.",
+    image: {
+      url: image ?? getPlaceholderImage(product.itemData?.name ?? "PH"),
+      alt: imageAlt ?? "Product Image",
+    },
+    description: product.itemData?.description ?? "Product Description",
     productType,
-    onlineStoreUrl: `https://admin.midwestraptorjunkies.com/shop/${node.id}`,
+    onlineStoreUrl: `https://midwestraptorjunkies.com/shop/product/${product.id}`,
     priceRange: {
       maxVariantPrice: {
         amount,
-        currencyCode: price?.currency ?? "USD",
+        currencyCode: priceCode,
       },
       minVariantPrice: {
         amount,
-        currencyCode: price?.currency ?? "USD",
+        currencyCode: priceCode,
       },
     },
   };
-
-  if (featured) {
-    data["featuredImage"] = {
-      altText: node.item_data.name,
-      url: image,
-    };
-  } else {
-    data["imageUrl"] = image;
-  }
-
   return data;
 };
 class SquareClient {
@@ -117,22 +80,24 @@ class SquareClient {
     private is_dev: boolean = false
   ) {}
   async productsMatching(search: string) {
-    const data = (await this.fetch("list", { search })) as SquareCatalogObjects;
+    const data = await this.fetch<SearchCatalogObjectsResponse>("list", {
+      search,
+    });
     if (!data?.objects) return [];
-    return data.objects.map(
-      (item) => squareToShopifyProduct(item, data.related_objects) as Product
+    return data.objects.map((item) =>
+      squareToShopifyProduct(item, data.relatedObjects)
     );
   }
 
   async productByHandle(handle: string) {
-    const data = (await this.fetch("item", {
+    const data = await this.fetch<RetrieveCatalogObjectResponse>("item", {
       id: handle,
-    })) as SquareRetrieveCatalogObject;
+    });
     if (!data.object) return null;
-    return squareToShopifyProduct(data.object, data.related_objects) as Product;
+    return squareToShopifyProduct(data.object, data.relatedObjects);
   }
 
-  async fetch(mode: "list" | "item", data: Record<string, unknown>) {
+  async fetch<T>(mode: "list" | "item", data: Record<string, unknown>) {
     const response = await AuthFetch(`/api/plugin/square?mode=${mode}`, {
       method: "POST",
       json: {
@@ -155,7 +120,9 @@ class SquareClient {
       });
     }
 
-    const body = (await response.json()) as Record<string, unknown>;
+    const body = (await response.json()) as ApiResponse<
+      T & { errors?: unknown[] }
+    >["result"];
 
     if ("errors" in body) {
       throw new APIError("Failed Square API request.", {

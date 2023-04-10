@@ -265,25 +265,29 @@ const BillingPanel: React.FC<Props> = ({
           details: [{ code: string; detail: string; category: string }];
         };
 
-        const error = errorResponses[
-          errors.details[0].code as keyof typeof errorResponses
-        ] ?? {
-          message: "An error occured when trying to process.",
-          type: "service",
-        };
+        let card_errors = "";
+        const status_errors = errors.details.map(
+          (value) =>
+            errorResponses[value.code as keyof typeof errorResponses] ?? {
+              message: "An error occured when trying to process.",
+              type: "service",
+            }
+        );
 
-        switch (error.type) {
-          case "exit":
-            break;
-          case "user":
-            container.current?.focus();
-            setError(error.message);
-            break;
-          default:
-            break;
+        for (const error of status_errors) {
+          if (error.type !== "user") continue;
+          card_errors += error.message + "\n";
         }
 
-        if (error.type !== "exit")
+        if (status_errors.some((value) => value.type === "user")) {
+          setError(card_errors);
+        }
+
+        if (
+          errors.details.some(
+            (value) => value.code === "IDEMPOTENCY_KEY_REUSED"
+          )
+        )
           await router.push(
             {
               pathname: "/shop/checkout",
@@ -295,7 +299,12 @@ const BillingPanel: React.FC<Props> = ({
             { shallow: true }
           );
 
-        setModalData(error);
+        setModalData(
+          status_errors[0] ?? {
+            message: "An error occured when trying to process.",
+            type: "service",
+          }
+        );
 
         throw response;
       }
@@ -313,9 +322,9 @@ const BillingPanel: React.FC<Props> = ({
         query: {
           mode: "shop",
           status: "ok",
-          message: encodeURIComponent(""),
+          message: encodeURIComponent("Order make successfully"),
           shop_recipt_id: result.receiptNumber,
-          shop_receipt: encodeURIComponent(result.receiptUrl),
+          shop_receipt_id: encodeURIComponent(result.receiptUrl),
         },
       });
     } catch (error) {
@@ -378,7 +387,9 @@ const BillingPanel: React.FC<Props> = ({
               ref={container}
             />
             {error ? (
-              <div className="w-full p-2 text-center text-red-500">{error}</div>
+              <div className="w-full whitespace-pre-line p-2 text-red-500">
+                {error}
+              </div>
             ) : null}
           </div>
 

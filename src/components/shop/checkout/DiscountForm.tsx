@@ -62,7 +62,7 @@ const DiscountForm: React.FC<Props> = ({
           <button
             onClick={addDiscount}
             type="button"
-            className="mt-1 block rounded-r-sm bg-primary py-2 px-3 text-white shadow-sm hover:bg-primary-600"
+            className="mt-1 block rounded-r-sm bg-primary px-3 py-2 text-white shadow-sm hover:bg-primary-600"
           >
             Apply
           </button>

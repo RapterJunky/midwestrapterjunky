@@ -259,10 +259,10 @@ const NewThreadPost: NextPage<FullPageProps> = ({ _site, navbar, preview }) => {
           className="flex w-full max-w-6xl flex-col justify-center px-2"
         >
           <Tab.List className="flex w-full">
-            <Tab className="inline-block w-full border-b border-gray-300 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-gray-600 transition duration-150 ease-in-out ui-selected:border-b-blue-600 ui-selected:text-blue-600">
+            <Tab className="inline-block w-full border-b border-gray-300 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-gray-600 transition duration-150 ease-in-out ui-selected:border-b-blue-600 ui-selected:text-blue-600">
               Write
             </Tab>
-            <Tab className="inline-block w-full border-b border-gray-300 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-gray-600 transition duration-150 ease-in-out ui-selected:border-b-blue-600 ui-selected:text-blue-600">
+            <Tab className="inline-block w-full border-b border-gray-300 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-gray-600 transition duration-150 ease-in-out ui-selected:border-b-blue-600 ui-selected:text-blue-600">
               Preview
             </Tab>
           </Tab.List>
@@ -316,7 +316,7 @@ const NewThreadPost: NextPage<FullPageProps> = ({ _site, navbar, preview }) => {
                 </label>
                 <button
                   type="submit"
-                  className="inline-block rounded bg-primary-700 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-selected:bg-primary-700 ui-selected:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                  className="inline-block rounded bg-primary-700 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-selected:bg-primary-700 ui-selected:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 >
                   Post
                 </button>

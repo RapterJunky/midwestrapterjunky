@@ -64,7 +64,7 @@ const CountdownSection: React.FC<CountDownProps> = ({
 }) => {
   return (
     <section
-      className="flex flex-col items-center justify-center pt-10 pb-20 duration-150 animate-in fade-in ease-in"
+      className="flex flex-col items-center justify-center pb-20 pt-10 duration-150 animate-in fade-in ease-in"
       style={{ backgroundColor: bgColor.hex }}
     >
       <h2 className="font-inter my-10 text-center text-4xl font-bold leading-9 tracking-tight text-white md:leading-4">

@@ -28,7 +28,7 @@ export default function NavDropdown({ links }: Props) {
             <Menu.Item key={i}>
               <IconLink
                 {...value}
-                className="flex w-full items-center gap-1 whitespace-nowrap rounded-sm bg-transparent py-2 px-4 text-sm font-bold uppercase text-black hover:bg-gray-100"
+                className="flex w-full items-center gap-1 whitespace-nowrap rounded-sm bg-transparent px-4 py-2 text-sm font-bold uppercase text-black hover:bg-gray-100"
               />
             </Menu.Item>
           ))}

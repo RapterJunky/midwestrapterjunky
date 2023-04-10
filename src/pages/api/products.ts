@@ -1,20 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
+import { Client, Environment } from "square";
 import { z } from "zod";
-import { logger } from "@lib/logger";
-import { getKeys } from "@lib/dynamic_keys";
-import { Shopify } from "@api/gql";
+
+import { squareToShopifyProduct } from "@lib/plugin/SquareClient";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import { handleError } from "@api/errorHandler";
-import {
-  type SquareCatalogObjects,
-  squareToShopifyProduct,
-} from "@/lib/plugin/SquareClient";
+import { getKeys } from "@lib/dynamic_keys";
+import { logger } from "@lib/logger";
+import { Shopify } from "@api/gql";
 
 type EncodeProductItem = [Storefront.StorefrontType, string, string];
 type Products = {
   index: number;
-  product: Record<string, unknown>;
+  product: Storefront.Product;
 };
 interface StorefontsProducts {
   keys: string[];
@@ -41,7 +40,9 @@ const keyGeneration = (
   }
 };
 
-const shopifyData = async (arg: StorefontsProducts) => {
+const shopifyData = async (
+  arg: StorefontsProducts
+): Promise<Array<{ index: number; product: Storefront.Product }>> => {
   const keys = await getKeys(arg.keys);
 
   const items = Object.entries(keys);
@@ -57,8 +58,8 @@ const shopifyData = async (arg: StorefontsProducts) => {
     .map(
       (value) => `
         item_${value.idx}: productByHandle(handle: "${value.item}") {
-            featuredImage {
-                altText
+            image: featuredImage {
+                alt: altText
                 url
             }
             title
@@ -81,7 +82,7 @@ const shopifyData = async (arg: StorefontsProducts) => {
 
   const query = `query GetStoreItems {${shopify_query}}`;
 
-  const data = await Shopify<Record<string, Record<string, unknown>>>(query, {
+  const data = await Shopify<Record<string, Storefront.Product>>(query, {
     SHOPIFY_DOMAIN: domain[1],
     SHOPIFY_STOREFRONT_ACCESS_TOKEN: access_token[1],
   });
@@ -94,7 +95,9 @@ const shopifyData = async (arg: StorefontsProducts) => {
   });
 };
 
-const squareData = async (arg: StorefontsProducts) => {
+const squareData = async (
+  arg: StorefontsProducts
+): Promise<Array<{ index: number; product: Storefront.Product }>> => {
   const keys = await getKeys(arg.keys);
   const items = Object.entries(keys);
   const access_token = items.find((value) =>
@@ -109,28 +112,25 @@ const squareData = async (arg: StorefontsProducts) => {
   )
     throw new Error("Invaild mode");
 
-  const request = await fetch(`https://${mode[1]}/v2/catalog/batch-retrieve `, {
-    method: "POST",
-    headers: {
-      "Square-Version": "2023-03-15",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token[1]}`,
-    },
-    body: JSON.stringify({
-      object_ids: arg.products.map((value) => value.item),
-      include_deleted_objects: false,
-      include_related_objects: true,
-    }),
+  const client = new Client({
+    accessToken: access_token[1],
+    environment:
+      mode[1] === "connect.squareup.com"
+        ? Environment.Production
+        : Environment.Sandbox,
   });
 
-  if (!request.ok) throw new Error("Failed to fetch products");
-  const body = (await request.json()) as SquareCatalogObjects;
+  const request = await client.catalogApi.batchRetrieveCatalogObjects({
+    includeDeletedObjects: false,
+    includeRelatedObjects: true,
+    objectIds: arg.products.map((value) => value.item),
+  });
 
-  if (!body.objects) throw new Error("No items returned!");
+  if (!request.result?.objects) throw new Error("No items returned!");
 
-  return body.objects.map((item, i) => ({
+  return request.result.objects.map((item, i) => ({
     index: i,
-    product: squareToShopifyProduct(item, body?.related_objects, true),
+    product: squareToShopifyProduct(item, request.result?.relatedObjects),
   }));
 };
 

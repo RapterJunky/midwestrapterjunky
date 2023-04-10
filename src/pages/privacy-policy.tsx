@@ -85,7 +85,7 @@ const PrivacyPolicy: NextPage<Props> = ({ _site, navbar, policy }) => {
         <Navbar {...navbar} mode="only-scroll" />
       </header>
       <main className="flex flex-1 justify-center">
-        <article className="lg:prose-md prose prose-sm my-8 mx-4 md:prose-base">
+        <article className="lg:prose-md prose prose-sm mx-4 my-8 md:prose-base">
           <div className="h-20"></div>
           <h1>Privacy Policy</h1>
           <span>

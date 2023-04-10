@@ -24,7 +24,7 @@ export default function Carousel(props: CarouselProps) {
       data-te-interval="8000"
     >
       <div
-        className="absolute right-0 bottom-0 left-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0"
+        className="absolute bottom-0 left-0 right-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0"
         data-te-carousel-indicators
       >
         {props.images.map((_, i) => (
@@ -72,7 +72,7 @@ export default function Carousel(props: CarouselProps) {
         ))}
       </div>
       <button
-        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute top-0 bottom-0 left-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute bottom-0 left-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
         data-te-target={targetId}
         data-te-slide="prev"
@@ -85,7 +85,7 @@ export default function Carousel(props: CarouselProps) {
         </span>
       </button>
       <button
-        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute top-0 bottom-0 right-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute bottom-0 right-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
         data-te-target={targetId}
         data-te-slide="next"

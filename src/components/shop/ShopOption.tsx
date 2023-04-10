@@ -62,7 +62,7 @@ const ShopOption: React.FC<Options> = ({
       </div>
       <div
         ref={ref}
-        className="absolute left-0 z-10 mt-2 mb-10 hidden w-full origin-top-left rounded-md shadow-lg lg:relative lg:block lg:shadow-none"
+        className="absolute left-0 z-10 mb-10 mt-2 hidden w-full origin-top-left rounded-md shadow-lg lg:relative lg:block lg:shadow-none"
       >
         <div className="shadow-xs rounded-sm bg-white lg:bg-none lg:shadow-none">
           <div role="menu" aria-orientation="vertical" aria-labelledby={id}>
@@ -73,8 +73,8 @@ const ShopOption: React.FC<Options> = ({
                 }`}
               >
                 <Link
-                  className="block px-4 py-2 lg:my-2 lg:mx-4 lg:inline-block lg:p-0"
-                  href="/shop/search"
+                  className="block px-4 py-2 lg:mx-4 lg:my-2 lg:inline-block lg:p-0"
+                  href="/shop"
                 >
                   {name}
                 </Link>
@@ -87,7 +87,7 @@ const ShopOption: React.FC<Options> = ({
                   }`}
                 >
                   <Link
-                    className="block px-4 py-2 lg:my-2 lg:mx-4 lg:inline-block lg:p-0"
+                    className="block px-4 py-2 lg:mx-4 lg:my-2 lg:inline-block lg:p-0"
                     href={value.link}
                   >
                     {value.name}

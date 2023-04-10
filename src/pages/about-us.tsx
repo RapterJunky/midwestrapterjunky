@@ -84,7 +84,7 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
         <Navbar {...props.navbar} mode="only-scroll" />
       </header>
       <main>
-        <div className="mt-40 mb-9 flex flex-col gap-4 md:mx-40 md:flex-row">
+        <div className="mb-9 mt-40 flex flex-col gap-4 md:mx-40 md:flex-row">
           <article className="flex flex-col gap-3 p-3 md:w-2/3">
             <div className="mb-4 flex justify-center">
               <h1 className="text-2xl font-bold">{props.aboutUsModel.title}</h1>

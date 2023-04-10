@@ -13,7 +13,10 @@ module PrismaJson {
     | import("datocms-structured-text-utils").ThematicBreak
   >;
 
-  type Dast<B = import("react-datocms").Record, L = import("react-datocms").Record> = import("react-datocms").StructuredTextGraphQlResponse<B, L>;
+  type Dast<
+    B = import("react-datocms").Record,
+    L = import("react-datocms").Record
+  > = import("react-datocms").StructuredTextGraphQlResponse<B, L>;
 
   type PostComment = { message: string };
 }

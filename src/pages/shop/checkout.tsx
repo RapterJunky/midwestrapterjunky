@@ -16,6 +16,7 @@ import useCart, { type CartItem, CartProvider } from "@hook/useCart";
 import GenericPageQuery from "@/gql/queries/generic";
 import useFormatPrice from "@hook/useFormatPrice";
 import { fetchCachedQuery } from "@lib/cache";
+import genericSeoTags from "@lib/utils/genericSeoTags";
 
 export type Address = {
   firstname: string;
@@ -186,13 +187,11 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            { tag: "title", content: "Checkout - Midwest Raptor Junkies" },
-            {
-              tag: "meta",
-              attributes: { name: "robots", content: "noindex,nofollow" },
-            },
-          ],
+          genericSeoTags({
+            title: "Checkout",
+            robots: false,
+            description: "Midwest Raptor Junkies shop checkout.",
+          }),
         ]}
       />
       <div className="flex flex-1 justify-center">

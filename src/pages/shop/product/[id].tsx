@@ -26,6 +26,7 @@ import useCatalog from "@hook/useCatalog";
 import useCart, { CartProvider } from "@hook/useCart";
 
 import type { FullPageProps, NextPageWithProvider } from "@type/page";
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@/gql/queries/generic";
 import useFormatPrice from "@hook/useFormatPrice";
 import { fetchCachedQuery } from "@lib/cache";
@@ -235,6 +236,9 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
       price: state.variation.price,
       quantity: parseInt(state.quantity as string),
       currency: state.variation.currency,
+      maxQuantity: inventory?.quantity
+        ? parseInt(inventory?.quantity)
+        : undefined,
       option: {
         pricingType: state.variation.pricingType,
         id: state.variation.id,
@@ -249,12 +253,11 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            {
-              tag: "title",
-              content: `${product.name} - Midwest Raptor Junkies`,
-            },
-          ],
+          genericSeoTags({
+            title: product.name,
+            description: product?.description ?? undefined,
+            url: `https://midestraptorjunkies.com/shop/product/${product.id}`,
+          }),
         ]}
       />
       <Navbar {...navbar} mode="none" />
@@ -285,6 +288,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
                 />
                 <div className="absolute bottom-6 right-6 divide-x divide-black border border-black">
                   <button
+                    aria-label="Previous Product Image"
                     type="button"
                     className="px-9 py-2 hover:bg-black hover:bg-opacity-20"
                     onClick={() =>
@@ -300,6 +304,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
                     <HiChevronLeft className="h-8 w-8" />
                   </button>
                   <button
+                    aria-label="Next Product Image"
                     type="button"
                     className="px-9 py-2 hover:bg-black hover:bg-opacity-20"
                     onClick={() =>
@@ -443,22 +448,23 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
 
             <div className="mt-4 lg:mt-auto">
               <button
+                aria-label="Add to Cart"
                 type="submit"
                 disabled={!inStock || stockLoading || isSubmitting}
-                className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+                className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {stockLoading
                   ? "Loading..."
                   : inStock
-                  ? "Add to cart"
-                  : "Out of stock"}
+                  ? "Add to Cart"
+                  : "Out of Stock"}
               </button>
             </div>
           </form>
         </div>
         <hr className="mt-7" />
-        <section className="mb-10 py-12 px-6">
-          <h2 className="mb-2 pt-1 pb-2 text-xl font-bold">Related Products</h2>
+        <section className="mb-10 px-6 py-12">
+          <h2 className="mb-2 pb-2 pt-1 text-xl font-bold">Related Products</h2>
           <div className="grid  grid-cols-2 gap-7 py-2 lg:grid-cols-4">
             {!data || isLoading
               ? null

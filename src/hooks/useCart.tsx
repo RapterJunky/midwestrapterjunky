@@ -16,6 +16,7 @@ export type CartItem = {
   price: number;
   currency: string;
   quantity: number;
+  maxQuantity?: number;
 };
 type CartCtx = {
   count: number;
@@ -103,11 +104,16 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
             const exists = current.find(
               (value) => value.id === id && value.option.id === option_id
             );
-            if (exists) {
-              exists.quantity += amount;
-              return [...current];
-            }
-            return current;
+            if (!exists) return current;
+
+            const quantity = exists.quantity + amount;
+
+            if (exists.maxQuantity && quantity > exists.maxQuantity)
+              return current;
+
+            exists.quantity = quantity;
+
+            return [...current];
           });
         },
         removeQuantity: (id: string, option_id: string, amount = 1) => {

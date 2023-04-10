@@ -17,6 +17,7 @@ import useSearchMeta from "@hook/useSearchMeta";
 import { fetchCachedQuery } from "@lib/cache";
 import { CartProvider } from "@hook/useCart";
 import useCatalog from "@hook/useCatalog";
+import genericSeoTags from "@/lib/utils/genericSeoTags";
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<FullPageProps>
@@ -66,13 +67,16 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [{ tag: "title", content: "Shop - Midwest Raptor Junkies" }],
+          genericSeoTags({
+            title: "Shop",
+            description: "Midwest Ratpor Junkies shop.",
+          }),
         ]}
       />
       <Navbar mode="none" {...navbar} />
       <ShopNavbar />
       <main className="flex w-full flex-grow flex-col items-center px-4">
-        <div className="mx-auto mt-3 mb-10 grid w-full max-w-7xl flex-1 grid-cols-1 gap-4 lg:grid-cols-12">
+        <div className="mx-auto mb-10 mt-3 grid w-full max-w-7xl flex-1 grid-cols-1 gap-4 lg:grid-cols-12">
           <div className="order-1 col-span-8 lg:order-none lg:col-span-2">
             {!categories || categoriesError || categoriesIsLoading ? null : (
               <ShopOption
@@ -82,7 +86,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                 data={categories.map((item) => ({
                   name: item.name,
                   id: item.id,
-                  link: `/shop/search?category=${item.id}`,
+                  link: `/shop?category=${item.id}`,
                 }))}
               />
             )}
@@ -93,7 +97,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                 {
                   name: "Midwest",
                   id: "midwest",
-                  link: "/shop/search?vendor=midwest",
+                  link: "/shop?vendor=midwest",
                 },
               ]}
               option="vendor"
@@ -140,8 +144,8 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                     data-headlessui-state={
                       router.query.last === "true" ? "active" : "disabled"
                     }
-                    className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70"
-                    href="/shop/search"
+                    className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70"
+                    href="/shop"
                   >
                     Previous
                   </Link>
@@ -153,7 +157,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                     }
                     aria-disabled={data?.hasNextPage ? "true" : "false"}
                     href={{
-                      pathname: "/shop/search",
+                      pathname: "/shop",
                       query: {
                         cursor: data?.hasNextPage
                           ? data?.nextCursor
@@ -161,7 +165,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                         last: true,
                       },
                     }}
-                    className="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70"
+                    className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70"
                   >
                     Next
                   </Link>
@@ -180,7 +184,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                   name: "Latest arrivals",
                   id: "latest",
                   link: {
-                    pathname: "/shop/search",
+                    pathname: "/shop",
                     query: filterQuery({
                       query: router.query?.query,
                       sort: "latest",
@@ -191,7 +195,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                   name: "Price: Low to high",
                   id: "lth",
                   link: {
-                    pathname: "/shop/search",
+                    pathname: "/shop",
                     query: filterQuery({
                       query: router.query?.query,
                       sort: "lth",
@@ -202,7 +206,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
                   name: "Price: High to low",
                   id: "htl",
                   link: {
-                    pathname: "/shop/search",
+                    pathname: "/shop",
                     query: filterQuery({
                       query: router.query?.query,
                       sort: "htl",

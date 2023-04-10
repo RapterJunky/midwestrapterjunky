@@ -17,7 +17,7 @@ export default function EmailCallToAction(props: EmailCallToActionProps) {
       style={{
         backgroundColor: props?.background_color?.hex ?? "rgb(63 98 18)",
       }}
-      className="flex h-max flex-col items-center justify-center gap-5 pt-3 pb-3 text-white lg:h-52 lg:flex-row"
+      className="flex h-max flex-col items-center justify-center gap-5 pb-3 pt-3 text-white lg:h-52 lg:flex-row"
     >
       <div className="w-3/5 text-center">
         <StructuredText customMarkRules={markRules} data={props.data} />

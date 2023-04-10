@@ -263,7 +263,11 @@ const doc: PrismaJson.Dast["value"]["document"]["children"] = [
   },
 ];
 
-const ExampleDast: PrismaJson.Dast<{ __typename: string; id: string; content: ResponsiveImage<{ width: number; height: number }> }> = {
+const ExampleDast: PrismaJson.Dast<{
+  __typename: string;
+  id: string;
+  content: ResponsiveImage<{ width: number; height: number }>;
+}> = {
   links: [],
   blocks: [
     {

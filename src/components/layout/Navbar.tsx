@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { HiMenu } from "react-icons/hi";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import Image from "next/image";
 
 import type { LinkWithIcon, ResponsiveImage } from "@type/page";
@@ -68,7 +69,12 @@ const Navbar: React.FC<NavbarProps> = ({
         ref={ref}
         className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
       >
-        <div className="mx-auto md:mx-0">
+        <Link
+          href="/"
+          aria-label="Logo"
+          data-cy="logo"
+          className="mx-auto md:mx-0"
+        >
           <Image
             src={logo?.responsiveImage?.src ?? "/new_logo.webp"}
             alt={logo?.responsiveImage?.alt ?? "site logo"}
@@ -78,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({
             height={65}
             className="object-cover object-center"
           />
-        </div>
+        </Link>
         <div className="flex lg:hidden">
           <button
             data-cy="mobile-sidenav-toggle"
@@ -92,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="hidden content-center items-center justify-between lg:flex">
           {pageLinks.slice(0, 7).map((value, i) => (
             <IconLink
-              data-cy="sidenav-link"
+              data-cy="desktop-nav-link"
               className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
               key={i}
               {...value}

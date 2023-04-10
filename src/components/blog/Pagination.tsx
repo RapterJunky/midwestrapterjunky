@@ -16,7 +16,7 @@ export default function Pagination({
   const nextPage = currentPage + 1 <= totalPages;
 
   return (
-    <div className="mt-auto space-y-2 pt-6 pb-8 md:space-y-5">
+    <div className="mt-auto space-y-2 pb-8 pt-6 md:space-y-5">
       <nav className="flex justify-between">
         <button
           data-cy="pagination-previous-page"

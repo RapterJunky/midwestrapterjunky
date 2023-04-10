@@ -67,8 +67,8 @@ const Model: React.FC<Props> = ({
                         Loading...
                       </span>
                     </div>
-                    <span className="mt-2 block text-xs text-white">
-                      Loading payment service.
+                    <span className="mt-2 block text-lg text-white">
+                      Proccessing...
                     </span>
                   </div>
                 </Dialog.Panel>
@@ -90,7 +90,7 @@ const Model: React.FC<Props> = ({
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={() => {
                         if (type === "exit") {
-                          return router.replace("/shop/search");
+                          return router.replace("/shop");
                         }
 
                         closeModal();

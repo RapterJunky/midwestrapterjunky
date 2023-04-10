@@ -10,7 +10,7 @@ import getPricingForVarable from "@/lib/shop/getPricingForVarable";
 
 const schema = z.object({
   checkout_id: z.string().uuid(),
-  location_id: z.string(),
+  location_id: z.string().nonempty("Missing location id"),
   customer_id: z.string().optional(),
   order: z
     .array(
@@ -26,7 +26,7 @@ const schema = z.object({
         pricingType: z.string(),
       })
     )
-    .nonempty(),
+    .nonempty("Order needs at most 1 item."),
   discounts: z.array(
     z.object({
       catalogObjectId: z.string(),

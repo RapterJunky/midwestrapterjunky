@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, ApiError } from "square";
 import createHttpError from "http-errors";
 import { serialize } from "superjson";
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
 import getPricingForVarable from "@lib/shop/getPricingForVarable";
@@ -173,7 +174,9 @@ export default async function handle(
 
     if (!clientOrder.result.order)
       throw createHttpError.InternalServerError("Failed to get order: 1");
+
     const { netAmountDueMoney, id: orderId } = clientOrder.result.order;
+
     if (!orderId || !netAmountDueMoney)
       throw createHttpError.InternalServerError("Failed to get order: 2");
 
@@ -185,7 +188,9 @@ export default async function handle(
 
     const payment = await client.paymentsApi
       .createPayment({
-        idempotencyKey: checkout_id,
+        // a new payment idemptencyKey should be created every time,
+        // while order may stay the same since the order shount change by this time.
+        idempotencyKey: randomUUID(),
         locationId: location_id,
         customerId: customer_id,
         sourceId: source_id,

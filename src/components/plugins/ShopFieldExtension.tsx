@@ -1,7 +1,3 @@
-import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, Button } from "datocms-react-ui";
-import get from "lodash.get";
-import useSWR from "swr";
 import {
   FaSearch,
   FaExternalLinkAlt,
@@ -9,12 +5,13 @@ import {
   FaWrench,
   FaSync,
 } from "react-icons/fa";
-import { normalizeConfig } from "@/lib/utils/plugin/config";
+import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import { Canvas, Button } from "datocms-react-ui";
+import get from "lodash.get";
+import useSWR from "swr";
 
-import ShopifyClient, {
-  APIError,
-  type Product as ShopifyProduct,
-} from "@/lib/plugin/ShopifyClient";
+import ShopifyClient, { APIError } from "@/lib/plugin/ShopifyClient";
+import { normalizeConfig } from "@/lib/utils/plugin/config";
 import SquareClient from "@/lib/plugin/SquareClient";
 
 export default function ShopFieldExtension({
@@ -30,7 +27,7 @@ export default function ShopFieldExtension({
       }
     )?.value ?? null;
   const { data, isLoading, error } = useSWR<
-    ShopifyProduct | null,
+    Storefront.Product | null,
     APIError | Error,
     [string | null]
   >([product], async (args) => {
@@ -184,7 +181,7 @@ const NoProduct = ({ handleOpenModel }: { handleOpenModel: () => void }) => {
 };
 
 const RenderProduct: React.FC<{
-  data: ShopifyProduct;
+  data: Storefront.Product;
   handleReset: () => void;
 }> = ({ data, handleReset }) => {
   return (
@@ -192,7 +189,7 @@ const RenderProduct: React.FC<{
       <div className="flex items-center">
         <div
           className="border-var-border mr-5 w-36 rounded bg-cover bg-center p-1 before:block before:pt-[100%]"
-          style={{ backgroundImage: `url(${data.imageUrl})` }}
+          style={{ backgroundImage: `url(${data.image.url})` }}
         />
         <div className="flex-1 text-left">
           <div className="mb-1 flex items-center gap-2 text-dato-accent">
@@ -242,7 +239,7 @@ const RenderProduct: React.FC<{
         </div>
       </div>
       <button
-        className="absolute top-5 right-5 cursor-pointer bg-none text-sm transition-opacity duration-[0.2s] ease-in-out hover:opacity-80"
+        className="absolute right-5 top-5 cursor-pointer bg-none text-sm transition-opacity duration-[0.2s] ease-in-out hover:opacity-80"
         type="button"
         onClick={handleReset}
       >
