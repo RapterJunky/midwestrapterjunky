@@ -98,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="hidden content-center items-center justify-between lg:flex">
           {pageLinks.slice(0, 7).map((value, i) => (
             <IconLink
-              data-cy="desktop-nav-link"
+              dataCy="desktop-nav-link"
               className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
               key={i}
               {...value}

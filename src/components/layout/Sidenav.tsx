@@ -46,7 +46,7 @@ const Sidenav: React.FC<Props> = ({ onClose, logo, pageLinks }) => {
         {pageLinks.map((value, i) => (
           <li key={i} className="flex" onClick={onClose}>
             <IconLink
-              data-cy="mobile-nav-link"
+              dataCy="mobile-nav-link"
               className="flex w-full items-center gap-1 pb-5 pl-4 pr-4 pt-5 hover:bg-gray-100 hover:font-medium"
               key={i}
               title={capitlize(value.title)}

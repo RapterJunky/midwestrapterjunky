@@ -26,7 +26,7 @@ export default function NavDropdown({ links }: Props) {
         <Menu.Items className="absolute right-4 top-10 mt-1 w-56 origin-top-right divide-y divide-gray-100 rounded-sm bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {links.slice(7).map((value, i) => (
             <Menu.Item key={i}>
-              <IconLink
+              <IconLink dataCy="desktop-dropdown-nav-link"
                 {...value}
                 className="flex w-full items-center gap-1 whitespace-nowrap rounded-sm bg-transparent px-4 py-2 text-sm font-bold uppercase text-black hover:bg-gray-100"
               />

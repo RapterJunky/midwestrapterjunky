@@ -11,19 +11,19 @@ describe("Header", () => {
             cy.get('[data-cy="logo"]').click();
             cy.location("pathname").should("eq", "/");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(0).should("contain", "home").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(0).should("contain", "Home").click();
             cy.location("pathname").should("eq", "/");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(1).should("contain", "blog").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(1).should("contain", "Nlog").click();
             cy.location("pathname").should("eq", "/blog");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(2).should("contain", "threads").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(2).should("contain", "Threads").click();
             cy.location("pathname").should("eq", "/threads");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(3).should("contain", "sponsors").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(3).should("contain", "Sponsors").click();
             cy.location("pathname").should("eq", "/sponsors");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(4).should("contain", "about us").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(4).should("contain", "About Us").click();
             cy.location("pathname").should("eq", "/about-us");
 
             cy.get('[data-cy="mobile-nav-link"]').eq(5).should("contain", "Calendar").click();
@@ -35,19 +35,19 @@ describe("Header", () => {
             cy.get('[data-cy="logo"]').click();
             cy.location("pathname").should("eq", "/");
 
-            cy.get('[data-cy="desktop-nav-link"]').eq(0).should("contain", "home").click();
+            cy.get('[data-cy="desktop-nav-link"]').eq(0).should("contain", "Home").click();
             cy.location("pathname").should("eq", "/");
 
-            cy.get('[data-cy="desktop-nav-link"]').eq(1).should("contain", "blog").click();
+            cy.get('[data-cy="desktop-nav-link"]').eq(1).should("contain", "Blog").click();
             cy.location("pathname").should("eq", "/blog");
 
-            cy.get('[data-cy="desktop-nav-link"]').eq(2).should("contain", "threads").click();
+            cy.get('[data-cy="desktop-nav-link"]').eq(2).should("contain", "Threads").click();
             cy.location("pathname").should("eq", "/threads");
 
-            cy.get('[data-cy="desktop-nav-link"]').eq(3).should("contain", "sponsors").click();
+            cy.get('[data-cy="desktop-nav-link"]').eq(3).should("contain", "Sponsors").click();
             cy.location("pathname").should("eq", "/sponsors");
 
-            cy.get('[data-cy="desktop-nav-link"]').eq(4).should("contain", "about us").click();
+            cy.get('[data-cy="desktop-nav-link"]').eq(4).should("contain", "About Us").click();
             cy.location("pathname").should("eq", "/about-us");
 
             cy.get('[data-cy="desktop-nav-link"]').eq(5).should("contain", "Calendar").click();
