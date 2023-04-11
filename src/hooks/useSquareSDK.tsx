@@ -3,13 +3,7 @@ import type {
   Card,
   Payments,
 } from "@square/web-payments-sdk-types";
-import {
-  useRef,
-  useEffect,
-  useState,
-  createContext,
-  useContext
-} from "react";
+import { useRef, useEffect, useState, createContext, useContext } from "react";
 import Script from "next/script";
 
 import type { Address } from "@/pages/shop/checkout";
@@ -88,7 +82,7 @@ export const SquareSDKProvider: React.FC<React.PropsWithChildren> = ({
             console.error(e);
           }
         }}
-        src="https://sandbox.web.squarecdn.com/v1/square.js"
+        src={`https://${process.env.NEXT_PUBLIC_SQUARE_MODE === "sandbox" ? "sandbox." : ""}web.squarecdn.com/v1/square.js`}
       />
     </SquareSDKContext.Provider>
   );
@@ -135,7 +129,7 @@ const useSquareSDK = (active: boolean) => {
       }
       card.current = undefined;
       loaded.current = active;
-    }
+    };
   }, [active, payment, setError, setLoading]);
 
   return {

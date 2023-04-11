@@ -81,7 +81,12 @@ const Model: React.FC<Props> = ({
                     Payment error
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500" data-cy="checkout-error-message">{message}</p>
+                    <p
+                      className="text-sm text-gray-500"
+                      data-cy="checkout-error-message"
+                    >
+                      {message}
+                    </p>
                   </div>
 
                   <div className="mt-4">

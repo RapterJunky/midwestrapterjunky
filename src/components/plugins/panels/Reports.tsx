@@ -42,7 +42,7 @@ const ArticleReport: React.FC<
 > = ({ handleDelete, id, article, reason, created, owner, reporter }) => {
   return (
     <li className="bg-white p-4 shadow">
-      <h2 className="text-lg font-bold line-clamp-1">{reason}</h2>
+      <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
       <span className="text-sm">
         Reported:{" "}
         {new Date(created).toLocaleDateString(undefined, {
@@ -56,7 +56,7 @@ const ArticleReport: React.FC<
         <summary className="cursor-pointer py-1">View Report</summary>
         <h4 className="font-bold">Type: Article</h4>
         <h4 className="font-bold">Reason:</h4>
-        <p className="p-1 text-sm line-clamp-1">{reason}</p>
+        <p className="line-clamp-1 p-1 text-sm">{reason}</p>
         <h4 className="font-bold">Link to Article:</h4>
         <a
           className="ml-4 text-blue-400 underline"
@@ -135,7 +135,7 @@ const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({
 }) => {
   return (
     <li className="bg-white p-4 shadow">
-      <h2 className="text-lg font-bold line-clamp-1">{reason}</h2>
+      <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
       <span className="text-sm">
         Reported:{" "}
         {new Date(created).toLocaleDateString(undefined, {

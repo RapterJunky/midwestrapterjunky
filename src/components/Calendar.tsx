@@ -177,8 +177,9 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                     className="relative h-30 w-1/7 border-b border-r bg-slate-100 px-4 pt-2"
                   >
                     <div
-                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(day, -1) ? "bg-gray-500 text-white" : ""
-                        }`}
+                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
+                        isToday(day, -1) ? "bg-gray-500 text-white" : ""
+                      }`}
                     >
                       {day}
                     </div>
@@ -193,10 +194,11 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                   className="relative h-30 w-1/7 border-b border-r px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${isToday(day)
+                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${
+                      isToday(day)
                         ? "bg-blue-500 text-white"
                         : "text-gray-700 hover:bg-blue-200"
-                      }`}
+                    }`}
                   >
                     {day}
                   </div>
@@ -229,8 +231,9 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                   className="h-30 w-1/7 border-b border-r bg-slate-100 px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
-                      }`}
+                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
+                      isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
+                    }`}
                   >
                     {i + 1}
                   </div>

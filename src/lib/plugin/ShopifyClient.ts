@@ -42,7 +42,7 @@ const productFragment = `
   }
 `;
 
-export class APIError extends Error { }
+export class APIError extends Error {}
 
 const normalizeProduct = (product: ShopifyProduct): Storefront.Product => {
   if (!product || typeof product !== "object") {

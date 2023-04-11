@@ -203,7 +203,7 @@ const RenderProduct: React.FC<{
             </a>
             <FaExternalLinkAlt className="text-sm" />
           </div>
-          <div className="text-var-light mb-1 overflow-hidden line-clamp-2">
+          <div className="text-var-light mb-1 line-clamp-2 overflow-hidden">
             {data.description}
           </div>
           {data.productType ? (
@@ -217,7 +217,7 @@ const RenderProduct: React.FC<{
             <strong>Price:</strong>
             &nbsp;
             {data.priceRange?.maxVariantPrice?.amount !==
-              data.priceRange?.minVariantPrice?.amount ? (
+            data.priceRange?.minVariantPrice?.amount ? (
               <span>
                 <span>
                   {data.priceRange.minVariantPrice.currencyCode}

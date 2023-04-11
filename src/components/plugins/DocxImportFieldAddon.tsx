@@ -175,12 +175,12 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             );
             const content = deserialize(document.body);
             await ctx.setFieldValue(ctx.fieldPath, content);
-            await ctx.notice("Document Imported!");
+            ctx.notice("Document Imported!").catch((e) => console.error(e));
           } catch (error) {
             console.error(error);
-            await ctx.alert(
-              (error as Error)?.message ?? "Failed to parse document"
-            );
+            ctx
+              .alert((error as Error)?.message ?? "Failed to parse document")
+              .catch((e) => console.error(e));
           } finally {
             setLoading(false);
           }

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, Environment } from "square";
-import { serialize } from 'superjson';
+import { serialize } from "superjson";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
@@ -44,10 +44,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       objectTypes: ["ITEM"],
       query: search.length
         ? {
-          textQuery: {
-            keywords: search.split(" "),
-          },
-        }
+            textQuery: {
+              keywords: search.split(" "),
+            },
+          }
         : undefined,
     });
 

@@ -344,8 +344,9 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${active ? "flex" : "hidden"
-        } flex-col items-center justify-center`}
+      className={`${
+        active ? "flex" : "hidden"
+      } flex-col items-center justify-center`}
     >
       <CheckoutModal
         asLoading={isSubmitting}
@@ -398,7 +399,8 @@ const BillingPanel: React.FC<Props> = ({
             <div className="my-2">
               <div>
                 <label className="inline-flex items-center">
-                  <input data-cy="checkout-billing-as-shipping"
+                  <input
+                    data-cy="checkout-billing-as-shipping"
                     {...register("address.billing_as_shipping")}
                     defaultChecked
                     type="checkbox"
@@ -435,7 +437,9 @@ const BillingPanel: React.FC<Props> = ({
             <li className="flex flex-col gap-1">
               <div>
                 <span className="mr-2 font-semibold">Shipping</span>
-                <button aria-label="Change Shipping Address" data-cy="checkout-to-shipping"
+                <button
+                  aria-label="Change Shipping Address"
+                  data-cy="checkout-to-shipping"
                   onClick={() => next(1)}
                   className="text-primary underline"
                 >
@@ -465,7 +469,8 @@ const BillingPanel: React.FC<Props> = ({
             <HiChevronLeft />
             <span className="hover:underline">Back</span>
           </button>
-          <button data-cy="checkout-pay"
+          <button
+            data-cy="checkout-pay"
             disabled={
               isSubmitting ||
               isValidating ||

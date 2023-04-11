@@ -55,7 +55,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-firstname`} className="text-gray-700">
             First Name
           </label>
-          <input data-cy={`${name}-firstname-input`}
+          <input
+            data-cy={`${name}-firstname-input`}
             {...register(ids.firstname, {
               disabled,
               required: "A name is required.",
@@ -82,7 +83,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-lastname`} className="text-gray-700">
             Last Name
           </label>
-          <input data-cy={`${name}-lastname-input`}
+          <input
+            data-cy={`${name}-lastname-input`}
             {...register(ids.lastname, {
               disabled,
               required: "A name is required.",
@@ -113,7 +115,8 @@ const AddressForm: React.FC<Props> = ({
               Address line 1 (or company name)
             </span>
           </label>
-          <input data-cy={`${name}-address1-input`}
+          <input
+            data-cy={`${name}-address1-input`}
             {...register(ids.address1, {
               disabled,
               required: "An address is required.",
@@ -135,7 +138,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-address2`}>
             <span className="text-gray-700">Address line 2 (optional)</span>
           </label>
-          <input data-cy={`${name}-address2-input`}
+          <input
+            data-cy={`${name}-address2-input`}
             {...register(ids.address2)}
             autoComplete={`${name} address-line-2`}
             id={`${name}-address2`}
@@ -149,7 +153,8 @@ const AddressForm: React.FC<Props> = ({
         <label htmlFor={`${name}-city`}>
           <span className="text-gray-700">City</span>
         </label>
-        <input data-cy={`${name}-city-input`}
+        <input
+          data-cy={`${name}-city-input`}
           {...register(ids.city, {
             disabled,
             required: "A city is required.",
@@ -170,7 +175,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-country`}>
             <span className="text-gray-700">Country or region</span>
           </label>
-          <select data-cy={`${name}-country-input`}
+          <select
+            data-cy={`${name}-country-input`}
             required
             defaultValue="US"
             {...register(ids.country, {
@@ -448,7 +454,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-state`}>
             <span className="text-gray-700">State</span>
           </label>
-          <select data-cy={`${name}-state-input`}
+          <select
+            data-cy={`${name}-state-input`}
             {...register(ids.state, {
               disabled,
               required: "Please select a state.",
@@ -658,7 +665,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-postal`}>
             <span className="text-gray-700">Zip / Postal Code</span>
           </label>
-          <input data-cy={`${name}-postal-input`}
+          <input
+            data-cy={`${name}-postal-input`}
             {...register(ids.postal, {
               disabled,
               required: "Please enter a postal code",
@@ -686,7 +694,8 @@ const AddressForm: React.FC<Props> = ({
         <label htmlFor={`${name}-phone`}>
           <span className="text-gray-700">Phone</span>
         </label>
-        <input data-cy={`${name}-phone-input`}
+        <input
+          data-cy={`${name}-phone-input`}
           {...register(ids.phone, {
             disabled,
             required: "Please enter a phone number",
@@ -717,7 +726,8 @@ const AddressForm: React.FC<Props> = ({
           <label htmlFor={`${name}-comments`}>
             <span className="text-gray-700">Comments</span>
           </label>
-          <textarea data-cy={`${name}-comments-input`}
+          <textarea
+            data-cy={`${name}-comments-input`}
             {...register(ids.notes, {
               maxLength: {
                 value: 200,

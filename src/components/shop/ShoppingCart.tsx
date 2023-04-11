@@ -2,7 +2,6 @@ import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
 
-
 import ShoppingCartItem from "@components/shop/ShoppingCartItem";
 import useFormatPrice from "@hook/useFormatPrice";
 import useCart from "@hook/useCart";
