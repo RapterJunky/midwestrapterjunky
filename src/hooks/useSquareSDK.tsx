@@ -82,7 +82,9 @@ export const SquareSDKProvider: React.FC<React.PropsWithChildren> = ({
             console.error(e);
           }
         }}
-        src={`https://${process.env.NEXT_PUBLIC_SQUARE_MODE === "sandbox" ? "sandbox." : ""}web.squarecdn.com/v1/square.js`}
+        src={`https://${
+          process.env.NEXT_PUBLIC_SQUARE_MODE === "sandbox" ? "sandbox." : ""
+        }web.squarecdn.com/v1/square.js`}
       />
     </SquareSDKContext.Provider>
   );
