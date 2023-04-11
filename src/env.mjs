@@ -25,7 +25,7 @@ const server = z.object({
   SHOP_ID: z.string().min(1),
 
   DATABASE_URL: z.string().min(1),
-  NEXTAUTH_URL: z.string(),
+  NEXTAUTH_URL: z.string().optional(),
 
   CI: z.coerce.boolean(),
   VERCEL: z.coerce.boolean(),
