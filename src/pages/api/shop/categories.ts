@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { Client } from "square";
 
+import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import { handleError } from "@lib/api/errorHandler";
 import { logger } from "@lib/logger";
 
@@ -36,6 +37,10 @@ export default async function handle(
           }))
       );
     }
+
+
+    if (!req.preview || process.env.VERCEL_ENV !== "development")
+      res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     return res.status(200).json([]);
   } catch (error) {

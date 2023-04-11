@@ -3,9 +3,9 @@ import { Client, type Environment } from "square";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
-import { handleError } from "@/lib/api/errorHandler";
-import { logger } from "@/lib/logger";
-import { PUBLIC_CACHE_FOR_1H } from "@/lib/revaildateTimings";
+import { handleError } from "@lib/api/errorHandler";
+import { logger } from "@lib/logger";
+import { PUBLIC_CACHE_FOR_1H } from "@lib/revaildateTimings";
 
 export default async function handler(
   req: NextApiRequest,

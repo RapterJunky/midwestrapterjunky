@@ -323,8 +323,8 @@ const BillingPanel: React.FC<Props> = ({
           mode: "shop",
           status: "ok",
           message: encodeURIComponent("Order make successfully"),
-          shop_recipt_id: result.receiptNumber,
-          shop_receipt_id: encodeURIComponent(result.receiptUrl),
+          shop_receipt_id: result.receiptNumber,
+          shop_receipt: encodeURIComponent(result.receiptUrl),
         },
       });
     } catch (error) {
@@ -344,9 +344,8 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${
-        active ? "flex" : "hidden"
-      } flex-col items-center justify-center`}
+      className={`${active ? "flex" : "hidden"
+        } flex-col items-center justify-center`}
     >
       <CheckoutModal
         asLoading={isSubmitting}
@@ -382,6 +381,8 @@ const BillingPanel: React.FC<Props> = ({
               </div>
             ) : null}
             <div
+              data-cy="billing-card-details"
+              data-status={loading ? "loading" : "ready"}
               className="shadow-square-input mt-1"
               id="card-container"
               ref={container}
@@ -397,7 +398,7 @@ const BillingPanel: React.FC<Props> = ({
             <div className="my-2">
               <div>
                 <label className="inline-flex items-center">
-                  <input
+                  <input data-cy="checkout-billing-as-shipping"
                     {...register("address.billing_as_shipping")}
                     defaultChecked
                     type="checkbox"
@@ -434,7 +435,7 @@ const BillingPanel: React.FC<Props> = ({
             <li className="flex flex-col gap-1">
               <div>
                 <span className="mr-2 font-semibold">Shipping</span>
-                <button
+                <button aria-label="Change Shipping Address" data-cy="checkout-to-shipping"
                   onClick={() => next(1)}
                   className="text-primary underline"
                 >
@@ -464,7 +465,7 @@ const BillingPanel: React.FC<Props> = ({
             <HiChevronLeft />
             <span className="hover:underline">Back</span>
           </button>
-          <button
+          <button data-cy="checkout-pay"
             disabled={
               isSubmitting ||
               isValidating ||

@@ -59,7 +59,7 @@ const CustomerInfo: React.FC<Props> = ({
                 value={field.value}
                 onChange={field.onChange}
               >
-                <RadioGroup.Option
+                <RadioGroup.Option data-cy="user-checkout-type"
                   value="account"
                   className="w-full cursor-pointer border p-2 hover:shadow"
                 >
@@ -78,7 +78,7 @@ const CustomerInfo: React.FC<Props> = ({
                     </div>
                   )}
                 </RadioGroup.Option>
-                <RadioGroup.Option
+                <RadioGroup.Option data-cy="user-checkout-type"
                   value="guest"
                   className="w-full cursor-pointer border p-2 hover:shadow"
                 >
@@ -118,6 +118,7 @@ const CustomerInfo: React.FC<Props> = ({
                 {...register("email", { required: "A email is required." })}
                 type="email"
                 id="email"
+                data-cy="user-recipet-email"
                 placeholder="me@example.com"
                 className="foucs mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -131,6 +132,7 @@ const CustomerInfo: React.FC<Props> = ({
               For recipets & order information only
             </span>
             <button
+              data-cy="checkout-as-guest"
               className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
               type="submit"
             >
@@ -141,13 +143,14 @@ const CustomerInfo: React.FC<Props> = ({
           "loading..."
         ) : session.status === "authenticated" ? (
           <button
+            data-cy="checkout-as-user"
             className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
             type="submit"
           >
             Continue as {session.data.user.name}
           </button>
         ) : (
-          <button
+          <button data-cy="account-register"
             onClick={() => signIn()}
             className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
             type="button"

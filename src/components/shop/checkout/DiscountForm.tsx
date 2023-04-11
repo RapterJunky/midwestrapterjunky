@@ -52,14 +52,14 @@ const DiscountForm: React.FC<Props> = ({
           Discount Code
         </label>
         <div className="flex">
-          <input
+          <input data-cy="discount-input"
             ref={discountRef}
             placeholder="Some discount"
             id="discount"
             type="text"
             className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           />
-          <button
+          <button data-cy="discount-input-enter"
             onClick={addDiscount}
             type="button"
             className="mt-1 block rounded-r-sm bg-primary px-3 py-2 text-white shadow-sm hover:bg-primary-600"
@@ -76,7 +76,7 @@ const DiscountForm: React.FC<Props> = ({
           <ul>
             {checkoutState.discounts.map((discount) => (
               <li className="flex items-center" key={discount.catalogObjectId}>
-                <button
+                <button data-cy="discount-remove"
                   onClick={() =>
                     dispatch({
                       type: "removeDiscount",

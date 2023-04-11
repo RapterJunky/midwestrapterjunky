@@ -1,0 +1,20 @@
+[
+  {
+    "labelColor": "13b1bf",
+    "id": "ZH4XVIJIWX72RDVB2O6Y7XVO",
+    "name": "Test Item",
+    "image": {
+      "url": "https://square-catalog-sandbox.s3.amazonaws.com/files/3f6c33c8bbaec74ebff497b0b014db656f37750e/original.png",
+      "alt": "logo.png"
+    },
+    "price": 1000,
+    "quantity": 2,
+    "currency": "USD",
+    "maxQuantity": 4,
+    "option": {
+      "pricingType": "VARIABLE_PRICING",
+      "id": "7UIEJI5L5VLBXDL65UULF4AY",
+      "name": "Large, 12\""
+    }
+  }
+]

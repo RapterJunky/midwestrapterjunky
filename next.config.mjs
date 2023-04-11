@@ -14,7 +14,7 @@ const withAnalyzer = withBundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withAnalyzer({
-  productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
+  productionBrowserSourceMaps: true, //process.env.VERCEL_ENV !== "production",
   reactStrictMode: true,
   /*experimental: {
     swcPlugins: [["next-superjson-plugin", {}]],

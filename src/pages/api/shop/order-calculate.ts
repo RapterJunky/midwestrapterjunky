@@ -3,10 +3,10 @@ import { Client } from "square";
 import { serialize } from "superjson";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { handleError } from "@/lib/api/errorHandler";
-import { logger } from "@/lib/logger";
-import { applyRateLimit } from "@/lib/api/rateLimiter";
-import getPricingForVarable from "@/lib/shop/getPricingForVarable";
+import { handleError } from "@lib/api/errorHandler";
+import { logger } from "@lib/logger";
+import { applyRateLimit } from "@lib/api/rateLimiter";
+import getPricingForVarable from "@lib/shop/getPricingForVarable";
 
 const schema = z.object({
   checkout_id: z.string().uuid(),

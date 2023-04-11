@@ -22,7 +22,4 @@ describe("Shop Page", () => {
             cy.get('[data-cy="product-category"]').should("contain", "Test Category");
         });
     });
-
-
-
 }); 

@@ -1,0 +1,10 @@
+{
+  "brand": "visa",
+  "number": "4111 1111 1111 1111",
+  "good_cvv": "111",
+  "bad_exp": "01/40",
+  "good_exp": "01/55",
+  "bad_cvv": 911,
+  "good_postal": "44444",
+  "bad_postal": "99999"
+}

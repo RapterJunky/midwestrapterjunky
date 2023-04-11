@@ -1,10 +1,11 @@
+import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
 import { HiX } from "react-icons/hi";
 import Link from "next/link";
-import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
+
 
 import ShoppingCartItem from "@components/shop/ShoppingCartItem";
+import useFormatPrice from "@hook/useFormatPrice";
 import useCart from "@hook/useCart";
-import useFormatPrice from "@/hooks/useFormatPrice";
 
 type Props = {
   onClose: () => void;
@@ -82,7 +83,7 @@ const ShoppingCart: React.FC<Props> = ({ onClose }) => {
                   href={{
                     pathname: "/shop/checkout",
                     query: {
-                      checkoutId: window.crypto.randomUUID(),
+                      checkoutId: crypto.randomUUID(),
                     },
                   }}
                   className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"

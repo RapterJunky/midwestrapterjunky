@@ -81,11 +81,12 @@ const Model: React.FC<Props> = ({
                     Payment error
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">{message}</p>
+                    <p className="text-sm text-gray-500" data-cy="checkout-error-message">{message}</p>
                   </div>
 
                   <div className="mt-4">
                     <button
+                      data-cy="checkout-error-accept"
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={() => {
