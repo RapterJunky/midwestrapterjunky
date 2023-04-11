@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, Environment } from "square";
+import { serialize } from 'superjson';
 import createHttpError from "http-errors";
 import { z } from "zod";
 
@@ -43,21 +44,25 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       objectTypes: ["ITEM"],
       query: search.length
         ? {
-            textQuery: {
-              keywords: search.split(" "),
-            },
-          }
+          textQuery: {
+            keywords: search.split(" "),
+          },
+        }
         : undefined,
     });
 
-    return res.status(200).json(objects.result);
+    const { json } = serialize(objects.result);
+
+    return res.status(200).json(json);
   }
 
   const { id } = fetchItem.parse(req.body);
 
   const item = await client.catalogApi.retrieveCatalogObject(id, true);
 
-  return res.status(200).json(item.result);
+  const { json } = serialize(item.result);
+
+  return res.status(200).json(json);
 };
 
 export default handle;

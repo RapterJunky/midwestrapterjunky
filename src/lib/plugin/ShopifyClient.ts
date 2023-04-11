@@ -37,13 +37,12 @@ const productFragment = `
     edges {
       node {
         src: transformedSrc(crop: CENTER, maxWidth: 200, maxHeight: 200)
-        alt
       }
     }
   }
 `;
 
-export class APIError extends Error {}
+export class APIError extends Error { }
 
 const normalizeProduct = (product: ShopifyProduct): Storefront.Product => {
   if (!product || typeof product !== "object") {
