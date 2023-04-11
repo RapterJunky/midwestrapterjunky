@@ -116,7 +116,7 @@ export default function ShopFieldExtension({
   return (
     <Canvas ctx={ctx}>
       {!isLoading && !error && data ? (
-        <div className="border-var-border relative border p-5 text-center transition-opacity duration-[0.2s] ease-in-out">
+        <div className="border-var-border relative border p-5 text-center transition-opacity duration-200 ease-in-out">
           <RenderProduct data={data} handleReset={handleReset} />
         </div>
       ) : null}
@@ -217,7 +217,7 @@ const RenderProduct: React.FC<{
             <strong>Price:</strong>
             &nbsp;
             {data.priceRange?.maxVariantPrice?.amount !==
-            data.priceRange?.minVariantPrice?.amount ? (
+              data.priceRange?.minVariantPrice?.amount ? (
               <span>
                 <span>
                   {data.priceRange.minVariantPrice.currencyCode}
@@ -239,7 +239,7 @@ const RenderProduct: React.FC<{
         </div>
       </div>
       <button
-        className="absolute right-5 top-5 cursor-pointer bg-none text-sm transition-opacity duration-[0.2s] ease-in-out hover:opacity-80"
+        className="absolute right-5 top-5 cursor-pointer bg-none text-sm transition-opacity duration-200 ease-in-out hover:opacity-80"
         type="button"
         onClick={handleReset}
       >

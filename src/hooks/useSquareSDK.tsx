@@ -8,11 +8,11 @@ import {
   useEffect,
   useState,
   createContext,
-  useContext,
-  useCallback,
+  useContext
 } from "react";
-import type { Address } from "@/pages/shop/checkout";
 import Script from "next/script";
+
+import type { Address } from "@/pages/shop/checkout";
 
 type SquareSDKContextProps = {
   loading: boolean;
@@ -95,36 +95,35 @@ export const SquareSDKProvider: React.FC<React.PropsWithChildren> = ({
 };
 
 const useSquareSDK = (active: boolean) => {
-  const card = useRef<Card>();
   const container = useRef<HTMLDivElement>(null);
+  const loaded = useRef<boolean>(false);
+  const card = useRef<Card>();
   const ctx = useContext(SquareSDKContext);
   if (!ctx) throw new Error("useSquareSDK needs to be wrapped in a provider.");
   const setLoading = ctx.setLoading;
   const setError = ctx.setError;
   const payment = ctx.payments;
 
-  const init = useCallback(
-    async (wrapper: HTMLDivElement | null) => {
-      try {
-        setLoading(true);
-        if (!wrapper || !payment) return;
-        card.current = await payment.card({ style: darkModeCardStyle });
-        await card.current.attach(wrapper);
-      } catch (e) {
-        console.error(e);
-        setError((e as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [payment, setLoading, setError]
-  );
-
   useEffect(() => {
     const wrapper = container.current;
-    if (!card.current) init(wrapper).catch((e) => console.error(e));
+    if (wrapper && payment && active && !card.current && !loaded.current) {
+      void (async () => {
+        try {
+          setLoading(true);
+          card.current = await payment.card({ style: darkModeCardStyle });
+          await card.current.attach(wrapper);
+        } catch (e) {
+          console.error(e);
+          setError((e as Error).message);
+        } finally {
+          setLoading(false);
+        }
+      })();
+      loaded.current = true;
+    }
     return () => {
       card.current?.destroy().catch((e) => console.error(e));
+      // Get rid of all the custom css generate by the square payments sdk
       if (wrapper) {
         const cssId = wrapper.children[0]
           ?.getAttribute("id")
@@ -135,8 +134,9 @@ const useSquareSDK = (active: boolean) => {
             ?.remove();
       }
       card.current = undefined;
-    };
-  }, [active, init]);
+      loaded.current = active;
+    }
+  }, [active, payment, setError, setLoading]);
 
   return {
     loading: ctx.loading,

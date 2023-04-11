@@ -91,15 +91,15 @@ const animatePlugin = plugin(
 			{ values: filterDefault(theme("animationDuration")) },
 		)*/
 
-    matchUtilities(
+    /*(matchUtilities(
       { delay: (value) => ({ animationDelay: value }) },
       { values: theme("animationDelay") }
-    );
+    );*/
 
-    matchUtilities(
+    /*matchUtilities(
       { ease: (value) => ({ animationTimingFunction: value }) },
       { values: filterDefault(theme("animationTimingFunction")) }
-    );
+    );*/
 
     addUtilities({
       ".running": { animationPlayState: "running" },
@@ -201,6 +201,9 @@ module.exports = {
       fontFamily: {
         sans: ["InterVariable", ...defaultTheme.fontFamily.sans],
         serif: ["Inter", ...defaultTheme.fontFamily.serif],
+      },
+      transitionTimingFunction: {
+        "carousel-in-out": "cubic-bezier(0.25,0.1,0.25,1.0)",
       },
       textColor: {
         "dato-base-body": "var(--base-body-color)",

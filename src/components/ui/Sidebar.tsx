@@ -59,7 +59,7 @@ const Sidebar: React.FC<React.PropsWithChildren<SidebarProps>> = ({
     >
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className="backdrop-blur-08 absolute inset-0 bg-black bg-opacity-40 backdrop-blur-0 duration-100 ease-linear"
+          className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm duration-100 ease-linear"
           onClick={onClose}
         />
         <section
