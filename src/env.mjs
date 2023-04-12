@@ -52,7 +52,7 @@ const client = z.object({
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().min(1),
   NEXT_PUBLIC_SQUARE_APPID: z.string().min(1),
   NEXT_PUBLIC_SQAURE_LOCATION_ID: z.string().min(1),
-  NEXT_PUBLIC_SQUARE_MODE: z.nativeEnum(Environment),
+  NEXT_PUBLIC_SQUARE_MODE: z.enum(["sandbox", "production"]),
 
   NEXT_PUBLIC_VERCEL_ENV: z.enum(["development", "production", "preview"]),
   NEXT_PUBLIC_VERCEL_URL: z.string(),
@@ -86,7 +86,7 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 
-  NEXT_PUBLIC_SQUARE_MODE: process.env.SQUARE_MODE,
+  NEXT_PUBLIC_SQUARE_MODE: process.env.NEXT_PUBLIC_SQUARE_MODE,
 
   SQAURE_ACCESS_TOKEN: process.env.SQAURE_ACCESS_TOKEN,
   SQUARE_MODE: process.env.SQUARE_MODE,

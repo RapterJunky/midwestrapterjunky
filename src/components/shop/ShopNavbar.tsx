@@ -60,6 +60,7 @@ const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
             placeholder="Search for products..."
             type="text"
             className="w-full border-none placeholder:text-sm focus:shadow-none focus:outline-none focus:ring-0"
+            enterKeyHint="search"
           />
           <div className="pointer-events-none absolute right-0 flex">
             <HiSearch className="mx-2 h-5 w-5 text-gray-800" />

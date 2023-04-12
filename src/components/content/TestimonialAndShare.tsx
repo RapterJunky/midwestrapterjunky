@@ -24,8 +24,8 @@ export type TestimonialAndShareProps = {
 
 export default function TestimonialAndShare(props: TestimonialAndShareProps) {
   return (
-    <div className="relative">
-      <div className="absolute top-0 z-40 flex h-full w-full flex-col">
+    <section className="relative">
+      <div className="absolute top-0 z-10 flex h-full w-full flex-col">
         <div
           className="flex flex-col items-center justify-center gap-10 py-8"
           style={{ backgroundColor: props.bgColor.hex }}
@@ -70,6 +70,6 @@ export default function TestimonialAndShare(props: TestimonialAndShareProps) {
           />
         </Background>
       </Parallax>
-    </div>
+    </section>
   );
 }

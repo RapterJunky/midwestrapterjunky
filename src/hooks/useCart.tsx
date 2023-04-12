@@ -40,8 +40,15 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
   const setData = (data: (prevState: CartItem[]) => CartItem[]) => {
     setItems((current) => {
       const item = data(current);
-      if (!!item.length)
-        window.localStorage.setItem("cart", JSON.stringify(item));
+      try {
+        if (!!item.length) {
+          window.localStorage.setItem("cart", JSON.stringify(item));
+        } else {
+          window.localStorage.removeItem("cart");
+        }
+      } catch (error) {
+        console.error(error);
+      }
       return item;
     });
   };
@@ -54,14 +61,18 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
 
   useEffect(() => {
     if (window) {
-      const data = window.localStorage.getItem("cart");
-      if (!data) {
+      try {
+        const data = window.localStorage.getItem("cart");
+        if (!data) return;
+        const cart = JSON.parse(data);
+        if (Array.isArray(cart)) setItems(cart as CartItem[]);
+        throw new SyntaxError("Expected an array.");
+      } catch (error) {
+        console.error(error);
+        if (error instanceof SyntaxError) window.localStorage.removeItem("cart");
+      } finally {
         setLoading(false);
-        return;
       }
-      const cart = JSON.parse(data);
-      if (Array.isArray(cart)) setItems(cart as CartItem[]);
-      setLoading(false);
     }
   }, []);
 

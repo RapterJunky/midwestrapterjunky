@@ -176,11 +176,10 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
   );
 
   useEffect(() => {
-    // on page reload `query.checkoutId` this maybe a bug but it does force
-    // client to restart checkout.
-    if (!loading && isEmpty)
+    if (!router.isReady) return;
+    if (!loading && isEmpty && !router.query?.checkoutId)
       router.replace("/shop").catch((e) => console.error(e));
-  }, [loading, isEmpty, router]);
+  }, [loading, isEmpty, router.isReady]);
 
   return (
     <div className="flex h-full flex-col">
@@ -294,8 +293,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                         {isLoading
                           ? "Calculating..."
                           : error
-                          ? "Failed to calculate."
-                          : formatPrice(
+                            ? "Failed to calculate."
+                            : formatPrice(
                               Number(order?.totalDiscountMoney?.amount)
                             )}
                       </span>
@@ -307,8 +306,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.totalTaxMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.totalTaxMoney?.amount))}
                     </span>
                   </li>
                   <li className="flex justify-between py-1">
@@ -317,8 +316,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(
+                          ? "Failed to calculate."
+                          : formatPrice(
                             Number(order?.totalServiceChargeMoney?.amount)
                           )}
                     </span>
@@ -332,8 +331,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.netAmountDueMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.netAmountDueMoney?.amount))}
                     </span>
                   </span>
                 </div>

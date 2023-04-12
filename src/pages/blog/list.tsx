@@ -8,32 +8,26 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
-import type { FullPageProps } from "types/page";
-import { DatoCMS } from "@api/gql";
-import { formatLocalDate } from "@lib/utils/timeFormat";
-import { getDescriptionTag } from "@lib/utils/description";
-
+import ExitPreview from "@components/ExitPreview";
 import Navbar from "@components/layout/Navbar";
+import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 import Tag from "@components/blog/tag";
 
+import { getDescriptionTag } from "@lib/utils/description";
+import type { FullPageProps, Paginate } from "types/page";
+import { formatLocalDate } from "@lib/utils/timeFormat";
+import genericSeoTags from "@/lib/utils/genericSeoTags";
 import GenericPageQuery from "@query/queries/generic";
-import Footer from "@components/layout/Footer";
-import Pagination from "@components/blog/Pagination";
-import ExitPreview from "@components/ExitPreview";
+import { DatoCMS } from "@api/gql";
 
-interface Posts {
-  posts: {
-    id: string;
-    slug: string;
-    title: string;
-    publishedAt: string;
-    tags: string[];
-    seo: SeoOrFaviconTag[];
-  }[];
-  totalArticles: {
-    count: number;
-  };
+interface Post {
+  id: string;
+  slug: string;
+  title: string;
+  publishedAt: string;
+  tags: string[];
+  seo: SeoOrFaviconTag[];
 }
 
 export const getStaticProps = async (
@@ -53,9 +47,9 @@ export const getStaticProps = async (
 
 const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const { data, error, isLoading } = useSWR<Posts, Response, string>(
+  const { data, error, isLoading } = useSWR<Paginate<Post>, Response, string>(
     `/api/blog?page=${pageIndex}`,
-    (uri) => fetch(uri).then((value) => value.json() as Promise<Posts>)
+    (uri) => fetch(uri).then((value) => value.json() as Promise<Paginate<Post>>)
   );
 
   return (
@@ -63,24 +57,18 @@ const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            { tag: "title", content: "Articles - Midwest Raptor Junkies" },
-            {
-              tag: "meta",
-              attributes: {
-                name: "description",
-                content: "All of Midwest Raptor Junkies published articles.",
-              },
-            },
-          ],
+          genericSeoTags({
+            title: "Articles",
+            description: "All of Midwest Raptor Junkies published articles."
+          })
         ]}
       />
       <header>
         <Navbar {...navbar} mode="none" />
       </header>
-      <main className="mx-auto flex max-w-3xl flex-grow flex-col px-4 sm:px-6 xl:max-w-5xl xl:px-0">
-        <div className="divide-y divide-gray-200">
-          <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+      <main className="flex flex-grow flex-col px-4 items-center">
+        <div className="divide-y divide-gray-200 max-w-3xl w-full flex-1">
+          <div className="space-y-2 pb-4 md:pb-6 sm:pb-8 pt-6 md:space-y-5">
             <h1 className="md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl">
               All Articles
             </h1>
@@ -89,14 +77,14 @@ const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
             {isLoading ? (
               <div className="mx-auto my-4 flex w-full flex-grow flex-col items-center justify-center p-4">
                 <div
-                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                   role="status"
                 >
                   <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
                     Loading...
                   </span>
                 </div>
-                <h3 className="p-3 font-sans">Loading...</h3>
+                <h3 className="p-3 font-sans">Loading Articles...</h3>
               </div>
             ) : (
               <>
@@ -113,11 +101,11 @@ const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
                   </div>
                 ) : (
                   <>
-                    {!data?.posts.length ? (
+                    {!data?.result || !data?.result.length ? (
                       "No posts found."
                     ) : (
                       <>
-                        {data.posts.map((post) => (
+                        {data.result.map((post) => (
                           <li key={post.id} className="py-4">
                             <article>
                               <dl>
@@ -159,12 +147,33 @@ const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
             )}
           </ul>
         </div>
-        <Pagination
-          setIndex={setPageIndex}
-          currentPage={pageIndex}
-          isLoading={isLoading}
-          total={data?.totalArticles.count ?? 0}
-        />
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5 max-w-3xl w-full">
+          <nav className="flex justify-between">
+            <button
+              aria-disabled={data?.isLastPage ? "true" : "false"}
+              data-cy="pagination-previous-page"
+              aria-label="Previous Page"
+              className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+              disabled={!!data?.isFirstPage}
+              onClick={() => setPageIndex(data?.previousPage ?? 0)}
+            >
+              Prev
+            </button>
+            <span>
+              {(data?.currentPage ?? 0) + 1} of {(data?.pageCount ?? 1)}
+            </span>
+            <button
+              aria-disabled={data?.isLastPage ? "true" : "false"}
+              data-cy="pagination-next-page"
+              aria-label="Next Page"
+              className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+              disabled={!!data?.isLastPage}
+              onClick={() => setPageIndex(data?.nextPage ?? 0)}
+            >
+              Next
+            </button>
+          </nav>
+        </div>
       </main>
       <Footer />
       {preview ? <ExitPreview /> : null}
