@@ -38,8 +38,7 @@ export default async function handle(
       );
     }
 
-    if (!req.preview || process.env.VERCEL_ENV !== "development")
-      res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
+    if (!req.preview && process.env.VERCEL_ENV !== "development") res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     return res.status(200).json([]);
   } catch (error) {

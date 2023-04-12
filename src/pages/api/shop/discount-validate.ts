@@ -47,7 +47,7 @@ export default async function handle(
 
     const { id, discountData } = response.result.objects[0];
 
-    if (!req.preview || process.env.VERCEL_ENV !== "development")
+    if (!req.preview && process.env.VERCEL_ENV !== "development")
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     return res.status(200).json({

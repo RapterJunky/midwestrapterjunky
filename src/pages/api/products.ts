@@ -213,7 +213,7 @@ export default async function handle(
     }
 
     // cache for 2 hours
-    if (!req.preview || process.env.VERCEL_ENV !== "development")
+    if (!req.preview && process.env.VERCEL_ENV !== "development")
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
     return res
       .status(200)
