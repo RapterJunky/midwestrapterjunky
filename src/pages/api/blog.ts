@@ -22,7 +22,7 @@ interface DataResponse {
   posts: Post[]
 }
 
-const MAX_ITEMS = 1;
+const MAX_ITEMS = 5;
 const schema = z.coerce.number().gte(0).optional().default(0);
 
 export default async function handle(
