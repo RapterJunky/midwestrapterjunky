@@ -14,12 +14,12 @@ type Post = {
   id: string;
   tags: string[];
   seo: SeoOrFaviconTag[];
-}
+};
 interface DataResponse {
   totalArticles: {
     count: number;
   };
-  posts: Post[]
+  posts: Post[];
 }
 
 const MAX_ITEMS = 5;
@@ -52,19 +52,20 @@ export default async function handle(
     }));
 
     // Two Hour wait
-    if (!req.preview && process.env.VERCEL_ENV !== "development") res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
+    if (!req.preview && process.env.VERCEL_ENV !== "development")
+      res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     const pageCount = Math.ceil(data.totalArticles.count / MAX_ITEMS);
     const isFirstPage = page === 0;
-    const isLastPage = page >= (pageCount - 1);
+    const isLastPage = page >= pageCount - 1;
 
     let previousPage = 0;
-    if ((page - 1) >= 0) {
+    if (page - 1 >= 0) {
       previousPage = page - 1;
     }
 
     let nextPage = page;
-    if ((page + 1) < pageCount) {
+    if (page + 1 < pageCount) {
       nextPage += 1;
     }
 
@@ -75,7 +76,7 @@ export default async function handle(
       nextPage,
       pageCount,
       isFirstPage,
-      isLastPage
+      isLastPage,
     });
   } catch (error) {
     return handleError(error, res);

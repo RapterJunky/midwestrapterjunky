@@ -69,7 +69,8 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
         throw new SyntaxError("Expected an array.");
       } catch (error) {
         console.error(error);
-        if (error instanceof SyntaxError) window.localStorage.removeItem("cart");
+        if (error instanceof SyntaxError)
+          window.localStorage.removeItem("cart");
       } finally {
         setLoading(false);
       }
