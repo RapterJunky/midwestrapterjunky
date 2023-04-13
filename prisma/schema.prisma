@@ -111,6 +111,8 @@ model ThreadPost {
   name     String
   ownerId  String
   created  DateTime  @default(now())
+  pinned   Boolean   @default(false)
+  locked   Boolean   @default(false)
   /// [Dast]
   content  Json?
   owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -124,9 +126,13 @@ model ThreadPost {
 }
 
 model Thread {
-  id    Int          @id @default(autoincrement())
-  name  String       @unique
-  posts ThreadPost[]
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  description    String
+  image          String
+  /// [Tags]
+  tags           Json?   
+  posts          ThreadPost[]
 }
 
 model Report {

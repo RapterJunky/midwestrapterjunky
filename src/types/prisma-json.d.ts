@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 module PrismaJson {
+  type Tags = string[];
+
   type AuthorSocial = { link: string; user: string };
 
   type DastRootTypes = Array<
