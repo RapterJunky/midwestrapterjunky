@@ -1,7 +1,7 @@
 import type { User, Comment as DbComment } from "@api/prisma";
 import type { useSession } from "next-auth/react";
 import Image from "next/image";
-import { HiFlag, HiTrash } from "react-icons/hi";
+import { HiFlag, HiHeart, HiLink, HiTrash } from "react-icons/hi";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 
 type Session = ReturnType<typeof useSession>;
@@ -30,9 +30,8 @@ const Comment: React.FC<Props> = ({
 }) => {
   return (
     <li
-      className={`flex w-full flex-col gap-2 py-2 ${
-        comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
-      }`}
+      className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
+        }`}
     >
       <div className="flex w-full gap-4">
         <div>
@@ -45,34 +44,39 @@ const Comment: React.FC<Props> = ({
           />
         </div>
         <div className="flex w-full flex-col gap-2">
-          <div className="text-xs text-gray-500">
-            {comment.owner.name} •{" "}
-            {formatLocalDate(comment.created, "en-us", { weekday: "short" })}
+          <div className="text-neutral-600 flex justify-between mb-4">
+            <div className="font-bold">
+              {comment.owner.name}
+            </div>
+            <div>
+              {formatLocalDate(comment.created, undefined, { day: "numeric", month: "short", year: "numeric" })}
+            </div>
           </div>
-          <article className="line prose max-w-none">
+          <article className="prose max-w-none min-h-[100px]">
             {comment.content?.message ?? "Missing comment message!"}
           </article>
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-4 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (
               <>
+                <button className="hover:text-gray-900 p-0.5">
+                  <HiHeart className="h-6 w-6" />
+                </button>
                 <button
-                  className="flex items-center gap-1 text-xs hover:text-gray-700"
+                  className="hover:text-gray-900 p-0.5"
                   onClick={() => reportComment(comment.id)}
                 >
-                  <HiFlag />
-                  Report
+                  <HiFlag className="h-6 w-6" />
+                </button>
+                <button className="hover:text-gray-900 p-0.5">
+                  <HiLink className="h-6 w-6" />
                 </button>
                 {session.data?.user.id === comment.owner.id ? (
-                  <>
-                    •
-                    <button
-                      className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
-                      onClick={() => deleteComment(comment.id)}
-                    >
-                      <HiTrash />
-                      Delete
-                    </button>
-                  </>
+                  <button
+                    className="p-0.5 text-red-500 hover:text-red-700"
+                    onClick={() => deleteComment(comment.id)}
+                  >
+                    <HiTrash className="h-6 w-6" />
+                  </button>
                 ) : null}
               </>
             ) : null}

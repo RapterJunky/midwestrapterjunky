@@ -1,7 +1,8 @@
+import { useVirtualizer } from "@tanstack/react-virtual";
+import useSWRInfinite from 'swr/infinite';
+import { useRef } from 'react';
 import { Paginate } from "@/types/page";
 import TopicCard from "./TopicCard";
-import useSWRInfinite from 'swr/infinite';
-import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 type Post = {
     id: string;
@@ -17,6 +18,7 @@ const fetcher = (url: string) => fetch(url).then(e => {
 }).then(e => e.json()) as Promise<Paginate<Post>>;
 
 const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
+    const wrapper = useRef<HTMLTableSectionElement>(null);
     const { data, size, setSize, error, isLoading } = useSWRInfinite<Paginate<Post>, Response>((index: number, previousData: Paginate<Post>) => {
         if (previousData?.isLastPage) return null;
         return `/api/community?page=${index + 1}&sort=${mode}`;
@@ -27,9 +29,9 @@ const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
         return arr;
     }, [] as Post[][]).flat() ?? [];
 
-
-    const rowVirtualizer = useWindowVirtualizer({
+    const rowVirtualizer = useVirtualizer({
         count: items.length,
+        getScrollElement: () => wrapper.current,
         estimateSize: () => 100,
         overscan: 5
     });
@@ -44,12 +46,12 @@ const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
                         <th className="py-2 px-4">Activity</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y-2">
+                <tbody ref={wrapper} className="divide-y-2">
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                         const item = items[virtualRow.index];
                         if (!item) throw new Error("Unable to get item");
                         return (
-                            <TopicCard activity={item.comments.at(0)?.created} title={item.name} slug={`/community/p/${item.id}`} tags={["Getting Started"]} description="" replies={item.comments.length} />
+                            <TopicCard key={virtualRow.key} activity={item.comments.at(0)?.created} title={item.name} slug={`/community/p/${item.id}`} tags={["Getting Started"]} description="" replies={item.comments.length} />
                         );
                     })}
                 </tbody>

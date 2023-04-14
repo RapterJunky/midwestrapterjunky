@@ -151,8 +151,7 @@ const Comments: React.FC<Props> = ({ post }) => {
           </button>
         </div>
       )}
-      <div className="mt-5">{data?.result.length} Comments</div>
-      <ul className="mt-5 w-full">
+      <ul className="mt-5 w-full divide-y">
         {error || !data ? (
           <li>{error?.statusText ?? "Failed to load comments"}</li>
         ) : null}
@@ -162,14 +161,14 @@ const Comments: React.FC<Props> = ({ post }) => {
         ) : null}
         {!isLoading && data
           ? data?.result.map((comment) => (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                session={session}
-                deleteComment={deleteComment}
-                reportComment={reportComment}
-              />
-            ))
+            <Comment
+              key={comment.id}
+              comment={comment}
+              session={session}
+              deleteComment={deleteComment}
+              reportComment={reportComment}
+            />
+          ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

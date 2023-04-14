@@ -3,14 +3,12 @@ export const formatTime = (from: string, to: string): string => {
   const toDate = new Date(to);
 
   if (fromDate.getMonth() === toDate.getMonth()) {
-    return `${
-      fromDate.getMonth() + 1
-    }/${fromDate.getDate()}-${toDate.getDate()}`;
+    return `${fromDate.getMonth() + 1
+      }/${fromDate.getDate()}-${toDate.getDate()}`;
   }
 
-  return `${fromDate.getMonth() + 1}/${fromDate.getDate()}-${
-    toDate.getMonth() + 1
-  }/${toDate.getDate()}`;
+  return `${fromDate.getMonth() + 1}/${fromDate.getDate()}-${toDate.getMonth() + 1
+    }/${toDate.getDate()}`;
 };
 
 /**
@@ -27,9 +25,9 @@ export const formatLocalDate = (
       : date
     : new Date();
   return data.toLocaleDateString(locale, {
-    weekday: options?.weekday ?? "long",
-    year: options?.year ?? "numeric",
-    month: options?.month ?? "long",
-    day: options?.day ?? "numeric",
+    weekday: options?.weekday,
+    year: options?.year,
+    month: options?.month,
+    day: options?.day,
   });
 };
