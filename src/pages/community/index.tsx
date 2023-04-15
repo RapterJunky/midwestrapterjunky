@@ -116,7 +116,7 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
                         router.push({ query: { tab: tab[e] } }, undefined, { shallow: true }).catch(e => console.error(e));
                     }}>
                         <div className="flex flex-col md:flex-row justify-between mb-4">
-                            <Tab.List className="flex gap-2">
+                            <Tab.List className="flex gap-2 font-bold">
                                 <Tab className="ui-selected:border-b-2 border-blue-500 w-full">
                                     <span className="px-2 py-1 hover:text-primary">Categories</span>
                                 </Tab>
@@ -138,10 +138,10 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
                             <Tab.Panel>
                                 <table className="w-full divide-y-4">
                                     <thead>
-                                        <tr>
-                                            <th className="md:w-[45%] text-left py-3 px-2">Category</th>
-                                            <th className="w-20 text-right py-3 px-2 hidden md:table-cell">Topics</th>
-                                            <th className="text-left py-3 px-2 hidden md:table-cell">Latest</th>
+                                        <tr className="text-neutral-600">
+                                            <th className="md:w-[45%] text-left py-3 px-2 font-medium">Category</th>
+                                            <th className="w-20 text-right py-3 px-2 hidden md:table-cell font-medium">Topics</th>
+                                            <th className="text-left py-3 px-2 hidden md:table-cell font-medium">Latest</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y-2">

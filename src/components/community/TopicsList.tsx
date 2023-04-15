@@ -3,6 +3,7 @@ import useSWRInfinite from 'swr/infinite';
 import { useRef } from 'react';
 import { Paginate } from "@/types/page";
 import TopicCard from "./TopicCard";
+import TopicTable from "./TopicTable";
 
 type Post = {
     id: string;
@@ -38,14 +39,7 @@ const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
 
     return (
         <>
-            <table className="divide-y-4 w-full">
-                <thead>
-                    <tr>
-                        <th className="text-left py-2 w-full">Topic</th>
-                        <th className="py-2 px-4">Replies</th>
-                        <th className="py-2 px-4">Activity</th>
-                    </tr>
-                </thead>
+            <TopicTable>
                 <tbody ref={wrapper} className="divide-y-2">
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                         const item = items[virtualRow.index];
@@ -55,7 +49,7 @@ const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
                         );
                     })}
                 </tbody>
-            </table>
+            </TopicTable>
             {error ? (
                 <div className="flex justify-center">
                     <span className="p-2">There was an error.</span>

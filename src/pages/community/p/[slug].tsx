@@ -12,6 +12,10 @@ import { HiFlag, HiHeart, HiLink, HiLockClosed } from "react-icons/hi";
 import { FaThumbtack } from "react-icons/fa";
 import { StructuredText } from "react-datocms/structured-text";
 import Comments from "@/components/thread/Comments";
+import SiteTags from "@/components/SiteTags";
+import genericSeoTags from "@/lib/utils/genericSeoTags";
+import TagList from "@/components/community/TagList";
+import TopicTable from "@/components/community/TopicTable";
 
 interface Props extends FullPageProps {
     post: {
@@ -100,36 +104,56 @@ const TEST: PrismaJson.Dast = {
     }
 }
 
-const CommunityPost: NextPage<Props> = ({ navbar, preview, _site, post }) => {
+const CommunityPost: NextPage<Props> = ({ navbar, _site, post }) => {
     return (
         <div className="flex flex-col h-full">
+            <SiteTags tags={[
+                _site.faviconMetaTags,
+                genericSeoTags({
+                    title: post.name,
+                    description: post.name,
+                })
+            ]} />
             <Navbar {...navbar} mode="only-scroll" />
-            <main className="flex-1 mt-20 flex justify-center">
-                <div className="container max-w-3xl mt-4 divide-y-2">
-                    <div className="mb-4">
-                        <h1 className="font-bold flex items-center text-2xl mb-1"> {post.locked ? <HiLockClosed /> : null} {post.pinned ? (<FaThumbtack />) : null}  {post.name}</h1>
-                        <div className="flex flex-wrap gap-2">
-                            <span className="px-1 py-0.5 bg-emerald-400 text-white rounded-sm">TAG</span>
-                        </div>
-                    </div>
+            <main className="flex-1 mt-20 flex flex-col items-center">
+                <div className="container max-w-3xl my-4 divide-y-2">
+                    <header className="mb-4">
+                        <h1 className="font-bold flex items-center text-3xl mb-1 gap-1">
+                            {post.locked ? (
+                                <span className="text-neutral-500">
+                                    <HiLockClosed />
+                                </span>
+                            ) : null}
+                            {post.pinned ? (
+                                <span className="text-neutral-500">
+                                    <FaThumbtack />
+                                </span>
+                            ) : null}
+                            {post.name}
+                        </h1>
+                        <TagList tags={["TAGS"]} />
+                    </header>
                     <div className="flex w-full pt-2 mb-4">
                         <div>
                             <Image className="rounded-full" src={post.owner.image} alt="avatar" width={40} height={50} />
                         </div>
                         <div className="px-2 w-full">
-                            <div className="flex w-full justify-between mb-4 text-neutral-600">
+                            <div className="flex w-full justify-between mb-2 text-neutral-600">
                                 <div className="font-bold">{post.owner.name}</div>
                                 <div>{new Date(post.created).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</div>
                             </div>
-                            <article className="prose py-2">
+                            <article className="prose py-2 mb-4">
                                 <StructuredText data={TEST} />
                             </article>
                             <div className="p-0.5 flex justify-end gap-1 text-neutral-600">
-                                <button className="p-1">
-                                    <HiFlag className="h-5 w-5" />
+                                <button className="p-1" title="like this post">
+                                    <HiHeart className="h-6 w-6" />
                                 </button>
-                                <button className="p-1">
-                                    <HiLink className="h-5 w-5" />
+                                <button className="p-1" title="privately flag this post for attention or send a private notification about it">
+                                    <HiFlag className="h-6 w-6" />
+                                </button>
+                                <button className="p-1" title="share a link to this post">
+                                    <HiLink className="h-6 w-6" />
                                 </button>
                             </div>
                         </div>
@@ -137,6 +161,25 @@ const CommunityPost: NextPage<Props> = ({ navbar, preview, _site, post }) => {
                     <div>
                         <Comments post={post.id} />
                     </div>
+                </div>
+                <div className="max-w-5xl w-full mb-4">
+                    <h1 className="font-bold text-xl">Suggested Topics</h1>
+                    <TopicTable>
+                        <tbody className="divide-y">
+                            <tr>
+                                <td className="p-2">
+                                    <div className="font-medium text-lg mb-1">Topic Title</div>
+                                    <TagList tags={["TAG"]} />
+                                </td>
+                                <td className="text-center font-medium">
+                                    399
+                                </td>
+                                <td className="text-center font-medium">
+                                    3 days ago
+                                </td>
+                            </tr>
+                        </tbody>
+                    </TopicTable>
                 </div>
             </main>
             <Footer />

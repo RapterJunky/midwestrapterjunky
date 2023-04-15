@@ -33,7 +33,7 @@ const Comment: React.FC<Props> = ({
       className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
         }`}
     >
-      <div className="flex w-full gap-4">
+      <div className="flex w-full">
         <div>
           <Image
             width={40}
@@ -43,8 +43,8 @@ const Comment: React.FC<Props> = ({
             alt="avatar"
           />
         </div>
-        <div className="flex w-full flex-col gap-2">
-          <div className="text-neutral-600 flex justify-between mb-4">
+        <div className="flex w-full flex-col gap-2 px-2">
+          <div className="text-neutral-600 flex justify-between mb-2">
             <div className="font-bold">
               {comment.owner.name}
             </div>
@@ -52,13 +52,14 @@ const Comment: React.FC<Props> = ({
               {formatLocalDate(comment.created, undefined, { day: "numeric", month: "short", year: "numeric" })}
             </div>
           </div>
-          <article className="prose max-w-none min-h-[100px]">
+          <article className="prose max-w-none min-h-[50px]">
             {comment.content?.message ?? "Missing comment message!"}
           </article>
-          <div className="flex items-center gap-4 text-gray-500 justify-end p-2">
+          <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (
               <>
-                <button className="hover:text-gray-900 p-0.5">
+                <button className="flex hover:text-gray-900 p-0.5">
+                  <span className="mr-1">4</span>
                   <HiHeart className="h-6 w-6" />
                 </button>
                 <button

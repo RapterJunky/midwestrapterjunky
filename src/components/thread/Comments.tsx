@@ -2,11 +2,14 @@ import useSWR from "swr";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
-import { HiArrowCircleRight } from "react-icons/hi";
+import { HiArrowCircleRight, HiLink, HiViewList } from "react-icons/hi";
 import type { Paginate } from "@type/page";
 import Comment, { type TComment } from "./Comment";
 import ReportDialog from "@components/dialogs/ReportDialog";
-interface Props {
+import { HiListBullet } from "react-icons/hi2";
+import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaListOl, FaListUl } from "react-icons/fa";
+
+type Props = {
   post: string;
 }
 
@@ -119,29 +122,51 @@ const Comments: React.FC<Props> = ({ post }) => {
       />
       {session.status === "authenticated" ? (
         <form
-          className="mt-6 flex justify-evenly gap-2"
+          className="mt-6 flex flex-col justify-evenly gap-2 px-4 mb-4"
           onSubmit={handleCreateComment}
         >
-          <Image
-            width={52}
-            height={52}
-            className="rounded-full"
-            src={
-              session.data.user?.image ??
-              "https://api.dicebear.com/5.x/icons/png?seed=Unknown"
-            }
-            alt="avatar"
-          />
-          <input
+          <div className="border-b flex gap-2">
+            <select title="Text heading" className="border-none">
+              <option>Normal</option>
+              <option>Heading 1</option>
+              <option>Heading 2</option>
+              <option>Heading 3</option>
+              <option>Heading 4</option>
+              <option>Heading 5</option>
+              <option>Heading 6</option>
+            </select>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+              <FaItalic className="h-5 w-5" title="empize" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+              <FaHighlighter className="h-5 w-5" title="highlight" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+              <FaBold className="h-5 w-5" title="bold" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create unorder list">
+              <FaListUl className="h-5 w-5" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create ordered list">
+              <FaListOl className="h-5 w-5" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Add a link">
+              <HiLink className="h-5 w-5" />
+            </button>
+            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Upload Image">
+              <FaFileImage className="h-5 w-5" />
+            </button>
+          </div>
+          <textarea
             autoComplete="off"
             name="comment"
-            className="mt-0 block w-full border-0 border-b-2 border-gray-200 px-0.5 focus:border-black focus:ring-0"
-            type="text"
             placeholder="Add a comment"
           />
-          <button type="submit" className="px-1">
-            <HiArrowCircleRight className="h-10 w-10 text-blue-400 hover:text-blue-500" />
-          </button>
+          <div className="w-full flex justify-end">
+            <button type="submit" className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
+              Reply
+            </button>
+          </div>
         </form>
       ) : (
         <div className="mt-6 flex w-full justify-center gap-4">
@@ -151,6 +176,20 @@ const Comments: React.FC<Props> = ({ post }) => {
           </button>
         </div>
       )}
+      <div className="mb-2 flex justify-between items-center">
+        <div>
+          Comments
+        </div>
+        <div>
+          <label htmlFor="sort">Sort By</label>
+          <select id="sort" className="border-none focus:outline-none focus:ring-0">
+            <option>Latest</option>
+            <option>Oldest</option>
+            <option>Likes</option>
+          </select>
+        </div>
+      </div>
+      <hr className="border-b-2" />
       <ul className="mt-5 w-full divide-y">
         {error || !data ? (
           <li>{error?.statusText ?? "Failed to load comments"}</li>
@@ -176,7 +215,7 @@ const Comments: React.FC<Props> = ({ post }) => {
           onClick={() => setPage(data?.previousPage ?? 1)}
           disabled={isLoading || data?.isFirstPage}
           type="button"
-          className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+          className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
         >
           Prev
         </button>
@@ -189,7 +228,7 @@ const Comments: React.FC<Props> = ({ post }) => {
           onClick={() => setPage(data?.nextPage ?? 1)}
           disabled={isLoading || data?.isLastPage}
           type="button"
-          className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+          className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
         >
           Next
         </button>
