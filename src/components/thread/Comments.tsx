@@ -1,12 +1,9 @@
 import useSWR from "swr";
-import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
-import { HiArrowCircleRight, HiLink, HiViewList } from "react-icons/hi";
+import { HiLink } from "react-icons/hi";
 import type { Paginate } from "@type/page";
 import Comment, { type TComment } from "./Comment";
-import ReportDialog from "@components/dialogs/ReportDialog";
-import { HiListBullet } from "react-icons/hi2";
 import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaListOl, FaListUl } from "react-icons/fa";
 
 type Props = {
@@ -15,8 +12,6 @@ type Props = {
 
 const Comments: React.FC<Props> = ({ post }) => {
   const session = useSession();
-  const commentId = useRef<string>();
-  const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
   const { data, isLoading, error, mutate } = useSWR<
     Paginate<TComment>,
@@ -54,34 +49,6 @@ const Comments: React.FC<Props> = ({ post }) => {
     }
   };
 
-  const reportComment = (id: string) => {
-    commentId.current = id;
-    setShow(true);
-  };
-
-  const handleReport = async (state: FormData) => {
-    try {
-      if (!commentId.current) throw new Error("Missing comment id");
-
-      const request = await fetch("/api/threads/comments", {
-        method: "POST",
-        body: JSON.stringify({
-          id: commentId.current,
-          reason: state.get("reason"),
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Type-Report": "true",
-        },
-      });
-      if (!request.ok) throw request;
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setShow(false);
-    }
-  };
-
   const handleCreateComment = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     try {
@@ -114,18 +81,12 @@ const Comments: React.FC<Props> = ({ post }) => {
 
   return (
     <div className="my-4">
-      <ReportDialog
-        title="Report Comment"
-        show={show}
-        onClose={() => setShow(false)}
-        reportHandle={handleReport}
-      />
       {session.status === "authenticated" ? (
         <form
-          className="mt-6 flex flex-col justify-evenly gap-2 px-4 mb-4"
+          className="my-6 flex flex-col justify-evenly gap-1 md:px-4"
           onSubmit={handleCreateComment}
         >
-          <div className="border-b flex gap-2">
+          <div className="border border-neutral-400 flex rounded-sm flex-wrap">
             <select title="Text heading" className="border-none">
               <option>Normal</option>
               <option>Heading 1</option>
@@ -135,31 +96,32 @@ const Comments: React.FC<Props> = ({ post }) => {
               <option>Heading 5</option>
               <option>Heading 6</option>
             </select>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
               <FaItalic className="h-5 w-5" title="empize" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
               <FaHighlighter className="h-5 w-5" title="highlight" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
               <FaBold className="h-5 w-5" title="bold" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create unorder list">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create unorder list">
               <FaListUl className="h-5 w-5" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create ordered list">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create ordered list">
               <FaListOl className="h-5 w-5" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Add a link">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Add a link">
               <HiLink className="h-5 w-5" />
             </button>
-            <button className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Upload Image">
+            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Upload Image">
               <FaFileImage className="h-5 w-5" />
             </button>
           </div>
           <textarea
             autoComplete="off"
             name="comment"
+            className="border border-neutral-400 rounded-sm"
             placeholder="Add a comment"
           />
           <div className="w-full flex justify-end">
@@ -196,7 +158,7 @@ const Comments: React.FC<Props> = ({ post }) => {
         ) : null}
         {isLoading ? <li>Loading</li> : null}
         {!isLoading && data && !data?.result?.length ? (
-          <li>No Comments</li>
+          <li className="text-center">No comments yet.</li>
         ) : null}
         {!isLoading && data
           ? data?.result.map((comment) => (
@@ -205,7 +167,6 @@ const Comments: React.FC<Props> = ({ post }) => {
               comment={comment}
               session={session}
               deleteComment={deleteComment}
-              reportComment={reportComment}
             />
           ))
           : null}

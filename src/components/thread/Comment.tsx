@@ -1,8 +1,10 @@
-import type { User, Comment as DbComment } from "@api/prisma";
+import { HiFlag, HiHeart, HiLink, HiTrash } from "react-icons/hi";
 import type { useSession } from "next-auth/react";
 import Image from "next/image";
-import { HiFlag, HiHeart, HiLink, HiTrash } from "react-icons/hi";
+
+import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
+import usePostActions from "@/hooks/usePostActions";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
@@ -15,7 +17,6 @@ interface Props {
   handleEdit?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleCreate?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
-  reportComment: (id: string) => void;
 }
 
 /**
@@ -24,12 +25,12 @@ interface Props {
  */
 const Comment: React.FC<Props> = ({
   deleteComment,
-  reportComment,
   comment,
   session,
 }) => {
+  const { report, like } = usePostActions();
   return (
-    <li
+    <li id={comment.id}
       className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
         }`}
     >
@@ -58,17 +59,18 @@ const Comment: React.FC<Props> = ({
           <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (
               <>
-                <button className="flex hover:text-gray-900 p-0.5">
+                <button onClick={() => like()} className="flex hover:text-black p-0.5">
                   <span className="mr-1">4</span>
                   <HiHeart className="h-6 w-6" />
                 </button>
                 <button
-                  className="hover:text-gray-900 p-0.5"
-                  onClick={() => reportComment(comment.id)}
+                  title="privately flag this comment for attention or send a private notification about it"
+                  className="hover:text-black p-0.5"
+                  onClick={() => report("comment", comment.id)}
                 >
                   <HiFlag className="h-6 w-6" />
                 </button>
-                <button className="hover:text-gray-900 p-0.5">
+                <button className="hover:text-black p-0.5">
                   <HiLink className="h-6 w-6" />
                 </button>
                 {session.data?.user.id === comment.owner.id ? (

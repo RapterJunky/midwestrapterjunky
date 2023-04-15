@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type { ResponsiveImage } from "@type/page";
+import { HiLink } from "react-icons/hi";
 
 //https://github.com/datocms/react-datocms/blob/master/docs/structured-text.md
 export const markRules = [
@@ -57,6 +58,13 @@ export const renderInlineRecord = ({
           {record.title}
         </Link>
       );
+    case "ExternalLink":
+      return (
+        <span className="flex items-center gap-1">
+          <HiLink />
+          <Link className="underline" href={record.slug}>{record.title}</Link>
+        </span>
+      );
     default:
       return null;
   }
@@ -72,9 +80,9 @@ export const renderBlock = ({
   switch (record.__typename) {
     case "ImageRecord":
       return (
-        <div className="relative">
+        <div className="relative flex justify-center">
           <Image
-            className="rounded object-center shadow"
+            className="rounded-sm object-center shadow"
             width={record.content.responsiveImage.width}
             height={record.content.responsiveImage.height}
             blurDataURL={record.content.blurUpThumb}

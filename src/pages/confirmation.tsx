@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
+import Link from "next/link";
 
 import Navbar from "@components/layout/Navbar";
 import Footer from "@components/layout/Footer";
@@ -9,7 +10,6 @@ import genericSeoTags from "@lib/utils/genericSeoTags";
 import type { FullPageProps } from "types/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
-import Link from "next/link";
 
 export async function getStaticProps() {
   const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
@@ -61,12 +61,12 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                (shop_receipt_url.startsWith(
-                  "https://squareupsandbox.com/receipt"
-                ) ||
-                  shop_receipt_url.startsWith(
-                    "https://squareup.com/receipt"
-                  )) ? (
+                  (shop_receipt_url.startsWith(
+                    "https://squareupsandbox.com/receipt"
+                  ) ||
+                    shop_receipt_url.startsWith(
+                      "https://squareup.com/receipt"
+                    )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
                     target="_blank"

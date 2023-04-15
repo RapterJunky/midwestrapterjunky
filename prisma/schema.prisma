@@ -113,6 +113,8 @@ model ThreadPost {
   created  DateTime  @default(now())
   pinned   Boolean   @default(false)
   locked   Boolean   @default(false)
+  /// [Tags]
+  tags     Json?
   /// [Dast]
   content  Json?
   owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)

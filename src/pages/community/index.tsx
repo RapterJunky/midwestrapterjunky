@@ -136,7 +136,7 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
                         </div>
                         <Tab.Panels>
                             <Tab.Panel>
-                                <table className="w-full divide-y-4">
+                                <table className="w-full divide-y-4 mb-8">
                                     <thead>
                                         <tr className="text-neutral-600">
                                             <th className="md:w-[45%] text-left py-3 px-2 font-medium">Category</th>
@@ -157,6 +157,7 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
                                                 latestTopics={category.posts}
                                             />
                                         ))}
+                                        <tr></tr>
                                     </tbody>
                                 </table>
                             </Tab.Panel>

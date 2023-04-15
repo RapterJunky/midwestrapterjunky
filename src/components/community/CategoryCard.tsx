@@ -2,6 +2,7 @@ import { HiLockClosed } from 'react-icons/hi';
 import { FaThumbtack } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from "next/link";
+import TagList from './TagList';
 
 type Props = {
     title: string;
@@ -38,10 +39,8 @@ const CategoryCard: React.FC<Props> = ({ slug, desciption, title, image, tags, t
                     {desciption}
                 </p>
                 {tags ? (
-                    <div className="clear-both w-full mt-1 flex gap-2 flex-wrap">
-                        {tags.map((tag, i) => (
-                            <span key={i} className="bg-emerald-600 text-white p-1 rounded-sm line-clamp-1 overflow-hidden">{tag}</span>
-                        ))}
+                    <div className="clear-both w-full mt-1">
+                        <TagList tags={tags} />
                     </div>
                 ) : null}
             </td>
@@ -62,7 +61,7 @@ const CategoryCard: React.FC<Props> = ({ slug, desciption, title, image, tags, t
                                 {topic.locked ? <HiLockClosed className="h-4 w-4" /> : null}
                                 {topic.pinned ? <FaThumbtack className="h-4 w-4" /> : null}
                                 <span className="text-primary overflow-hidden line-clamp-1">{topic.name}</span>
-                                <span className="text-neutral-400 text-sm">{new Date(topic.created).toLocaleDateString("en-us", { month: "short", day: "numeric" })}</span>
+                                <span className="text-neutral-400 text-sm">{new Date(topic.created).toLocaleDateString("en-us", { month: "short", day: "numeric", year: "numeric" })}</span>
                             </Link>
                         </li>
                     ))}
