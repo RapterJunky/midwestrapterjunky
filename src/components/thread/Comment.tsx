@@ -59,10 +59,10 @@ const Comment: React.FC<Props> = ({
           <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (
               <>
-                <button onClick={() => like()} className="flex hover:text-black p-0.5">
+                {/*<button onClick={() => like()} className="flex hover:text-black p-0.5">
                   <span className="mr-1">4</span>
                   <HiHeart className="h-6 w-6" />
-                </button>
+            </button>*/}
                 <button
                   title="privately flag this comment for attention or send a private notification about it"
                   className="hover:text-black p-0.5"
@@ -70,9 +70,9 @@ const Comment: React.FC<Props> = ({
                 >
                   <HiFlag className="h-6 w-6" />
                 </button>
-                <button className="hover:text-black p-0.5">
+                {/*<button className="hover:text-black p-0.5">
                   <HiLink className="h-6 w-6" />
-                </button>
+                </button>*/}
                 {session.data?.user.id === comment.owner.id ? (
                   <button
                     className="p-0.5 text-red-500 hover:text-red-700"

@@ -5,6 +5,7 @@ import { HiLink } from "react-icons/hi";
 import type { Paginate } from "@type/page";
 import Comment, { type TComment } from "./Comment";
 import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaListOl, FaListUl } from "react-icons/fa";
+import TextEditor from "../community/TextEditor";
 
 type Props = {
   post: string;
@@ -86,44 +87,13 @@ const Comments: React.FC<Props> = ({ post }) => {
           className="my-6 flex flex-col justify-evenly gap-1 md:px-4"
           onSubmit={handleCreateComment}
         >
-          <div className="border border-neutral-400 flex rounded-sm flex-wrap">
-            <select title="Text heading" className="border-none">
-              <option>Normal</option>
-              <option>Heading 1</option>
-              <option>Heading 2</option>
-              <option>Heading 3</option>
-              <option>Heading 4</option>
-              <option>Heading 5</option>
-              <option>Heading 6</option>
-            </select>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
-              <FaItalic className="h-5 w-5" title="empize" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
-              <FaHighlighter className="h-5 w-5" title="highlight" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm">
-              <FaBold className="h-5 w-5" title="bold" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create unorder list">
-              <FaListUl className="h-5 w-5" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Create ordered list">
-              <FaListOl className="h-5 w-5" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Add a link">
-              <HiLink className="h-5 w-5" />
-            </button>
-            <button type="button" className="p-2 hover:bg-neutral-400 hover:text-neutral-100 rounded-sm" title="Upload Image">
-              <FaFileImage className="h-5 w-5" />
-            </button>
-          </div>
-          <textarea
+          <TextEditor />
+          {/*<textarea
             autoComplete="off"
             name="comment"
             className="border border-neutral-400 rounded-sm"
             placeholder="Add a comment"
-          />
+      />*/}
           <div className="w-full flex justify-end">
             <button type="submit" className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
               Reply
