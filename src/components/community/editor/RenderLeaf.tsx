@@ -1,4 +1,5 @@
 import type { RenderLeafProps } from 'slate-react';
+
 const RenderLeaf: React.FC<RenderLeafProps> = ({ attributes, leaf, children }) => {
 
     if (leaf.strong) {

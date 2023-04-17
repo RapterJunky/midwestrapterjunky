@@ -44,8 +44,8 @@ const Comment: React.FC<Props> = ({
             alt="avatar"
           />
         </div>
-        <div className="flex w-full flex-col gap-2 px-2">
-          <div className="text-neutral-600 flex justify-between mb-2">
+        <div className="flex w-full flex-col px-2">
+          <div className="text-neutral-600 flex justify-between mb-1">
             <div className="font-bold">
               {comment.owner.name}
             </div>

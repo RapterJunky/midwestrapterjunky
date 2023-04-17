@@ -137,6 +137,19 @@ const TEST: PrismaJson.Dast = {
                         }
                     ]
                 },
+                {
+                    type: "blockquote",
+                    attribution: "Hello",
+                    children: [
+                        {
+                            type: "paragraph",
+                            children: [{
+                                type: "span",
+                                value: "TEST"
+                            }]
+                        }
+                    ]
+                }
             ]
         }
     }
@@ -173,13 +186,15 @@ const CommunityPost: NextPageWithProvider<Props> = ({ navbar, _site, post }) => 
                         <TagList tags={["TAGS"]} />
                     </header>
                     <div className="flex w-full pt-2 mb-4">
-                        <div>
-                            <Image className="rounded-full" src={post.owner.image} alt="avatar" width={40} height={50} />
-                        </div>
                         <div className="px-2 w-full">
-                            <div className="flex w-full justify-between mb-2 text-neutral-600">
-                                <div className="font-bold">{post.owner.name}</div>
-                                <div>{new Date(post.created).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</div>
+                            <div className="flex gap-2">
+                                <div>
+                                    <Image className="rounded-full" src={post.owner.image} alt="avatar" width={40} height={50} />
+                                </div>
+                                <div className="flex w-full justify-between mb-2 text-neutral-600">
+                                    <div className="font-bold">{post.owner.name}</div>
+                                    <div>{new Date(post.created).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}</div>
+                                </div>
                             </div>
                             <article className="prose py-2 mb-4 max-w-none">
                                 <StructuredText renderBlock={renderBlock} renderInlineRecord={renderInlineRecord} data={TEST} />

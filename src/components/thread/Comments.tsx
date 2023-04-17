@@ -5,7 +5,7 @@ import { HiLink } from "react-icons/hi";
 import type { Paginate } from "@type/page";
 import Comment, { type TComment } from "./Comment";
 import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaListOl, FaListUl } from "react-icons/fa";
-import TextEditor from "../community/TextEditor";
+import TextEditor from "../community/editor/TextEditor";
 
 type Props = {
   post: string;
