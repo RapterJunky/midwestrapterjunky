@@ -1,6 +1,6 @@
 import { useSlate } from "slate-react";
 import { useRef } from 'react';
-import { isMarkActive, isBlockActive, toggleBlock, toggleMark, insertImage, insertLink, isLinkActive, type Mark, type FormatType, type ListStyle, type HeadingLevel, getActiveHeading } from "@lib/utils/textEditorUtils";
+import { isMarkActive, isBlockActive, toggleBlock, toggleMark, insertImage, insertLink, isLinkActive, type Mark, type FormatType, type ListStyle, type HeadingLevel, getActiveHeading } from "@/lib/utils/editor/textEditorUtils";
 import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaLink, FaListOl, FaListUl, FaQuoteRight, FaStrikethrough, FaUnderline } from "react-icons/fa";
 
 const MarkButton: React.FC<React.PropsWithChildren<{ mark: Mark; }>> = ({ mark, children }) => {

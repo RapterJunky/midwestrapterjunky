@@ -200,15 +200,15 @@ const CommunityPost: NextPageWithProvider<Props> = ({ navbar, _site, post }) => 
                                 <StructuredText renderBlock={renderBlock} renderInlineRecord={renderInlineRecord} data={TEST} />
                             </article>
                             <div className="p-0.5 flex justify-end gap-1 text-neutral-600">
-                                <button onClick={() => like()} type="button" className="p-1" title="like this post">
+                                {/*<button onClick={() => like()} type="button" className="p-1" title="like this post">
                                     <HiHeart className="h-6 w-6" />
-                                </button>
+                                </button>*/}
                                 <button onClick={() => report("post", post.id)} type="button" className="p-1" title="privately flag this post for attention or send a private notification about it">
                                     <HiFlag className="h-6 w-6" />
                                 </button>
-                                <button type="button" className="p-1" title="share a link to this post">
+                                {/*<button type="button" className="p-1" title="share a link to this post">
                                     <HiLink className="h-6 w-6" />
-                                </button>
+                                </button>*/}
                             </div>
                         </div>
                     </div>

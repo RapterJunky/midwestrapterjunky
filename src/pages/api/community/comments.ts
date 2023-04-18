@@ -7,23 +7,19 @@ import prisma from "@api/prisma";
 import { getSession } from "@lib/getSession";
 import { handleError } from "@api/errorHandler";
 import { applyRateLimit } from "@api/rateLimiter";
+import { slateToDast } from "@lib/utils/slateToDast";
+import type { Descendant } from 'slate';
 
 const getSchema = z.object({
   post: z.string().uuid(),
   page: z.coerce.number().positive().min(1).optional().default(1),
 });
 const postSchema = z.object({
-  content: z.object({ message: z.string() }),
+  data: z.array(z.object({ type: z.string() }).passthrough()).transform(e => slateToDast(e as Descendant[], {})),
   parentCommentId: z.string().uuid().nullable().optional(),
-  threadPostId: z.string().uuid(),
+  postId: z.string().uuid().nonempty(),
 });
 
-const patchSchema = z.object({
-  id: z.string().uuid(),
-  content: z.object({
-    message: z.string(),
-  }),
-});
 const deleteSchema = z.object({
   id: z.string().uuid(),
 });
@@ -61,7 +57,7 @@ export default async function handler(
               parentCommentId: true,
             },
             orderBy: {
-              created: "asc",
+              created: "desc",
             },
           })
           .withPages({ limit: 20, page });
@@ -87,14 +83,14 @@ export default async function handler(
           return res.status(201).json({ message: "Reported" });
         }
 
-        const { content, parentCommentId, threadPostId } = postSchema.parse(
+        const { data, parentCommentId, postId } = postSchema.parse(
           req.body
         );
 
         await prisma.threadPost.exists(
           {
             where: {
-              id: threadPostId,
+              id: postId,
             },
           },
           createHttpError.NotFound("Given post id was not found")
@@ -111,12 +107,19 @@ export default async function handler(
           );
         }
 
+        if (!data) throw createHttpError.InternalServerError("Failed to transform message");
+
+        const dast: PrismaJson.Dast = {
+          blocks: [],
+          value: data
+        }
+
         const result = await prisma.comment.create({
           data: {
             id: randomUUID(),
-            content,
+            content: dast,
             ownerId: session.user.id,
-            threadPostId,
+            threadPostId: postId,
             parentCommentId,
           },
           select: {
@@ -136,34 +139,6 @@ export default async function handler(
 
         return res.status(201).json(result);
       }
-      case "PATCH": {
-        await applyRateLimit(req, res);
-        const session = await getSession(req, res);
-        const { content, id } = patchSchema.parse(req.body);
-
-        await prisma.comment.exists(
-          {
-            where: {
-              id,
-              AND: {
-                ownerId: session.user.id,
-              },
-            },
-          },
-          createHttpError.NotFound()
-        );
-
-        const result = await prisma.comment.update({
-          where: {
-            id,
-          },
-          data: {
-            content,
-          },
-        });
-
-        return res.status(200).json(result);
-      }
       case "DELETE": {
         await applyRateLimit(req, res);
         const session = await getSession(req, res);
@@ -178,7 +153,7 @@ export default async function handler(
               },
             },
           },
-          createHttpError.NotFound()
+          createHttpError.NotFound("No comment with given owner exists.")
         );
 
         const result = await prisma.comment.delete({

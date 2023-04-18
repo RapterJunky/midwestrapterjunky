@@ -1,10 +1,11 @@
-import { HiFlag, HiHeart, HiLink, HiTrash } from "react-icons/hi";
 import type { useSession } from "next-auth/react";
+import { HiFlag, HiTrash } from "react-icons/hi";
 import Image from "next/image";
 
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
-import usePostActions from "@/hooks/usePostActions";
+import usePostActions from "@hook/usePostActions";
+import { StructuredText } from "react-datocms/structured-text";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
@@ -14,8 +15,6 @@ export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
 interface Props {
   comment: TComment;
   session: Session;
-  handleEdit?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  handleCreate?: (ev: React.FormEvent<HTMLFormElement>) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
 }
 
@@ -28,7 +27,7 @@ const Comment: React.FC<Props> = ({
   comment,
   session,
 }) => {
-  const { report, like } = usePostActions();
+  const { report } = usePostActions();
   return (
     <li id={comment.id}
       className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
@@ -54,7 +53,9 @@ const Comment: React.FC<Props> = ({
             </div>
           </div>
           <article className="prose max-w-none min-h-[50px]">
-            {comment.content?.message ?? "Missing comment message!"}
+            {comment.content ? (
+              <StructuredText data={comment.content} />
+            ) : "Missing comment message!"}
           </article>
           <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (

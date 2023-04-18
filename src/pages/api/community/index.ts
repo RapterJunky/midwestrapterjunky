@@ -1,8 +1,10 @@
-import { handleError } from "@/lib/api/errorHandler";
-import createHttpError from "http-errors";
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "@api/prisma";
+import createHttpError from "http-errors";
 import { z } from "zod";
+
+import { handleError } from "@api/errorHandler";
+import prisma from "@api/prisma";
+
 
 const getSchema = z.object({
     sort: z.enum(["latest", "top"]),
@@ -44,6 +46,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
 
                 return res.status(200).json({ result: posts, ...meta });
+            }
+            case "POST": {
+
             }
             default:
                 throw createHttpError.MethodNotAllowed();

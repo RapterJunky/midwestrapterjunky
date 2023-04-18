@@ -15,16 +15,18 @@ export const handleError = (
   error: unknown,
   res: NextApiResponse<ApiErrorResponse>
 ) => {
-  logger.error(error);
-
   if (error instanceof ZodError) {
     const data = fromZodError(error);
+
+    logger.error(data.message, error);
 
     return res.status(400).json({
       message: data.message,
       details: data.details,
     });
   }
+
+  logger.error(error);
 
   if (error instanceof Prisma.PrismaClientValidationError) {
     return res.status(400).json({ message: error.message });
