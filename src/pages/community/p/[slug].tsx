@@ -20,6 +20,7 @@ import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { PostProvider } from "@/hooks/usePost";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import TopicActions from "@/components/community/TopicActions";
+import TopicsList from "@/components/community/TopicsList";
 
 interface Props extends FullPageProps {
     post: {
@@ -217,22 +218,7 @@ const CommunityPost: NextPageWithProvider<Props> = ({ navbar, _site, post }) => 
                     </div>
                     <div className="max-w-5xl w-full mb-4 px-4">
                         <h1 className="font-bold text-xl">Suggested Topics</h1>
-                        <TopicTable>
-                            <tbody className="divide-y">
-                                <tr>
-                                    <td className="p-2">
-                                        <div className="font-medium text-lg mb-1 overflow-hidden line-clamp-2">Topic Title</div>
-                                        <TagList tags={["TAG"]} />
-                                    </td>
-                                    <td className="text-center font-medium">
-                                        399
-                                    </td>
-                                    <td className="text-center font-medium">
-                                        3 days ago
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </TopicTable>
+                        <TopicsList mode="suggest" tags={post.tags} ignore={post.id} />
                     </div>
                 </main>
             </PostProvider>

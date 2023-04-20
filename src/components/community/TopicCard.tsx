@@ -1,8 +1,9 @@
-import useRelativeTime from "@hook/useRelativeTime";
-import Link from "next/link";
-import TagList from "./TagList";
 import { HiLockClosed } from "react-icons/hi2";
 import { FaThumbtack } from "react-icons/fa";
+import Link from "next/link";
+
+import TagList from "@components/community/TagList";
+import useRelativeTime from "@hook/useRelativeTime";
 
 type Props = {
     title: string;
@@ -22,7 +23,7 @@ const TopicCard: React.FC<Props> = ({ locked, pinned, activity, title, slug, tag
             <td>
                 <div className="p-2">
                     <Link href={slug}>
-                        <h3 className="font-bold text-lg mb-2 flex items-center gap-1">
+                        <h3 className="font-bold text-base md:text-lg mb-2 flex items-center gap-1">
                             {locked ? (
                                 <HiLockClosed className="text-neutral-400" />
                             ) : null}

@@ -4,6 +4,7 @@ import type { Descendant } from 'slate';
 import useSWR from "swr";
 
 import type { TComment } from '@components/thread/Comment';
+import { singleFetch } from '@api/fetch';
 import type { Paginate } from '@type/page';
 
 type ItemType = "post" | "comment";
@@ -128,8 +129,12 @@ const ReportDialog: React.FC<{ data: DialogData, close: () => void }> = ({ data,
  */
 export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }>> = ({ children, postId }) => {
     const [page, setPage] = useState<number>(1);
-    const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/posts?post=${postId}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<PostLikes>);
-    const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(postId ? `/api/community/comments?post=${postId}&page=${page}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<Paginate<TComment>>);
+    const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/posts?post=${postId}` : null, singleFetch as () => Promise<PostLikes>, {
+        revalidateOnFocus: false
+    });
+    const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(postId ? `/api/community/comments?post=${postId}&page=${page}` : null, singleFetch as () => Promise<Paginate<TComment>>, {
+        revalidateOnFocus: false
+    });
     const [dialog, setDialog] = useState<DialogData>({
         title: "Error",
         reasonInput: false,
@@ -421,25 +426,6 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
             },
             async create(type, content) {
                 try {
-                    if (type === "post") {
-                        const response = await fetch("/api/community/posts", {
-                            method: "POST",
-                            body: JSON.stringify({
-                                type: "post",
-                                ...content
-                            }),
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        });
-
-                        if (!response.ok) throw response;
-
-                        const data = await response.json() as { id: string };
-
-                        return data.id;
-                    }
-
                     await mutate(async (current) => {
                         if (!current) throw new Error("No data to populate.");
 

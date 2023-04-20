@@ -78,13 +78,14 @@ export const isMarkActive = (editor: Editor, format: Mark) => {
     return marks ? marks[format] === true : false;
 }
 
-export const insertImage = (editor: Editor, image: HTMLImageElement) => {
+export const insertImage = (editor: Editor, image: HTMLImageElement, file: File) => {
     const el: NonTextNode = {
         type: "block",
         blockModelId: "ImageRecord",
         id: crypto.randomUUID(),
         width: image.width,
         height: image.height,
+        file,
         src: image.src,
         children: [{ text: "" }]
     };
@@ -147,7 +148,7 @@ export const withPlugin = (editor: Editor) => {
                     const url = reader.result as string;
                     const image = new Image();
                     image.addEventListener("load", () => {
-                        insertImage(editor, image);
+                        insertImage(editor, image, file);
                     }, false);
                     image.src = url;
                 }, false);

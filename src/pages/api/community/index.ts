@@ -7,7 +7,9 @@ import prisma from "@api/prisma";
 
 
 const getSchema = z.object({
-    sort: z.enum(["latest", "top"]),
+    sort: z.enum(["latest", "top", "suggest"]),
+    tags: z.array(z.string().transform(value => decodeURIComponent(value))).optional().default([]),
+    ignore: z.string().uuid().optional(),
     page: z.coerce.number().min(1).optional().default(1)
 });
 
@@ -15,7 +17,43 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         switch (req.method) {
             case "GET": {
-                const { sort, page } = getSchema.parse(req.query);
+                const { sort, page, tags, ignore } = getSchema.parse(req.query);
+
+                if (sort === "suggest") {
+                    const data = await prisma.threadPost.findMany({
+                        where: {
+                            NOT: ignore ? {
+                                id: ignore
+                            } : undefined,
+                            tags: {
+                                array_contains: tags
+                            }
+                        },
+                        select: {
+                            id: true,
+                            name: true,
+                            locked: true,
+                            pinned: true,
+                            tags: true,
+                            comments: {
+                                take: 1,
+                                orderBy: {
+                                    created: "desc",
+                                },
+                                select: {
+                                    updatedAt: true
+                                }
+                            }
+                        },
+                        take: 5,
+                    });
+
+                    return res.status(200).json({
+                        result: data,
+                        isLastPage: true,
+
+                    });
+                }
 
                 const [posts, meta] = await prisma.threadPost.paginate({
                     select: {
@@ -23,6 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         name: true,
                         locked: true,
                         pinned: true,
+                        tags: true,
                         comments: {
                             take: 1,
                             orderBy: {

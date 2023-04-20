@@ -44,7 +44,7 @@ const ImageButton: React.FC = () => {
                     const url = reader.result;
                     if (!url) return;
                     const image = new Image();
-                    image.addEventListener("load", () => insertImage(editor, image), false);
+                    image.addEventListener("load", () => insertImage(editor, image, file), false);
                     image.src = url as string;
                 }, false);
                 reader.readAsDataURL(file);

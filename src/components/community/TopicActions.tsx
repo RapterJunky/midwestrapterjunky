@@ -1,4 +1,4 @@
-import { HiFlag, HiHeart, HiLockOpen, HiTrash, HiLockClosed } from "react-icons/hi";
+import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import usePost from "@hook/usePost";
 
@@ -21,17 +21,12 @@ const TopicActions: React.FC<{ likes: number; postId: string, ownerId: string; }
                 <HiFlag className="h-6 w-6" />
             </button>
             {session.data?.user.id === ownerId ? (
-                <>
-                    <button className="p-1 flex hover:text-black" title="lock post">
-                        <HiLockClosed className="h-6 w-6" />
-                    </button>
-                    <button title="delete your post"
-                        className="p-1 text-red-500 hover:text-red-700"
-                        onClick={() => deletePost("post", postId)}
-                    >
-                        <HiTrash className="h-6 w-6" />
-                    </button>
-                </>
+                <button title="delete your post"
+                    className="p-1 text-red-500 hover:text-red-700"
+                    onClick={() => deletePost("post", postId)}
+                >
+                    <HiTrash className="h-6 w-6" />
+                </button>
             ) : null}
         </div>
     )
