@@ -1,32 +1,44 @@
 import { useContext, createContext, useState, Fragment } from 'react';
-import type { TComment } from '@components/thread/Comment';
 import { Dialog, Transition } from '@headlessui/react';
-import useSWR from "swr";
-import { Paginate } from '@/types/page';
 import type { Descendant } from 'slate';
+import useSWR from "swr";
+
+import type { TComment } from '@components/thread/Comment';
+import type { Paginate } from '@type/page';
 
 type ItemType = "post" | "comment";
 type DialogData = { reasonInput: boolean, title: string; message: string; open: boolean; };
 type PostLikes = { likesCount: number; likedByMe: boolean; }
+type CreateCommentBody = {
+    message: Descendant[],
+    parentCommentId?: string;
+}
+type CreatePostBody = {
+    message: Descendant[],
+    category: string;
+    title: string;
+    tags: string[]
+}
 
 type PostCtx = {
     report: (type: ItemType, id: string) => Promise<void>;
     like: (type: ItemType, id: string) => Promise<void>;
     unlike: (type: ItemType, id: string) => Promise<void>;
     delete: (type: ItemType, id: string) => Promise<void>;
-    create: (type: ItemType, data: Descendant[]) => Promise<void>;
-    page: number;
+    create: <T extends ItemType>(type: T, data: T extends "comment" ? CreateCommentBody : CreatePostBody) => Promise<string | null>;
     setPage: (page: number) => void;
+    page: number;
+    likes?: PostLikes;
     comments?: Paginate<TComment>;
     error?: Response;
     isLoading: boolean;
-    likes?: { likesCount: number; likedByMe: boolean; };
     likesIsLoading: boolean;
     likesError?: Response
 }
 
 const REPORT_EVENT_REASON = "mrj::report::reason";
 const REPORT_EVENT_EXIT = "mrj::report:exit";
+const PostContext = createContext<PostCtx | undefined>(undefined);
 
 const ReportDialog: React.FC<{ data: DialogData, close: () => void }> = ({ data, close }) => {
 
@@ -110,18 +122,14 @@ const ReportDialog: React.FC<{ data: DialogData, close: () => void }> = ({ data,
     );
 }
 
-
-//window.dispatchEvent(new CustomEvent(REPORT_EVENT_EXIT));
-const PostContext = createContext<PostCtx | undefined>(undefined);
-
 /**
  * A conslidated place for handling actions/dialogs for reporting, liking, deleting, and other actions
  * that can be shared between posts and comments
  */
 export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }>> = ({ children, postId }) => {
     const [page, setPage] = useState<number>(1);
-    const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/post?mode=likes&post=${postId}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<PostLikes>);
-    const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(postId ? `/api/community/comments?mode=comment&?post=${postId}&page=${page}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<Paginate<TComment>>);
+    const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/posts?post=${postId}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<PostLikes>);
+    const { data, isLoading, error, mutate } = useSWR<Paginate<TComment>, Response>(postId ? `/api/community/comments?post=${postId}&page=${page}` : null, (url) => fetch(url).then(e => { if (e.ok) return e; throw e; }).then(r => r.json()) as Promise<Paginate<TComment>>);
     const [dialog, setDialog] = useState<DialogData>({
         title: "Error",
         reasonInput: false,
@@ -178,7 +186,10 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                             type: "report",
                             id,
                             reason,
-                        })
+                        }),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
                     });
 
                     if (!response.ok) throw response;
@@ -201,14 +212,17 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
             },
             async unlike(type, id) {
                 try {
-                    if (type === "comment") {
+                    if (type === "post") {
                         await likesMutate(async () => {
-                            const response = await fetch('/api/community/post', {
+                            const response = await fetch('/api/community/posts', {
                                 method: "DELETE",
                                 body: JSON.stringify({
                                     id,
                                     type: "like",
-                                })
+                                }),
+                                headers: {
+                                    "Content-Type": "application/json"
+                                }
                             });
 
                             if (!response.ok) throw response;
@@ -278,14 +292,17 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
             },
             async like(type, id) {
                 try {
-                    if (type === "comment") {
+                    if (type === "post") {
                         await likesMutate(async () => {
-                            const response = await fetch('/api/community/post', {
+                            const response = await fetch('/api/community/posts', {
                                 method: "POST",
                                 body: JSON.stringify({
                                     id,
                                     type: "like",
-                                })
+                                }),
+                                headers: {
+                                    "Content-Type": "application/json"
+                                }
                             });
 
                             if (!response.ok) throw response;
@@ -354,7 +371,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
             },
             async delete(type, id) {
                 try {
-                    if (type === "comment") {
+                    if (type === "post") {
                         const response = await fetch("/api/community/post", {
                             method: "DELETE",
                             body: JSON.stringify({
@@ -402,10 +419,25 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                     });
                 }
             },
-            async create(type, message) {
+            async create(type, content) {
                 try {
                     if (type === "post") {
-                        return;
+                        const response = await fetch("/api/community/posts", {
+                            method: "POST",
+                            body: JSON.stringify({
+                                type: "post",
+                                ...content
+                            }),
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        });
+
+                        if (!response.ok) throw response;
+
+                        const data = await response.json() as { id: string };
+
+                        return data.id;
                     }
 
                     await mutate(async (current) => {
@@ -416,8 +448,8 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                             body: JSON.stringify({
                                 type: "comment",
                                 postId,
-                                data: message,
-                                parentCommentId: undefined
+                                data: content.message,
+                                parentCommentId: (content as CreateCommentBody)?.parentCommentId
                             }),
                             headers: {
                                 "Content-Type": "application/json"
@@ -429,10 +461,20 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                         const comment = await request.json() as TComment;
 
                         return { ...current, result: [comment, ...current.result] }
-                    }, { revalidate: false });
+                    }, {
+                        revalidate: false,
+                        rollbackOnError: true
+                    });
                 } catch (error) {
                     console.error(error);
+                    setDialog({
+                        message: "There was a problem in submitting your request. Please try again.",
+                        title: "Error",
+                        open: true,
+                        reasonInput: false
+                    });
                 }
+                return null;
             }
         }}>
             {children}

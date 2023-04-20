@@ -3,8 +3,9 @@ import { useSession } from "next-auth/react";
 import usePost from "@hook/usePost";
 
 const TopicActions: React.FC<{ likes: number; postId: string, ownerId: string; }> = ({ postId, ownerId, likes }) => {
-    const session = useSession();
     const { unlike, like, report, delete: deletePost, likes: data, isLoading } = usePost();
+    const session = useSession();
+
     if (session.status !== "authenticated") return null;
 
     return (

@@ -23,9 +23,7 @@ const Comments: React.FC = () => {
   const onSubmit = async (state: FormState) => {
     const empty = await isEditorEmpty();
     if (empty) return;
-
-    await create("comment", state.message);
-
+    await create("comment", state);
     resetEditor();
   }
 

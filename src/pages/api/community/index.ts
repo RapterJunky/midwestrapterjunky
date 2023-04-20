@@ -48,7 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 return res.status(200).json({ result: posts, ...meta });
             }
             case "POST": {
-
+                throw createHttpError.NotImplemented();
             }
             default:
                 throw createHttpError.MethodNotAllowed();

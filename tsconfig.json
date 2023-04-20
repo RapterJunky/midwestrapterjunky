@@ -22,6 +22,7 @@
       "@hook/*": ["hooks/*"],
       "@type/*": ["types/*"],
       "@lib/*": ["lib/*"],
+      "@service/*": ["lib/services/*"],
       "@components/*": ["components/*"],
       "@query/*": ["gql/*"],
       "@utils/*": ["lib/utils/*"]
