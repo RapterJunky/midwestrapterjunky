@@ -1,87 +1,39 @@
 import { useSession, signIn } from "next-auth/react";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-import useSWR from "swr";
+import { useForm } from 'react-hook-form';
+import type { Descendant } from "slate";
 
-import Comment, { type TComment } from "@components/thread/Comment";
-import { isEditorEmpty, resetEditor } from "@/lib/utils/editor/editorActions";
-import usePostActions from "@hook/usePostActions";
-import type { Paginate } from "@type/page";
-import { Descendant } from "slate";
+import { isEditorEmpty, resetEditor } from "@lib/utils/editor/editorActions";
+import CommentBox from "@components/thread/CommentBox";
+import Comment from "@components/thread/Comment";
+import usePost from "@hook/usePost";
 
-type Props = {
-  post: string;
+type FormState = {
+  message: Descendant[];
 }
 
-const TextEditor = dynamic(() => import("@components/community/editor/TextEditor"), {
-  loading: () => (
-    <div className="animate-pulse">
-      <span className="inline-block h-12 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
-      <span className="inline-block h-28 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
-    </div>
-  )
-});
-
-const Comments: React.FC<Props> = ({ post }) => {
-  const [state, setState] = useState<Descendant[]>([{ type: "paragraph", children: [{ text: "" }] }]);
+const Comments: React.FC = () => {
+  const { handleSubmit, control } = useForm<FormState>({
+    defaultValues: {
+      message: [{ type: "paragraph", children: [{ text: "" }] }]
+    }
+  });
+  const { isLoading, comments, error, setPage, create } = usePost();
   const session = useSession();
-  const actions = usePostActions();
-  const [page, setPage] = useState(1);
-  const { data, isLoading, error, mutate } = useSWR<
-    Paginate<TComment>,
-    Response,
-    string
-  >(
-    `/api/community/comments?post=${post}&page=${page}`,
-    (url) =>
-      fetch(url)
-        .then((value) => {
-          if (value.ok) return value;
-          throw value;
-        })
-        .then((res) => res.json()) as Promise<Paginate<TComment>>
-  );
 
-  const deleteComment = async (id: string) => {
-    try {
-      if (!data) return;
-      await actions.delete("comment", id);
-      await mutate({
-        ...data,
-        result: data.result.filter((value) => value.id !== id),
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const onSubmit = async (state: FormState) => {
+    const empty = await isEditorEmpty();
+    if (empty) return;
 
-  const handleCreateComment = async (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    try {
-      if (!data || !state) return;
+    await create("comment", state.message);
 
-      const empty = await isEditorEmpty()
-      if (empty) return;
-
-      const result = await actions.create("comment", { data: state, id: post });
-      if (!result) return;
-
-      resetEditor();
-
-      await mutate({ ...data, result: [result, ...data.result] });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    resetEditor();
+  }
 
   return (
     <div className="my-4">
       {session.status === "authenticated" ? (
-        <form
-          className="my-6 flex flex-col justify-evenly gap-1 md:px-4"
-          onSubmit={handleCreateComment}
-        >
-          <TextEditor value={state} onChange={setState} />
+        <form className="my-6 flex flex-col justify-evenly gap-1 md:px-4" onSubmit={handleSubmit(onSubmit)}>
+          <CommentBox control={control} name="message" />
           <div className="w-full flex justify-end">
             <button type="submit" className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
               Reply
@@ -111,7 +63,7 @@ const Comments: React.FC<Props> = ({ post }) => {
       </div>
       <hr className="border-b-2" />
       <ul className="mt-5 w-full divide-y">
-        {error || !data ? (
+        {error || !comments ? (
           <li className="text-center py-4 font-bold text-lg">{error?.statusText ?? "Failed to load comments"}</li>
         ) : null}
         {isLoading ? (
@@ -120,24 +72,23 @@ const Comments: React.FC<Props> = ({ post }) => {
             <span className="inline-block h-28 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
           </li>
         ) : null}
-        {!isLoading && data && !data?.result?.length ? (
+        {!isLoading && comments && !comments?.result?.length ? (
           <li className="text-center py-4 font-bold text-lg">No comments yet.</li>
         ) : null}
-        {!isLoading && data
-          ? data?.result.map((comment) => (
+        {!isLoading && comments
+          ? comments?.result.map((comment) => (
             <Comment
               key={comment.id}
               comment={comment}
               session={session}
-              deleteComment={deleteComment}
             />
           ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">
         <button
-          onClick={() => setPage(data?.previousPage ?? 1)}
-          disabled={isLoading || data?.isFirstPage}
+          onClick={() => setPage(comments?.previousPage ?? 1)}
+          disabled={isLoading || comments?.isFirstPage}
           type="button"
           className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
         >
@@ -145,12 +96,12 @@ const Comments: React.FC<Props> = ({ post }) => {
         </button>
 
         <div>
-          {data?.currentPage ?? 0} of {(data?.pageCount ?? 0) + 1}
+          {comments?.currentPage ?? 1} of {(comments?.pageCount ?? 0) + 1}
         </div>
 
         <button
-          onClick={() => setPage(data?.nextPage ?? 1)}
-          disabled={isLoading || data?.isLastPage}
+          onClick={() => setPage(comments?.nextPage ?? 1)}
+          disabled={isLoading || comments?.isLastPage}
           type="button"
           className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
         >

@@ -21,6 +21,11 @@ model Authors {
   id     String @unique
 }
 
+model MailingList {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+}
+
 model Cache {
   id      Int     @id @default(autoincrement())
   key     String  @unique
@@ -32,11 +37,6 @@ model Settings {
   id    Int    @id @default(autoincrement())
   key   String @unique
   value String
-}
-
-model MailingList {
-  id    Int    @id @default(autoincrement())
-  email String @unique
 }
 
 model Account {
@@ -77,9 +77,10 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  TheadPost     ThreadPost[]
-  Comment       Comment[]
+  theadPosts    ThreadPost[]
+  comments      Comment[]
   reports       Report[]
+  likes         Like[]
 }
 
 model VerificationToken {
@@ -91,50 +92,54 @@ model VerificationToken {
 }
 
 model Comment {
-  id              String     @id
+  id              String     @id @default(uuid())
   /// [PostComment]
-  content         Json // Dast maybe, for now { message: string }
+  content         Json
   created         DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
   parentCommentId String?
   ownerId         String
   owner           User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ThreadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
+  threadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
   threadPostId    String
   reports         Report[]
+  likes           Like[]
 
   @@index([ownerId])
   @@index([threadPostId])
 }
 
 model ThreadPost {
-  id       String    @id
-  name     String
-  ownerId  String
-  created  DateTime  @default(now())
-  pinned   Boolean   @default(false)
-  locked   Boolean   @default(false)
+  id        String    @id @default(uuid())
+  name      String
+  ownerId   String
+  created   DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  pinned    Boolean   @default(false)
+  locked    Boolean   @default(false)
   /// [Tags]
-  tags     Json?
+  tags      Json?
   /// [Dast]
-  content  Json?
-  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  thread   Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
-  threadId Int
-  comments Comment[]
-  reports  Report[]
+  content   Json?
+  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  thread    Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
+  threadId  Int
+  comments  Comment[]
+  reports   Report[]
+  likes     Like[]
 
   @@index([threadId])
   @@index([ownerId])
 }
 
 model Thread {
-  id             Int          @id @default(autoincrement())
-  name           String       @unique
-  description    String
-  image          String
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String
+  image       String
   /// [Tags]
-  tags           Json?   
-  posts          ThreadPost[]
+  tags        Json?
+  posts       ThreadPost[]
 }
 
 model Report {
@@ -147,11 +152,26 @@ model Report {
   reason    String
   comment   Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
   post      ThreadPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
-  owner     User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  owner     User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([commentId])
   @@index([ownerId])
   @@index([postId])
+}
+
+model Like {
+  id           String      @id
+  type         ReportType
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment      Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post         ThreadPost? @relation(fields: [threadPostId], references: [id], onDelete: Cascade)
+  userId       String
+  commentId    String?
+  threadPostId String?
+
+  @@index([userId])
+  @@index([commentId])
+  @@index([threadPostId])
 }
 
 enum ReportType {

@@ -1,21 +1,22 @@
 import type { useSession } from "next-auth/react";
-import { HiFlag, HiTrash } from "react-icons/hi";
+import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import Image from "next/image";
 
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
-import usePostActions from "@hook/usePostActions";
+import usePostActions from "@/hooks/usePost";
 import { StructuredText } from "react-datocms/structured-text";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
-  owner: Omit<User, "email" | "emailVerified">;
+  owner: Omit<User, "email" | "emailVerified">,
+  likedByMe: boolean;
+  likeCount: number;
 };
 
 interface Props {
   comment: TComment;
   session: Session;
-  deleteComment: (id: string) => Promise<void>;
 }
 
 /**
@@ -23,11 +24,10 @@ interface Props {
  *
  */
 const Comment: React.FC<Props> = ({
-  deleteComment,
   comment,
   session,
 }) => {
-  const { report } = usePostActions();
+  const { report, like, unlike, delete: deleteComment } = usePostActions();
   return (
     <li id={comment.id}
       className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
@@ -60,10 +60,12 @@ const Comment: React.FC<Props> = ({
           <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
             {session.status === "authenticated" ? (
               <>
-                {/*<button onClick={() => like()} className="flex hover:text-black p-0.5">
-                  <span className="mr-1">4</span>
+                <button title="like this comment" data-headlessui-state={comment.likedByMe ? "active" : ""} onClick={() => comment.likedByMe ? unlike("comment", comment.id) : like("comment", comment.id)} className="flex hover:text-black p-0.5 ui-active:text-red-400">
+                  {comment.likeCount > 0 ? (
+                    <span className="mr-1">{comment.likeCount}</span>
+                  ) : null}
                   <HiHeart className="h-6 w-6" />
-            </button>*/}
+                </button>
                 <button
                   title="privately flag this comment for attention or send a private notification about it"
                   className="hover:text-black p-0.5"
@@ -75,9 +77,9 @@ const Comment: React.FC<Props> = ({
                   <HiLink className="h-6 w-6" />
                 </button>*/}
                 {session.data?.user.id === comment.owner.id ? (
-                  <button
+                  <button title="delete your comment"
                     className="p-0.5 text-red-500 hover:text-red-700"
-                    onClick={() => deleteComment(comment.id)}
+                    onClick={() => deleteComment("comment", comment.id)}
                   >
                     <HiTrash className="h-6 w-6" />
                   </button>

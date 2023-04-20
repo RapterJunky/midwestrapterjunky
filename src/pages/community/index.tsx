@@ -107,7 +107,10 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
 
     return (
         <div className="flex flex-col h-full">
-            <SiteTags tags={[_site.faviconMetaTags, genericSeoTags({ title: "Community", description: "Midwest Raptor Junkies Community Hub" })]} />
+            <SiteTags tags={[
+                _site.faviconMetaTags,
+                genericSeoTags({ title: "Community", description: "Midwest Raptor Junkies Community Hub" })
+            ]} />
             <Navbar {...navbar} mode="only-scroll" />
             <main className="flex-1 flex flex-col items-center mt-28">
                 <div className="flex flex-col justify-center container max-w-6xl px-2 mb-4">
