@@ -47,16 +47,8 @@ const Comments: React.FC = () => {
         </div>
       )}
       <div className="mb-2 flex justify-between items-center">
-        <div>
+        <div className="p-1">
           Comments
-        </div>
-        <div>
-          <label htmlFor="sort">Sort By</label>
-          <select id="sort" className="border-none focus:outline-none focus:ring-0">
-            <option>Latest</option>
-            <option>Oldest</option>
-            <option>Top</option>
-          </select>
         </div>
       </div>
       <hr className="border-b-2" />

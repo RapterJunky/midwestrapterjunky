@@ -8,8 +8,10 @@ import TopicTable from "./TopicTable";
 type Post = {
     id: string;
     name: string;
+    locked: boolean,
+    pinned: boolean,
     comments: {
-        created: string;
+        updatedAt: string;
     }[];
 };
 
@@ -45,7 +47,7 @@ const TopicsList: React.FC<{ mode: "top" | "latest" }> = ({ mode }) => {
                         const item = items[virtualRow.index];
                         if (!item) throw new Error("Unable to get item");
                         return (
-                            <TopicCard key={virtualRow.key} activity={item.comments.at(0)?.created} title={item.name} slug={`/community/p/${item.id}`} tags={["Getting Started"]} description="" replies={item.comments.length} />
+                            <TopicCard pinned={item.pinned} locked={item.locked} key={virtualRow.key} activity={item.comments.at(0)?.updatedAt} title={item.name} slug={`/community/p/${item.id}`} tags={["Getting Started"]} description="" replies={item.comments.length} />
                         );
                     })}
                 </tbody>

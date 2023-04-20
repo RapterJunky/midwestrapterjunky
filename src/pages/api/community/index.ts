@@ -21,21 +21,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     select: {
                         id: true,
                         name: true,
+                        locked: true,
+                        pinned: true,
                         comments: {
                             take: 1,
                             orderBy: {
-                                created: "desc"
+                                created: "desc",
                             },
                             select: {
-                                created: true
+                                updatedAt: true
                             }
                         }
-                        // tags
                     },
                     orderBy: sort === "latest" ? {
                         created: "desc"
                     } : {
-                        comments: {
+                        likes: {
                             _count: "desc"
                         }
                     }
