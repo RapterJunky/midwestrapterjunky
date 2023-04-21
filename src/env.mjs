@@ -11,6 +11,7 @@ const server = z.object({
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
 
+  GOOGLE_APPLICATION_CREDENTIALS: z.string(),
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
 
@@ -83,6 +84,7 @@ const processEnv = {
   DATOCMS_API_TOKEN: process.env.DATOCMS_API_TOKEN,
   DATOCMS_ENVIRONMENT: process.env.DATOCMS_ENVIRONMENT,
 
+  GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 

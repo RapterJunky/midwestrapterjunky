@@ -202,21 +202,26 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
                 mode: "loading"
             });
 
-            console.log(state);
-
             const formData = new FormData();
 
             formData.append("type", "post");
             formData.append("title", state.title);
-            state.tags.forEach((tag) => formData.append("tags", tag));
+            formData.append("thread", state.categoryId);
+            state.tags.forEach((tag) => formData.append("tags[]", tag));
 
             const images = getImages(state.message as NonTextNode[]);
 
+            formData.append("message", JSON.stringify(state.message));
+
+            for (const image of images) {
+                formData.append(`imageData[]`, JSON.stringify({ id: image.id, width: image.width, height: image.height }));
+            }
+
             for (const image of images) {
                 formData.append(`image[${image.id}]`, image.file, `${image.id}.${image.file.type.split("/")[1]}`);
-                formData.append(`imageData[${image.id}]`, JSON.stringify({ width: image.width, height: image.height }));
+
             }
-            formData.append("message", JSON.stringify(state.message));
+
             console.log(formData);
             const response = await fetch("/api/community/create", {
                 method: "POST",
@@ -225,14 +230,14 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
 
             if (!response.ok) throw response;
 
-            /*const data = await response.json() as { postId: string };
- 
+            const data = await response.json() as { postId: string };
+
             await router.replace({
                 pathname: "/community/p/[slug]",
                 query: {
                     slug: data.postId
                 }
-            });*/
+            });
 
         } catch (error) {
             console.error(error);

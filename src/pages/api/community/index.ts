@@ -8,7 +8,7 @@ import prisma from "@api/prisma";
 
 const getSchema = z.object({
     sort: z.enum(["latest", "top", "suggest"]),
-    tags: z.array(z.string().transform(value => decodeURIComponent(value))).optional().default([]),
+    tags: z.array(z.string().transform(value => decodeURIComponent(value))).or(z.string().transform((val) => [decodeURIComponent(val)])).optional(),
     ignore: z.string().uuid().optional(),
     page: z.coerce.number().min(1).optional().default(1)
 });

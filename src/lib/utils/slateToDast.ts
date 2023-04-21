@@ -16,22 +16,7 @@ import type { Block, BlockquoteSource, Node, NonTextNode, Paragraph, Heading, Th
 
 type FieldBlockWithFullItem = {
     type: BlockType;
-    /** The DatoCMS block record ID */
-    item: Record<string, unknown>;
-};
-
-type Item = {
-    id?: string;
-    type: 'item';
-    attributes: Record<string, unknown>;
-    relationships: {
-        item_type: {
-            data: {
-                id: string;
-                type: 'item_type';
-            };
-        };
-    };
+    item: string;
 };
 
 export const isNonTextNode = (node: SlateNode): node is NonTextNode =>
@@ -206,58 +191,18 @@ function innerSerialize(
 }
 
 export function slateToDast(
-    nodes: Node[] | null,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allFieldsByItemTypeId: Record<string, any[]>,
+    nodes: Node[] | null
 ): FieldDocument | null {
     if (!nodes || nodes.length === 0) {
         return null;
     }
 
     const children = innerSerialize(nodes, (node: Block) => {
-        const { blockModelId, id, ...blockAttributes } = node;
-
-        const recordAttributes: Record<string, unknown> = {};
-
-        const block = allFieldsByItemTypeId[blockModelId];
-
-        if (block) {
-            block.forEach((field) => {
-                const apiKey = field.attributes.api_key;
-
-                if (field.attributes.field_type === 'structured_text') {
-                    recordAttributes[apiKey] = slateToDast(
-                        (blockAttributes[apiKey] as unknown) as Node[],
-                        allFieldsByItemTypeId,
-                    );
-                } else if (blockAttributes[apiKey] === '__NULL_VALUE__') {
-                    recordAttributes[apiKey] = null;
-                } else {
-                    recordAttributes[apiKey] = blockAttributes[apiKey];
-                }
-            });
-        }
-
-        const record: Item = {
-            type: 'item',
-            attributes: recordAttributes,
-            relationships: {
-                item_type: {
-                    data: {
-                        id: blockModelId,
-                        type: 'item_type',
-                    },
-                },
-            },
-        };
-
-        if (id) {
-            record.id = id;
-        }
+        const { id } = node;
 
         const fieldBlock: FieldBlockWithFullItem = {
             type: 'block',
-            item: record,
+            item: id ?? "",
         };
 
         return fieldBlock;

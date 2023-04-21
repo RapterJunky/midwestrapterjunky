@@ -28,6 +28,8 @@
     "express-rate-limit": "^6.7.0",
     "express-slow-down": "^1.6.0",
     "formidable": "^2.1.1",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^118.0.0",
     "graphql-request": "^5.2.0",
     "html-react-parser": "^3.0.15",
     "http-errors": "^2.0.0",
