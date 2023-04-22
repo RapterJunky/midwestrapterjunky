@@ -12,7 +12,7 @@ type FormState = {
 }
 
 const Comments: React.FC = () => {
-  const { handleSubmit, control } = useForm<FormState>({
+  const { handleSubmit, control, formState: { isSubmitting, errors }, setError } = useForm<FormState>({
     defaultValues: {
       message: [{ type: "paragraph", children: [{ text: "" }] }]
     }
@@ -22,8 +22,11 @@ const Comments: React.FC = () => {
 
   const onSubmit = async (state: FormState) => {
     const empty = await isEditorEmpty();
-    if (empty) return;
-    await create("comment", state);
+    if (empty) {
+      return setError("message", { type: "min", message: "There is nothing to submit." });
+    }
+
+    await create(state);
     resetEditor();
   }
 
@@ -32,9 +35,26 @@ const Comments: React.FC = () => {
       {session.status === "authenticated" ? (
         <form className="my-6 flex flex-col justify-evenly gap-1 md:px-4" onSubmit={handleSubmit(onSubmit)}>
           <CommentBox control={control} name="message" />
+          {errors.message ? (
+            <div className="text-red-500">{errors.message.message}</div>
+          ) : null}
           <div className="w-full flex justify-end">
-            <button type="submit" className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
-              Reply
+            <button disabled={isSubmitting} type="submit" className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70">
+              {isSubmitting ? (
+                <div className="flex gap-2">
+                  <div
+                    className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status">
+                    <span
+                      className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                    >Loading...</span
+                    >
+                  </div>
+                  Loading...
+                </div>
+              ) : (
+                <span>Reply</span>
+              )}
             </button>
           </div>
         </form>

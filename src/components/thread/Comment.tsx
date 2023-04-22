@@ -1,11 +1,13 @@
-import type { useSession } from "next-auth/react";
+import { StructuredText } from "react-datocms/structured-text";
 import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
+import type { useSession } from "next-auth/react";
+import { useState } from 'react';
 import Image from "next/image";
 
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
-import usePostActions from "@/hooks/usePost";
-import { StructuredText } from "react-datocms/structured-text";
+import { renderBlock } from "@lib/structuredTextRules";
+import usePostActions from "@hook/usePost";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
@@ -27,6 +29,7 @@ const Comment: React.FC<Props> = ({
   comment,
   session,
 }) => {
+  const [loading, setLoading] = useState({ state: false, type: "" });
   const { report, like, unlike, delete: deleteComment } = usePostActions();
   return (
     <li id={comment.id}
@@ -54,7 +57,7 @@ const Comment: React.FC<Props> = ({
           </div>
           <article className="prose max-w-none min-h-[50px]">
             {comment.content ? (
-              <StructuredText data={comment.content} />
+              <StructuredText renderBlock={renderBlock} data={comment.content} />
             ) : "Missing comment message!"}
           </article>
           <div className="flex items-center gap-2 text-gray-500 justify-end p-2">
@@ -66,21 +69,53 @@ const Comment: React.FC<Props> = ({
                   ) : null}
                   <HiHeart className="h-6 w-6" />
                 </button>
-                <button
+                <button disabled={loading.state && loading.type === "report"}
                   title="privately flag this comment for attention or send a private notification about it"
-                  className="hover:text-black p-0.5"
-                  onClick={() => report("comment", comment.id)}
+                  className="hover:text-black p-0.5 flex items-center disabled:opacity-70"
+                  onClick={async () => {
+                    setLoading({ state: true, type: "report" });
+                    await report("comment", comment.id);
+                    setLoading({ state: false, type: "" });
+                  }}
                 >
+                  {loading.state && loading.type === "report" ? (
+                    <div className="flex gap-2">
+                      <div
+                        className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status">
+                        <span
+                          className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                        >Loading...</span
+                        >
+                      </div>
+                    </div>
+                  ) : null}
                   <HiFlag className="h-6 w-6" />
                 </button>
                 {/*<button className="hover:text-black p-0.5">
                   <HiLink className="h-6 w-6" />
                 </button>*/}
                 {session.data?.user.id === comment.owner.id ? (
-                  <button title="delete your comment"
-                    className="p-0.5 text-red-500 hover:text-red-700"
-                    onClick={() => deleteComment("comment", comment.id)}
+                  <button disabled={loading.state && loading.type === "delete"} title="delete your comment"
+                    className="p-0.5 text-red-500 hover:text-red-700 flex items-center disabled:opacity-70"
+                    onClick={async () => {
+                      setLoading({ state: true, type: "delete" });
+                      await deleteComment("comment", comment.id);
+                      setLoading({ state: false, type: "" });
+                    }}
                   >
+                    {loading.state && loading.type === "delete" ? (
+                      <div className="flex gap-2">
+                        <div
+                          className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                          role="status">
+                          <span
+                            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                          >Loading...</span
+                          >
+                        </div>
+                      </div>
+                    ) : null}
                     <HiTrash className="h-6 w-6" />
                   </button>
                 ) : null}

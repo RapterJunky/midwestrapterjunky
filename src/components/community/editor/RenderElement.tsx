@@ -97,7 +97,7 @@ const RenderElement: React.FC<RenderElementProps> = ({ attributes, children, ele
             return (<li {...attributes}>{children}</li>);
         case "paragraph":
             return (
-                <p className="break-words whitespace-pre" {...attributes}>
+                <p {...attributes}>
                     {children}
                 </p>
             )

@@ -1,22 +1,25 @@
-import { Controller, useForm } from 'react-hook-form';
-import SiteTags from "@/components/SiteTags";
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
-import GenericPageQuery from "@/gql/queries/generic";
-import { fetchCachedQuery } from "@/lib/cache";
-import genericSeoTags from "@/lib/utils/genericSeoTags";
-import { FullPageProps } from "@/types/page";
-import { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
-import { Descendant } from 'slate';
-import CommentBox from '@/components/thread/CommentBox';
-import TagInput from '@/components/TagInput';
-import { isEditorEmpty } from '@lib/utils/editor/editorActions';
-import prisma from '@api/prisma';
+import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import type { NonTextNode } from 'datocms-structured-text-slate-utils';
 import { Dialog, Transition } from '@headlessui/react';
+import { Controller, useForm } from 'react-hook-form';
 import { Fragment, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import type { Block, NonTextNode } from 'datocms-structured-text-slate-utils';
+import { useRouter } from 'next/router';
+import type { Descendant } from 'slate';
+
+import CommentBox from '@components/thread/CommentBox';
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
+import SiteTags from "@components/SiteTags";
+import TagInput from '@components/TagInput';
+
+import extractSlateImages from '@lib/utils/editor/extractSlateImages';
+import { isEditorEmpty } from '@lib/utils/editor/editorActions';
+import genericSeoTags from "@lib/utils/genericSeoTags";
+import GenericPageQuery from "@query/queries/generic";
+import type { FullPageProps } from "@type/page";
+import { fetchCachedQuery } from "@lib/cache";
+import prisma from '@api/prisma';
 
 type DialogData = {
     open: boolean;
@@ -63,47 +66,10 @@ export const getStaticProps = async ({ preview }: GetStaticPropsContext): Promis
     };
 };
 
-
-const getImages = (nodes: NonTextNode[]) => {
-    const images: {
-        id: string,
-        width: number,
-        height: number,
-        file: File,
-    }[] = [];
-
-    for (const node of nodes) {
-        if (node.type === "block" && node.blockModelId === "ImageRecord") {
-            if (!node.id) continue;
-
-            images.push({
-                id: node.id,
-                width: (node as Block & { width: number; height: number; file: File }).width,
-                height: (node as Block & { width: number; height: number; file: File }).height,
-                file: (node as Block & { width: number; height: number; file: File }).file
-            });
-
-            delete node.width;
-            delete node.height;
-            delete node.file;
-            delete node.src;
-
-            continue;
-        }
-
-        if (node.children) {
-            const data = getImages(node.children as NonTextNode[]);
-            images.push(...data);
-        }
-    }
-
-    return images;
-}
-
 const CreateTopicDialog: React.FC<{ data: DialogData, onClose: () => void }> = ({ data, onClose }) => {
     return (
         <Transition appear show={data.open} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={onClose /*() => data.mode === "message" ? onClose() : () => { }*/}>
+            <Dialog as="div" className="relative z-50" onClose={() => data.mode === "message" ? onClose() : () => { }}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -204,12 +170,15 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
 
             const formData = new FormData();
 
-            formData.append("type", "post");
             formData.append("title", state.title);
             formData.append("thread", state.categoryId);
             state.tags.forEach((tag) => formData.append("tags[]", tag));
 
-            const images = getImages(state.message as NonTextNode[]);
+            const images = extractSlateImages(state.message as NonTextNode[]);
+
+            if (images.length > 5) {
+                throw new Error("There can be no more then 5 images uploaded at a time.", { cause: "MAX_IMAGES" });
+            }
 
             formData.append("message", JSON.stringify(state.message));
 
@@ -219,13 +188,14 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
 
             for (const image of images) {
                 formData.append(`image[${image.id}]`, image.file, `${image.id}.${image.file.type.split("/")[1]}`);
-
             }
 
-            console.log(formData);
             const response = await fetch("/api/community/create", {
                 method: "POST",
-                body: formData
+                body: formData,
+                headers: {
+                    "X-Type-Create": "post"
+                },
             });
 
             if (!response.ok) throw response;
@@ -242,7 +212,9 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
         } catch (error) {
             console.error(error);
 
-            const message = error instanceof Response ? `STATUS_CODE: ${error.statusText}` : "";
+            const message = error instanceof Response ? `STATUS_CODE: ${error.statusText}` :
+                error instanceof Error ?
+                    error.cause === "MAX_IMAGES" ? error.message : "" : "";
 
             setDialog({
                 open: true,

@@ -1,11 +1,14 @@
+import type { NonTextNode } from 'datocms-structured-text-slate-utils';
 import { useContext, createContext, useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import type { Descendant } from 'slate';
+import { useRouter } from 'next/router';
 import useSWR from "swr";
 
+import extractSlateImages from '@lib/utils/editor/extractSlateImages';
 import type { TComment } from '@components/thread/Comment';
-import { singleFetch } from '@api/fetch';
 import type { Paginate } from '@type/page';
+import { singleFetch } from '@api/fetch';
 
 type ItemType = "post" | "comment";
 type DialogData = { reasonInput: boolean, title: string; message: string; open: boolean; };
@@ -14,27 +17,21 @@ type CreateCommentBody = {
     message: Descendant[],
     parentCommentId?: string;
 }
-type CreatePostBody = {
-    message: Descendant[],
-    category: string;
-    title: string;
-    tags: string[]
-}
 
 type PostCtx = {
     report: (type: ItemType, id: string) => Promise<void>;
     like: (type: ItemType, id: string) => Promise<void>;
     unlike: (type: ItemType, id: string) => Promise<void>;
     delete: (type: ItemType, id: string) => Promise<void>;
-    create: <T extends ItemType>(type: T, data: T extends "comment" ? CreateCommentBody : CreatePostBody) => Promise<string | null>;
+    create: (data: CreateCommentBody) => Promise<void>;
     setPage: (page: number) => void;
-    page: number;
-    likes?: PostLikes;
-    comments?: Paginate<TComment>;
-    error?: Response;
-    isLoading: boolean;
     likesIsLoading: boolean;
+    isLoading: boolean;
+    page: number;
+    comments?: Paginate<TComment>;
+    likes?: PostLikes;
     likesError?: Response
+    error?: Response;
 }
 
 const REPORT_EVENT_REASON = "mrj::report::reason";
@@ -128,6 +125,7 @@ const ReportDialog: React.FC<{ data: DialogData, close: () => void }> = ({ data,
  * that can be shared between posts and comments
  */
 export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }>> = ({ children, postId }) => {
+    const router = useRouter();
     const [page, setPage] = useState<number>(1);
     const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/posts?post=${postId}` : null, singleFetch as () => Promise<PostLikes>, {
         revalidateOnFocus: false
@@ -136,9 +134,9 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
         revalidateOnFocus: false
     });
     const [dialog, setDialog] = useState<DialogData>({
-        title: "Error",
+        title: "",
         reasonInput: false,
-        message: "There was an error when processing your request.",
+        message: "",
         open: false
     });
 
@@ -377,7 +375,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
             async delete(type, id) {
                 try {
                     if (type === "post") {
-                        const response = await fetch("/api/community/post", {
+                        const response = await fetch("/api/community/posts", {
                             method: "DELETE",
                             body: JSON.stringify({
                                 id,
@@ -389,6 +387,8 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                         });
 
                         if (!response.ok) throw response;
+
+                        router.replace("/community").catch(e => console.error(e));
 
                         return;
                     }
@@ -424,21 +424,36 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                     });
                 }
             },
-            async create(type, content) {
+            async create(content) {
                 try {
                     await mutate(async (current) => {
-                        if (!current) throw new Error("No data to populate.");
+                        if (!current || !postId) throw new Error("Unable to create comment.", { cause: !postId ? "NO_POST_ID" : undefined });
 
-                        const request = await fetch("/api/community/comments", {
+                        const formData = new FormData();
+                        formData.append("postId", postId);
+                        if (content.parentCommentId) formData.append("parentId", content.parentCommentId);
+
+                        const images = extractSlateImages(content.message as NonTextNode[]);
+
+                        if (images.length > 5) {
+                            throw new Error("There can be no more then 5 images uploaded at a time.", { cause: "MAX_IMAGES" });
+                        }
+
+                        formData.append("message", JSON.stringify(content.message));
+
+                        for (const imageData of images) formData.append("imageData[]", JSON.stringify({
+                            id: imageData.id,
+                            width: imageData.width,
+                            height: imageData.height
+                        }));
+
+                        for (const image of images) formData.append(`image[${image.id}]`, image.file, `${image.id}.${image.file.type.split("/")[1]}`)
+
+                        const request = await fetch("/api/community/create", {
                             method: "POST",
-                            body: JSON.stringify({
-                                type: "comment",
-                                postId,
-                                data: content.message,
-                                parentCommentId: (content as CreateCommentBody)?.parentCommentId
-                            }),
+                            body: formData,
                             headers: {
-                                "Content-Type": "application/json"
+                                "X-Type-Create": "comment"
                             }
                         });
 
@@ -453,14 +468,20 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
                     });
                 } catch (error) {
                     console.error(error);
+
+                    let message = "There was a problem in submitting your request. Please try again."
+
+                    if (error instanceof Error && error?.cause === "MAX_IMAGES") {
+                        message = error.message;
+                    }
+
                     setDialog({
-                        message: "There was a problem in submitting your request. Please try again.",
+                        message: message,
                         title: "Error",
                         open: true,
                         reasonInput: false
                     });
                 }
-                return null;
             }
         }}>
             {children}

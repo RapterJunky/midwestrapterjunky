@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
+import { google } from 'googleapis';
 import { Session } from "next-auth";
 import { z } from "zod";
+
+import { logger } from "@lib/logger";
+import prisma from "@api/prisma";
 
 const schema = z.object({
     type: z.enum(["like", "comment"]),
@@ -53,18 +57,51 @@ const DELETE = async (req: NextApiRequest, res: NextApiResponse, session: Sessio
             });
         }
         case "comment": {
-            const { count } = await prisma.comment.deleteMany({
+            const data = await prisma.comment.findFirst({
                 where: {
                     id,
                     AND: {
                         ownerId: session.user.id
                     }
+                },
+                select: {
+                    content: true,
+                    id: true
                 }
-            })
+            });
 
-            if (count === 0) throw createHttpError.NotFound("No comment with given owner exists.")
+            if (!data) throw createHttpError.NotFound("No comment with given owner exists.")
 
-            return res.status(200).json({ count });
+            await prisma.comment.delete({
+                where: {
+                    id: data.id
+                }
+            });
+
+            if (data.content.blocks) {
+
+                const images = data.content.blocks.filter(block => block.__typename === "ImageRecord");
+
+                if (images.length) {
+                    const auth = new google.auth.GoogleAuth({
+                        scopes: ["https://www.googleapis.com/auth/drive"]
+                    });
+                    const driveService = google.drive({ version: 'v3', auth });
+
+                    const results = await Promise.allSettled(images.map(image => {
+                        return driveService.files.delete({
+                            fileId: image.content.imageId
+                        });
+                    }));
+
+                    for (const result of results) {
+                        if (result.status !== "rejected") continue;
+                        logger.error(result.reason);
+                    }
+                }
+            }
+
+            return res.status(200).json({ ok: true });
         }
     }
 }
