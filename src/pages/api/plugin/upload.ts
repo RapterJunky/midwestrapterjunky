@@ -3,33 +3,11 @@ import { unlink, readFile } from "node:fs/promises";
 import createHttpError from "http-errors";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import multer from "multer";
+import { type File, IncomingForm } from "formidable";
 
-import { cwebp } from "@lib/webp";
+import { cwebp, compileWebp } from "@lib/webp";
 import { logger } from "@lib/logger";
 import { handleError } from "@api/errorHandler";
-
-interface FileUpload {
-  file: {
-    fieldname: string;
-    filename: string;
-    originalname: string;
-    encoding: string;
-    mimetype: string;
-    destination: string;
-    path: string;
-    size: number;
-  };
-}
-
-const tmp = tmpdir();
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: tmp,
-    filename: (req, file, cb) => cb(null, file.originalname),
-  }),
-});
 
 export const config = {
   api: {
@@ -38,47 +16,61 @@ export const config = {
 };
 
 export default async function handle(
-  req: NextApiRequest & FileUpload,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     if (
       req.method !== "POST" ||
-      !req.headers["content-type"]?.includes("multipart/form-data")
+      req.headers["content-type"] !== "multipart/form-data"
     )
       throw createHttpError.BadRequest();
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
-    await new Promise<void>((ok, rej) => {
-      upload.single("image")(req, res, (err) => {
-        if (err) return rej(err);
-        return ok();
-      });
+    const form = new IncomingForm({
+      maxFiles: 1,
+      multiples: false,
+      allowEmptyFiles: false,
+      filter({ name, originalFilename, mimetype }) {
+        return !!(mimetype && mimetype.includes("image"))
+      }
     });
 
-    logger.info(req.file, `${req.file.mimetype} | ${req.file.originalname}`);
 
-    let filename = req.file.filename;
-    let filepath = req.file.path;
+    const file = await new Promise<File>((ok, reject) => {
+      form.parse(req, async (err, _fields, files) => {
+        if (err) {
+          return reject(err);
+        }
 
-    if (req.file.mimetype !== "image/webp") {
-      filename = filename.replace(/(\..+)$/g, ".webp");
-      filepath = join(tmp, filename);
-      await cwebp(req.file.path, filepath);
-      await unlink(req.file.path);
+        ok(files["image"] as File);
+      });
+    })
+
+    logger.info(file, `${file.mimetype} | ${file.originalFilename}`);
+
+    let filename = file.newFilename;
+    let filepath = file.filepath;
+
+    if (file.mimetype !== "image/webp") {
+      const data = await compileWebp(filepath);
+
+      filepath = data.filepath;
+      filename = data.filename;
+
     }
 
-    const file = await readFile(filepath, { encoding: "base64" });
+    const filebase64 = await readFile(filepath, { encoding: "base64" });
 
     await unlink(filepath);
 
     return res.status(200).json({
-      base64: `data:image/webp;base64,${file}`,
+      base64: `data:image/webp;base64,${filebase64}`,
       filename: filename,
     });
   } catch (error) {

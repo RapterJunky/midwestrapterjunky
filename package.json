@@ -3,6 +3,7 @@
   "version": "0.5.0",
   "private": true,
   "scripts": {
+    "prebuild": "node ./src/prebuild.mjs",
     "dev": "next dev | pino-pretty",
     "build": "cross-env CI=true next build",
     "start": "next start",

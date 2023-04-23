@@ -154,9 +154,7 @@ const uploadImages = async (images: ImageData[] | undefined, files: Record<`imag
             }
         });
 
-        if (value.mimetype === "image/webp") {
-            await unlink(value.filepath);
-        }
+        await unlink(filepath);
 
         return {
             recordId: uuid,
@@ -199,6 +197,7 @@ const uploadImages = async (images: ImageData[] | undefined, files: Record<`imag
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         if (!req.method || !["POST", "PATCH"].includes(req.method)) throw createHttpError.MethodNotAllowed();
+        if (req.headers["content-type"] !== "multipart/form-data") throw createHttpError.BadRequest();
         const header = creationType.parse(req.headers["x-type-create"]);
 
         await applyRateLimit(req, res);

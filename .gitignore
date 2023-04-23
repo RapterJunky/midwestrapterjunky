@@ -16,7 +16,7 @@
 /cypress/videos
 /cypress/screenshots
 /cypress/downloads
-raptorjunkies-e164e87b03b2.json
+raptorjunkies.json
 
 # production
 /build
