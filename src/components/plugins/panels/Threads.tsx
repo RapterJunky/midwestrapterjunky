@@ -1,12 +1,14 @@
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Button, Spinner } from "datocms-react-ui";
-import useSWR from "swr";
-import { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Panel } from "./Panel";
-import type { Paginate } from "@type/page";
-import type { Thread } from "@prisma/client";
+import { useState } from "react";
+import Image from "next/image";
+import useSWR from "swr";
+
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import type { Thread } from "@prisma/client";
+import type { Paginate } from "@type/page";
+import { Panel } from "./Panel";
 
 export const Threads: React.FC<{
   ctx: RenderPageCtx;
@@ -19,7 +21,7 @@ export const Threads: React.FC<{
     Response,
     string
   >(
-    `/api/threads?page=${page}`,
+    `/api/plugin/category?page=${page}`,
     (url) =>
       fetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>
   );
@@ -32,11 +34,11 @@ export const Threads: React.FC<{
         parameters: {
           type: "create",
         },
-        title: "Create Thread",
+        title: "Create Category",
       })) as Thread | undefined;
       if (!result) return;
 
-      const request = await AuthFetch("/api/threads", {
+      const request = await AuthFetch("/api/plugin/category", {
         method: "POST",
         json: result,
       });
@@ -48,7 +50,6 @@ export const Threads: React.FC<{
       ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
     }
   };
-
   const editModel = async (thread: Thread) => {
     try {
       if (!data) throw new Error("Missing Source Data");
@@ -58,11 +59,11 @@ export const Threads: React.FC<{
           type: "edit",
           data: thread,
         },
-        title: "Edit Thread",
+        title: "Edit Category",
       })) as Thread | undefined;
       if (!result) return;
 
-      await AuthFetch("/api/threads", {
+      await AuthFetch("/api/plugin/category", {
         method: "PATCH",
         json: result,
       });
@@ -82,7 +83,7 @@ export const Threads: React.FC<{
     try {
       if (!data) throw new Error("Missing Source Data");
       const confirm = await ctx.openConfirm({
-        title: "Delete Thread",
+        title: "Delete Category",
         content:
           "Deleting this thread will remove all posts and comments connected to this thread.",
         choices: [
@@ -99,7 +100,7 @@ export const Threads: React.FC<{
       });
       if (!confirm) return;
 
-      await AuthFetch("/api/threads", {
+      await AuthFetch("/api/plugin/category", {
         method: "DELETE",
         json: { id },
       });
@@ -118,16 +119,16 @@ export const Threads: React.FC<{
     <Panel
       actions={
         <Button onClick={createModel} buttonType="primary" buttonSize="m">
-          Create Thread
+          Create Category
         </Button>
       }
-      title="Threads"
+      title="categories"
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
       {!data && error ? (
         <div className="flex h-full w-full items-center justify-center">
-          <h1 className="text-lg">There was an error loading threads!</h1>
+          <h1 className="text-lg">There was an error loading categories!</h1>
         </div>
       ) : null}
       {!data && isLoading ? (
@@ -138,7 +139,7 @@ export const Threads: React.FC<{
       {data && !data.result.length ? (
         <div className="flex h-full w-full items-center justify-center">
           <h1 className="text-lg">
-            There&apos;s no threads! Try creating one.
+            There&apos;s no categories! Try creating one.
           </h1>
         </div>
       ) : null}
@@ -147,25 +148,33 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                  <li className="flex bg-white p-4 shadow" key={value.id}>
-                    <div className="mr-auto">
-                      <h1 className="text-xl font-bold">{value.name}</h1>
-                      <span className="text-sm">Description</span>
+                <li className="flex bg-white p-4 shadow items-center gap-2" key={value.id}>
+                  <div>
+                    <Image className="rounded-full" src={value.image} alt="Category Image" width={40} height={40} />
+                  </div>
+                  <div className="mr-auto">
+                    <h1 className="text-xl font-bold">{value.name}</h1>
+                    <div className="flex flex-wrap gap-1">
+                      {value.tags?.map((tag, i) => (
+                        <span className="py-0.5 px-1 rounded-md bg-dato-accent text-dato-light" key={i}>{tag}</span>
+                      ))}
                     </div>
-                    <div className="flex gap-dato-m text-white">
-                      <Button
-                        onClick={() => editModel(value)}
-                        rightIcon={<FaEdit style={{ fill: "white" }} />}
-                        buttonType="primary"
-                      />
-                      <Button
-                        onClick={() => deleteModel(value.id)}
-                        rightIcon={<FaTrash style={{ fill: "white" }} />}
-                        buttonType="negative"
-                      />
-                    </div>
-                  </li>
-                ))
+                    <p>{value.description}</p>
+                  </div>
+                  <div className="flex gap-dato-m text-white">
+                    <Button
+                      onClick={() => editModel(value)}
+                      rightIcon={<FaEdit style={{ fill: "white" }} />}
+                      buttonType="primary"
+                    />
+                    <Button
+                      onClick={() => deleteModel(value.id)}
+                      rightIcon={<FaTrash style={{ fill: "white" }} />}
+                      buttonType="negative"
+                    />
+                  </div>
+                </li>
+              ))
               : null}
           </ul>
           <hr className="mt-dato-m" />

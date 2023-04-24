@@ -35,6 +35,13 @@ export const uploadImages = async (images: ImageData[] | undefined, files: Recor
     const fileLinks = await Promise.allSettled(Object.entries(files).map(async ([key, value]) => {
         const uuid = key.replace("image[", "").replace("]", "");
 
+        logger.info({
+            filename: value.originalFilename,
+            mimetype: value.mimetype,
+            uuid,
+            size: value.size
+        }, "Uploading image to Google Drive");
+
         let filename = value.newFilename;
         let filepath = value.filepath;
         let mimetype = value.mimetype ?? undefined;

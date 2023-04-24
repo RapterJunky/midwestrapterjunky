@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unlink, readFile } from "node:fs/promises";
 import createHttpError from "http-errors";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { type File, IncomingForm } from "formidable";
 
-import { cwebp, compileWebp } from "@lib/webp";
+import { compileWebp } from "@lib/webp";
 import { logger } from "@lib/logger";
 import { handleError } from "@api/errorHandler";
 
@@ -22,7 +20,7 @@ export default async function handle(
   try {
     if (
       req.method !== "POST" ||
-      req.headers["content-type"] !== "multipart/form-data"
+      !req.headers["content-type"]?.startsWith("multipart/form-data")
     )
       throw createHttpError.BadRequest();
     if (
@@ -36,6 +34,7 @@ export default async function handle(
       maxFiles: 1,
       multiples: false,
       allowEmptyFiles: false,
+      keepExtensions: true,
       filter({ name, originalFilename, mimetype }) {
         return !!(mimetype && mimetype.includes("image"))
       }

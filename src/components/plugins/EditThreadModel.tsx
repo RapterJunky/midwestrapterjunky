@@ -62,7 +62,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                 error={error?.message}
                 id={name}
                 name={name}
-                label="Thread Description"
+                label="Category Description"
                 value={value}
                 onChange={onChange}
               />

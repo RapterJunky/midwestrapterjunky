@@ -5,10 +5,11 @@ import { z } from "zod";
 import handleAuthors from "@service/plugin/pluginAuthors";
 import handleReports from "@service/plugin/pluginReports";
 import handleSquare from "@service/plugin/pluginSquare";
+import handleCategory from "@service/plugin/pluginCategory";
 import { handleError } from "@api/errorHandler";
 
 const allowedRoutes = z
-  .array(z.enum(["authors", "reports", "square"]))
+  .array(z.enum(["authors", "reports", "square", "category"]))
   .describe("Allowed api paths")
   .max(1);
 
@@ -26,6 +27,8 @@ export default async function handle(
         return await handleAuthors(req, res);
       case "reports":
         return await handleReports(req, res);
+      case "category":
+        return await handleCategory(req, res);
       case "square":
         return await handleSquare(req, res);
       default:

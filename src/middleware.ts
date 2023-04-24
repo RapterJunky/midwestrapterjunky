@@ -3,8 +3,8 @@ import { Flags } from "@lib/config/flags";
 import { hasFlag } from "@lib/config/hasFlag";
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/threads")) {
-    if (hasFlag(Flags.Forms)) return NextResponse.next();
+  if (request.nextUrl.pathname.startsWith("/community")) {
+    if (hasFlag(Flags.Forms) || request.cookies.get("next-auth.session-token")) return NextResponse.next();
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
@@ -23,5 +23,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/plugins/(.*)", "/threads/:path*", "/shop/:path*"],
+  matcher: ["/plugins/(.*)", "/community/:path*", "/shop/:path*"],
 };

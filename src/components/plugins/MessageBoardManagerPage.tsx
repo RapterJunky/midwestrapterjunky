@@ -30,12 +30,11 @@ const MessageBoardManagerPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
         className="absolute flex h-full w-full flex-1"
       >
         <Tab.List
-          className={`flex flex-col divide-y border-r bg-dato-dark text-dato-light transition ${
-            mini ? "w-12" : "w-52"
-          }`}
+          className={`flex flex-col divide-y border-r bg-dato-dark text-dato-light transition ${mini ? "w-12" : "w-52"
+            }`}
         >
           <Tab className="flex items-center gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:text-dato-primary">
-            <FaColumns /> {mini ? null : "Threads"}
+            <FaColumns /> {mini ? null : "Categories"}
           </Tab>
           <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:text-dato-primary">
             <FaFlag /> {mini ? null : "Reports"}

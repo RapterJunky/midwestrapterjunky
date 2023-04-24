@@ -10,8 +10,8 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
-import StructuredTextFields from "@/lib/plugin/StructuredTextFields";
-import { isVaildConfig, normalizeConfig } from "@/lib/utils/plugin/config";
+import StructuredTextFields from "@lib/plugin/StructuredTextFields";
+import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 import { hasFlag } from "@lib/config/hasFlag";
 import { Flags } from "@lib/config/flags";
 
@@ -21,7 +21,7 @@ const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
-const MESSAGE_BOARD_PAGE_ID = "message-board-manager";
+const MESSAGE_BOARD_PAGE_ID = "community";
 
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
 const ShopFieldExtension = dynamic(
@@ -199,7 +199,7 @@ const MidwestRaptor: NextPage = () => {
 
       if (hasFlag(Flags.Forms)) {
         pages.push({
-          label: "Message Board",
+          label: "Community",
           icon: "comments",
           pointsTo: {
             pageId: MESSAGE_BOARD_PAGE_ID,
