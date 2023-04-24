@@ -25,11 +25,11 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
         switch (req.method) {
             case "POST": {
-                if (req.headers["content-type"] !== "multipart/form-data") throw createHttpError.BadRequest();
+                if (!req.headers["content-type"]?.startsWith("multipart/form-data")) throw createHttpError.BadRequest("Bad Content Type");
                 return await POST(req, res, session, contentType);
             }
             case "PATCH": {
-                if (req.headers["content-type"] !== "multipart/form-data") throw createHttpError.BadRequest();
+                if (!req.headers["content-type"]?.startsWith("multipart/form-data")) throw createHttpError.BadRequest("Bad Content Type");
                 return await PATCH(req, res, session, contentType);
             }
             case "GET": {

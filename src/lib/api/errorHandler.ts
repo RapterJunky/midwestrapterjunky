@@ -8,7 +8,8 @@ import { logger } from "@lib/logger";
 
 export type ApiErrorResponse = {
   message: string;
-  details?: unknown[];
+  status?: number;
+  details?: unknown[] | { message: string; }[];
 };
 
 export const handleError = (
@@ -32,7 +33,13 @@ export const handleError = (
     return res.status(400).json({ message: error.message });
   }
   if (createHttpError.isHttpError(error)) {
-    return res.status(error.statusCode).json(error);
+    return res.status(error.statusCode).json({
+      message: error.name,
+      status: error.statusCode,
+      details: [{
+        message: error?.message ?? error?.cause ?? error.name
+      }]
+    });
   }
 
   const ie = createHttpError.InternalServerError();

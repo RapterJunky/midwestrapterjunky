@@ -3,18 +3,19 @@ import { createEditor, Transforms, type Descendant, Editor } from 'slate';
 import type { NonTextNode } from 'datocms-structured-text-slate-utils';
 import { useMemo, useCallback, useEffect } from 'react';
 
-import { EDITOR_ISEMPTY_ID_R, EDITOR_ISEMPTY_ID_S, EDITOR_RESET_EVENT_ID } from '@/lib/utils/editor/editorActions';
+import { EDITOR_ISEMPTY_ID_R, EDITOR_ISEMPTY_ID_S, EDITOR_RESET_EVENT_ID } from '@lib/utils/editor/editorActions';
 import EditorToolbar from '@components/community/editor/EditorToolbar';
 import RenderElement from "@components/community/editor/RenderElement";
 import RenderLeaf from '@components/community/editor/RenderLeaf';
-import { withPlugin } from '@/lib/utils/editor/textEditorUtils';
+import { withPlugin } from '@lib/utils/editor/textEditorUtils';
 
 type Props = {
     onChange?: (vlaue: Descendant[]) => void;
     value: Descendant[]
+    id: string;
 }
 
-const TextEditor: React.FC<Props> = ({ onChange, value }) => {
+const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
     const editor = useMemo(() => withPlugin(withReact(createEditor())), []);
     const renderElement = useCallback((props: RenderElementProps) => (<RenderElement {...props} />), []);
     const renderLeaf = useCallback((props: RenderLeafProps) => <RenderLeaf {...props} />, []);
@@ -37,15 +38,15 @@ const TextEditor: React.FC<Props> = ({ onChange, value }) => {
                 state = Editor.isEmpty(editor, root as NonTextNode);
             }
         }
-        window.dispatchEvent(new CustomEvent(EDITOR_ISEMPTY_ID_R, { detail: state }));
+        window.dispatchEvent(new CustomEvent(`${EDITOR_ISEMPTY_ID_R}${id}`, { detail: state }));
     }, []);
 
     useEffect(() => {
-        window.addEventListener(EDITOR_RESET_EVENT_ID, reset, false);
-        window.addEventListener(EDITOR_ISEMPTY_ID_S, isEmpty, false);
+        window.addEventListener(`${EDITOR_RESET_EVENT_ID}${id}`, reset, false);
+        window.addEventListener(`${EDITOR_ISEMPTY_ID_S}${id}`, isEmpty, false);
         return () => {
-            window.removeEventListener(EDITOR_ISEMPTY_ID_S, isEmpty, false);
-            window.removeEventListener(EDITOR_RESET_EVENT_ID, reset, false);
+            window.removeEventListener(`${EDITOR_ISEMPTY_ID_S}${id}`, isEmpty, false);
+            window.removeEventListener(`${EDITOR_RESET_EVENT_ID}${id}`, reset, false);
         }
     }, []);
 

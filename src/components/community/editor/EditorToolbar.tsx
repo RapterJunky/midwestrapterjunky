@@ -6,7 +6,7 @@ import { FaBold, FaFileImage, FaHighlighter, FaItalic, FaLink, FaListOl, FaListU
 const MarkButton: React.FC<React.PropsWithChildren<{ mark: Mark; }>> = ({ mark, children }) => {
     const editor = useSlate();
     return (
-        <button onMouseDown={e => e.preventDefault()} onClick={() => toggleMark(editor, mark)} type="button" data-headlessui-state={isMarkActive(editor, mark) ? "active" : ""} className="p-1 text-neutral-500 ui-active:text-black">
+        <button onMouseDown={e => e.preventDefault()} onClick={() => toggleMark(editor, mark)} type="button" data-headlessui-state={isMarkActive(editor, mark) ? "active" : ""} className="p-1 text-neutral-500 ui-active:text-black hover:text-neutral-600 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm">
             {children}
         </button>
     );
@@ -15,7 +15,7 @@ const MarkButton: React.FC<React.PropsWithChildren<{ mark: Mark; }>> = ({ mark, 
 const BlockButton: React.FC<React.PropsWithChildren<{ type: FormatType; list?: ListStyle }>> = ({ list, type, children }) => {
     const editor = useSlate();
     return (
-        <button onMouseDown={e => e.preventDefault()} onClick={() => toggleBlock(editor, type, { list })} className="p-1 text-neutral-500 ui-active:text-black" type="button" data-headlessui-state={isBlockActive(editor, type, { list }) ? "active" : ""} >
+        <button onMouseDown={e => e.preventDefault()} onClick={() => toggleBlock(editor, type, { list })} className="p-1 text-neutral-500 ui-active:text-black hover:text-neutral-600 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" type="button" data-headlessui-state={isBlockActive(editor, type, { list }) ? "active" : ""} >
             {children}
         </button>
     );
@@ -24,7 +24,7 @@ const BlockButton: React.FC<React.PropsWithChildren<{ type: FormatType; list?: L
 const LinkButton: React.FC = () => {
     const editor = useSlate();
     return (
-        <button onMouseDown={e => e.preventDefault()} onClick={() => insertLink(editor, "")} className="p-1 text-neutral-500 ui-active:text-black" type="button" data-headlessui-state={isLinkActive(editor) ? "active" : ""} >
+        <button onMouseDown={e => e.preventDefault()} onClick={() => insertLink(editor, "")} className="p-1 text-neutral-500 ui-active:text-black hover:text-neutral-600 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" type="button" data-headlessui-state={isLinkActive(editor) ? "active" : ""} >
             <FaLink />
         </button>
     );
@@ -52,7 +52,7 @@ const ImageButton: React.FC = () => {
             <button type="button" onMouseDown={e => e.preventDefault()} onClick={() => {
                 if (!input.current) return;
                 input.current.click();
-            }} className="p-1 text-neutral-500 ui-active:text-black">
+            }} className="p-1 text-neutral-500 ui-active:text-black hover:text-neutral-600 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm">
                 <FaFileImage />
             </button>
         </>

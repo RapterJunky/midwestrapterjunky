@@ -13,7 +13,7 @@ import { singleFetch } from '@api/fetch';
 type ItemType = "post" | "comment";
 type DialogData = { reasonInput: boolean, title: string; message: string; open: boolean; };
 type PostLikes = { likesCount: number; likedByMe: boolean; }
-type CreateCommentBody = {
+export type CreateCommentBody = {
     message: Descendant[],
     parentCommentId?: string;
 }
@@ -461,8 +461,11 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId: string; }>
 
                         if (!request.ok) throw request;
 
-                        const comment = await request.json() as TComment;
+                        if (content.parentCommentId) {
+                            return current;
+                        }
 
+                        const comment = await request.json() as TComment;
                         return { ...current, result: [comment, ...current.result] }
                     }, {
                         revalidate: false,

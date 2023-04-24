@@ -25,7 +25,7 @@ const GET = async (req: NextApiRequest, res: NextApiResponse, session: Session |
             _count: {
                 select: {
                     likes: true,
-                    children: !!parent
+                    children: !parent
                 }
             },
             owner: {
@@ -54,7 +54,7 @@ const GET = async (req: NextApiRequest, res: NextApiResponse, session: Session |
         const { _count, ...commentFields } = comment;
         result.push({
             ...commentFields,
-            hasChildren: _count.children ? _count?.children >= 1 : false,
+            children: _count.children,
             likedByMe: !!likes.find(like => like.commentId === comment.id),
             likeCount: _count.likes
         });
