@@ -6,16 +6,17 @@ import prisma from "@api/prisma";
 
 const schema = z.object({
     post: z.string().uuid(),
+    parent: z.string().uuid().optional(),
     page: z.coerce.number().positive().min(1).optional().default(1),
 });
 
 const GET = async (req: NextApiRequest, res: NextApiResponse, session: Session | null) => {
-    const { post, page } = schema.parse(req.query);
+    const { post, page, parent } = schema.parse(req.query);
 
     const [comments, meta] = await prisma.comment.paginate({
         where: {
             threadPostId: post,
-            parentCommentId: null
+            parentCommentId: parent ?? null
         },
         select: {
             id: true,
@@ -23,7 +24,8 @@ const GET = async (req: NextApiRequest, res: NextApiResponse, session: Session |
             created: true,
             _count: {
                 select: {
-                    likes: true
+                    likes: true,
+                    children: !!parent
                 }
             },
             owner: {
@@ -52,6 +54,7 @@ const GET = async (req: NextApiRequest, res: NextApiResponse, session: Session |
         const { _count, ...commentFields } = comment;
         result.push({
             ...commentFields,
+            hasChildren: _count.children ? _count?.children >= 1 : false,
             likedByMe: !!likes.find(like => like.commentId === comment.id),
             likeCount: _count.likes
         });

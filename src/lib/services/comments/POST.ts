@@ -62,6 +62,7 @@ const POST = async (req: NextApiRequest, res: NextApiResponse, session: Session 
 
             return res.status(201).json({
                 ...comment,
+                hasChildren: false,
                 likedByMe: true,
                 likeCount: _count.likes
             })

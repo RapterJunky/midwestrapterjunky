@@ -27,6 +27,7 @@ type PostCtx = {
     setPage: (page: number) => void;
     likesIsLoading: boolean;
     isLoading: boolean;
+    postId: string;
     page: number;
     comments?: Paginate<TComment>;
     likes?: PostLikes;
@@ -124,7 +125,7 @@ const ReportDialog: React.FC<{ data: DialogData, close: () => void }> = ({ data,
  * A conslidated place for handling actions/dialogs for reporting, liking, deleting, and other actions
  * that can be shared between posts and comments
  */
-export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }>> = ({ children, postId }) => {
+export const PostProvider: React.FC<React.PropsWithChildren<{ postId: string; }>> = ({ children, postId }) => {
     const router = useRouter();
     const [page, setPage] = useState<number>(1);
     const { data: likes, isLoading: likesIsLoading, error: likesError, mutate: likesMutate } = useSWR<PostLikes, Response>(postId ? `/api/community/posts?post=${postId}` : null, singleFetch as () => Promise<PostLikes>, {
@@ -146,6 +147,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId?: string; }
         <PostContext.Provider value={{
             comments: data,
             isLoading,
+            postId,
             error,
             page,
             setPage,

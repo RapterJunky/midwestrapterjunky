@@ -65,12 +65,21 @@ const DELETE = async (req: NextApiRequest, res: NextApiResponse, session: Sessio
                     }
                 },
                 select: {
+                    parentCommentId: true,
                     content: true,
                     id: true
                 }
             });
 
-            if (!data) throw createHttpError.NotFound("No comment with given owner exists.")
+            if (!data) throw createHttpError.NotFound("No comment with given owner exists.");
+
+            if (!data.parentCommentId) {
+                await prisma.comment.deleteMany({
+                    where: {
+                        parentCommentId: data.id
+                    }
+                });
+            }
 
             await prisma.comment.delete({
                 where: {

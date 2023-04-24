@@ -1,4 +1,5 @@
 import { StructuredText } from "react-datocms/structured-text";
+import dynamic from 'next/dynamic';
 import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import type { useSession } from "next-auth/react";
 import { useState } from 'react';
@@ -7,19 +8,22 @@ import Image from "next/image";
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
-import usePostActions from "@hook/usePost";
+import usePost from "@hook/usePost";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
   owner: Omit<User, "email" | "emailVerified">,
   likedByMe: boolean;
   likeCount: number;
+  hasChildren: boolean;
 };
 
 interface Props {
   comment: TComment;
   session: Session;
 }
+
+const ChildComments = dynamic(() => import("@components/thread/ChildComments"));
 
 /**
  *  Implement Handles for edits and reply another time.
@@ -30,7 +34,7 @@ const Comment: React.FC<Props> = ({
   session,
 }) => {
   const [loading, setLoading] = useState({ state: false, type: "" });
-  const { report, like, unlike, delete: deleteComment } = usePostActions();
+  const { report, like, unlike, delete: deleteComment, postId } = usePost();
   return (
     <li id={comment.id}
       className={`flex w-full flex-col gap-2 py-2 ${comment.parentCommentId ? " ml-11 border-l-2 border-gray-300 pl-2" : ""
@@ -92,9 +96,6 @@ const Comment: React.FC<Props> = ({
                   ) : null}
                   <HiFlag className="h-6 w-6" />
                 </button>
-                {/*<button className="hover:text-black p-0.5">
-                  <HiLink className="h-6 w-6" />
-                </button>*/}
                 {session.data?.user.id === comment.owner.id ? (
                   <button disabled={loading.state && loading.type === "delete"} title="delete your comment"
                     className="p-0.5 text-red-500 hover:text-red-700 flex items-center disabled:opacity-70"
@@ -122,6 +123,9 @@ const Comment: React.FC<Props> = ({
               </>
             ) : null}
           </div>
+          {(comment.hasChildren && !comment.parentCommentId) ? (
+            <ChildComments session={session} parentId={comment.id} postId={postId} />
+          ) : null}
         </div>
       </div>
     </li>

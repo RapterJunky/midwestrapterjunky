@@ -40,7 +40,12 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
       props.items.map((value) => value.item.value).join(",")
     )}`,
     (url: string) =>
-      fetch(url).then((value) => value.json()) as Promise<Storefront.Product[]>
+      fetch(url).then((value) => value.json()) as Promise<Storefront.Product[]>,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: false
+    }
   );
 
   if (!data && isLoading)

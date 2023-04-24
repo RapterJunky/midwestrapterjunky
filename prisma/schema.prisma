@@ -92,19 +92,24 @@ model VerificationToken {
 }
 
 model Comment {
-  id              String     @id @default(uuid())
+  id           String     @id @default(uuid())
   /// [PostComment]
-  content         Json
-  created         DateTime   @default(now())
-  updatedAt       DateTime   @default(now()) @updatedAt
-  parentCommentId String?
-  ownerId         String
-  owner           User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  threadPost      ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
-  threadPostId    String
-  reports         Report[]
-  likes           Like[]
+  content      Json
+  created      DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  ownerId      String
+  owner        User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  threadPost   ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
+  threadPostId String
+  reports      Report[]
+  likes        Like[]
 
+  parentCommentId String?
+  // Can not set ondelete to Cascade due to relationMode = "prisma"
+  parent          Comment?  @relation(name: "ParentChild", fields: [parentCommentId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  children        Comment[] @relation(name: "ParentChild")
+
+  @@index([parentCommentId])
   @@index([ownerId])
   @@index([threadPostId])
 }
