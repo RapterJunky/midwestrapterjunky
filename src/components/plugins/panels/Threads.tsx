@@ -38,13 +38,19 @@ export const Threads: React.FC<{
       })) as Thread | undefined;
       if (!result) return;
 
-      const request = await AuthFetch("/api/plugin/category", {
-        method: "POST",
-        json: result,
-      });
+      await mutate(async () => {
+        const request = await AuthFetch("/api/plugin/category", {
+          method: "POST",
+          json: result,
+        });
 
-      const body = (await request.json()) as Thread;
-      await mutate({ ...data, result: [body, ...data.result] });
+        const body = await request.json() as Thread;
+
+        return { ...data, result: [body, ...data.result] }
+      }, {
+        revalidate: false,
+        rollbackOnError: true
+      });
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
@@ -63,16 +69,20 @@ export const Threads: React.FC<{
       })) as Thread | undefined;
       if (!result) return;
 
-      await AuthFetch("/api/plugin/category", {
-        method: "PATCH",
-        json: result,
-      });
-
-      await mutate({
-        ...data,
-        result: [result].concat(
-          data.result.filter((value) => value.id !== thread.id)
-        ),
+      await mutate(async () => {
+        await AuthFetch("/api/plugin/category", {
+          method: "PATCH",
+          json: result,
+        });
+        return {
+          ...data,
+          result: [result].concat(
+            data.result.filter((value) => value.id !== thread.id)
+          ),
+        }
+      }, {
+        revalidate: false,
+        rollbackOnError: true
       });
     } catch (error) {
       console.error(error);
@@ -85,7 +95,7 @@ export const Threads: React.FC<{
       const confirm = await ctx.openConfirm({
         title: "Delete Category",
         content:
-          "Deleting this thread will remove all posts and comments connected to this thread.",
+          "Deleting this category will remove all posts and comments connected to this category.",
         choices: [
           {
             label: "Ok",
@@ -100,14 +110,18 @@ export const Threads: React.FC<{
       });
       if (!confirm) return;
 
-      await AuthFetch("/api/plugin/category", {
-        method: "DELETE",
-        json: { id },
-      });
-
-      await mutate({
-        ...data,
-        result: data.result.filter((value) => value.id !== id),
+      await mutate(async () => {
+        await AuthFetch("/api/plugin/category", {
+          method: "DELETE",
+          json: { id },
+        });
+        return {
+          ...data,
+          result: data.result.filter((value) => value.id !== id),
+        }
+      }, {
+        revalidate: false,
+        rollbackOnError: true
       });
     } catch (error) {
       console.error(error);
@@ -150,7 +164,7 @@ export const Threads: React.FC<{
               ? data.result.map((value) => (
                 <li className="flex bg-white p-4 shadow items-center gap-2" key={value.id}>
                   <div>
-                    <Image className="rounded-full" src={value.image} alt="Category Image" width={40} height={40} />
+                    <Image unoptimized className="rounded-full" src={value.image} alt="Category Image" width={40} height={40} />
                   </div>
                   <div className="mr-auto">
                     <h1 className="text-xl font-bold">{value.name}</h1>

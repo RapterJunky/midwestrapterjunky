@@ -1,23 +1,18 @@
-import useSWR from "swr";
+import { Dropdown, DropdownMenu, DropdownGroup, TextInput, DropdownOption, Button, Spinner } from "datocms-react-ui";
+import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { StructuredText } from "react-datocms/structured-text";
+import type { RenderPageCtx } from "datocms-plugin-sdk";
+import { useDebounce } from "use-debounce";
 import { useCtx } from "datocms-react-ui";
 import { useState } from "react";
-import { useDebounce } from "use-debounce";
 import Image from "next/image";
+import useSWR from "swr";
+
 import type { User, Report, ThreadPost, Comment } from "@prisma/client";
-import type { RenderPageCtx } from "datocms-plugin-sdk";
-import {
-  Dropdown,
-  DropdownMenu,
-  DropdownGroup,
-  TextInput,
-  DropdownOption,
-  Button,
-  Spinner,
-} from "datocms-react-ui";
-import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
-import { Panel } from "./Panel";
-import type { Paginate } from "@type/page";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import { renderBlock } from "@/lib/structuredTextRules";
+import type { Paginate } from "@type/page";
+import { Panel } from "./Panel";
 
 type ContentType = Paginate<
   Omit<Report, "created"> & {
@@ -38,8 +33,21 @@ type FullReport = {
 };
 
 const ArticleReport: React.FC<
-  { article: { slug: string; name: string } } & FullReport
-> = ({ handleDelete, id, article, reason, created, owner, reporter }) => {
+  { ctx: RenderPageCtx, article: { slug: string; name: string } } & FullReport
+> = ({ ctx, handleDelete, id, article, reason, created, owner, reporter }) => {
+
+  const deleteItem = async () => {
+    try {
+      await AuthFetch("/api/plugin/reports", {
+        method: "DELETE",
+        json: { id, type: "topic" },
+      });
+    } catch (error) {
+      console.error(error);
+      ctx.alert("Failed to remove topic.").catch(e => console.error(e));
+    }
+  }
+
   return (
     <li className="bg-white p-4 shadow">
       <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
@@ -54,10 +62,10 @@ const ArticleReport: React.FC<
       <hr />
       <details>
         <summary className="cursor-pointer py-1">View Report</summary>
-        <h4 className="font-bold">Type: Article</h4>
+        <h4 className="font-bold">Type: Topic</h4>
         <h4 className="font-bold">Reason:</h4>
         <p className="line-clamp-1 p-1 text-sm">{reason}</p>
-        <h4 className="font-bold">Link to Article:</h4>
+        <h4 className="font-bold">Link to Topic:</h4>
         <a
           className="ml-4 text-blue-400 underline"
           target="_blank"
@@ -78,7 +86,7 @@ const ArticleReport: React.FC<
         </div>
         <h4 className="font-bold">Reported By:</h4>
         <div className="ml-4">
-          <Image
+          <Image unoptimized
             width={32}
             height={32}
             className="h-8 w-8"
@@ -110,9 +118,10 @@ const ArticleReport: React.FC<
             )}
           >
             <DropdownMenu alignment="right">
-              <DropdownOption red>Remove Article and Ban User</DropdownOption>
-              <DropdownOption red>Remove Article</DropdownOption>
-              <DropdownOption red>Ban Reporty</DropdownOption>
+              <DropdownOption red disabled>Remove Topic and Ban User</DropdownOption>
+              <DropdownOption red onClick={deleteItem}>Remove Topic</DropdownOption>
+              <DropdownOption red disabled>Ban Reporty</DropdownOption>
+              <DropdownOption red disabled>Lock Topic</DropdownOption>
               <DropdownOption onClick={() => handleDelete(id)}>
                 Dismiss Report
               </DropdownOption>
@@ -124,7 +133,7 @@ const ArticleReport: React.FC<
   );
 };
 
-const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({
+const CommentReport: React.FC<{ ctx: RenderPageCtx, comment: Comment } & FullReport> = ({
   id,
   handleDelete,
   comment,
@@ -132,7 +141,21 @@ const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({
   created,
   owner,
   reporter,
+  ctx
 }) => {
+
+  const deleteItem = async () => {
+    try {
+      await AuthFetch("/api/plugin/reports", {
+        method: "DELETE",
+        json: { id, type: "topic" },
+      });
+    } catch (error) {
+      console.error(error);
+      ctx.alert("Failed to remove topic.").catch(e => console.error(e));
+    }
+  }
+
   return (
     <li className="bg-white p-4 shadow">
       <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
@@ -151,10 +174,12 @@ const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({
         <h4 className="font-bold">Reason for report:</h4>
         <p className="p-1 text-sm">{reason}</p>
         <h4 className="font-bold">Offending Comment:</h4>
-        <p className="w-1/2 p-1 text-sm">{comment.content.message}</p>
+        <div className="w-1/2 p-1 text-sm">
+          <StructuredText renderBlock={renderBlock} data={comment.content} />
+        </div>
         <h4 className="font-bold">Owner:</h4>
         <div className="ml-4">
-          <Image
+          <Image unoptimized
             width={32}
             height={32}
             className="h-8 w-8"
@@ -197,10 +222,9 @@ const CommentReport: React.FC<{ comment: Comment } & FullReport> = ({
             )}
           >
             <DropdownMenu alignment="right">
-              <DropdownOption red>Remove Article and Ban User</DropdownOption>
-              <DropdownOption red>Remove Article</DropdownOption>
-              <DropdownOption red>Ban Reporty</DropdownOption>
-              <DropdownOption>Hide Article</DropdownOption>
+              <DropdownOption red disabled>Remove Comment and Ban User</DropdownOption>
+              <DropdownOption red onClick={deleteItem}>Remove Comment</DropdownOption>
+              <DropdownOption red disabled>Ban Reporty</DropdownOption>
               <DropdownOption onClick={() => handleDelete(id)}>
                 Dismiss Report
               </DropdownOption>
@@ -239,20 +263,23 @@ export const Reports: React.FC<{
     const reports = await AuthFetch(url);
 
     return reports.json() as Promise<ContentType>;
-  });
+  }, { revalidateOnFocus: true });
 
   const handleDelete = async (id: number) => {
     try {
       if (!data) throw new Error("NoSourceData");
-
-      await AuthFetch("/api/plugin/reports", {
-        method: "DELETE",
-        json: { id },
-      });
-
-      await mutate({
-        ...data,
-        result: data?.result.filter((value) => value.id !== id),
+      await mutate(async () => {
+        await AuthFetch("/api/plugin/reports", {
+          method: "DELETE",
+          json: { id, type: "report" },
+        });
+        return {
+          ...data,
+          result: data?.result.filter((value) => value.id !== id),
+        }
+      }, {
+        revalidate: false,
+        rollbackOnError: true
       });
     } catch (error) {
       console.error(error);
@@ -340,6 +367,7 @@ export const Reports: React.FC<{
             {data.result.map((report) =>
               report.type === "Comment" ? (
                 <CommentReport
+                  ctx={ctx}
                   handleDelete={handleDelete}
                   key={report.id}
                   id={report.id}
@@ -351,11 +379,12 @@ export const Reports: React.FC<{
                 />
               ) : (
                 <ArticleReport
+                  ctx={ctx}
                   handleDelete={handleDelete}
                   key={report.id}
                   id={report.id}
                   article={{
-                    slug: `/thread/${report.post?.threadId}/post/${report.post?.id}`,
+                    slug: `/community/p/${report.post?.id}`,
                     name: report.post?.name ?? "Missing Name",
                   }}
                   reason={report.reason}

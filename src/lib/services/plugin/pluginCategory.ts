@@ -8,6 +8,17 @@ const schema = z.object({
     page: z.coerce.number().optional().default(1)
 });
 
+const createCategory = z.object({
+    name: z.string().nonempty(),
+    description: z.string().nonempty(),
+    tags: z.array(z.string().min(3).max(15)).max(6),
+    image: z.string().url()
+});
+
+const patchSchema = createCategory.extend({
+    id: z.number().positive().min(1)
+})
+
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case "GET": {
@@ -20,6 +31,48 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             });
 
             return res.status(200).json({ ...meta, result: categires });
+        }
+        case "POST": {
+            const { tags, name, description, image } = createCategory.parse(req.body);
+
+            const data = await prisma.thread.create({
+                data: {
+                    description,
+                    image,
+                    tags,
+                    name
+                }
+            });
+
+            return res.status(201).json(data);
+        }
+        case "PATCH": {
+            const { id, tags, name, description, image } = patchSchema.parse(req.body);
+
+            const data = await prisma.thread.update({
+                where: {
+                    id
+                },
+                data: {
+                    tags,
+                    name,
+                    description,
+                    image
+                }
+            });
+
+            return res.status(200).json(data);
+        }
+        case "DELETE": {
+            const { id } = z.object({ id: z.number().positive().min(1) }).parse(req.body);
+
+            const data = await prisma.thread.delete({
+                where: {
+                    id
+                }
+            });
+
+            return res.status(200).json(data);
         }
         default:
             throw createHttpError.MethodNotAllowed();

@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import type { Descendant } from 'slate';
 
-import CommentBox from '@components/thread/CommentBox';
+import TextEditor from "@components/community/editor/TextEditor";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
@@ -20,6 +20,7 @@ import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import prisma from '@api/prisma';
+
 
 type DialogData = {
     open: boolean;
@@ -155,7 +156,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
     }, [session.status])
 
     const onSubmit = async (state: FormState) => {
-        if (await isEditorEmpty()) {
+        if (await isEditorEmpty(":ct")) {
             setError("message", {
                 type: "required",
                 message: "Please enter a message"
@@ -275,7 +276,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
                                 value: 6
                             }
                         }} control={control} name="tags" render={({ field }) => (
-                            <TagInput max={6} clearError={() => clearErrors("tags")} value={field.value} onChange={field.onChange} setError={(type, message) => setError("tags", { type: type, message: message })} />
+                            <TagInput className="border border-neutral-400" max={6} clearError={() => clearErrors("tags")} value={field.value} onChange={field.onChange} setError={(type, message) => setError("tags", { type: type, message: message })} />
                         )} />
                         {errors.tags ? (
                             <span className="text-red-500">{errors.tags.message}</span>
@@ -284,7 +285,9 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
                     </div>
                     <div className="mb-4 flex flex-col gap-1">
                         <label className="text-neutral-600">Post Content</label>
-                        <CommentBox control={control} name="message" />
+                        <Controller control={control} name="message" render={({ field }) => (
+                            <TextEditor id=":ct" value={field.value} onChange={field.onChange} />
+                        )} />
                         {errors.message ? (
                             <span className="text-red-500">{errors.message.message}</span>
                         ) : null}

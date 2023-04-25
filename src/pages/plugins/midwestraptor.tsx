@@ -3,7 +3,6 @@ import type {
   RenderFieldExtensionCtx,
   RenderPageCtx,
   RenderModalCtx,
-  MainNavigationTab,
   RenderAssetSourceCtx,
 } from "datocms-plugin-sdk";
 import type { NextPage } from "next";
@@ -12,8 +11,6 @@ import dynamic from "next/dynamic";
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
-import { hasFlag } from "@lib/config/hasFlag";
-import { Flags } from "@lib/config/flags";
 
 import "datocms-react-ui/styles.css";
 
@@ -195,19 +192,15 @@ const MidwestRaptor: NextPage = () => {
       ];
     },
     mainNavigationTabs() {
-      const pages: MainNavigationTab[] = [];
-
-      if (hasFlag(Flags.Forms)) {
-        pages.push({
+      return [
+        {
           label: "Community",
           icon: "comments",
           pointsTo: {
             pageId: MESSAGE_BOARD_PAGE_ID,
           },
-        });
-      }
-
-      return pages;
+        }
+      ];
     },
   });
 

@@ -12,7 +12,8 @@ const getSchema = z.object({
 });
 
 const deleteSchema = z.object({
-  id: z.number().positive(),
+  id: z.number().positive().or(z.string().uuid()),
+  type: z.enum(["comment", "report", "topic"])
 });
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -31,7 +32,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
           include: {
             comment: {
               include: {
-                owner: true,
+                owner: true
               },
             },
             owner: true,
@@ -50,11 +51,31 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ ...meta, result: reports });
     }
     case "DELETE": {
-      const { id } = deleteSchema.parse(req.body);
-
-      await prisma.report.delete({ where: { id } });
-
-      return res.status(200).json({ message: "ok" });
+      const { id, type } = deleteSchema.parse(req.body);
+      switch (type) {
+        case "comment": {
+          if (typeof id !== "string") throw createHttpError.BadRequest("Bad Id");
+          await prisma.$transaction([
+            prisma.comment.deleteMany({
+              where: {
+                parentCommentId: id
+              }
+            }),
+            prisma.comment.delete({ where: { id } })
+          ])
+          return res.status(200).json({ message: "ok" });
+        }
+        case "report": {
+          if (typeof id !== "number") throw createHttpError.BadRequest("Bad Id");
+          await prisma.report.delete({ where: { id } });
+          return res.status(200).json({ message: "ok" });
+        }
+        case "topic": {
+          if (typeof id !== "string") throw createHttpError.BadRequest("Bad Id");
+          await prisma.threadPost.delete({ where: { id } });
+          return res.status(200).json({ message: "ok" });
+        }
+      }
     }
     default:
       throw createHttpError.MethodNotAllowed();

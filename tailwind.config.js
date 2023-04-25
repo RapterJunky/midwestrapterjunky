@@ -205,6 +205,10 @@ module.exports = {
       transitionTimingFunction: {
         "carousel-in-out": "cubic-bezier(0.25,0.1,0.25,1.0)",
       },
+      fontSize: {
+        "dato-xs": "var(--font-size-xs)",
+        "dato-m": "var(--font-size-m)",
+      },
       textColor: {
         "dato-base-body": "var(--base-body-color)",
         "dato-light-body": "var(--light-body-color)",
@@ -213,6 +217,7 @@ module.exports = {
         "dato-primary": "var(--primary-color)",
         "dato-light": "var(--light-color)",
         "dato-dark": "var(--dark-color)",
+        "dato-alert": "var(--alert-color)",
       },
       backgroundColor: {
         "dato-light": "var(--light-bg-color)",
@@ -230,6 +235,8 @@ module.exports = {
         "dato-primary": "var(--primary-color)",
         "dato-light": "var(--light-color)",
         "dato-dark": "var(--dark-color)",
+        "dato-alert": "var(--alert-color)",
+        "dato-border": "var(--border-color)",
       },
       height: {
         30: "7.5rem" /*120px*/,

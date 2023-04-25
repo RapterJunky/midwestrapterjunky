@@ -53,6 +53,7 @@ export default function Carousel(props: CarouselProps) {
             style={{ backfaceVisibility: "hidden" }}
           >
             <Image
+              placeholder="blur"
               fill
               sizes={value.responsiveImage.sizes}
               blurDataURL={value.blurUpThumb}

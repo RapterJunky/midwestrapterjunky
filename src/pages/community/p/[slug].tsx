@@ -15,7 +15,6 @@ import Comments from "@components/thread/Comments";
 import SiteTags from "@components/SiteTags";
 import genericSeoTags from "@lib/utils/genericSeoTags";
 import TagList from "@components/community/TagList";
-import TopicTable from "@components/community/TopicTable";
 import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { PostProvider } from "@/hooks/usePost";
 import { formatLocalDate } from "@lib/utils/timeFormat";
@@ -99,74 +98,6 @@ export const getStaticProps = async ({ preview, params }: GetStaticPropsContext)
     };
 };
 
-const TEST: PrismaJson.Dast = {
-    blocks: [
-        {
-            id: "Image-1344545",
-            __typename: "ImageRecord",
-            content: {
-                blurUpThumb: "",
-                responsiveImage: {
-                    src: "https://api.dicebear.com/6.x/shapes/png?seed=Socks&size=96",
-                    alt: "avatar",
-                    width: 96,
-                    height: 96,
-                }
-            }
-        }
-    ],
-    links: [
-        {
-            id: "EX-134",
-            __typename: "ExternalLink",
-            slug: "https://midwestraptorjunkies.com/safelink?link=https://example.com",
-            title: "ExternalLink"
-        }
-    ],
-    value: {
-        schema: "dast",
-        document: {
-            type: "root",
-            children: [
-                {
-                    type: "block",
-                    item: "Image-1344545"
-                },
-                {
-                    type: "paragraph",
-                    children: [
-                        {
-                            type: "inlineItem",
-                            item: "EX-134"
-                        }
-                    ]
-                },
-                {
-                    type: "paragraph", children: [
-                        {
-                            "type": "span",
-                            value: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit deserunt enim soluta praesentium laudantium reprehenderit est ipsa iusto porro rerum, voluptatibus quae quibusdam nisi tenetur dicta similique in pariatur atque!"
-                        }
-                    ]
-                },
-                {
-                    type: "blockquote",
-                    attribution: "Hello",
-                    children: [
-                        {
-                            type: "paragraph",
-                            children: [{
-                                type: "span",
-                                value: "TEST"
-                            }]
-                        }
-                    ]
-                }
-            ]
-        }
-    }
-}
-
 const CommunityPost: NextPageWithProvider<Props> = ({ navbar, _site, post }) => {
     return (
         <div className="flex flex-col h-full">
@@ -209,7 +140,7 @@ const CommunityPost: NextPageWithProvider<Props> = ({ navbar, _site, post }) => 
                                     </div>
                                 </div>
                                 <article className="prose py-2 mb-4 max-w-none">
-                                    <StructuredText renderBlock={renderBlock} renderInlineRecord={renderInlineRecord} data={post.content ?? TEST} />
+                                    <StructuredText renderBlock={renderBlock} renderInlineRecord={renderInlineRecord} data={post.content} />
                                 </article>
                                 <TopicActions likes={post._count.likes} postId={post.id} ownerId={post.ownerId} />
                             </div>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
+import Spinner from "../Spinner";
 
 export interface FeatureShopItems {
   items: { item: { value: string } }[];
@@ -52,14 +53,7 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
     return (
       <section className="flex flex-col bg-zinc-100 px-4 py-8">
         <div className="flex items-center justify-center">
-          <div
-            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          >
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Loading...
-            </span>
-          </div>
+          <Spinner size="h-8 w-8" />
         </div>
       </section>
     );

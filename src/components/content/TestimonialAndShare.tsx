@@ -61,6 +61,7 @@ export default function TestimonialAndShare(props: TestimonialAndShareProps) {
       <Parallax className="h-screen">
         <Background className="relative h-screen w-screen">
           <Image
+            placeholder="blur"
             blurDataURL={props.bgImage.blurUpThumb}
             sizes={props.bgImage.responsiveImage.sizes}
             src={props.bgImage.responsiveImage.src}

@@ -24,6 +24,7 @@ export default function UpcomingEvents(props: UpcomingEventsProps) {
         <div key={i} className="relative flex w-2/4 justify-center md:w-1/4">
           <div className="flex h-full max-h-[608px] w-full max-w-[608px] justify-center">
             <Image
+              placeholder="blur"
               className="pointer-events-none object-cover object-center"
               height={event.bgImage.responsiveImage.height}
               width={event.bgImage.responsiveImage.width}

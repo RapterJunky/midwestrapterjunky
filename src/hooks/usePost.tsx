@@ -156,7 +156,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId: string; }>
             likesIsLoading,
             async report(type, id) {
                 try {
-                    const reason = new Promise<string | null>((ok) => {
+                    const reason = await new Promise<string | null>((ok) => {
                         let cleanup: () => void;
                         const reasonHandle = (e: Event) => {
                             if (cleanup) cleanup();
@@ -178,7 +178,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId: string; }>
                         setDialog({
                             reasonInput: true,
                             title: "Reason for report",
-                            message: "Please enter a reason for reporting this comment.",
+                            message: `Please enter a reason for reporting this ${type === "comment" ? "comment" : "post"}.`,
                             open: true
                         });
                     });
@@ -193,6 +193,7 @@ export const PostProvider: React.FC<React.PropsWithChildren<{ postId: string; }>
                             reason,
                         }),
                         headers: {
+
                             "Content-Type": "application/json"
                         }
                     });

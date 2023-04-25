@@ -7,6 +7,7 @@ type Props = {
     value: string[];
     clearError: () => void,
     onChange: (value: string[]) => void;
+    className?: string;
 }
 
 const TagBtn: React.FC<{ removeButtonText: string; name: string; onDelete: () => void }> = ({ removeButtonText, name, onDelete }) => {
@@ -19,11 +20,11 @@ const TagBtn: React.FC<{ removeButtonText: string; name: string; onDelete: () =>
 }
 
 ///https://github.com/i-like-robots/react-tags/blob/main/lib/ReactTags.js
-const TagInput: React.FC<Props> = ({ setError, value, onChange, clearError, max }) => {
+const TagInput: React.FC<Props> = ({ setError, value, onChange, clearError, max, className = "" }) => {
     const [tags, setTags] = useState<string[]>(value);
     const [query, setQuery] = useState<string>("");
     return (
-        <div className="border flex gap-2 p-1 border-neutral-400">
+        <div className={`flex gap-2 p-1 ${className}`}>
             <div className='flex flex-wrap gap-2'>
                 {tags.map((tag, i) => (
                     <TagBtn key={i} name={tag} removeButtonText={`Remove tag '${tag}'`} onDelete={() => {
