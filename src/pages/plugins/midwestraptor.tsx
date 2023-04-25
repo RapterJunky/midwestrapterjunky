@@ -199,7 +199,7 @@ const MidwestRaptor: NextPage = () => {
           pointsTo: {
             pageId: MESSAGE_BOARD_PAGE_ID,
           },
-        }
+        },
       ];
     },
   });

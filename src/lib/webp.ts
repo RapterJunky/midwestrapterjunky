@@ -1,6 +1,6 @@
-import { extname, basename, join } from 'node:path';
+import { extname, basename, join } from "node:path";
 import { execFile } from "node:child_process";
-import { unlink } from 'node:fs/promises';
+import { unlink } from "node:fs/promises";
 
 /**
  * Given a image filepath it compiles it into a webp image
@@ -18,9 +18,9 @@ export const compileWebp = async (filePath: string) => {
 
   return {
     filepath: webpFilepath,
-    filename: webpFilename
-  }
-}
+    filename: webpFilename,
+  };
+};
 
 /**
  * Get the binary file path for the webp compiler

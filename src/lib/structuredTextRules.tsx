@@ -62,7 +62,9 @@ export const renderInlineRecord = ({
       return (
         <span className="flex items-center gap-1">
           <HiLink />
-          <Link className="underline" href={record.slug}>{record.title}</Link>
+          <Link className="underline" href={record.slug}>
+            {record.title}
+          </Link>
         </span>
       );
     default:

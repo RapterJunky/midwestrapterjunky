@@ -1,4 +1,12 @@
-import { Dropdown, DropdownMenu, DropdownGroup, TextInput, DropdownOption, Button, Spinner } from "datocms-react-ui";
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownGroup,
+  TextInput,
+  DropdownOption,
+  Button,
+  Spinner,
+} from "datocms-react-ui";
 import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { StructuredText } from "react-datocms/structured-text";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
@@ -33,9 +41,8 @@ type FullReport = {
 };
 
 const ArticleReport: React.FC<
-  { ctx: RenderPageCtx, article: { slug: string; name: string } } & FullReport
+  { ctx: RenderPageCtx; article: { slug: string; name: string } } & FullReport
 > = ({ ctx, handleDelete, id, article, reason, created, owner, reporter }) => {
-
   const deleteItem = async () => {
     try {
       await AuthFetch("/api/plugin/reports", {
@@ -44,9 +51,9 @@ const ArticleReport: React.FC<
       });
     } catch (error) {
       console.error(error);
-      ctx.alert("Failed to remove topic.").catch(e => console.error(e));
+      ctx.alert("Failed to remove topic.").catch((e) => console.error(e));
     }
-  }
+  };
 
   return (
     <li className="bg-white p-4 shadow">
@@ -86,7 +93,8 @@ const ArticleReport: React.FC<
         </div>
         <h4 className="font-bold">Reported By:</h4>
         <div className="ml-4">
-          <Image unoptimized
+          <Image
+            unoptimized
             width={32}
             height={32}
             className="h-8 w-8"
@@ -118,10 +126,18 @@ const ArticleReport: React.FC<
             )}
           >
             <DropdownMenu alignment="right">
-              <DropdownOption red disabled>Remove Topic and Ban User</DropdownOption>
-              <DropdownOption red onClick={deleteItem}>Remove Topic</DropdownOption>
-              <DropdownOption red disabled>Ban Reporty</DropdownOption>
-              <DropdownOption red disabled>Lock Topic</DropdownOption>
+              <DropdownOption red disabled>
+                Remove Topic and Ban User
+              </DropdownOption>
+              <DropdownOption red onClick={deleteItem}>
+                Remove Topic
+              </DropdownOption>
+              <DropdownOption red disabled>
+                Ban Reporty
+              </DropdownOption>
+              <DropdownOption red disabled>
+                Lock Topic
+              </DropdownOption>
               <DropdownOption onClick={() => handleDelete(id)}>
                 Dismiss Report
               </DropdownOption>
@@ -133,17 +149,9 @@ const ArticleReport: React.FC<
   );
 };
 
-const CommentReport: React.FC<{ ctx: RenderPageCtx, comment: Comment } & FullReport> = ({
-  id,
-  handleDelete,
-  comment,
-  reason,
-  created,
-  owner,
-  reporter,
-  ctx
-}) => {
-
+const CommentReport: React.FC<
+  { ctx: RenderPageCtx; comment: Comment } & FullReport
+> = ({ id, handleDelete, comment, reason, created, owner, reporter, ctx }) => {
   const deleteItem = async () => {
     try {
       await AuthFetch("/api/plugin/reports", {
@@ -152,9 +160,9 @@ const CommentReport: React.FC<{ ctx: RenderPageCtx, comment: Comment } & FullRep
       });
     } catch (error) {
       console.error(error);
-      ctx.alert("Failed to remove topic.").catch(e => console.error(e));
+      ctx.alert("Failed to remove topic.").catch((e) => console.error(e));
     }
-  }
+  };
 
   return (
     <li className="bg-white p-4 shadow">
@@ -179,7 +187,8 @@ const CommentReport: React.FC<{ ctx: RenderPageCtx, comment: Comment } & FullRep
         </div>
         <h4 className="font-bold">Owner:</h4>
         <div className="ml-4">
-          <Image unoptimized
+          <Image
+            unoptimized
             width={32}
             height={32}
             className="h-8 w-8"
@@ -222,9 +231,15 @@ const CommentReport: React.FC<{ ctx: RenderPageCtx, comment: Comment } & FullRep
             )}
           >
             <DropdownMenu alignment="right">
-              <DropdownOption red disabled>Remove Comment and Ban User</DropdownOption>
-              <DropdownOption red onClick={deleteItem}>Remove Comment</DropdownOption>
-              <DropdownOption red disabled>Ban Reporty</DropdownOption>
+              <DropdownOption red disabled>
+                Remove Comment and Ban User
+              </DropdownOption>
+              <DropdownOption red onClick={deleteItem}>
+                Remove Comment
+              </DropdownOption>
+              <DropdownOption red disabled>
+                Ban Reporty
+              </DropdownOption>
               <DropdownOption onClick={() => handleDelete(id)}>
                 Dismiss Report
               </DropdownOption>
@@ -249,38 +264,45 @@ export const Reports: React.FC<{
     ContentType,
     Response,
     [number, string, "asc" | "desc", "Comment" | "Post" | undefined]
-  >([page, query, order, type], async (params) => {
-    const url = new URL("/api/plugin/reports", window.location.origin);
-    url.searchParams.set("page", params[0].toString());
-    if (params[1] && !!params[1].length) {
-      url.searchParams.set("search", params[1]);
-    }
-    url.searchParams.set("order", params[2]);
-    if (params[3]) {
-      url.searchParams.set("type", params[3]);
-    }
+  >(
+    [page, query, order, type],
+    async (params) => {
+      const url = new URL("/api/plugin/reports", window.location.origin);
+      url.searchParams.set("page", params[0].toString());
+      if (params[1] && !!params[1].length) {
+        url.searchParams.set("search", params[1]);
+      }
+      url.searchParams.set("order", params[2]);
+      if (params[3]) {
+        url.searchParams.set("type", params[3]);
+      }
 
-    const reports = await AuthFetch(url);
+      const reports = await AuthFetch(url);
 
-    return reports.json() as Promise<ContentType>;
-  }, { revalidateOnFocus: true });
+      return reports.json() as Promise<ContentType>;
+    },
+    { revalidateOnFocus: true }
+  );
 
   const handleDelete = async (id: number) => {
     try {
       if (!data) throw new Error("NoSourceData");
-      await mutate(async () => {
-        await AuthFetch("/api/plugin/reports", {
-          method: "DELETE",
-          json: { id, type: "report" },
-        });
-        return {
-          ...data,
-          result: data?.result.filter((value) => value.id !== id),
+      await mutate(
+        async () => {
+          await AuthFetch("/api/plugin/reports", {
+            method: "DELETE",
+            json: { id, type: "report" },
+          });
+          return {
+            ...data,
+            result: data?.result.filter((value) => value.id !== id),
+          };
+        },
+        {
+          revalidate: false,
+          rollbackOnError: true,
         }
-      }, {
-        revalidate: false,
-        rollbackOnError: true
-      });
+      );
     } catch (error) {
       console.error(error);
       ctx.alert("Failed to delete report!").catch((e) => console.error(e));

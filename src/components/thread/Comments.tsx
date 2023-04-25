@@ -1,7 +1,6 @@
 import { useSession, signIn } from "next-auth/react";
 import dynamic from "next/dynamic";
 
-
 import Comment from "@components/thread/Comment";
 import usePost from "@hook/usePost";
 import SkeletonComment from "./SkeletonComment";
@@ -12,7 +11,7 @@ const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
       <span className="inline-block h-12 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
       <span className="inline-block h-28 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
     </div>
-  )
+  ),
 });
 
 const Comments: React.FC = () => {
@@ -31,15 +30,15 @@ const Comments: React.FC = () => {
           </button>
         </div>
       )}
-      <div className="mb-2 flex justify-between items-center">
-        <div className="p-1">
-          Comments
-        </div>
+      <div className="mb-2 flex items-center justify-between">
+        <div className="p-1">Comments</div>
       </div>
       <hr className="border-b-2" />
       <ul className="mt-5 w-full divide-y">
         {!isLoading && (error || !comments) ? (
-          <li className="text-center py-4 font-bold text-lg">{error?.statusText ?? "Failed to load comments"}</li>
+          <li className="py-4 text-center text-lg font-bold">
+            {error?.statusText ?? "Failed to load comments"}
+          </li>
         ) : null}
         {isLoading ? (
           <>
@@ -49,16 +48,14 @@ const Comments: React.FC = () => {
           </>
         ) : null}
         {!isLoading && comments && !comments?.result?.length ? (
-          <li className="text-center py-4 font-bold text-lg">No comments yet.</li>
+          <li className="py-4 text-center text-lg font-bold">
+            No comments yet.
+          </li>
         ) : null}
         {!isLoading && comments
           ? comments?.result.map((comment) => (
-            <Comment
-              key={comment.id}
-              comment={comment}
-              session={session}
-            />
-          ))
+              <Comment key={comment.id} comment={comment} session={session} />
+            ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

@@ -45,7 +45,7 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: false
+      revalidateOnMount: false,
     }
   );
 

@@ -1,7 +1,7 @@
 import type { NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
 import createHttpError from "http-errors";
-import { errors } from 'formidable';
+import { errors } from "formidable";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
@@ -9,7 +9,7 @@ import { logger } from "@lib/logger";
 export type ApiErrorResponse = {
   message: string;
   status?: number;
-  details?: unknown[] | { message: string; }[];
+  details?: unknown[] | { message: string }[];
 };
 
 export const handleError = (
@@ -36,9 +36,11 @@ export const handleError = (
     return res.status(error.statusCode).json({
       message: error.name,
       status: error.statusCode,
-      details: [{
-        message: error?.message ?? error?.cause ?? error.name
-      }]
+      details: [
+        {
+          message: error?.message ?? error?.cause ?? error.name,
+        },
+      ],
     });
   }
 

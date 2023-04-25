@@ -38,19 +38,22 @@ export const Threads: React.FC<{
       })) as Thread | undefined;
       if (!result) return;
 
-      await mutate(async () => {
-        const request = await AuthFetch("/api/plugin/category", {
-          method: "POST",
-          json: result,
-        });
+      await mutate(
+        async () => {
+          const request = await AuthFetch("/api/plugin/category", {
+            method: "POST",
+            json: result,
+          });
 
-        const body = await request.json() as Thread;
+          const body = (await request.json()) as Thread;
 
-        return { ...data, result: [body, ...data.result] }
-      }, {
-        revalidate: false,
-        rollbackOnError: true
-      });
+          return { ...data, result: [body, ...data.result] };
+        },
+        {
+          revalidate: false,
+          rollbackOnError: true,
+        }
+      );
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
@@ -69,21 +72,24 @@ export const Threads: React.FC<{
       })) as Thread | undefined;
       if (!result) return;
 
-      await mutate(async () => {
-        await AuthFetch("/api/plugin/category", {
-          method: "PATCH",
-          json: result,
-        });
-        return {
-          ...data,
-          result: [result].concat(
-            data.result.filter((value) => value.id !== thread.id)
-          ),
+      await mutate(
+        async () => {
+          await AuthFetch("/api/plugin/category", {
+            method: "PATCH",
+            json: result,
+          });
+          return {
+            ...data,
+            result: [result].concat(
+              data.result.filter((value) => value.id !== thread.id)
+            ),
+          };
+        },
+        {
+          revalidate: false,
+          rollbackOnError: true,
         }
-      }, {
-        revalidate: false,
-        rollbackOnError: true
-      });
+      );
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to create thread.").catch((e) => console.error(e));
@@ -110,19 +116,22 @@ export const Threads: React.FC<{
       });
       if (!confirm) return;
 
-      await mutate(async () => {
-        await AuthFetch("/api/plugin/category", {
-          method: "DELETE",
-          json: { id },
-        });
-        return {
-          ...data,
-          result: data.result.filter((value) => value.id !== id),
+      await mutate(
+        async () => {
+          await AuthFetch("/api/plugin/category", {
+            method: "DELETE",
+            json: { id },
+          });
+          return {
+            ...data,
+            result: data.result.filter((value) => value.id !== id),
+          };
+        },
+        {
+          revalidate: false,
+          rollbackOnError: true,
         }
-      }, {
-        revalidate: false,
-        rollbackOnError: true
-      });
+      );
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to delete thread.").catch((e) => console.error(e));
@@ -162,33 +171,48 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                <li className="flex bg-white p-4 shadow items-center gap-2" key={value.id}>
-                  <div>
-                    <Image unoptimized className="rounded-full" src={value.image} alt="Category Image" width={40} height={40} />
-                  </div>
-                  <div className="mr-auto">
-                    <h1 className="text-xl font-bold">{value.name}</h1>
-                    <div className="flex flex-wrap gap-1">
-                      {value.tags?.map((tag, i) => (
-                        <span className="py-0.5 px-1 rounded-md bg-dato-accent text-dato-light" key={i}>{tag}</span>
-                      ))}
+                  <li
+                    className="flex items-center gap-2 bg-white p-4 shadow"
+                    key={value.id}
+                  >
+                    <div>
+                      <Image
+                        unoptimized
+                        className="rounded-full"
+                        src={value.image}
+                        alt="Category Image"
+                        width={40}
+                        height={40}
+                      />
                     </div>
-                    <p>{value.description}</p>
-                  </div>
-                  <div className="flex gap-dato-m text-white">
-                    <Button
-                      onClick={() => editModel(value)}
-                      rightIcon={<FaEdit style={{ fill: "white" }} />}
-                      buttonType="primary"
-                    />
-                    <Button
-                      onClick={() => deleteModel(value.id)}
-                      rightIcon={<FaTrash style={{ fill: "white" }} />}
-                      buttonType="negative"
-                    />
-                  </div>
-                </li>
-              ))
+                    <div className="mr-auto">
+                      <h1 className="text-xl font-bold">{value.name}</h1>
+                      <div className="flex flex-wrap gap-1">
+                        {value.tags?.map((tag, i) => (
+                          <span
+                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            key={i}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <p>{value.description}</p>
+                    </div>
+                    <div className="flex gap-dato-m text-white">
+                      <Button
+                        onClick={() => editModel(value)}
+                        rightIcon={<FaEdit style={{ fill: "white" }} />}
+                        buttonType="primary"
+                      />
+                      <Button
+                        onClick={() => deleteModel(value.id)}
+                        rightIcon={<FaTrash style={{ fill: "white" }} />}
+                        buttonType="negative"
+                      />
+                    </div>
+                  </li>
+                ))
               : null}
           </ul>
           <hr className="mt-dato-m" />
