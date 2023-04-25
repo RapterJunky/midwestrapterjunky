@@ -1,7 +1,9 @@
-import { useId } from "react";
-import Image from "next/image";
-import type { ResponsiveImage } from "@type/page";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useId } from "react";
+
+import type { ResponsiveImage } from "@type/page";
 
 export type CarouselProps = {
   images: ResponsiveImage<{
@@ -10,7 +12,12 @@ export type CarouselProps = {
   }>[];
 };
 
-export default function Carousel(props: CarouselProps) {
+const CarouselRuntime = dynamic(
+  () => import("@components/content/CarouselRuntime"),
+  { ssr: false }
+);
+
+export default function CarouselElement(props: CarouselProps) {
   const id = useId();
   const carouselId = `${id.replace(/:/g, "")}-carousel`;
   const targetId = `#${carouselId}`;
@@ -23,6 +30,7 @@ export default function Carousel(props: CarouselProps) {
       data-te-carousel-slide="carousel"
       data-te-interval="8000"
     >
+      <CarouselRuntime />
       <div
         className="absolute bottom-0 left-0 right-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0"
         data-te-carousel-indicators

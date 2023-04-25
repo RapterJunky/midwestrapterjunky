@@ -8,7 +8,7 @@ const config = {
       extends: [
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
-      excludedFiles: ["*.d.ts"],
+      excludedFiles: ["*.d.ts","*.mjs"],
       files: ["*.ts", "*.tsx"],
       parserOptions: {
         project: path.join(__dirname, "tsconfig.json"),
@@ -19,6 +19,7 @@ const config = {
   parserOptions: {
     project: path.join(__dirname, "tsconfig.json"),
   },
+  ignorePatterns: ["prebuild.mjs"],
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {

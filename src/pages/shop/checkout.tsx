@@ -1,5 +1,4 @@
 import { useState, useEffect, useReducer } from "react";
-import { useRouter } from "next/router";
 import type { Order } from "square";
 import useSWR from "swr";
 
@@ -11,12 +10,13 @@ import Footer from "@/components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
 import type { FullPageProps, NextPageWithProvider } from "@type/page";
-import { SquareSDKProvider } from "@hook/useSquareSDK";
 import useCart, { type CartItem, CartProvider } from "@hook/useCart";
+import genericSeoTags from "@lib/utils/genericSeoTags";
+import { SquareSDKProvider } from "@hook/useSquareSDK";
 import GenericPageQuery from "@/gql/queries/generic";
 import useFormatPrice from "@hook/useFormatPrice";
 import { fetchCachedQuery } from "@lib/cache";
-import genericSeoTags from "@lib/utils/genericSeoTags";
+import useModRouter from "@hook/useModRouter";
 
 export type Address = {
   firstname: string;
@@ -140,7 +140,7 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
   const { data, subtotal, isEmpty, loading } = useCart();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const formatPrice = useFormatPrice("USD");
-  const router = useRouter();
+  const { router, replace } = useModRouter();
   const {
     data: order,
     isLoading,
@@ -178,8 +178,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
   useEffect(() => {
     if (!router.isReady) return;
     if (!loading && isEmpty && !router.query?.checkoutId)
-      router.replace("/shop").catch((e) => console.error(e));
-  }, [loading, isEmpty, router.isReady]);
+      replace("/shop").catch((e) => console.error(e));
+  }, [loading, isEmpty, router.isReady, replace, router.query?.checkoutId]);
 
   return (
     <div className="flex h-full flex-col">

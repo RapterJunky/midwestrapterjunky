@@ -1,6 +1,11 @@
 /// <reference types="@total-typescript/ts-reset"/>
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
+declare module "tw-elements" {
+  export declare class Carousel {}
+  export declare function initTE(init: { [x: string]: Carousel }): void;
+}
+
 declare module React {
   type EnterKeyHintOptions =
     | "enter"

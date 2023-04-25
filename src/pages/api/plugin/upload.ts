@@ -26,7 +26,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-      process.env.PLUGIN_TOKEN
+        process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -35,21 +35,20 @@ export default async function handle(
       multiples: false,
       allowEmptyFiles: false,
       keepExtensions: true,
-      filter({ name, originalFilename, mimetype }) {
-        return !!(mimetype && mimetype.includes("image"))
-      }
+      filter({ mimetype }) {
+        return !!(mimetype && mimetype.includes("image"));
+      },
     });
 
-
     const file = await new Promise<File>((ok, reject) => {
-      form.parse(req, async (err, _fields, files) => {
+      form.parse(req, (err, _fields, files) => {
         if (err) {
           return reject(err);
         }
 
         ok(files["image"] as File);
       });
-    })
+    });
 
     logger.info(file, `${file.mimetype} | ${file.originalFilename}`);
 
@@ -61,7 +60,6 @@ export default async function handle(
 
       filepath = data.filepath;
       filename = data.filename;
-
     }
 
     const filebase64 = await readFile(filepath, { encoding: "base64" });

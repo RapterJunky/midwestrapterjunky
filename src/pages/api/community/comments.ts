@@ -5,7 +5,6 @@ import { applyRateLimit } from "@api/rateLimiter";
 import { handleError } from "@api/errorHandler";
 import DELETE from "@service/comments/DELETE";
 import { getSession } from "@lib/getSession";
-import PATCH from "@service/comments/PATCH";
 import POST from "@service/comments/POST";
 import GET from "@service/comments/GET";
 
@@ -26,9 +25,6 @@ export default async function handler(
       case "DELETE": {
         await applyRateLimit(req, res);
         return await DELETE(req, res, session);
-      }
-      case "PATCH": {
-        return await PATCH(req, res, session);
       }
       default:
         throw createHttpError.MethodNotAllowed();

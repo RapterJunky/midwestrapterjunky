@@ -3,7 +3,6 @@ import type {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from "next";
-import Script from "next/script";
 import type { SeoOrFaviconTag } from "react-datocms";
 
 import Navbar from "@components/layout/Navbar";
@@ -55,18 +54,6 @@ const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site }) => {
         <ModuleContent data={home.bodyContent} />
       </main>
       <Footer />
-      <Script
-        onReady={() => {
-          /* TW Elements does not seem to execute on load sometimes, so create instances here. 
-                                World like to get rid of haveing this script in the frist place but not sandalone 
-                                script is ready or react compable */
-          document
-            .querySelectorAll('[id*="-carousel"]')
-            .forEach((value) => window.te.Carousel.getOrCreateInstance(value));
-        }}
-        src="https://cdn.jsdelivr.net/npm/tw-elements@1.0.0-beta1/dist/js/index.min.js"
-        strategy="lazyOnload"
-      />
       {preview ? <ExitPreview /> : null}
     </>
   );

@@ -1,20 +1,20 @@
-import { HiChevronDown, HiChevronUp, HiFlag, HiHeart, HiReply, HiTrash } from "react-icons/hi";
+import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import { StructuredText } from "react-datocms/structured-text";
 import type { useSession } from "next-auth/react";
 //import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState } from "react";
 import Image from "next/image";
 
-import usePost/*, { type CreateCommentBody }*/ from "@hook/usePost";
+import usePost /*, { type CreateCommentBody }*/ from "@hook/usePost";
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
-import Spinner from '@components/Spinner';
+import Spinner from "@components/Spinner";
 //import useComment from "@/hooks/useComment";
 
 type Session = ReturnType<typeof useSession>;
 export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
-  owner: Omit<User, "email" | "emailVerified">,
+  owner: Omit<User, "email" | "emailVerified">;
   likedByMe: boolean;
   likeCount: number;
   children: number;
@@ -23,7 +23,7 @@ export type TComment = Omit<DbComment, "ownerId" | "threadPostId"> & {
 interface Props {
   comment: TComment;
   session: Session;
-  isChild?: boolean
+  isChild?: boolean;
 }
 
 /*const ChildComments = dynamic(() => import("@components/thread/ChildComments"));
@@ -44,9 +44,12 @@ const Comment: React.FC<Props> = ({
   //const [showReplies, setShowReplies] = useState(false);
   //const [showReplyBox, setShowReplyBox] = useState(false);
   const [loading, setLoading] = useState({ state: false, type: "" });
-  const { report, like, unlike, delete: deleteComment, postId, create } = usePost();
+  const { report, like, unlike, delete: deleteComment } = usePost();
   return (
-    <li id={comment.id} className="flex w-full flex-col gap-2 py-2 animate-in fade-in-10">
+    <li
+      id={comment.id}
+      className="flex w-full flex-col gap-2 py-2 animate-in fade-in-10"
+    >
       <div className="flex w-full">
         <div>
           <Image
@@ -58,21 +61,28 @@ const Comment: React.FC<Props> = ({
           />
         </div>
         <div className="flex w-full flex-col px-2">
-          <div className="text-neutral-600 flex justify-between mb-1">
-            <div className="font-bold">
-              {comment.owner.name}
-            </div>
+          <div className="mb-1 flex justify-between text-neutral-600">
+            <div className="font-bold">{comment.owner.name}</div>
             <div>
-              {formatLocalDate(comment.created, undefined, { day: "numeric", month: "short", year: "numeric" })}
+              {formatLocalDate(comment.created, undefined, {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
             </div>
           </div>
-          <article className="prose max-w-none min-h-[50px]">
+          <article className="prose min-h-[50px] max-w-none">
             {comment.content ? (
-              <StructuredText renderBlock={renderBlock} data={comment.content} />
-            ) : "Missing comment message!"}
+              <StructuredText
+                renderBlock={renderBlock}
+                data={comment.content}
+              />
+            ) : (
+              "Missing comment message!"
+            )}
           </article>
           <div className="flex justify-between">
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               {/*session.status === "authenticated" && !isChild ? (
                 <button onClick={() => setShowReplyBox(curr => !curr)} className="hover:text-black p-1 text-gray-500 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" title="reply to comment" aria-label="reply">
                   <HiReply className="h-5 w-5" />
@@ -85,18 +95,28 @@ const Comment: React.FC<Props> = ({
                 </button>
               ) : null*/}
             </div>
-            <div className="flex items-center gap-1 text-gray-500 justify-end">
+            <div className="flex items-center justify-end gap-1 text-gray-500">
               {session.status === "authenticated" ? (
                 <>
-                  <button title="like this comment" data-headlessui-state={comment.likedByMe ? "active" : ""} onClick={() => comment.likedByMe ? unlike("comment", comment.id) : like("comment", comment.id)} className="flex hover:text-black hover:bg-gray-400 hover:bg-opacity-20 rounded-sm p-1 ui-active:text-red-400">
+                  <button
+                    title="like this comment"
+                    data-headlessui-state={comment.likedByMe ? "active" : ""}
+                    onClick={() =>
+                      comment.likedByMe
+                        ? unlike("comment", comment.id)
+                        : like("comment", comment.id)
+                    }
+                    className="flex rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black ui-active:text-red-400"
+                  >
                     {comment.likeCount > 0 ? (
                       <span className="mr-1">{comment.likeCount}</span>
                     ) : null}
                     <HiHeart className="h-6 w-6" />
                   </button>
-                  <button disabled={loading.state && loading.type === "report"}
+                  <button
+                    disabled={loading.state && loading.type === "report"}
                     title="privately flag this comment for attention or send a private notification about it"
-                    className="hover:text-black p-1 flex items-center disabled:opacity-70 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm"
+                    className="flex items-center rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black disabled:opacity-70"
                     onClick={async () => {
                       setLoading({ state: true, type: "report" });
                       await report("comment", comment.id);
@@ -111,13 +131,16 @@ const Comment: React.FC<Props> = ({
                     <HiFlag className="h-6 w-6" />
                   </button>
                   {session.data?.user.id === comment.owner.id ? (
-                    <button disabled={loading.state && loading.type === "delete"} title="delete your comment"
-                      className="p-1 text-red-500 hover:text-red-700 flex items-center disabled:opacity-70 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm"
+                    <button
+                      disabled={loading.state && loading.type === "delete"}
+                      title="delete your comment"
+                      className="flex items-center rounded-sm p-1 text-red-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-red-700 disabled:opacity-70"
                       onClick={async () => {
                         setLoading({ state: true, type: "delete" });
                         await deleteComment("comment", comment.id);
                         setLoading({ state: false, type: "" });
-                      }}>
+                      }}
+                    >
                       {loading.state && loading.type === "delete" ? (
                         <div className="flex gap-2">
                           <Spinner />
