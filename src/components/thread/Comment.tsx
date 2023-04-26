@@ -96,23 +96,24 @@ const Comment: React.FC<Props> = ({
               ) : null*/}
             </div>
             <div className="flex items-center justify-end gap-1 text-gray-500">
+              <button
+                disabled={session.status !== "authenticated"}
+                title="like this comment"
+                data-headlessui-state={comment.likedByMe ? "active" : ""}
+                onClick={() =>
+                  comment.likedByMe
+                    ? unlike("comment", comment.id)
+                    : like("comment", comment.id)
+                }
+                className="flex rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black ui-active:text-red-400"
+              >
+                {comment.likeCount > 0 ? (
+                  <span className="mr-1">{comment.likeCount}</span>
+                ) : null}
+                <HiHeart className="h-6 w-6" />
+              </button>
               {session.status === "authenticated" ? (
                 <>
-                  <button
-                    title="like this comment"
-                    data-headlessui-state={comment.likedByMe ? "active" : ""}
-                    onClick={() =>
-                      comment.likedByMe
-                        ? unlike("comment", comment.id)
-                        : like("comment", comment.id)
-                    }
-                    className="flex rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black ui-active:text-red-400"
-                  >
-                    {comment.likeCount > 0 ? (
-                      <span className="mr-1">{comment.likeCount}</span>
-                    ) : null}
-                    <HiHeart className="h-6 w-6" />
-                  </button>
                   <button
                     disabled={loading.state && loading.type === "report"}
                     title="privately flag this comment for attention or send a private notification about it"

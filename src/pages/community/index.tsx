@@ -3,6 +3,7 @@ import type {
   GetStaticPropsResult,
   NextPage,
 } from "next";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Tab } from "@headlessui/react";
@@ -22,6 +23,7 @@ import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import prisma from "@api/prisma";
+
 
 interface Props extends FullPageProps {
   categories: {
@@ -94,22 +96,23 @@ const tab = ["categories", "latest", "top"];
 
 const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
   const [index, setIndex] = useState(0);
+  const session = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (router.isReady) {
       switch (router.query?.tab) {
         case "latest":
-          if (index !== 1) setIndex(1);
+          setIndex(1);
           break;
         case "top":
-          if (index !== 2) setIndex(2);
+          setIndex(2);
           break;
         default:
           break;
       }
     }
-  }, [router.isReady, router.query?.tab, index]);
+  }, [router.isReady, router.query?.tab]);
 
   return (
     <div className="flex h-full flex-col">
@@ -149,13 +152,14 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
                 </Tab>
               </Tab.List>
               <div className="mt-4 md:mt-0">
-                <Link
-                  href="/community/create-topic"
-                  className="inline-flex w-full items-center justify-center gap-1 rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70 md:w-auto"
-                >
-                  <HiPlus className="h-4 w-4" />
-                  <span>New Topic</span>
-                </Link>
+                {session.status === "authenticated" ? (
+                  <Link
+                    href="/community/create-topic"
+                    className="inline-flex w-full items-center justify-center gap-1 rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] ui-disabled:pointer-events-none ui-disabled:opacity-70 md:w-auto">
+                    <HiPlus className="h-4 w-4" />
+                    <span>New Topic</span>
+                  </Link>
+                ) : null}
               </div>
             </div>
             <Tab.Panels>

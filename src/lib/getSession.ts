@@ -14,6 +14,6 @@ export const getSession = async <T extends boolean = true>(
   error?: T
 ) => {
   const session = await getServerSession(req, res, authConfig);
-  if (!session && !error) throw Unauthorized();
+  if (!session && !!error) throw Unauthorized();
   return session as T extends true ? Session : Session | null;
 };

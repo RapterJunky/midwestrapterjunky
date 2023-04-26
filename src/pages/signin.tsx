@@ -1,12 +1,14 @@
 import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
-import { type getProviders, signIn } from "next-auth/react";
+import { type getProviders, signIn, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
+import { useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
 import SiteTags from "@components/SiteTags";
 
+import useModRouter from "@hook/useModRouter";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
@@ -47,9 +49,22 @@ export const getStaticProps = async (): Promise<
  * @see https://www.hyperui.dev/components/application-ui/login-forms
  */
 const SignIn: NextPage<Props> = ({ seo, providers }) => {
+  const { router, replace } = useModRouter();
+  const session = useSession();
   const icon = (seo.faviconMetaTags ?? []).find(
     (value) => value.tag === "link" && value.attributes.sizes === "96x96"
   );
+
+  useEffect(() => {
+    if (router.isReady) {
+      const callback = router.query.callbackUrl;
+      if (session.status === "authenticated" && callback && !Array.isArray(callback) && callback.startsWith(`${process.env.NEXT_PUBLIC_VERCEL_ENV !== "development" ? "https" : "http"}://${process.env.NEXT_PUBLIC_VERCEL_URL}`)) {
+        replace(callback).catch(e => console.error(e));
+        return;
+      }
+    }
+  }, [router.isReady, session.status, replace]);
+
   return (
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
       <SiteTags

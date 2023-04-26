@@ -21,7 +21,20 @@ const TopicActions: React.FC<{
   const [loading, setLoading] = useState({ state: false, type: "" });
   const session = useSession();
 
-  if (session.status !== "authenticated") return null;
+  if (session.status !== "authenticated") return (
+    <div className="flex justify-end gap-1 p-0.5 text-neutral-600">
+      <button
+        type="button"
+        className="flex rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black disabled:text-neutral-800 ui-active:text-red-400 ui-active:hover:text-red-500"
+        title="like this post"
+      >
+        {data?.likesCount ?? likes > 0 ? (
+          <span className="mr-1">{data?.likesCount ?? likes}</span>
+        ) : null}
+        <HiHeart className="h-6 w-6" />
+      </button>
+    </div>
+  );
 
   return (
     <div className="flex justify-end gap-1 p-0.5 text-neutral-600">
