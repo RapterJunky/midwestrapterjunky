@@ -1,11 +1,11 @@
 import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
 import { type getProviders, signIn, useSession } from "next-auth/react";
-import { FaGoogle } from "react-icons/fa";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import FontAwesomeIcon from "@components/FontAwesomeIcon"
 import SiteTags from "@components/SiteTags";
 
 import useModRouter from "@hook/useModRouter";
@@ -63,10 +63,9 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
         callback &&
         !Array.isArray(callback) &&
         callback.startsWith(
-          `${
-            process.env.NEXT_PUBLIC_VERCEL_ENV !== "development"
-              ? "https"
-              : "http"
+          `${process.env.NEXT_PUBLIC_VERCEL_ENV !== "development"
+            ? "https"
+            : "http"
           }://${process.env.NEXT_PUBLIC_VERCEL_URL}`
         )
       ) {
@@ -143,7 +142,7 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
                   key={provider?.id}
                   onClick={() => signIn(provider?.id)}
                 >
-                  <FaGoogle /> continue with {provider?.name}
+                  <FontAwesomeIcon iconName="google" prefix="fa" icon={[488, 512, [], "", "M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"]} /> continue with {provider?.name}
                 </button>
               ))}
             </div>

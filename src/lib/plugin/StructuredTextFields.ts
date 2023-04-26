@@ -1,4 +1,6 @@
-const rules = [
+import type { StructuredTextCustomMark } from "datocms-plugin-sdk";
+
+const rules: StructuredTextCustomMark[] = [
   {
     icon: "text-height",
     id: "text-xs",
@@ -35,6 +37,6 @@ const rules = [
       lineHeight: "2.25rem" /* 36px */,
     },
   },
-];
+]
 
 export default rules;
