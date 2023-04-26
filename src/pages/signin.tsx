@@ -2,7 +2,7 @@ import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
 import { type getProviders, signIn, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -58,12 +58,23 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
   useEffect(() => {
     if (router.isReady) {
       const callback = router.query.callbackUrl;
-      if (session.status === "authenticated" && callback && !Array.isArray(callback) && callback.startsWith(`${process.env.NEXT_PUBLIC_VERCEL_ENV !== "development" ? "https" : "http"}://${process.env.NEXT_PUBLIC_VERCEL_URL}`)) {
-        replace(callback).catch(e => console.error(e));
+      if (
+        session.status === "authenticated" &&
+        callback &&
+        !Array.isArray(callback) &&
+        callback.startsWith(
+          `${
+            process.env.NEXT_PUBLIC_VERCEL_ENV !== "development"
+              ? "https"
+              : "http"
+          }://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        )
+      ) {
+        replace(callback).catch((e) => console.error(e));
         return;
       }
     }
-  }, [router.isReady, session.status, replace]);
+  }, [router.isReady, session.status, replace, router.query.callbackUrl]);
 
   return (
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">

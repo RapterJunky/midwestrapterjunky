@@ -50,11 +50,11 @@ const GET = async (
 
   const likes = session
     ? await prisma.like.findMany({
-      where: {
-        userId: session?.user.id,
-        commentId: { in: comments.map((value) => value.id) },
-      },
-    })
+        where: {
+          userId: session?.user.id,
+          commentId: { in: comments.map((value) => value.id) },
+        },
+      })
     : [];
 
   const result = [];
