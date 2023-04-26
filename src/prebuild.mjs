@@ -49,3 +49,5 @@ if (parsed.success === false) {
 }
 
 writeFileSync("./raptorjunkies.json", parsed.data);
+
+console.log("Finished GOOGLE_APPLICATION_CREDENTIALS");

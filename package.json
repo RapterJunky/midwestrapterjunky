@@ -13,7 +13,8 @@
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "cypress:run": "cypress run",
     "cypress:run:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@datocms/cma-client-node": "^1.3.1",
