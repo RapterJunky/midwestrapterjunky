@@ -22,7 +22,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             const file = inputFile.current.files.item(0);
             if (!file) return;
             const [{ default: mammonth }, { jsx }] = await Promise.all([
-              import("mammoth/mammoth.browser"),
+              import("mammoth/mammoth.browser.min"),
               import("slate-hyperscript"),
             ]);
 
