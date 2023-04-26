@@ -14,7 +14,7 @@ describe("Header", () => {
             cy.get('[data-cy="mobile-nav-link"]').eq(0).should("contain", "Home").click();
             cy.location("pathname").should("eq", "/");
 
-            cy.get('[data-cy="mobile-nav-link"]').eq(1).should("contain", "Nlog").click();
+            cy.get('[data-cy="mobile-nav-link"]').eq(1).should("contain", "Blog").click();
             cy.location("pathname").should("eq", "/blog");
 
             cy.get('[data-cy="mobile-nav-link"]').eq(2).should("contain", "Threads").click();
