@@ -1,12 +1,6 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const plugin = require("tailwindcss/plugin");
 
-function filterDefault(values) {
-  return Object.fromEntries(
-    Object.entries(values).filter(([key]) => key !== "DEFAULT")
-  );
-}
-
 const animatePlugin = plugin(
   ({ addUtilities, matchUtilities, theme }) => {
     addUtilities({
