@@ -47,6 +47,8 @@ export default async function handle(
         },
       });
 
+      await res.revalidate("/community");
+
       return res.status(201).json(data);
     }
     case "PATCH": {
