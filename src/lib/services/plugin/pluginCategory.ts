@@ -19,10 +19,7 @@ const patchSchema = createCategory.extend({
   id: z.number().positive().min(1),
 });
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
       const { page } = schema.parse(req.query);
@@ -68,6 +65,8 @@ export default async function handle(
         },
       });
 
+      await res.revalidate("/community");
+
       return res.status(200).json(data);
     }
     case "DELETE": {
@@ -81,9 +80,13 @@ export default async function handle(
         },
       });
 
+      await res.revalidate("/community");
+
       return res.status(200).json(data);
     }
     default:
       throw createHttpError.MethodNotAllowed();
   }
 }
+
+export default handle;
