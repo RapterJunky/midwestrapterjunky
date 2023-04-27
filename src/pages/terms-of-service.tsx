@@ -18,9 +18,9 @@ import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 
+import terms_of_service from "@query/queries/terms_of_service";
 import type { FullPageProps } from "@type/page";
 import { DatoCMS } from "@api/gql";
-import terms_of_service from "@query/queries/terms_of_service";
 
 interface Props extends FullPageProps {
   terms: {

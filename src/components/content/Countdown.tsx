@@ -1,5 +1,5 @@
-import type { Color } from "@type/page";
 import Countdown, { type CountdownRendererFn } from "react-countdown";
+import type { Color } from "@type/page";
 
 export type CountDownProps = {
   id: string;

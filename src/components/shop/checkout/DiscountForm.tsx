@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { HiX } from "react-icons/hi";
+import HiX from "@components/icons/HiX";
 import type { CheckoutAction, CheckoutState } from "@/pages/shop/checkout";
 
 type Props = {

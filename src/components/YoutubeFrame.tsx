@@ -1,26 +1,15 @@
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface Props {
   youtubeId: string;
 }
 
-/*
-   <iframe
-            className="h-[200%] w-[200%] border-none"
-            allowFullScreen
-            allow="autoplay; encrypted-media;"
-            title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
-            src={`https://www.youtube-nocookie.com/embed/${props.youtubeid}?autoplay=1&loop=1&mute=1&playlist=${props.youtubeid}&controls=0&fs=0`}
-            width="640"
-            height="360"
-          ></iframe>
-
-*/
-
-//https://buhalbu.com/nextjs/articles/next-js-adventures-embedded-youtube-videos
-//https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/
-//https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+/**
+ * @see https://buhalbu.com/nextjs/articles/next-js-adventures-embedded-youtube-videos
+ * @see https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+ */
 export default function YoutubeFrame({ youtubeId }: Props) {
   const [show, setShow] = useState(false);
   const wrapper = useRef<HTMLDivElement>(null);
@@ -66,3 +55,15 @@ export default function YoutubeFrame({ youtubeId }: Props) {
     </div>
   );
 }
+/*
+   <iframe
+            className="h-[200%] w-[200%] border-none"
+            allowFullScreen
+            allow="autoplay; encrypted-media;"
+            title="Rare Ford F-150 Raptor Sighting at Northwest Motorsport"
+            src={`https://www.youtube-nocookie.com/embed/${props.youtubeid}?autoplay=1&loop=1&mute=1&playlist=${props.youtubeid}&controls=0&fs=0`}
+            width="640"
+            height="360"
+          ></iframe>
+
+*/

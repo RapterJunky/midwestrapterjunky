@@ -1,8 +1,9 @@
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useId } from "react";
 
+import HiChevronRight from "@components/icons/HiChevronRight";
+import HiChevronLeft from "@components/icons/HiChevronLeft";
 import type { ResponsiveImage } from "@type/page";
 
 export type CarouselProps = {

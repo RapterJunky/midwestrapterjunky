@@ -11,13 +11,14 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import SiteTags from "@/components/SiteTags";
 
-import type { FullPageProps, NextPageWithProvider } from "@/types/page";
+import type { FullPageProps, NextPageWithProvider } from "@type/page";
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@/gql/queries/generic";
 import useSearchMeta from "@hook/useSearchMeta";
 import { fetchCachedQuery } from "@lib/cache";
 import { CartProvider } from "@hook/useCart";
 import useCatalog from "@hook/useCatalog";
-import genericSeoTags from "@/lib/utils/genericSeoTags";
+
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<FullPageProps>
@@ -130,8 +131,8 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
               {data && !error && !isLoading
                 ? data.result.map((item, i) => <ShopCard key={i} {...item} />)
                 : Array.from({ length: 15 }).map((_, i) => (
-                    <Skeleton key={i} />
-                  ))}
+                  <Skeleton key={i} />
+                ))}
             </div>
             <div className="mt-10 flex w-full justify-center">
               <ul className="list-style-none flex space-x-4">

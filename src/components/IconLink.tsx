@@ -1,6 +1,7 @@
 import Link from "next/link";
-import type { LinkWithIcon } from "@type/page";
+
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import type { LinkWithIcon } from "@type/page";
 
 const IconLink = (
   props: LinkWithIcon & { className: string; dataCy?: string }

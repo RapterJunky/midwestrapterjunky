@@ -1,7 +1,7 @@
-import { HiX } from "react-icons/hi";
 import Image from "next/image";
 import Link from "next/link";
 
+import HiX from "@components/icons/HiX";
 import IconLink from "@components/IconLink";
 import { capitlize } from "@utils/capitlize";
 

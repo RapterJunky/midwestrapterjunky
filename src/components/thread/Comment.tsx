@@ -1,4 +1,3 @@
-import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import { StructuredText } from "react-datocms/structured-text";
 import type { useSession } from "next-auth/react";
 //import dynamic from 'next/dynamic';
@@ -9,6 +8,9 @@ import usePost /*, { type CreateCommentBody }*/ from "@hook/usePost";
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
+import HiHeart from "@components/icons/HiHeart";
+import HiTrash from "@components/icons/HiTrash";
+import HiFlag from "@components/icons/HiFlag";
 import Spinner from "@components/Spinner";
 //import useComment from "@/hooks/useComment";
 

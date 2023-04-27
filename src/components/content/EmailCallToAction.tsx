@@ -2,10 +2,11 @@ import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import { HiOutlineChevronRight } from "react-icons/hi";
 
-import type { Color } from "@type/page";
+import HiOutlineChevronRight from "@components/icons/HiOutlineChevronRight";
 import { markRules } from "@lib/structuredTextRules";
+import type { Color } from "@type/page";
+
 export type EmailCallToActionProps = {
   data: StructuredTextGraphQlResponse;
   background_color: Color | null;

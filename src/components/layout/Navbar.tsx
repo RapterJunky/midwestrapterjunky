@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { HiMenu } from "react-icons/hi";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 import type { LinkWithIcon, ResponsiveImage } from "@type/page";
 import Sidenav from "@components/layout/Sidenav";
+import HiMenu from "@components/icons/HiMenu";
 import Sidebar from "@components/ui/Sidebar";
 import IconLink from "@components/IconLink";
 

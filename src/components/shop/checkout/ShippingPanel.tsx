@@ -1,6 +1,6 @@
 import AddressForm from "@components/shop/checkout/AddressForm";
-import { HiChevronLeft } from "react-icons/hi";
 import { useForm } from "react-hook-form";
+import HiChevronLeft from "@/components/icons/HiChevronLeft";
 
 import type {
   CheckoutState,

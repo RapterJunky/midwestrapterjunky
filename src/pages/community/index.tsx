@@ -7,15 +7,16 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Tab } from "@headlessui/react";
-import { HiPlus } from "react-icons/hi";
 import { serialize } from "superjson";
 import Link from "next/link";
+
 
 import CategoryCard from "@components/community/CategoryCard";
 import TopicsList from "@components/community/TopicsList";
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
+import HiPlus from "@components/icons/HiPlus";
 import SiteTags from "@components/SiteTags";
 
 import genericSeoTags from "@lib/utils/genericSeoTags";

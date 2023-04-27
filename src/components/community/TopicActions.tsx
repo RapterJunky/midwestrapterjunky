@@ -1,7 +1,9 @@
-import { HiFlag, HiHeart, HiTrash } from "react-icons/hi";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
+import HiTrash from "@components/icons/HiTrash";
+import HiHeart from "@components/icons/HiHeart";
+import HiFlag from "@components/icons/HiFlag";
 import Spinner from "@components/Spinner";
 import usePost from "@hook/usePost";
 

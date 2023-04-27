@@ -1,37 +1,28 @@
-import type {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  GetStaticPropsResult,
-  NextPage,
-} from "next";
+import type { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import type { SeoOrFaviconTag } from "react-datocms";
-import {
-  StructuredText,
-  type StructuredTextGraphQlResponse,
-} from "react-datocms/structured-text";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { HiArrowLeft } from "react-icons/hi";
 import { z } from "zod";
 
-import Navbar from "@components/layout/Navbar";
-import SiteTags from "@components/SiteTags";
-import Footer from "@components/layout/Footer";
-import Tag from "@components/blog/tag";
-import ExitPreview from "@components/ExitPreview";
+import HiArrowLeft from "@components/icons/HiArrowLeft";
 import ScrollToTop from "@components/blog/ScrollToTop";
+import ExitPreview from "@components/ExitPreview";
+import Navbar from "@components/layout/Navbar";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
+import Tag from "@components/blog/tag";
 
+import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
+import type { FullPageProps, ResponsiveImage } from "types/page";
+import ArticlesListQuery from "@query/queries/articles_list";
+import GetNextArticles from "@query/queries/next_articles";
+import { formatLocalDate } from "@lib/utils/timeFormat";
+import ArticleQuery from "@query/queries/article";
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
-import type { FullPageProps, ResponsiveImage } from "types/page";
-import { formatLocalDate } from "@lib/utils/timeFormat";
-import { renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import { DatoCMS } from "@api/gql";
-
-import ArticleQuery from "@query/queries/article";
-import GetNextArticles from "@query/queries/next_articles";
-import ArticlesListQuery from "@query/queries/articles_list";
 
 const Comments = dynamic(() => import("@components/blog/Comments"));
 

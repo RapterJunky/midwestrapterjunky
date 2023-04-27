@@ -4,8 +4,8 @@ import type {
   NextPage,
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 
 import ExitPreview from "@components/ExitPreview";

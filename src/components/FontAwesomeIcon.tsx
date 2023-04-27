@@ -6,6 +6,12 @@ interface Props extends Icon {
   fillRule?: FillRule;
   clipRule?: number | string;
   className?: string;
+  ariaHidden?: boolean,
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: string;
+  strokeLinecap?: "inherit" | "butt" | "round" | "square";
+  strokeLinejoin?: "inherit" | "round" | "miter" | "bevel";
 }
 
 /**
@@ -18,21 +24,30 @@ const SvgIcon = ({
   style,
   fillRule,
   clipRule,
-  className
+  className,
+  ariaHidden,
+  stroke,
+  strokeWidth,
+  strokeLinecap,
+  strokeLinejoin,
+  fill = "currentColor"
+
 }: React.PropsWithoutRef<Props>) => {
   return (
     <svg
+      aria-hidden={ariaHidden}
       className={className}
-      data-fa={`${prefix}-${iconName}`}
+      data-id={`${prefix}-${iconName}`}
       height="1em"
       width="1em"
+      strokeOpacity={strokeWidth}
       style={style}
-      stroke="currentColor"
-      fill="currentColor"
+      stroke={stroke}
+      fill={fill}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${icon[0]} ${icon[1]}`}
     >
-      <path fillRule={fillRule} clipRule={clipRule} d={icon[4]}></path>
+      <path strokeLinejoin={strokeLinejoin} strokeLinecap={strokeLinecap} fillRule={fillRule} clipRule={clipRule} d={icon[4]}></path>
     </svg>
   );
 };

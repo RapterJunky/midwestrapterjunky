@@ -5,21 +5,20 @@ import type {
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
-import { HiArrowRight } from "react-icons/hi";
 
-import Navbar from "@components/layout/Navbar";
-import SiteTags from "@components/SiteTags";
-import Footer from "@components/layout/Footer";
+import HiArrowRight from "@components/icons/HiArrowRight";
 import ExitPreview from "@components/ExitPreview";
+import Navbar from "@components/layout/Navbar";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
 import Tag from "@components/blog/tag";
 
-import { DatoCMS } from "@api/gql";
 import { getDescriptionTag } from "@lib/utils/description";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
-
 import type { FullPageProps } from "types/page";
-import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
+import { DatoCMS } from "@api/gql";
 
 interface BlogLatestProps extends FullPageProps {
   posts: {

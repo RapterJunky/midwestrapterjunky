@@ -5,14 +5,14 @@ import type {
   NextPage,
 } from "next";
 import { StructuredText } from "react-datocms/structured-text";
-import { HiLockClosed } from "react-icons/hi";
-import { FaThumbtack } from "react-icons/fa";
 import { serialize } from "superjson";
 import Image from "next/image";
 import { z } from "zod";
 
 import TopicActions from "@/components/community/TopicActions";
 import TopicsList from "@/components/community/TopicsList";
+import HiLockClosed from "@components/icons/HiLockClosed";
+import FaThumbtack from "@components/icons/FaThumbtack";
 import TagList from "@components/community/TagList";
 import Comments from "@components/thread/Comments";
 import Navbar from "@components/layout/Navbar";

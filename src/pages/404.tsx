@@ -1,13 +1,13 @@
 import type { GetStaticPropsResult, NextPage } from "next";
 import Link from "next/link";
 
+import FontAwesomeIcon from "@components/FontAwesomeIcon";
 import SiteTags from "@components/SiteTags";
 
 import genericSeoTags from "@lib/utils/genericSeoTags";
-import Query from "@query/queries/generic";
-import { fetchCachedQuery } from "@lib/cache";
 import type { FullPageProps } from "@type/page";
-import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import { fetchCachedQuery } from "@lib/cache";
+import Query from "@query/queries/generic";
 
 type Props = Pick<FullPageProps, "_site">;
 

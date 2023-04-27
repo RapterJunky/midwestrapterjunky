@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { HiAnnotation, HiArrowUp } from "react-icons/hi";
 
+import HiAnnotation from "@components/icons/HiAnnotation";
+import HiArrowUp from "@components/icons/HiArrowUp";
 interface Props {
   comments: boolean;
 }
@@ -25,9 +26,8 @@ const ScrollToTop = ({ comments = false }: Props) => {
 
   return (
     <div
-      className={`fixed bottom-8 right-8 hidden flex-col gap-3 ${
-        show ? "md:flex" : "md:hidden"
-      }`}
+      className={`fixed bottom-8 right-8 hidden flex-col gap-3 ${show ? "md:flex" : "md:hidden"
+        }`}
     >
       {comments ? (
         <button

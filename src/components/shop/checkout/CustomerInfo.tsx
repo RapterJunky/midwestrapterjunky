@@ -2,7 +2,8 @@ import type { CheckoutState, CheckoutAction } from "@/pages/shop/checkout";
 import { signIn, useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { RadioGroup } from "@headlessui/react";
-import { HiCheck } from "react-icons/hi";
+
+import HiCheck from "@components/icons/HiCheck";
 
 type Props = {
   next: () => void;

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { Color, Icon } from "@type/page";
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import type { Color, Icon } from "@type/page";
 
 export type SocialLinksProps = {
   sociallinks: { iconColor: Color | null; logo: Icon; link: string }[];

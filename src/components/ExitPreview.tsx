@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HiEyeOff } from "react-icons/hi";
+import HiEyeOff from "@components/icons/HiEyeOff";
 
 export default function ExitPreview() {
   return (

@@ -1,10 +1,10 @@
-import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { HiSearch } from "react-icons/hi";
-import { HiShoppingBag } from "react-icons/hi2";
+import { useRouter } from "next/router";
 
-import Sidebar from "@components/ui/Sidebar";
+import HiShoppingBag from "@components/icons/HiShoppingBag";
 import ShoppingCart from "@components/shop/ShoppingCart";
+import HiSearch from "@components/icons/HiSearch";
+import Sidebar from "@components/ui/Sidebar";
 import useCart from "@hook/useCart";
 
 const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {

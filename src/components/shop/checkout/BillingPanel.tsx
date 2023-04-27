@@ -1,8 +1,8 @@
-import { HiChevronLeft } from "react-icons/hi";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import HiChevronLeft from "@components/icons/HiChevronLeft";
 import CheckoutModal from "./CheckoutModal";
 import DiscountForm from "./DiscountForm";
 import AddressForm from "./AddressForm";
@@ -344,9 +344,8 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${
-        active ? "flex" : "hidden"
-      } flex-col items-center justify-center`}
+      className={`${active ? "flex" : "hidden"
+        } flex-col items-center justify-center`}
     >
       <CheckoutModal
         asLoading={isSubmitting}

@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HiMinus, HiPlus, HiX } from "react-icons/hi";
+
 import useCart, { type CartItem } from "@hook/useCart";
 import useFormatPrice from "@/hooks/useFormatPrice";
+import HiMinus from "@components/icons/HiMinus";
+import HiPlus from "@components/icons/HiPlus";
+import HiX from "@components/icons/HiX";
 
 const ShoppingCartItem: React.FC<{ data: CartItem; editable?: boolean }> = ({
   data,

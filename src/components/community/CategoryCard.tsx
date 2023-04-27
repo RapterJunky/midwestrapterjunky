@@ -1,7 +1,8 @@
-import { HiLockClosed } from "react-icons/hi";
-import { FaThumbtack } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+
+import HiLockClosed from "@components/icons/HiLockClosed";
+import FaThumbtack from "@components/icons/FaThumbtack";
 import TagList from "./TagList";
 
 type Props = {

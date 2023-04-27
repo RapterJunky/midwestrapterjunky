@@ -5,17 +5,16 @@ import type {
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
+import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import Calendar from "@components/Calendar";
-import ExitPreview from "@components/ExitPreview";
 import SiteTags from "@components/SiteTags";
 
 import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
-import { DatoCMS } from "@api/gql";
-import Query from "@query/queries/calendar";
-
 import type { FullPageProps } from "types/page";
+import Query from "@query/queries/calendar";
+import { DatoCMS } from "@api/gql";
 
 interface CalendarProps extends FullPageProps {
   allEvents: {

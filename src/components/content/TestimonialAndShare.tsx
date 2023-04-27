@@ -1,13 +1,16 @@
-import Image from "next/image";
 import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
 import { Parallax, Background } from "react-parallax";
-import { HiStar } from "react-icons/hi";
+import Image from "next/image";
+
+import HiStar from "@components/icons/HiStar";
 import Button from "@components/Button";
-import { markRules } from "@lib/structuredTextRules";
+
 import type { Color, ResponsiveImage } from "@type/page";
+import { markRules } from "@lib/structuredTextRules";
+
 
 export type TestimonialAndShareProps = {
   description: StructuredTextGraphQlResponse;

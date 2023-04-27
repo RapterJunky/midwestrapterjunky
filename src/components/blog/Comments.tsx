@@ -1,7 +1,9 @@
-import Script from "next/script";
 import { useState, useCallback } from "react";
+import Script from "next/script";
 
 /**
+ * @deprecated Should be replaced with in house version
+ * 
  * Uses facebook comments plugin.
  * @see https://developers.facebook.com/docs/plugins/comments/
  *

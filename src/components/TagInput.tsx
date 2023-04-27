@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HiX } from "react-icons/hi";
+import HiX from "@components/icons/HiX";
 
 type Props = {
   max?: number;
@@ -28,7 +28,9 @@ const TagBtn: React.FC<{
   );
 };
 
-///https://github.com/i-like-robots/react-tags/blob/main/lib/ReactTags.js
+/**
+ * @see https://github.com/i-like-robots/react-tags/blob/main/lib/ReactTags.js
+ * */
 const TagInput: React.FC<Props> = ({
   setError,
   value,
@@ -73,17 +75,17 @@ const TagInput: React.FC<Props> = ({
                     exists
                       ? "pattern"
                       : minLength
-                      ? "minLength"
-                      : maxItems
-                      ? "max"
-                      : "maxLength",
+                        ? "minLength"
+                        : maxItems
+                          ? "max"
+                          : "maxLength",
                     exists
                       ? "Tag already exists."
                       : minLength
-                      ? "Tag must be longer then 3 characters."
-                      : maxItems
-                      ? `There can only be ${max} tags`
-                      : "Tag must be less then 12 characters"
+                        ? "Tag must be longer then 3 characters."
+                        : maxItems
+                          ? `There can only be ${max} tags`
+                          : "Tag must be less then 12 characters"
                   );
                   return;
                 }

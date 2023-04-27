@@ -9,7 +9,6 @@ import {
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
 import type { SeoOrFaviconTag } from "react-datocms";
-import { HiArrowLeft } from "react-icons/hi";
 import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +16,7 @@ import Head from "next/head";
 import { z } from "zod";
 
 import StoreButtonLink from "@components/StoreButtonLink";
+import HiArrowLeft from "@components/icons/HiArrowLeft";
 import ScrollToTop from "@components/blog/ScrollToTop";
 import ExitPreview from "@components/ExitPreview";
 import Footer from "@components/layout/Footer";
@@ -195,8 +195,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

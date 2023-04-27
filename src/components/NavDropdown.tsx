@@ -1,8 +1,9 @@
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { HiMenu } from "react-icons/hi";
-import IconLink from "@components/IconLink";
+
 import type { LinkWithIcon } from "types/page";
+import HiMenu from "@components/icons/HiMenu";
+import IconLink from "@components/IconLink";
 
 interface Props {
   links: LinkWithIcon[];

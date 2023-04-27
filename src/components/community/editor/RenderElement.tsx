@@ -6,9 +6,11 @@ import {
   useSlateStatic,
 } from "slate-react";
 import type { Block } from "datocms-structured-text-slate-utils";
-import { HiLink, HiTrash } from "react-icons/hi";
 import { Transforms } from "slate";
 import Image from "next/image";
+
+import HiTrash from "@components/icons/HiTrash";
+import HiLink from "@components/icons/HiLink";
 
 type SlateBlockImage = Block & { src: string; width: number; height: number };
 

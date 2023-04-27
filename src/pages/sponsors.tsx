@@ -13,8 +13,8 @@ import SiteTags from "@components/SiteTags";
 import ExitPreview from "@components/ExitPreview";
 
 import type { FullPageProps, ResponsiveImage } from "types/page";
-import { DatoCMS } from "@api/gql";
 import SponsorsQuery from "@query/queries/sponsors";
+import { DatoCMS } from "@api/gql";
 
 interface PageProps extends FullPageProps {
   sponsor: {

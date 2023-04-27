@@ -2,8 +2,8 @@ import { useSession, signIn } from "next-auth/react";
 import dynamic from "next/dynamic";
 
 import Comment from "@components/thread/Comment";
-import usePost from "@hook/usePost";
 import SkeletonComment from "./SkeletonComment";
+import usePost from "@hook/usePost";
 
 const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
   loading: () => (
@@ -54,8 +54,8 @@ const Comments: React.FC = () => {
         ) : null}
         {!isLoading && comments
           ? comments?.result.map((comment) => (
-              <Comment key={comment.id} comment={comment} session={session} />
-            ))
+            <Comment key={comment.id} comment={comment} session={session} />
+          ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

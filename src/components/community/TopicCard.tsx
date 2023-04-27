@@ -1,7 +1,7 @@
-import { HiLockClosed } from "react-icons/hi2";
-import { FaThumbtack } from "react-icons/fa";
 import Link from "next/link";
 
+import HiLockClosed from "@components/icons/HiLockClosed";
+import FaThumbtack from "@components/icons/FaThumbtack";
 import TagList from "@components/community/TagList";
 import useRelativeTime from "@hook/useRelativeTime";
 

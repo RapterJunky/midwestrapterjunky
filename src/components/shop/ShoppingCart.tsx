@@ -1,9 +1,10 @@
-import { HiShoppingBag, HiOutlineShoppingBag } from "react-icons/hi2";
-import { HiX } from "react-icons/hi";
 import Link from "next/link";
 
+import HiOutlineShoppingBag from "@components/icons/HiOutlineShoppingBag";
 import ShoppingCartItem from "@components/shop/ShoppingCartItem";
+import HiShoppingBag from "@components/icons/HiShoppingBag";
 import useFormatPrice from "@hook/useFormatPrice";
+import HiX from "@components/icons/HiX";
 import useCart from "@hook/useCart";
 
 type Props = {
