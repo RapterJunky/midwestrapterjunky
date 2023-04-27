@@ -5,23 +5,24 @@ interface Props extends Icon {
   style?: React.CSSProperties;
   fillRule?: FillRule;
   clipRule?: number | string;
+  className?: string;
 }
-
-
 
 /**
  * @see https://github.com/tomphill/datocms-plugin-fontawesome
  */
-const FontAwesomeIcon = ({
+const SvgIcon = ({
   prefix,
   iconName,
   icon,
   style,
   fillRule,
-  clipRule
+  clipRule,
+  className
 }: React.PropsWithoutRef<Props>) => {
   return (
     <svg
+      className={className}
       data-fa={`${prefix}-${iconName}`}
       height="1em"
       width="1em"
@@ -36,4 +37,4 @@ const FontAwesomeIcon = ({
   );
 };
 
-export default FontAwesomeIcon;
+export default SvgIcon;
