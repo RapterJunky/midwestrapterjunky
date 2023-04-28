@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import Button from "@components/Button";
+import Button from "@/components/ui/Button";
 
 export default function StoreButtonLink(props: { value: string }) {
   const { data, error } = useSWR<Storefront.Product[], Response, string>(

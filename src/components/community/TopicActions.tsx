@@ -4,7 +4,7 @@ import { useState } from "react";
 import HiTrash from "@components/icons/HiTrash";
 import HiHeart from "@components/icons/HiHeart";
 import HiFlag from "@components/icons/HiFlag";
-import Spinner from "@components/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import usePost from "@hook/usePost";
 
 const TopicActions: React.FC<{

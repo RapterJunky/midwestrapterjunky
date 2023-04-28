@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
-import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
 import SiteTags from "@components/SiteTags";
 
 import genericSeoTags from "@lib/utils/genericSeoTags";

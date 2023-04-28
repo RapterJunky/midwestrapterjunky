@@ -7,7 +7,7 @@ import type { LinkWithIcon, ResponsiveImage } from "@type/page";
 import Sidenav from "@components/layout/Sidenav";
 import HiMenu from "@components/icons/HiMenu";
 import Sidebar from "@components/ui/Sidebar";
-import IconLink from "@components/IconLink";
+import IconLink from "@/components/ui/IconLink";
 
 export interface NavProps {
   navbar: {
@@ -29,7 +29,7 @@ const navbarMode = {
   none: "text-black bg-opacity-100",
 };
 
-const NavDropdown = dynamic(() => import("@components/NavDropdown"));
+const NavDropdown = dynamic(() => import("@/components/ui/NavDropdown"));
 
 const Navbar: React.FC<NavbarProps> = ({
   logo,

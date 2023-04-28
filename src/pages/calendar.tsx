@@ -5,7 +5,7 @@ import type {
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
-import ExitPreview from "@components/ExitPreview";
+import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import Calendar from "@components/Calendar";

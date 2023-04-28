@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import type { LinkWithIcon } from "types/page";
 import HiMenu from "@components/icons/HiMenu";
-import IconLink from "@components/IconLink";
+import IconLink from "@/components/ui/IconLink";
 
 interface Props {
   links: LinkWithIcon[];

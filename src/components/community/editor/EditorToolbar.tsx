@@ -15,7 +15,7 @@ import {
   type HeadingLevel,
   getActiveHeading,
 } from "@/lib/utils/editor/textEditorUtils";
-import SvgIcon from "@components/FontAwesomeIcon";
+import SvgIcon from "@/components/ui/FontAwesomeIcon";
 
 const FaBold = () => (
   <SvgIcon

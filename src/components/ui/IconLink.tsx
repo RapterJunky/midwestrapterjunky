@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
 import type { LinkWithIcon } from "@type/page";
 
 const IconLink = (

@@ -8,7 +8,7 @@ import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import type { SeoOrFaviconTag } from "react-datocms";
+import type { SeoOrFavico@/components/ui / ExitPreviewcms";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";

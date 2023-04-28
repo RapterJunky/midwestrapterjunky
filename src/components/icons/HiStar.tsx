@@ -1,4 +1,4 @@
-import SvgIcon from "@components/FontAwesomeIcon";
+import SvgIcon from "@/components/ui/FontAwesomeIcon";
 
 const HiStar: React.FC<{ className?: string }> = ({ className }) => (
   <SvgIcon

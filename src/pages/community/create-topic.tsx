@@ -15,8 +15,8 @@ import TextEditor from "@components/community/editor/TextEditor";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import TagInput from "@components/TagInput";
-import Spinner from "@/components/Spinner";
+import TagInput from "@/components/inputs/TagInput";
+import Spinner from "@/components/ui/Spinner";
 
 import extractSlateImages from "@lib/utils/editor/extractSlateImages";
 import { isEditorEmpty } from "@lib/utils/editor/editorActions";
@@ -253,10 +253,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,

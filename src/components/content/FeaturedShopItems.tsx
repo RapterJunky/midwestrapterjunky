@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
-import Spinner from "@components/Spinner";
+import Spinner from "@/components/ui/Spinner";
 
 export interface FeatureShopItems {
   items: { item: { value: string } }[];

@@ -3,7 +3,7 @@ import type { Descendant } from "slate";
 import { useId } from "react";
 
 import TextEditor from "@components/community/editor/TextEditor";
-import Spinner from "@components/Spinner";
+import Spinner from "@/components/ui/Spinner";
 
 import { isEditorEmpty, resetEditor } from "@lib/utils/editor/editorActions";
 import type { CreateCommentBody } from "@hook/usePost";

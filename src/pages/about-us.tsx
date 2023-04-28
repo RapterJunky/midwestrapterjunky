@@ -11,7 +11,7 @@ import type { SeoOrFaviconTag } from "react-datocms";
 import Image from "next/image";
 
 import ModuleContent from "@components/layout/ModuleContent";
-import ExitPreview from "@components/ExitPreview";
+import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";

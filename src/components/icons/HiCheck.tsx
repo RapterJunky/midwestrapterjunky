@@ -1,4 +1,4 @@
-import SvgIcon from "@components/FontAwesomeIcon";
+import SvgIcon from "@/components/ui/FontAwesomeIcon";
 
 const HiCheck: React.FC<{ className?: string }> = ({ className }) => (
   <SvgIcon

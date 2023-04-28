@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import HiX from "@components/icons/HiX";
-import IconLink from "@components/IconLink";
+import IconLink from "@/components/ui/IconLink";
 import { capitlize } from "@utils/capitlize";
 
 import type { LinkWithIcon, ResponsiveImage } from "@type/page";

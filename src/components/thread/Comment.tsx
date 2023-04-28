@@ -11,7 +11,7 @@ import { renderBlock } from "@lib/structuredTextRules";
 import HiHeart from "@components/icons/HiHeart";
 import HiTrash from "@components/icons/HiTrash";
 import HiFlag from "@components/icons/HiFlag";
-import Spinner from "@components/Spinner";
+import Spinner from "@/components/ui/Spinner";
 //import useComment from "@/hooks/useComment";
 
 type Session = ReturnType<typeof useSession>;

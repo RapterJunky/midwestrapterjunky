@@ -1,5 +1,5 @@
 import Link from "next/link";
-import FontAwesomeIcon from "@components/FontAwesomeIcon";
+import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
 import type { Color, Icon } from "@type/page";
 
 export type SocialLinksProps = {

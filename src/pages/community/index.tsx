@@ -13,7 +13,7 @@ import Link from "next/link";
 
 import CategoryCard from "@components/community/CategoryCard";
 import TopicsList from "@components/community/TopicsList";
-import ExitPreview from "@components/ExitPreview";
+import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import HiPlus from "@components/icons/HiPlus";

@@ -3,7 +3,7 @@ import {
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
 import { markRules } from "@lib/structuredTextRules";
-import Button from "@components/Button";
+import Button from "@/components/ui/Button";
 
 import type { Color } from "@type/page";
 import YoutubeFrame from "@components/YoutubeFrame";

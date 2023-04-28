@@ -6,7 +6,7 @@ import { Parallax, Background } from "react-parallax";
 import Image from "next/image";
 
 import HiStar from "@components/icons/HiStar";
-import Button from "@components/Button";
+import Button from "@/components/ui/Button";
 
 import type { Color, ResponsiveImage } from "@type/page";
 import { markRules } from "@lib/structuredTextRules";
