@@ -145,7 +145,7 @@ export const Threads: React.FC<{
           Create Category
         </Button>
       }
-      title="categories"
+      title="Categories"
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
@@ -171,48 +171,48 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                  <li
-                    className="flex items-center gap-2 bg-white p-4 shadow"
-                    key={value.id}
-                  >
-                    <div>
-                      <Image
-                        unoptimized
-                        className="rounded-full"
-                        src={value.image}
-                        alt="Category Image"
-                        width={40}
-                        height={40}
-                      />
+                <li
+                  className="flex items-center gap-2 bg-white p-4 shadow"
+                  key={value.id}
+                >
+                  <div>
+                    <Image
+                      unoptimized
+                      className="rounded-full"
+                      src={value.image}
+                      alt="Category Image"
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                  <div className="mr-auto">
+                    <h1 className="text-xl font-bold">{value.name}</h1>
+                    <div className="flex flex-wrap gap-1">
+                      {value.tags?.map((tag, i) => (
+                        <span
+                          className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                          key={i}
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                    <div className="mr-auto">
-                      <h1 className="text-xl font-bold">{value.name}</h1>
-                      <div className="flex flex-wrap gap-1">
-                        {value.tags?.map((tag, i) => (
-                          <span
-                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
-                            key={i}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <p>{value.description}</p>
-                    </div>
-                    <div className="flex gap-dato-m text-white">
-                      <Button
-                        onClick={() => editModel(value)}
-                        rightIcon={<FaEdit style={{ fill: "white" }} />}
-                        buttonType="primary"
-                      />
-                      <Button
-                        onClick={() => deleteModel(value.id)}
-                        rightIcon={<FaTrash style={{ fill: "white" }} />}
-                        buttonType="negative"
-                      />
-                    </div>
-                  </li>
-                ))
+                    <p>{value.description}</p>
+                  </div>
+                  <div className="flex gap-dato-m text-white">
+                    <Button
+                      onClick={() => editModel(value)}
+                      rightIcon={<FaEdit style={{ fill: "white" }} />}
+                      buttonType="primary"
+                    />
+                    <Button
+                      onClick={() => deleteModel(value.id)}
+                      rightIcon={<FaTrash style={{ fill: "white" }} />}
+                      buttonType="negative"
+                    />
+                  </div>
+                </li>
+              ))
               : null}
           </ul>
           <hr className="mt-dato-m" />
