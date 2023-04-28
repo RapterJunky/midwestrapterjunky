@@ -344,8 +344,9 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${active ? "flex" : "hidden"
-        } flex-col items-center justify-center`}
+      className={`${
+        active ? "flex" : "hidden"
+      } flex-col items-center justify-center`}
     >
       <CheckoutModal
         asLoading={isSubmitting}

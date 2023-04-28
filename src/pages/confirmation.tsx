@@ -12,9 +12,8 @@ import type { FullPageProps } from "types/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
 
-
 interface Props extends FullPageProps {
-  seo: SeoOrFaviconTag[]
+  seo: SeoOrFaviconTag[];
 }
 
 export async function getStaticProps() {
@@ -23,7 +22,11 @@ export async function getStaticProps() {
     props: {
       ...data,
       preview: false,
-      seo: genericSeoTags({ title: "Confirmation", robots: false, description: "Confirmation page" }),
+      seo: genericSeoTags({
+        title: "Confirmation",
+        robots: false,
+        description: "Confirmation page",
+      }),
     },
   };
 }
@@ -39,9 +42,7 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[_site.faviconMetaTags, seo]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar mode="none" {...navbar} />
       <main className="flex flex-1 items-center justify-center">
         <div className="prose text-center md:prose-lg">
@@ -65,12 +66,12 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                  (shop_receipt_url.startsWith(
-                    "https://squareupsandbox.com/receipt"
-                  ) ||
-                    shop_receipt_url.startsWith(
-                      "https://squareup.com/receipt"
-                    )) ? (
+                (shop_receipt_url.startsWith(
+                  "https://squareupsandbox.com/receipt"
+                ) ||
+                  shop_receipt_url.startsWith(
+                    "https://squareup.com/receipt"
+                  )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
                     target="_blank"

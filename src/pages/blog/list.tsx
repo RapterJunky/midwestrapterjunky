@@ -46,7 +46,7 @@ export const getStaticProps = async (
       seo: genericSeoTags({
         title: "Articles",
         description: "All of Midwest Raptor Junkies published articles.",
-      })
+      }),
     },
   };
 };
@@ -60,12 +60,7 @@ const BlogList: NextPage<Props> = ({ preview, navbar, _site, seo }) => {
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <header>
         <Navbar {...navbar} mode="none" />
       </header>

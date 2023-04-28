@@ -37,6 +37,6 @@ const rules: StructuredTextCustomMark[] = [
       lineHeight: "2.25rem" /* 36px */,
     },
   },
-]
+];
 
 export default rules;

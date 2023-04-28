@@ -11,7 +11,6 @@ import Button from "@components/Button";
 import type { Color, ResponsiveImage } from "@type/page";
 import { markRules } from "@lib/structuredTextRules";
 
-
 export type TestimonialAndShareProps = {
   description: StructuredTextGraphQlResponse;
   bgImage: ResponsiveImage;

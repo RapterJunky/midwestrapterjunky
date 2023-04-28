@@ -87,6 +87,6 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     default:
       throw createHttpError.MethodNotAllowed();
   }
-}
+};
 
 export default handle;

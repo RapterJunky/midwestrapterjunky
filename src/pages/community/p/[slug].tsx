@@ -29,7 +29,6 @@ import { fetchCachedQuery } from "@lib/cache";
 import { PostProvider } from "@hook/usePost";
 import prisma from "@api/prisma";
 
-
 interface Props extends FullPageProps {
   seo: SeoOrFaviconTag[];
   post: {
@@ -112,7 +111,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: post.name,
         description: post.name,
-      })
+      }),
     },
   };
 };
@@ -120,12 +119,7 @@ export const getStaticProps = async ({
 const CommunityPost: NextPage<Props> = ({ navbar, _site, post, seo }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar {...navbar} mode="only-scroll" />
       <PostProvider postId={post.id}>
         <main className="mt-20 flex flex-1 flex-col items-center">

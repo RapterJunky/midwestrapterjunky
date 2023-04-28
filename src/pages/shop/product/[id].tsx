@@ -34,7 +34,7 @@ import useCatalog from "@hook/useCatalog";
 import { logger } from "@lib/logger";
 
 interface Props extends FullPageProps {
-  seo: SeoOrFaviconTag[]
+  seo: SeoOrFaviconTag[];
   product: {
     id: string;
     updatedAt?: string;
@@ -136,8 +136,9 @@ export const getStaticProps = async (
   if (!images.length) {
     images = [
       {
-        url: `https://api.dicebear.com/6.x/icons/png?seed=${itemData?.name ?? "PH"
-          }`,
+        url: `https://api.dicebear.com/6.x/icons/png?seed=${
+          itemData?.name ?? "PH"
+        }`,
         alt: "Product Image",
       },
     ];
@@ -201,7 +202,12 @@ export const getStaticProps = async (
   };
 };
 
-const Product: NextPageWithProvider<Props> = ({ _site, navbar, product, seo }) => {
+const Product: NextPageWithProvider<Props> = ({
+  _site,
+  navbar,
+  product,
+  seo,
+}) => {
   const { addToCart, openCart } = useCart();
   const { data, isLoading } = useCatalog({
     category: product.category?.id ?? undefined,
@@ -256,12 +262,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product, seo }) =
 
   return (
     <div className="flex flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar {...navbar} mode="none" />
       <main
         className="flex w-full flex-grow flex-col"
@@ -458,8 +459,8 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product, seo }) =
                 {stockLoading
                   ? "Loading..."
                   : inStock
-                    ? "Add to Cart"
-                    : "Out of Stock"}
+                  ? "Add to Cart"
+                  : "Out of Stock"}
               </button>
             </div>
           </form>
@@ -471,35 +472,35 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product, seo }) =
             {!data || isLoading
               ? null
               : data.result.map((item) => (
-                <div
-                  className="border border-gray-200 bg-gray-100"
-                  key={item.id}
-                >
-                  <Link
-                    href={`/shop/product/${item.id}`}
-                    aria-label={item.name}
-                    className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
+                  <div
+                    className="border border-gray-200 bg-gray-100"
+                    key={item.id}
                   >
-                    <div className="flex h-full w-full items-center justify-center overflow-hidden">
-                      <Image
-                        className="h-full w-full object-cover"
-                        src={
-                          item.image?.url ??
-                          `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
-                        }
-                        alt={item.image?.alt ?? "Product Image"}
-                        height={540}
-                        width={540}
-                        sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
-                      />
+                    <Link
+                      href={`/shop/product/${item.id}`}
+                      aria-label={item.name}
+                      className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
+                    >
+                      <div className="flex h-full w-full items-center justify-center overflow-hidden">
+                        <Image
+                          className="h-full w-full object-cover"
+                          src={
+                            item.image?.url ??
+                            `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
+                          }
+                          alt={item.image?.alt ?? "Product Image"}
+                          height={540}
+                          width={540}
+                          sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
+                        />
+                      </div>
+                    </Link>
+                    <div className="flex w-full justify-between">
+                      <span className="line-clamp-1">{item.name}</span>
+                      <span>{item.price}</span>
                     </div>
-                  </Link>
-                  <div className="flex w-full justify-between">
-                    <span className="line-clamp-1">{item.name}</span>
-                    <span>{item.price}</span>
                   </div>
-                </div>
-              ))}
+                ))}
           </div>
         </section>
       </main>

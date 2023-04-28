@@ -22,7 +22,7 @@ import type { FullPageProps } from "types/page";
 import { DatoCMS } from "@api/gql";
 
 interface BlogLatestProps extends FullPageProps {
-  seo: SeoOrFaviconTag[]
+  seo: SeoOrFaviconTag[];
   posts: {
     slug: string;
     publishedAt: string | null;
@@ -50,8 +50,8 @@ export const getStaticProps = async (
       preview: ctx?.preview ?? false,
       seo: genericSeoTags({
         title: "Blog Lastest",
-        description: "Midwest Raptor Junkies latest published articles."
-      })
+        description: "Midwest Raptor Junkies latest published articles.",
+      }),
     },
     revalidate: REVAILDATE_IN_2H,
   };
@@ -62,16 +62,11 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   navbar,
   preview,
   posts,
-  seo
+  seo,
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <header>
         <Navbar {...navbar} mode="none" />
       </header>

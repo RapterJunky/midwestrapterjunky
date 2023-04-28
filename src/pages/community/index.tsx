@@ -92,14 +92,20 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: "Community",
         description: "Midwest Raptor Junkies Community Hub",
-      })
+      }),
     },
   };
 };
 
 const tab = ["categories", "latest", "top"];
 
-const Community: NextPage<Props> = ({ _site, navbar, preview, categories, seo }) => {
+const Community: NextPage<Props> = ({
+  _site,
+  navbar,
+  preview,
+  categories,
+  seo,
+}) => {
   const [index, setIndex] = useState(0);
   const session = useSession();
   const router = useRouter();
@@ -121,12 +127,7 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories, seo })
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar {...navbar} mode="only-scroll" />
       <main className="mt-28 flex flex-1 flex-col items-center">
         <div className="container mb-4 flex max-w-6xl flex-col justify-center px-2">

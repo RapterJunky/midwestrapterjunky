@@ -19,7 +19,6 @@ import useFormatPrice from "@hook/useFormatPrice";
 import { fetchCachedQuery } from "@lib/cache";
 import useModRouter from "@hook/useModRouter";
 
-
 export type Address = {
   firstname: string;
   lastname: string;
@@ -68,7 +67,7 @@ export async function getStaticProps() {
         title: "Checkout",
         robots: false,
         description: "Midwest Raptor Junkies shop checkout.",
-      })
+      }),
     },
   };
 }
@@ -130,10 +129,9 @@ const checkoutReducer = (
 
 //https://bootsnipp.com/snippets/ypqoW
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
-const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoOrFaviconTag[] }> = ({
-  _site,
-  seo
-}) => {
+const Checkout: NextPageWithProvider<
+  Omit<FullPageProps, "navbar"> & { seo: SeoOrFaviconTag[] }
+> = ({ _site, seo }) => {
   const [checkoutState, dispatch] = useReducer(checkoutReducer, {
     completed: {
       shipping: false,
@@ -191,12 +189,7 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoO
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <div className="flex flex-1 justify-center">
         <div className="container h-full max-w-6xl">
           <main className="grid flex-1 grid-cols-1 lg:grid-cols-3">
@@ -297,8 +290,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoO
                         {isLoading
                           ? "Calculating..."
                           : error
-                            ? "Failed to calculate."
-                            : formatPrice(
+                          ? "Failed to calculate."
+                          : formatPrice(
                               Number(order?.totalDiscountMoney?.amount)
                             )}
                       </span>
@@ -310,8 +303,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoO
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(Number(order?.totalTaxMoney?.amount))}
+                        ? "Failed to calculate."
+                        : formatPrice(Number(order?.totalTaxMoney?.amount))}
                     </span>
                   </li>
                   <li className="flex justify-between py-1">
@@ -320,8 +313,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoO
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(
+                        ? "Failed to calculate."
+                        : formatPrice(
                             Number(order?.totalServiceChargeMoney?.amount)
                           )}
                     </span>
@@ -335,8 +328,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoO
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(Number(order?.netAmountDueMoney?.amount))}
+                        ? "Failed to calculate."
+                        : formatPrice(Number(order?.netAmountDueMoney?.amount))}
                     </span>
                   </span>
                 </div>

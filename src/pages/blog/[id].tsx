@@ -1,5 +1,13 @@
-import type { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
-import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+import type {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
 import type { SeoOrFaviconTag } from "react-datocms";
 import dynamic from "next/dynamic";
 import Image from "next/image";

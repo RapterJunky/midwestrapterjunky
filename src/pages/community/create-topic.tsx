@@ -27,7 +27,6 @@ import { fetchCachedQuery } from "@lib/cache";
 import useModRouter from "@hook/useModRouter";
 import prisma from "@api/prisma";
 
-
 type DialogData = {
   open: boolean;
   mode: "loading" | "message";
@@ -43,7 +42,7 @@ type FormState = {
 };
 
 interface Props extends FullPageProps {
-  seo: SeoOrFaviconTag[]
+  seo: SeoOrFaviconTag[];
   categories: {
     id: number;
     tags: PrismaJson.Tags | null;
@@ -75,7 +74,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: "Create Topic",
         description: "Create a new topic",
-      })
+      }),
     },
   };
 };
@@ -254,10 +253,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-            ? error.cause === "MAX_IMAGES"
-              ? error.message
-              : ""
-            : "";
+          ? error.cause === "MAX_IMAGES"
+            ? error.message
+            : ""
+          : "";
 
       setDialog({
         open: true,
@@ -270,12 +269,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar {...navbar} mode="none" />
       <CreateTopicDialog
         data={dialog}

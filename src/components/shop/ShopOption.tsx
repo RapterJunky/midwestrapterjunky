@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useId } from "react";
 import type { UrlObject } from "url";
 import Link from "next/link";
 
-import HiChevronDown from "@components/icons/HiChevronDown"
+import HiChevronDown from "@components/icons/HiChevronDown";
 import useSearchMeta from "@hook/useSearchMeta";
 
 type Options = {
@@ -38,8 +38,9 @@ const ShopOption: React.FC<Options> = ({
   }, [open]);
 
   const selected = meta[option]
-    ? `${selectedName}: ${data.find((value) => value.id === meta[option])?.name ?? "All"
-    }`
+    ? `${selectedName}: ${
+        data.find((value) => value.id === meta[option])?.name ?? "All"
+      }`
     : name;
 
   return (
@@ -68,8 +69,9 @@ const ShopOption: React.FC<Options> = ({
           <div role="menu" aria-orientation="vertical" aria-labelledby={id}>
             <ul>
               <li
-                className={`hover:bg-accent-1 hover:text-accent-8 focus:bg-accent-1 focus:text-accent-8 block text-sm leading-5 text-zinc-600 focus:outline-none lg:text-base lg:font-bold lg:tracking-wide lg:no-underline lg:hover:bg-transparent ${!meta[option] ? "underline" : ""
-                  }`}
+                className={`hover:bg-accent-1 hover:text-accent-8 focus:bg-accent-1 focus:text-accent-8 block text-sm leading-5 text-zinc-600 focus:outline-none lg:text-base lg:font-bold lg:tracking-wide lg:no-underline lg:hover:bg-transparent ${
+                  !meta[option] ? "underline" : ""
+                }`}
               >
                 <Link
                   className="block px-4 py-2 lg:mx-4 lg:my-2 lg:inline-block lg:p-0"
@@ -81,8 +83,9 @@ const ShopOption: React.FC<Options> = ({
               {data.map((value, i) => (
                 <li
                   key={i}
-                  className={`hover:bg-accent-1 focus:bg-accent-1 focus:text-accent-8 block text-sm leading-5 text-zinc-600 hover:text-zinc-900 focus:outline-none lg:hover:bg-transparent ${meta[option] === value.id ? "underline" : ""
-                    }`}
+                  className={`hover:bg-accent-1 focus:bg-accent-1 focus:text-accent-8 block text-sm leading-5 text-zinc-600 hover:text-zinc-900 focus:outline-none lg:hover:bg-transparent ${
+                    meta[option] === value.id ? "underline" : ""
+                  }`}
                 >
                   <Link
                     className="block px-4 py-2 lg:mx-4 lg:my-2 lg:inline-block lg:p-0"

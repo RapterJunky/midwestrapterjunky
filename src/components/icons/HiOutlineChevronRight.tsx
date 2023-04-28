@@ -1,6 +1,9 @@
-import SvgIcon from "@components/FontAwesomeIcon"
+import SvgIcon from "@components/FontAwesomeIcon";
 
-const HiOutlineChevronRight: React.FC<{ className?: string }> = ({ className }) => <SvgIcon
+const HiOutlineChevronRight: React.FC<{ className?: string }> = ({
+  className,
+}) => (
+  <SvgIcon
     className={className}
     ariaHidden
     strokeWidth="2"
@@ -12,6 +15,8 @@ const HiOutlineChevronRight: React.FC<{ className?: string }> = ({ className }) 
     strokeLinejoin="round"
     prefix="hi"
     iconName="outlinechevronright"
-    icon={[24, 24, [], "", "M9 5l7 7-7 7"]} />
+    icon={[24, 24, [], "", "M9 5l7 7-7 7"]}
+  />
+);
 
 export default HiOutlineChevronRight;

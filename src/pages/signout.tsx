@@ -9,7 +9,9 @@ import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 
-type Props = Omit<FullPageProps, "navbar" | "preview"> & { seo: SeoOrFaviconTag[] };
+type Props = Omit<FullPageProps, "navbar" | "preview"> & {
+  seo: SeoOrFaviconTag[];
+};
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
@@ -24,7 +26,7 @@ export const getStaticProps = async (): Promise<
       seo: genericSeoTags({
         title: "Signout",
         robots: false,
-        description: "Signout page for Midwest Raptor Junkies."
+        description: "Signout page for Midwest Raptor Junkies.",
       }),
       _site: data._site,
     },
@@ -33,12 +35,7 @@ export const getStaticProps = async (): Promise<
 const SignOut: NextPage<Props> = ({ _site, seo }) => {
   return (
     <div className="flex h-full items-center justify-center bg-neutral-200">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <div className="block max-w-sm rounded-lg bg-white p-6 shadow-lg">
         <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800">
           Signout

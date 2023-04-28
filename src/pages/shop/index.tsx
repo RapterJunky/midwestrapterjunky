@@ -20,10 +20,11 @@ import { fetchCachedQuery } from "@lib/cache";
 import { CartProvider } from "@hook/useCart";
 import useCatalog from "@hook/useCatalog";
 
-
 type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
 
-export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps = async (): Promise<
+  GetStaticPropsResult<Props>
+> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
     GenericPageQuery
@@ -35,8 +36,8 @@ export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => 
       seo: genericSeoTags({
         title: "Shop",
         description: "Midwest Ratpor Junkies shop.",
-      })
-    }
+      }),
+    },
   };
 };
 
@@ -72,12 +73,7 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
 
   return (
     <div className="flex h-full flex-col">
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <Navbar mode="none" {...navbar} />
       <ShopNavbar />
       <main className="flex w-full flex-grow flex-col items-center px-4">
@@ -135,8 +131,8 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
               {data && !error && !isLoading
                 ? data.result.map((item, i) => <ShopCard key={i} {...item} />)
                 : Array.from({ length: 15 }).map((_, i) => (
-                  <Skeleton key={i} />
-                ))}
+                    <Skeleton key={i} />
+                  ))}
             </div>
             <div className="mt-10 flex w-full justify-center">
               <ul className="list-style-none flex space-x-4">

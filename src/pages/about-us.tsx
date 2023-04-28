@@ -1,5 +1,12 @@
-import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
-import type { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
+import {
+  StructuredText,
+  type StructuredTextGraphQlResponse,
+} from "react-datocms/structured-text";
+import type {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  NextPage,
+} from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 import Image from "next/image";
 
@@ -9,8 +16,16 @@ import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
 
-import { markRules, renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
-import type { FullPageProps, ModulerContent, ResponsiveImage } from "types/page";
+import {
+  markRules,
+  renderBlock,
+  renderInlineRecord,
+} from "@lib/structuredTextRules";
+import type {
+  FullPageProps,
+  ModulerContent,
+  ResponsiveImage,
+} from "types/page";
 import about_us from "@query/queries/about_us";
 import { DatoCMS } from "@api/gql";
 
