@@ -2,12 +2,12 @@ import { useState } from "react";
 import HiX from "@components/icons/HiX";
 
 type Props = {
-  max?: number;
   setError: (type: string, message: string) => void;
-  value: string[];
-  clearError: () => void;
   onChange: (value: string[]) => void;
+  clearError: () => void;
   className?: string;
+  value: string[];
+  max?: number;
 };
 
 const TagBtn: React.FC<{
@@ -75,17 +75,17 @@ const TagInput: React.FC<Props> = ({
                     exists
                       ? "pattern"
                       : minLength
-                      ? "minLength"
-                      : maxItems
-                      ? "max"
-                      : "maxLength",
+                        ? "minLength"
+                        : maxItems
+                          ? "max"
+                          : "maxLength",
                     exists
                       ? "Tag already exists."
                       : minLength
-                      ? "Tag must be longer then 3 characters."
-                      : maxItems
-                      ? `There can only be ${max} tags`
-                      : "Tag must be less then 12 characters"
+                        ? "Tag must be longer then 3 characters."
+                        : maxItems
+                          ? `There can only be ${max} tags`
+                          : "Tag must be less then 12 characters"
                   );
                   return;
                 }

@@ -7,14 +7,14 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/community")) {
     const token = await getToken({ req: request });
 
-    if (!hasFlag(Flags.Forms) || !token) return NextResponse.next();
+    if (hasFlag(Flags.Forms) || token) return NextResponse.next();
 
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/shop")) {
     const token = await getToken({ req: request });
-    if (!hasFlag(Flags.Forms) || !token) return NextResponse.next();
+    if (hasFlag(Flags.Forms) || token) return NextResponse.next();
 
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
