@@ -84,6 +84,7 @@ export const renderBlock = ({
       return (
         <div className="relative flex justify-center">
           <Image
+            placeholder="blur"
             className="rounded-sm object-center shadow"
             width={record.content.responsiveImage.width}
             height={record.content.responsiveImage.height}

@@ -1,17 +1,16 @@
+import { type getProviders, signIn } from "next-auth/react";
 import type { NextPage, GetStaticPropsResult } from "next";
 import type { FaviconAttributes } from "react-datocms/seo";
-import { type getProviders, signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import FontAwesomeIcon from "@components/FontAwesomeIcon"
 import SiteTags from "@components/SiteTags";
 
-import useModRouter from "@hook/useModRouter";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
+import { useRouter } from "next/router";
 
 type Provider = Awaited<ReturnType<typeof getProviders>>;
 interface Props {
@@ -39,7 +38,7 @@ export const getStaticProps = async (): Promise<
   return {
     props: {
       providers,
-      seo: data._site,
+      seo: data._site
     },
   };
 };
@@ -49,31 +48,11 @@ export const getStaticProps = async (): Promise<
  * @see https://www.hyperui.dev/components/application-ui/login-forms
  */
 const SignIn: NextPage<Props> = ({ seo, providers }) => {
-  const { router, replace } = useModRouter();
-  const session = useSession();
+  const router = useRouter();
   const icon = (seo.faviconMetaTags ?? []).find(
     (value) => value.tag === "link" && value.attributes.sizes === "96x96"
   );
-
-  useEffect(() => {
-    if (router.isReady) {
-      const callback = router.query.callbackUrl;
-      if (
-        session.status === "authenticated" &&
-        callback &&
-        !Array.isArray(callback) &&
-        callback.startsWith(
-          `${process.env.NEXT_PUBLIC_VERCEL_ENV !== "development"
-            ? "https"
-            : "http"
-          }://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-        )
-      ) {
-        replace(callback).catch((e) => console.error(e));
-        return;
-      }
-    }
-  }, [router.isReady, session.status, replace, router.query.callbackUrl]);
+  const callbackUrl = decodeURI(router?.query?.callbackUrl as string ?? "/");
 
   return (
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -140,7 +119,9 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
                   className="mb-2 flex w-full items-center justify-center gap-1 rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   type="submit"
                   key={provider?.id}
-                  onClick={() => signIn(provider?.id)}
+                  onClick={async () => signIn(provider?.id, {
+                    callbackUrl,
+                  })}
                 >
                   <FontAwesomeIcon iconName="google" prefix="fa" icon={[488, 512, [], "", "M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"]} /> continue with {provider?.name}
                 </button>

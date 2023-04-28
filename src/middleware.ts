@@ -1,17 +1,21 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { Flags } from "@lib/config/flags";
 import { hasFlag } from "@lib/config/hasFlag";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/community")) {
-    if (request.cookies.get("next-auth.session-token") || hasFlag(Flags.Forms))
-      return NextResponse.next();
+    const token = await getToken({ req: request });
+
+    if (!hasFlag(Flags.Forms) || !token) return NextResponse.next();
+
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/shop")) {
-    if (request.cookies.get("next-auth.session-token") || hasFlag(Flags.Shop))
-      return NextResponse.next();
+    const token = await getToken({ req: request });
+    if (!hasFlag(Flags.Forms) || !token) return NextResponse.next();
+
     return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 

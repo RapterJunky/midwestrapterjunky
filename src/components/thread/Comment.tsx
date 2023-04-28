@@ -55,6 +55,7 @@ const Comment: React.FC<Props> = ({
       <div className="flex w-full">
         <div>
           <Image
+            unoptimized
             width={40}
             height={40}
             className="rounded-full"
