@@ -1,6 +1,6 @@
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas } from "datocms-react-ui";
+import { Canvas, Button } from "datocms-react-ui";
 import { useRef, useState } from "react";
 import type { Text } from "slate";
 
@@ -190,14 +190,15 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
         className="hidden"
         accept=".doc,.docx,application/msword"
       />
-      <button
-        className="underline disabled:text-dato-primary"
+      <Button
         disabled={loading}
+        buttonSize="xxs"
+        buttonType="primary"
         type="button"
         onClick={() => inputFile.current?.click()}
       >
-        {loading ? "Loading...." : "Import From Text Document"}
-      </button>
+        {loading ? "Loading...." : "Import text document"}
+      </Button>
     </Canvas>
   );
 };

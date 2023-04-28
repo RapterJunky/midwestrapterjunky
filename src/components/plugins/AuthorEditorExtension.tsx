@@ -25,7 +25,8 @@ const Author = ({
       <div className="flex h-full items-center justify-center gap-1">
         <div className="relative h-12 w-12">
           <Image
-            sizes="100vw"
+            unoptimized
+            sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
             className="rounded-full object-cover object-center"
             src={data.avatar ?? "https://api.lorem.space/image/car?w=48&h=48"}
             alt="author image"
