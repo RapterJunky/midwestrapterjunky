@@ -1,4 +1,5 @@
 import { useState, useEffect, useReducer } from "react";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { Order } from "square";
 import useSWR from "swr";
 
@@ -17,6 +18,7 @@ import GenericPageQuery from "@/gql/queries/generic";
 import useFormatPrice from "@hook/useFormatPrice";
 import { fetchCachedQuery } from "@lib/cache";
 import useModRouter from "@hook/useModRouter";
+
 
 export type Address = {
   firstname: string;
@@ -62,6 +64,11 @@ export async function getStaticProps() {
     props: {
       _site: data._site,
       preview: false,
+      seo: genericSeoTags({
+        title: "Checkout",
+        robots: false,
+        description: "Midwest Raptor Junkies shop checkout.",
+      })
     },
   };
 }
@@ -123,8 +130,9 @@ const checkoutReducer = (
 
 //https://bootsnipp.com/snippets/ypqoW
 //https://react-square-payments.weareseeed.com/docs/props#optional-props
-const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
+const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar"> & { seo: SeoOrFaviconTag[] }> = ({
   _site,
+  seo
 }) => {
   const [checkoutState, dispatch] = useReducer(checkoutReducer, {
     completed: {
@@ -186,11 +194,7 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Checkout",
-            robots: false,
-            description: "Midwest Raptor Junkies shop checkout.",
-          }),
+          seo
         ]}
       />
       <div className="flex flex-1 justify-center">
@@ -293,8 +297,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                         {isLoading
                           ? "Calculating..."
                           : error
-                          ? "Failed to calculate."
-                          : formatPrice(
+                            ? "Failed to calculate."
+                            : formatPrice(
                               Number(order?.totalDiscountMoney?.amount)
                             )}
                       </span>
@@ -306,8 +310,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.totalTaxMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.totalTaxMoney?.amount))}
                     </span>
                   </li>
                   <li className="flex justify-between py-1">
@@ -316,8 +320,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(
+                          ? "Failed to calculate."
+                          : formatPrice(
                             Number(order?.totalServiceChargeMoney?.amount)
                           )}
                     </span>
@@ -331,8 +335,8 @@ const Checkout: NextPageWithProvider<Omit<FullPageProps, "navbar">> = ({
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.netAmountDueMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.netAmountDueMoney?.amount))}
                     </span>
                   </span>
                 </div>

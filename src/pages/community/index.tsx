@@ -3,13 +3,13 @@ import type {
   GetStaticPropsResult,
   NextPage,
 } from "next";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Tab } from "@headlessui/react";
 import { serialize } from "superjson";
 import Link from "next/link";
-
 
 import CategoryCard from "@components/community/CategoryCard";
 import TopicsList from "@components/community/TopicsList";
@@ -26,6 +26,7 @@ import { fetchCachedQuery } from "@lib/cache";
 import prisma from "@api/prisma";
 
 interface Props extends FullPageProps {
+  seo: SeoOrFaviconTag[];
   categories: {
     description: string;
     id: number;
@@ -88,13 +89,17 @@ export const getStaticProps = async ({
       ...props,
       categories: json as never as Props["categories"],
       preview: preview ?? false,
+      seo: genericSeoTags({
+        title: "Community",
+        description: "Midwest Raptor Junkies Community Hub",
+      })
     },
   };
 };
 
 const tab = ["categories", "latest", "top"];
 
-const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
+const Community: NextPage<Props> = ({ _site, navbar, preview, categories, seo }) => {
   const [index, setIndex] = useState(0);
   const session = useSession();
   const router = useRouter();
@@ -119,10 +124,7 @@ const Community: NextPage<Props> = ({ _site, navbar, preview, categories }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Community",
-            description: "Midwest Raptor Junkies Community Hub",
-          }),
+          seo,
         ]}
       />
       <Navbar {...navbar} mode="only-scroll" />

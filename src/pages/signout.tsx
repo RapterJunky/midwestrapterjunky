@@ -1,13 +1,15 @@
 import type { GetStaticPropsResult, NextPage } from "next";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { signOut } from "next-auth/react";
 
 import SiteTags from "@components/SiteTags";
 
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 
-type Props = Omit<FullPageProps, "navbar" | "preview">;
+type Props = Omit<FullPageProps, "navbar" | "preview"> & { seo: SeoOrFaviconTag[] };
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
@@ -19,17 +21,22 @@ export const getStaticProps = async (): Promise<
 
   return {
     props: {
+      seo: genericSeoTags({
+        title: "Signout",
+        robots: false,
+        description: "Signout page for Midwest Raptor Junkies."
+      }),
       _site: data._site,
     },
   };
 };
-const SignOut: NextPage<Props> = ({ _site }) => {
+const SignOut: NextPage<Props> = ({ _site, seo }) => {
   return (
     <div className="flex h-full items-center justify-center bg-neutral-200">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [{ tag: "title", content: "Signout - Midwest Raptor Junkies" }],
+          seo
         ]}
       />
       <div className="block max-w-sm rounded-lg bg-white p-6 shadow-lg">

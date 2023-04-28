@@ -69,7 +69,7 @@ const CategoryCard: React.FC<Props> = ({
         <div className="mb-2 text-lg font-bold md:hidden">Latest</div>
         <ul>
           {!latestTopics.length ? (
-            <span className="text-primary">No Topics Yet!</span>
+            <li className="text-primary">No Topics Yet!</li>
           ) : (
             latestTopics.map((topic, i) => (
               <li key={i}>

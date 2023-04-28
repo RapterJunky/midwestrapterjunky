@@ -1,3 +1,4 @@
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -11,17 +12,23 @@ import type { FullPageProps } from "types/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
 
+
+interface Props extends FullPageProps {
+  seo: SeoOrFaviconTag[]
+}
+
 export async function getStaticProps() {
   const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
   return {
     props: {
       ...data,
       preview: false,
+      seo: genericSeoTags({ title: "Confirmation", robots: false, description: "Confirmation page" }),
     },
   };
 }
 
-const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
+const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
   const router = useRouter();
 
   const shop_receipt_url = decodeURIComponent(
@@ -33,10 +40,7 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
   return (
     <div className="flex h-full flex-col">
       <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          genericSeoTags({ title: "Confirmation", robots: false }),
-        ]}
+        tags={[_site.faviconMetaTags, seo]}
       />
       <Navbar mode="none" {...navbar} />
       <main className="flex flex-1 items-center justify-center">
@@ -61,12 +65,12 @@ const Submited: NextPage<FullPageProps> = ({ _site, navbar }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                (shop_receipt_url.startsWith(
-                  "https://squareupsandbox.com/receipt"
-                ) ||
-                  shop_receipt_url.startsWith(
-                    "https://squareup.com/receipt"
-                  )) ? (
+                  (shop_receipt_url.startsWith(
+                    "https://squareupsandbox.com/receipt"
+                  ) ||
+                    shop_receipt_url.startsWith(
+                      "https://squareup.com/receipt"
+                    )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
                     target="_blank"

@@ -4,6 +4,7 @@ import type {
   NextPage,
 } from "next";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Dialog, Transition } from "@headlessui/react";
 import { Controller, useForm } from "react-hook-form";
 import { Fragment, useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import { fetchCachedQuery } from "@lib/cache";
 import useModRouter from "@hook/useModRouter";
 import prisma from "@api/prisma";
 
+
 type DialogData = {
   open: boolean;
   mode: "loading" | "message";
@@ -41,6 +43,7 @@ type FormState = {
 };
 
 interface Props extends FullPageProps {
+  seo: SeoOrFaviconTag[]
   categories: {
     id: number;
     tags: PrismaJson.Tags | null;
@@ -69,6 +72,10 @@ export const getStaticProps = async ({
       ...props,
       categories,
       preview: preview ?? false,
+      seo: genericSeoTags({
+        title: "Create Topic",
+        description: "Create a new topic",
+      })
     },
   };
 };
@@ -145,7 +152,7 @@ const CreateTopicDialog: React.FC<{
   );
 };
 
-const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
+const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   const session = useSession();
   const { router, replace } = useModRouter();
   const [dialog, setDialog] = useState<DialogData>({
@@ -247,10 +254,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,
@@ -266,10 +273,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Create Topic",
-            description: "Create a new topic",
-          }),
+          seo,
         ]}
       />
       <Navbar {...navbar} mode="none" />

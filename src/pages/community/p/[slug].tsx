@@ -5,6 +5,7 @@ import type {
   NextPage,
 } from "next";
 import { StructuredText } from "react-datocms/structured-text";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { serialize } from "superjson";
 import Image from "next/image";
 import { z } from "zod";
@@ -28,7 +29,9 @@ import { fetchCachedQuery } from "@lib/cache";
 import { PostProvider } from "@hook/usePost";
 import prisma from "@api/prisma";
 
+
 interface Props extends FullPageProps {
+  seo: SeoOrFaviconTag[];
   post: {
     _count: {
       likes: number;
@@ -106,20 +109,21 @@ export const getStaticProps = async ({
       ...props,
       post: json as Props["post"],
       preview: preview ?? false,
+      seo: genericSeoTags({
+        title: post.name,
+        description: post.name,
+      })
     },
   };
 };
 
-const CommunityPost: NextPage<Props> = ({ navbar, _site, post }) => {
+const CommunityPost: NextPage<Props> = ({ navbar, _site, post, seo }) => {
   return (
     <div className="flex h-full flex-col">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: post.name,
-            description: post.name,
-          }),
+          seo,
         ]}
       />
       <Navbar {...navbar} mode="only-scroll" />

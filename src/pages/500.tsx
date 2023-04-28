@@ -1,15 +1,16 @@
 import type { GetStaticPropsResult, NextPage } from "next";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import Link from "next/link";
 
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
 import SiteTags from "@components/SiteTags";
 
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
 
-
-type Props = Pick<FullPageProps, "_site">;
+type Props = Pick<FullPageProps, "_site"> & { seo: SeoOrFaviconTag[] };
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
@@ -18,6 +19,11 @@ export const getStaticProps = async (): Promise<
   return {
     props: {
       _site: data._site,
+      seo: genericSeoTags({
+        title: "Server Error",
+        description: "Midwest Raptor Junkies has experienced an interal server error.",
+        robots: false
+      })
     },
   };
 };
@@ -26,19 +32,13 @@ export const getStaticProps = async (): Promise<
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
  */
-const ErrorPage: NextPage<Props> = ({ _site }) => {
+const ErrorPage: NextPage<Props> = ({ _site, seo }) => {
   return (
     <div className="flex h-screen w-full flex-grow items-center justify-center bg-gray-200 px-16 md:px-0">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            { tag: "title", content: "Server Error - Midwest Raptor Junkies" },
-            {
-              tag: "meta",
-              attributes: { name: "robots", content: "noindex,nofollow" },
-            },
-          ],
+          seo
         ]}
       />
       <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-8 shadow-2xl md:px-8 lg:px-24">

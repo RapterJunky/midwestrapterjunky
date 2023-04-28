@@ -17,10 +17,12 @@ import { getDescriptionTag } from "@lib/utils/description";
 import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import QueryBlogLatest from "@query/queries/blogLatest";
+import genericSeoTags from "@/lib/utils/genericSeoTags";
 import type { FullPageProps } from "types/page";
 import { DatoCMS } from "@api/gql";
 
 interface BlogLatestProps extends FullPageProps {
+  seo: SeoOrFaviconTag[]
   posts: {
     slug: string;
     publishedAt: string | null;
@@ -31,8 +33,6 @@ interface BlogLatestProps extends FullPageProps {
 }
 
 const MAX_DISPLAY = 5;
-
-//https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/master/components/Tag.js
 
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
@@ -48,6 +48,10 @@ export const getStaticProps = async (
     props: {
       ...data,
       preview: ctx?.preview ?? false,
+      seo: genericSeoTags({
+        title: "Blog Lastest",
+        description: "Midwest Raptor Junkies latest published articles."
+      })
     },
     revalidate: REVAILDATE_IN_2H,
   };
@@ -58,22 +62,14 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
   navbar,
   preview,
   posts,
+  seo
 }) => {
   return (
     <div className="flex h-full flex-col">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [
-            { tag: "title", content: " Blog Lastest - Midwest Raptor Junkies" },
-            {
-              tag: "meta",
-              attributes: {
-                name: "description",
-                content: "Midwest Raptor Junkies latest published articles.",
-              },
-            },
-          ],
+          seo,
         ]}
       />
       <header>

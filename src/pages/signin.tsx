@@ -1,21 +1,24 @@
+import type { FaviconAttributes, SeoOrFaviconTag } from "react-datocms/seo";
 import { type getProviders, signIn } from "next-auth/react";
 import type { NextPage, GetStaticPropsResult } from "next";
-import type { FaviconAttributes } from "react-datocms/seo";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
 import FontAwesomeIcon from "@components/FontAwesomeIcon"
 import SiteTags from "@components/SiteTags";
 
+import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
-import { useRouter } from "next/router";
 
 type Provider = Awaited<ReturnType<typeof getProviders>>;
 interface Props {
   providers: Partial<Provider>;
-  seo: Omit<FullPageProps, "preview" | "navbar">["_site"];
+  _site: Omit<FullPageProps, "preview" | "navbar">["_site"];
+  seo: SeoOrFaviconTag[],
+  icon: string;
 }
 
 export const getStaticProps = async (): Promise<
@@ -35,10 +38,19 @@ export const getStaticProps = async (): Promise<
     GenericPageQuery
   );
 
+  const icon = (data._site.faviconMetaTags ?? []).find(
+    (value) => value.tag === "link" && value.attributes.sizes === "96x96"
+  );
+
   return {
     props: {
       providers,
-      seo: data._site
+      icon: (icon?.attributes as FaviconAttributes)?.href ?? "",
+      _site: data._site,
+      seo: genericSeoTags({
+        title: "SignIn",
+        description: "Login page for Midwest Raptor Junkies."
+      })
     },
   };
 };
@@ -47,21 +59,13 @@ export const getStaticProps = async (): Promise<
  * @author HyperUI
  * @see https://www.hyperui.dev/components/application-ui/login-forms
  */
-const SignIn: NextPage<Props> = ({ seo, providers }) => {
+const SignIn: NextPage<Props> = ({ _site, seo, providers, icon }) => {
   const router = useRouter();
-  const icon = (seo.faviconMetaTags ?? []).find(
-    (value) => value.tag === "link" && value.attributes.sizes === "96x96"
-  );
   const callbackUrl = decodeURI(router?.query?.callbackUrl as string ?? "/");
 
   return (
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
-      <SiteTags
-        tags={[
-          seo.faviconMetaTags,
-          [{ tag: "title", content: "SignIn - Midwest Raptor Junkies" }],
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
         <Image
           src="https://www.datocms-assets.com/77949/1676234561-220865184_6246667838678383_7191752647666209634_n.webp"
@@ -73,7 +77,7 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
           <Link className="block text-white" href="/">
             <span className="sr-only">Home</span>
             <Image
-              src={(icon?.attributes as FaviconAttributes)?.href ?? ""}
+              src={icon}
               height={70}
               width={70}
               alt="logo"
@@ -99,7 +103,7 @@ const SignIn: NextPage<Props> = ({ seo, providers }) => {
             >
               <span className="sr-only">Home</span>
               <Image
-                src={(icon?.attributes as FaviconAttributes)?.href ?? ""}
+                src={icon}
                 height={48}
                 width={48}
                 alt="logo"

@@ -8,8 +8,9 @@ import {
   type CatalogCustomAttributeValue,
   type CatalogItemOptionValue,
 } from "square";
-import { useForm, Controller } from "react-hook-form";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Listbox, Transition } from "@headlessui/react";
+import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,6 +34,7 @@ import useCatalog from "@hook/useCatalog";
 import { logger } from "@lib/logger";
 
 interface Props extends FullPageProps {
+  seo: SeoOrFaviconTag[]
   product: {
     id: string;
     updatedAt?: string;
@@ -178,6 +180,11 @@ export const getStaticProps = async (
   return {
     props: {
       ...props,
+      seo: genericSeoTags({
+        title: itemData?.name ?? "MRJ Product",
+        description: itemData?.description ?? undefined,
+        url: `https://midestraptorjunkies.com/shop/product/${id}`,
+      }),
       product: {
         id,
         images,
@@ -194,7 +201,7 @@ export const getStaticProps = async (
   };
 };
 
-const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
+const Product: NextPageWithProvider<Props> = ({ _site, navbar, product, seo }) => {
   const { addToCart, openCart } = useCart();
   const { data, isLoading } = useCatalog({
     category: product.category?.id ?? undefined,
@@ -252,11 +259,7 @@ const Product: NextPageWithProvider<Props> = ({ _site, navbar, product }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: product.name,
-            description: product?.description ?? undefined,
-            url: `https://midestraptorjunkies.com/shop/product/${product.id}`,
-          }),
+          seo,
         ]}
       />
       <Navbar {...navbar} mode="none" />

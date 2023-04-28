@@ -30,9 +30,11 @@ interface Post {
   seo: SeoOrFaviconTag[];
 }
 
+type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
+
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<FullPageProps>> => {
+): Promise<GetStaticPropsResult<Props>> => {
   const data = await DatoCMS<FullPageProps>(GenericPageQuery, {
     preview: ctx.preview,
   });
@@ -41,11 +43,15 @@ export const getStaticProps = async (
     props: {
       ...data,
       preview: ctx?.preview ?? false,
+      seo: genericSeoTags({
+        title: "Articles",
+        description: "All of Midwest Raptor Junkies published articles.",
+      })
     },
   };
 };
 
-const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
+const BlogList: NextPage<Props> = ({ preview, navbar, _site, seo }) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { data, error, isLoading } = useSWR<Paginate<Post>, Response, string>(
     `/api/blog?page=${pageIndex}`,
@@ -57,10 +63,7 @@ const BlogList: NextPage<FullPageProps> = ({ preview, navbar, _site }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Articles",
-            description: "All of Midwest Raptor Junkies published articles.",
-          }),
+          seo,
         ]}
       />
       <header>

@@ -1,4 +1,5 @@
 import type { GetStaticPropsResult, NextPage } from "next";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import Link from "next/link";
 
 import FontAwesomeIcon from "@components/FontAwesomeIcon";
@@ -9,7 +10,7 @@ import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
 import Query from "@query/queries/generic";
 
-type Props = Pick<FullPageProps, "_site">;
+type Props = Pick<FullPageProps, "_site"> & { seo: SeoOrFaviconTag[] };
 
 export const getStaticProps = async (): Promise<
   GetStaticPropsResult<Props>
@@ -20,6 +21,11 @@ export const getStaticProps = async (): Promise<
   return {
     props: {
       _site: data._site,
+      seo: genericSeoTags({
+        title: "Not Found",
+        description: "Midest Raptor Junkies failed to find what you where looking for.",
+        robots: false
+      })
     },
   };
 };
@@ -28,16 +34,13 @@ export const getStaticProps = async (): Promise<
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
  */
-const ErrorPage: NextPage<Props> = ({ _site }) => {
+const ErrorPage: NextPage<Props> = ({ _site, seo }) => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-200 px-16 md:px-0">
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Not Found",
-            robots: false
-          })
+          seo,
         ]}
       />
       <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-8 shadow-2xl md:px-8 lg:px-24">

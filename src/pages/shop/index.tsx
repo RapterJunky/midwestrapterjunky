@@ -1,15 +1,16 @@
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { GetStaticPropsResult } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useSWR from "swr";
 
-import ShopNavbar from "@/components/shop/ShopNavbar";
-import ShopOption from "@/components/shop/ShopOption";
-import Skeleton from "@/components/shop/Skeleton";
-import ShopCard from "@/components/shop/ShopCard";
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
-import SiteTags from "@/components/SiteTags";
+import ShopNavbar from "@components/shop/ShopNavbar";
+import ShopOption from "@components/shop/ShopOption";
+import Skeleton from "@components/shop/Skeleton";
+import ShopCard from "@components/shop/ShopCard";
+import Footer from "@components/layout/Footer";
+import Navbar from "@components/layout/Navbar";
+import SiteTags from "@components/SiteTags";
 
 import type { FullPageProps, NextPageWithProvider } from "@type/page";
 import genericSeoTags from "@lib/utils/genericSeoTags";
@@ -20,16 +21,22 @@ import { CartProvider } from "@hook/useCart";
 import useCatalog from "@hook/useCatalog";
 
 
-export const getStaticProps = async (): Promise<
-  GetStaticPropsResult<FullPageProps>
-> => {
+type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
+
+export const getStaticProps = async (): Promise<GetStaticPropsResult<Props>> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
     GenericPageQuery
   );
 
   return {
-    props,
+    props: {
+      ...props,
+      seo: genericSeoTags({
+        title: "Shop",
+        description: "Midwest Ratpor Junkies shop.",
+      })
+    }
   };
 };
 
@@ -47,7 +54,7 @@ const filterQuery = (query: Record<string, string | string[] | undefined>) =>
     return obj;
   }, {});
 
-const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
+const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
   const router = useRouter();
   const meta = useSearchMeta();
   const {
@@ -68,10 +75,7 @@ const ShopSearch: NextPageWithProvider<FullPageProps> = ({ _site, navbar }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          genericSeoTags({
-            title: "Shop",
-            description: "Midwest Ratpor Junkies shop.",
-          }),
+          seo
         ]}
       />
       <Navbar mode="none" {...navbar} />
