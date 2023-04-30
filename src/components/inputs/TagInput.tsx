@@ -75,17 +75,17 @@ const TagInput: React.FC<Props> = ({
                     exists
                       ? "pattern"
                       : minLength
-                        ? "minLength"
-                        : maxItems
-                          ? "max"
-                          : "maxLength",
+                      ? "minLength"
+                      : maxItems
+                      ? "max"
+                      : "maxLength",
                     exists
                       ? "Tag already exists."
                       : minLength
-                        ? "Tag must be longer then 3 characters."
-                        : maxItems
-                          ? `There can only be ${max} tags`
-                          : "Tag must be less then 12 characters"
+                      ? "Tag must be longer then 3 characters."
+                      : maxItems
+                      ? `There can only be ${max} tags`
+                      : "Tag must be less then 12 characters"
                   );
                   return;
                 }

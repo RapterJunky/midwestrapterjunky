@@ -143,12 +143,21 @@ const EventPage: NextPage<EventPageProps> = ({
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[event._seoMetaTags, _site.faviconMetaTags, [{
-        tag: "meta", attributes: {
-          property: "og:url",
-          content: `https://midwestraptorjunkies.com/events/${event.id}`
-        }
-      }]]} />
+      <SiteTags
+        tags={[
+          event._seoMetaTags,
+          _site.faviconMetaTags,
+          [
+            {
+              tag: "meta",
+              attributes: {
+                property: "og:url",
+                content: `https://midwestraptorjunkies.com/events/${event.id}`,
+              },
+            },
+          ],
+        ]}
+      />
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />
@@ -200,8 +209,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

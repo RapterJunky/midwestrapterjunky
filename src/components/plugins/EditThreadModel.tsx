@@ -20,7 +20,8 @@ interface State {
 }
 
 const generateImage = () =>
-  `https://api.dicebear.com/6.x/shapes/png?seed=${crypto.randomUUID().split("-")[0]
+  `https://api.dicebear.com/6.x/shapes/png?seed=${
+    crypto.randomUUID().split("-")[0]
   }`;
 
 const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
@@ -88,10 +89,11 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${errors.description
+            className={`w-full border placeholder:text-dato-placeholder ${
+              errors.description
                 ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
                 : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-              } text-dato-m focus:outline-0 focus:ring-0`}
+            } text-dato-m focus:outline-0 focus:ring-0`}
             placeholder="description"
             id="description"
             {...register("description", {
@@ -111,10 +113,11 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             name="tags"
             render={({ field }) => (
               <TagInput
-                className={`border ${errors.tags
+                className={`border ${
+                  errors.tags
                     ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
                     : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-                  }`}
+                }`}
                 onChange={field.onChange}
                 value={field.value}
                 max={6}

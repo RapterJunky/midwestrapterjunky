@@ -46,7 +46,7 @@ export const getStaticProps = async (
       seo: genericSeoTags({
         title: "Articles",
         description: "All of Midwest Raptor Junkies published articles.",
-        url: "https://midwestraptorjunkies.com/blog/list"
+        url: "https://midwestraptorjunkies.com/blog/list",
       }),
     },
   };

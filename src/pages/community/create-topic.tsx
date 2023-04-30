@@ -74,7 +74,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: "Create Topic",
         description: "Create a new topic",
-        url: "https://midwestraptorjunkies.com/community/create-topic"
+        url: "https://midwestraptorjunkies.com/community/create-topic",
       }),
     },
   };
@@ -254,10 +254,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-            ? error.cause === "MAX_IMAGES"
-              ? error.message
-              : ""
-            : "";
+          ? error.cause === "MAX_IMAGES"
+            ? error.message
+            : ""
+          : "";
 
       setDialog({
         open: true,

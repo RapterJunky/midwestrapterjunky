@@ -80,12 +80,21 @@ export const getStaticProps = async (
 const PrivacyPolicy: NextPage<Props> = ({ _site, navbar, policy }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[_site.faviconMetaTags, policy._seoMetaTags, [{
-        tag: "meta", attributes: {
-          property: "og:url",
-          content: "https://midwestraptorjunkies.com/privacy-policy"
-        }
-      }]]} />
+      <SiteTags
+        tags={[
+          _site.faviconMetaTags,
+          policy._seoMetaTags,
+          [
+            {
+              tag: "meta",
+              attributes: {
+                property: "og:url",
+                content: "https://midwestraptorjunkies.com/privacy-policy",
+              },
+            },
+          ],
+        ]}
+      />
       <header>
         <Navbar {...navbar} mode="only-scroll" />
       </header>

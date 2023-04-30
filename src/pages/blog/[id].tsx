@@ -32,7 +32,6 @@ import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 
-
 const Comments = dynamic(() => import("@components/blog/Comments"));
 
 interface ArticleProps extends FullPageProps {
@@ -169,12 +168,15 @@ const Article: NextPage<ArticleProps> = ({
         tags={[
           _site.faviconMetaTags,
           post.seo,
-          [{
-            tag: "meta", attributes: {
-              property: "og:url",
-              content: `https://midwestraptorjunkies.com/blog/${post.id}`
-            }
-          }],
+          [
+            {
+              tag: "meta",
+              attributes: {
+                property: "og:url",
+                content: `https://midwestraptorjunkies.com/blog/${post.id}`,
+              },
+            },
+          ],
           post.commentsAdmins?.map((value) => ({
             tag: "meta",
             attributes: { property: "fb:admins", content: value },
