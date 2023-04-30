@@ -111,6 +111,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: post.name,
         description: post.name,
+        url: `https://midwestraptorjunkies.com/community/p/${post.id}`
       }),
     },
   };

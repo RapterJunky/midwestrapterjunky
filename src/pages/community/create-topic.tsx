@@ -74,6 +74,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: "Create Topic",
         description: "Create a new topic",
+        url: "https://midwestraptorjunkies.com/community/create-topic"
       }),
     },
   };

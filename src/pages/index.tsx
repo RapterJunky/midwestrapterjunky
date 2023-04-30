@@ -44,7 +44,12 @@ const Home: NextPage<HomeContent> = ({ preview, navbar, home, _site }) => {
     <>
       <SiteTags
         ignore={["article:modified_time"]}
-        tags={[home._seoMetaTags, _site.faviconMetaTags]}
+        tags={[home._seoMetaTags, _site.faviconMetaTags, [{
+          tag: "meta", attributes: {
+            property: "og:url",
+            content: "https://midwestraptorjunkies.com"
+          }
+        }]]}
       />
       <header>
         <Navbar {...navbar} mode="fade-scroll" />

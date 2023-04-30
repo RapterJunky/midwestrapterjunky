@@ -8,7 +8,7 @@ import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import type { SeoOrFavico@/components/ui / ExitPreviewcms";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import { z } from "zod";
 
 import HiArrowLeft from "@components/icons/HiArrowLeft";
 import ScrollToTop from "@components/blog/ScrollToTop";
-import ExitPreview from "@components/ExitPreview";
+import ExitPreview from "@components/ui/ExitPreview";
 import Navbar from "@components/layout/Navbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
@@ -31,6 +31,7 @@ import ArticleQuery from "@query/queries/article";
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
+
 
 const Comments = dynamic(() => import("@components/blog/Comments"));
 
@@ -168,6 +169,12 @@ const Article: NextPage<ArticleProps> = ({
         tags={[
           _site.faviconMetaTags,
           post.seo,
+          [{
+            tag: "meta", attributes: {
+              property: "og:url",
+              content: `https://midwestraptorjunkies.com/blog/${post.id}`
+            }
+          }],
           post.commentsAdmins?.map((value) => ({
             tag: "meta",
             attributes: { property: "fb:admins", content: value },

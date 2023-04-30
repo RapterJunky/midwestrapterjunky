@@ -92,6 +92,7 @@ export const getStaticProps = async ({
       seo: genericSeoTags({
         title: "Community",
         description: "Midwest Raptor Junkies Community Hub",
+        url: "https://midwestraptorjunkies.com/community"
       }),
     },
   };

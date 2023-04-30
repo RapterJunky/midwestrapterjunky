@@ -63,7 +63,12 @@ const CalendarPage: NextPage<CalendarProps> = ({
 }) => {
   return (
     <div className="flex flex-col">
-      <SiteTags tags={[_site.faviconMetaTags, calendar._seoMetaTags]} />
+      <SiteTags tags={[_site.faviconMetaTags, calendar._seoMetaTags, [{
+        tag: "meta", attributes: {
+          property: "og:url",
+          content: "https://midwestraptorjunkies.com/calendar"
+        }
+      }]]} />
       <header>
         <Navbar {...navbar} mode="none" />
       </header>

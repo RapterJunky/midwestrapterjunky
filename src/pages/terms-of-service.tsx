@@ -82,7 +82,12 @@ export const getStaticProps = async (
 const TermsOfService: NextPage<Props> = ({ _site, navbar, terms }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[_site.faviconMetaTags, terms._seoMetaTags]} />
+      <SiteTags tags={[_site.faviconMetaTags, terms._seoMetaTags, [{
+        tag: "meta", attributes: {
+          property: "og:url",
+          content: "https://midwestraptorjunkies.com/terms-of-service"
+        }
+      }]]} />
       <header>
         <Navbar {...navbar} mode="only-scroll" />
       </header>

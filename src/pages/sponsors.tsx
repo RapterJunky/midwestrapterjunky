@@ -51,7 +51,12 @@ const SponsorsPage: NextPage<PageProps> = ({
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[_site.faviconMetaTags, sponsor.seo]} />
+      <SiteTags tags={[_site.faviconMetaTags, sponsor.seo, [{
+        tag: "meta", attributes: {
+          property: "og:url",
+          content: "https://midwestraptorjunkies.com/sponsors"
+        }
+      }]]} />
       <Navbar {...navbar} mode="none" />
       <main className="mb-4 flex w-full flex-grow flex-col items-center justify-center gap-6 divide-y divide-gray-300">
         <h1 className="md:leading-14 my-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-5xl">

@@ -143,7 +143,12 @@ const EventPage: NextPage<EventPageProps> = ({
 }) => {
   return (
     <div className="flex h-full flex-col">
-      <SiteTags tags={[event._seoMetaTags, _site.faviconMetaTags]} />
+      <SiteTags tags={[event._seoMetaTags, _site.faviconMetaTags, [{
+        tag: "meta", attributes: {
+          property: "og:url",
+          content: `https://midwestraptorjunkies.com/events/${event.id}`
+        }
+      }]]} />
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />

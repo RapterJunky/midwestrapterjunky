@@ -78,7 +78,12 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
   return (
     <>
       <SiteTags
-        tags={[props._site.faviconMetaTags, props.aboutUsModel._seoMetaTags]}
+        tags={[props._site.faviconMetaTags, props.aboutUsModel._seoMetaTags, [{
+          tag: "meta", attributes: {
+            property: "og:url",
+            content: "https://midwestraptorjunkies.com/about-us"
+          }
+        }]]}
       />
       <header>
         <Navbar {...props.navbar} mode="only-scroll" />

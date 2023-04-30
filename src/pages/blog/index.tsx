@@ -51,6 +51,7 @@ export const getStaticProps = async (
       seo: genericSeoTags({
         title: "Blog Lastest",
         description: "Midwest Raptor Junkies latest published articles.",
+        url: "https://midwestraptorjunkies.com/blog"
       }),
     },
     revalidate: REVAILDATE_IN_2H,
