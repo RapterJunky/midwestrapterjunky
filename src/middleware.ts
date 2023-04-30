@@ -7,16 +7,17 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/community")) {
     const token = await getToken({ req: request });
 
-    if (token || hasFlag(Flags.Forms)) return NextResponse.next();
-
-    return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
+    //if (!!token || hasFlag(Flags.Forms)) return NextResponse.next();
+    return NextResponse.next();
+    //return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/shop")) {
     const token = await getToken({ req: request });
-    if (token || hasFlag(Flags.Forms)) return NextResponse.next();
+    //if (!!token || hasFlag(Flags.Forms)) return NextResponse.next();
+    return NextResponse.next();
 
-    return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
+    // return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/plugins")) {

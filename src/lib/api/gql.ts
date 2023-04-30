@@ -2,9 +2,8 @@ import { GraphQLClient, type Variables, ClientError } from "graphql-request";
 import type { RequestConfig } from "graphql-request/src/types";
 import { logger } from "@lib/logger";
 
-const DATO_CMS = `https://graphql.datocms.com/environments/${
-  process.env.DATOCMS_ENVIRONMENT ?? "main"
-}`;
+const DATO_CMS = `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT ?? "main"
+  }`;
 
 interface FetchOptions {
   variables?: Variables;
@@ -69,6 +68,7 @@ async function GQLFetch<T extends object>(
     if (error instanceof ClientError) {
       logger.error(
         {
+          message: error.message,
           errors: error.response.errors,
           url: url,
         },
