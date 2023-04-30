@@ -44,7 +44,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      await res.revalidate("/community");
+      await Promise.all([
+        res.revalidate("/community"),
+        res.revalidate("/community/create-topic")
+      ])
 
       return res.status(201).json(data);
     }
@@ -65,7 +68,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      await res.revalidate("/community");
+      await Promise.all([
+        res.revalidate("/community"),
+        res.revalidate("/community/create-topic")
+      ])
 
       return res.status(200).json(data);
     }
@@ -80,7 +86,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      await res.revalidate("/community");
+      await Promise.all([
+        res.revalidate("/community"),
+        res.revalidate("/community/create-topic")
+      ])
 
       return res.status(200).json(data);
     }
