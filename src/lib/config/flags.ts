@@ -1,4 +1,4 @@
 export const enum Flags {
-  Forms = "FORMS",
-  Shop = "SHOP",
+  Community = "community",
+  Shop = "shop",
 }

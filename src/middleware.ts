@@ -1,23 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import flagEnabled from "@/lib/config/flagEnabled";
 import { Flags } from "@lib/config/flags";
-import { hasFlag } from "@lib/config/hasFlag";
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/community")) {
-    const token = await getToken({ req: request });
 
-    //if (!!token || hasFlag(Flags.Forms)) return NextResponse.next();
-    return NextResponse.next();
-    //return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
+    const enabled = await flagEnabled(Flags.Community);
+
+    if (enabled) return NextResponse.next();
+
+    return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/shop")) {
-    const token = await getToken({ req: request });
-    //if (!!token || hasFlag(Flags.Forms)) return NextResponse.next();
-    return NextResponse.next();
+    const enabled = await flagEnabled(Flags.Shop);
 
-    // return NextResponse.rewrite(new URL("/404", request.nextUrl.origin));
+    if (enabled) return NextResponse.next();
+    return NextResponse.rewrite(new URL("/under-construction", request.nextUrl.origin));
   }
 
   if (request.nextUrl.pathname.startsWith("/plugins")) {

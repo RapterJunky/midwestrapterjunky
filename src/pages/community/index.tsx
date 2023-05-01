@@ -19,6 +19,7 @@ import Navbar from "@components/layout/Navbar";
 import HiPlus from "@components/icons/HiPlus";
 import SiteTags from "@components/SiteTags";
 
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
@@ -85,6 +86,7 @@ export const getStaticProps = async ({
   const { json } = serialize(cat);
 
   return {
+    revalidate: REVAILDATE_IN_2H,
     props: {
       ...props,
       categories: json as never as Props["categories"],

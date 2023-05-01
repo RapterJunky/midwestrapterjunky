@@ -10,8 +10,36 @@ const server = z.object({
   DATOCMS_READONLY_TOKEN: z.string(),
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
-
-  GOOGLE_APPLICATION_CREDENTIALS: z.string(),
+  CONFIG_CAT_KEY: z.string(),
+  CONFIG_CAT_MANAGEMENT: z.string(),
+  GOOGLE_SERVICE_KEY: z
+    .string()
+    .transform((arg, ctx) => {
+      try {
+        return JSON.parse(arg);
+      } catch (error) {
+        ctx.addIssue({ type: "custom", message: "Invaild Json" });
+        return z.NEVER;
+      }
+    })
+    .pipe(
+      z.object({
+        key_version: z.string().nonempty(),
+        type: z.literal("service_account"),
+        project_id: z.string().nonempty(),
+        private_key_id: z.string().nonempty(),
+        private_key: z
+          .string()
+          .nonempty()
+          .startsWith("-----BEGIN PRIVATE KEY-----"),
+        client_email: z.string().email(),
+        client_id: z.string().nonempty(),
+        auth_uri: z.string().url(),
+        token_uri: z.string().url(),
+        auth_provider_x509_cert_url: z.string().url(),
+        client_x509_cert_url: z.string().url(),
+      })
+    ),
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
 
@@ -69,7 +97,11 @@ const client = z.object({
   NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME: z.string().optional(),
   NEXT_PUBLIC_VERCEL_GIT_PREVIOUS_SHA: z.string().optional(),
 
-  NEXT_PUBLIC_FEATURE_FLAGS: z.string().optional().default(""),
+  NEXT_PUBLIC_FEATURE_FLAGS: z
+    .string()
+    .transform((value) => value.split(","))
+    .optional()
+    .default([]),
 });
 
 /**
@@ -79,12 +111,14 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  CONFIG_CAT_MANAGEMENT: process.env.CONFIG_CAT_MANAGEMENT,
+  CONFIG_CAT_KEY: process.env.CONFIG_CAT_KEY,
   NODE_ENV: process.env.NODE_ENV,
   DATOCMS_READONLY_TOKEN: process.env.DATOCMS_READONLY_TOKEN,
   DATOCMS_API_TOKEN: process.env.DATOCMS_API_TOKEN,
   DATOCMS_ENVIRONMENT: process.env.DATOCMS_ENVIRONMENT,
 
-  GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+  GOOGLE_SERVICE_KEY: process.env.GOOGLE_SERVICE_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 

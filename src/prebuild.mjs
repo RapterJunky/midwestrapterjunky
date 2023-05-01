@@ -48,6 +48,6 @@ if (parsed.success === false) {
   throw new Error("Invalid environment variables");
 }
 
-writeFileSync("./raptorjunkies.json", parsed.data);
+writeFileSync("./creds/raptorjunkies.json", parsed.data);
 
 console.log("Finished GOOGLE_APPLICATION_CREDENTIALS");

@@ -42,7 +42,7 @@ const BrowseProductsModel = dynamic(
   () => import("@components/plugins/BrowseProductsModal")
 );
 const MessageBoardManagerPage = dynamic(
-  () => import("@components/plugins/MessageBoardManagerPage")
+  () => import("@/components/plugins/CommunityPage")
 );
 const EditThreadModel = dynamic(
   () => import("@components/plugins/EditThreadModel")

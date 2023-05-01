@@ -34,7 +34,16 @@ export const uploadImages = async (
 ) => {
   if (!images) return [];
 
+  const creds = process.env.GOOGLE_SERVICE_KEY;
+
   const auth = new google.auth.GoogleAuth({
+    projectId: creds.project_id,
+    credentials: {
+      type: creds.type,
+      private_key: creds.private_key,
+      client_email: creds.client_email,
+      client_id: creds.client_id,
+    },
     scopes: ["https://www.googleapis.com/auth/drive"],
   });
 
