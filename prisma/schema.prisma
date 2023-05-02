@@ -75,6 +75,7 @@ model User {
   email         String?      @unique
   emailVerified DateTime?
   image         String?
+  banned        Boolean      @default(false)
   accounts      Account[]
   sessions      Session[]
   theadPosts    ThreadPost[]
@@ -93,7 +94,7 @@ model VerificationToken {
 
 model Comment {
   id           String     @id @default(uuid())
-  /// [PostComment]
+  /// [Dast]
   content      Json
   created      DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
@@ -115,23 +116,24 @@ model Comment {
 }
 
 model ThreadPost {
-  id        String    @id @default(uuid())
-  name      String
-  ownerId   String
-  created   DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  pinned    Boolean   @default(false)
-  locked    Boolean   @default(false)
+  id          String    @id @default(uuid())
+  name        String
+  ownerId     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  pinned      Boolean   @default(false)
+  locked      Boolean   @default(false)
+  notifyOwner Boolean   @default(false)
   /// [Tags]
-  tags      Json?
+  tags        Json?
   /// [Dast]
-  content   Json?
-  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  thread    Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
-  threadId  Int
-  comments  Comment[]
-  reports   Report[]
-  likes     Like[]
+  content     Json?
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  thread      Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
+  threadId    Int
+  comments    Comment[]
+  reports     Report[]
+  likes       Like[]
 
   @@index([threadId])
   @@index([ownerId])

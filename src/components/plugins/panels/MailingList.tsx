@@ -21,12 +21,8 @@ export const MailingList: React.FC<{
     return (
         <Panel title="Mailing List"
             mini={mini}
-            setMini={() => setMini((state) => !state)}
-            actions={<div className="flex gap-1">
-                <Button buttonType="primary" buttonSize="xxs">Download spreadsheet</Button>
-                <Button buttonType="primary" buttonSize="xxs">Mail to all</Button>
-            </div>}>
-            <DisplayDataStates data={data as Paginate<object>} error={error} isLoading={isLoading} message={{
+            setMini={() => setMini((state) => !state)}>
+            <DisplayDataStates data={data} error={error} isLoading={isLoading} message={{
                 error: "There was an error loading the mailing list.",
                 empty: "There&apos;s no emails yet!"
             }} />

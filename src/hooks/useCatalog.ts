@@ -18,6 +18,7 @@ interface Opt {
   sort?: Sort;
   category?: string;
   limit?: number;
+  ignore?: string
 }
 
 const useCatalog = (opt: Opt) => {
@@ -27,7 +28,7 @@ const useCatalog = (opt: Opt) => {
     [string, Opt]
   >(
     ["/api/shop/catalog", opt],
-    async ([url, { cursor, query, vendor, sort, category, limit }]) => {
+    async ([url, { cursor, query, vendor, sort, category, limit, ignore }]) => {
       const params = new URLSearchParams();
 
       if (cursor) params.set("cursor", cursor);
@@ -36,6 +37,7 @@ const useCatalog = (opt: Opt) => {
       if (vendor) params.set("vendor", vendor);
       if (sort) params.set("sort", sort);
       if (limit) params.set("limit", limit.toString());
+      if (ignore) params.set("ignore", ignore);
 
       const request = await fetch(`${url}?${params.toString()}`);
       if (!request) throw request;

@@ -10,6 +10,8 @@ const schema = z.object({
   query: z.string().optional(),
   sort: z.enum(["latest", "lth", "htl"]).optional(),
   category: z.string().optional(),
+  vender: z.string().optional(),
+  ignore: z.string().nonempty().optional(),
   limit: z.coerce
     .number()
     .positive()
@@ -27,7 +29,7 @@ export default async function handle(
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
 
-    const { cursor, query, sort, category, limit } = schema.parse(req.query);
+    const { cursor, query, sort, category, limit, ignore } = schema.parse(req.query);
 
     const client = new Client({
       accessToken: process.env.SQAURE_ACCESS_TOKEN,
@@ -37,28 +39,30 @@ export default async function handle(
     const content = await client.catalogApi.searchCatalogObjects({
       includeDeletedObjects: false,
       includeRelatedObjects: true,
-      limit,
+      // May return with item that will be ignored
+      // so fetch an extra to try to return wanted amount
+      limit: ignore ? limit + 1 : limit,
       objectTypes: ["ITEM"],
       cursor,
       query:
         query || category
           ? {
-              exactQuery: category
-                ? {
-                    attributeName: "category_id",
-                    attributeValue: category,
-                  }
-                : undefined,
-              textQuery: query
-                ? {
-                    keywords: query.split(" "),
-                  }
-                : undefined,
-            }
+            exactQuery: category
+              ? {
+                attributeName: "category_id",
+                attributeValue: category,
+              }
+              : undefined,
+            textQuery: query
+              ? {
+                keywords: query.split(" "),
+              }
+              : undefined,
+          }
           : undefined,
     });
 
-    const items = [];
+    let items = [];
 
     if (!content?.result.objects)
       return res.status(200).json({
@@ -143,6 +147,10 @@ export default async function handle(
         break;
       default:
         break;
+    }
+
+    if (ignore) {
+      items = items.filter(value => value.id !== ignore).slice(0, limit);
     }
 
     return res.status(200).json({
