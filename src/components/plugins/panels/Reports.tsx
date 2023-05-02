@@ -21,6 +21,8 @@ import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import { renderBlock } from "@/lib/structuredTextRules";
 import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
+import DatoCmsPagination from "./Pagination";
+import DisplayDataStates from "./DisplayDataStates";
 
 type ContentType = Paginate<
   Omit<Report, "created"> & {
@@ -368,21 +370,10 @@ export const Reports: React.FC<{
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
-      {!data && error ? (
-        <div className="flex h-full w-full items-center justify-center">
-          <h1 className="text-lg">There was an error, loading reports.</h1>
-        </div>
-      ) : null}
-      {!data && isLoading ? (
-        <div className="flex h-full w-full items-center justify-center">
-          <Spinner size={56} />
-        </div>
-      ) : null}
-      {data && !data.result.length ? (
-        <div className="flex h-full w-full items-center justify-center">
-          <h1 className="text-lg">No reports found!</h1>
-        </div>
-      ) : null}
+      <DisplayDataStates message={{
+        error: "There was an error, loading reports.",
+        empty: "No reports found!"
+      }} data={data as Paginate<object>} error={error} isLoading={isLoading} />
       {data && data.result.length ? (
         <>
           <ul className="w-full space-y-2 p-4">
@@ -418,29 +409,7 @@ export const Reports: React.FC<{
             )}
           </ul>
           <hr />
-          <div className="my-dato-l flex items-center justify-evenly">
-            <Button
-              onClick={() => setPage(data?.previousPage ?? 1)}
-              disabled={data?.isFirstPage}
-              type="button"
-              buttonType="primary"
-            >
-              Prev
-            </Button>
-
-            <div>
-              {data?.currentPage ?? 0} of {data?.currentPage ?? 0}
-            </div>
-
-            <Button
-              onClick={() => setPage(data?.nextPage ?? 1)}
-              disabled={data?.isLastPage}
-              type="button"
-              buttonType="primary"
-            >
-              Next
-            </Button>
-          </div>
+          <DatoCmsPagination setPage={setPage} data={data} />
         </>
       ) : null}
     </Panel>
