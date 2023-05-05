@@ -2,13 +2,18 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 declare module "tw-elements" {
-  export declare class Carousel { }
+  export declare class Carousel {}
   export declare class ChipsInput {
-    constructor(el: HTMLElement, props?: {
-      initialValues?: { tag: string }[]
-    });
-  };
-  export declare function initTE(init: { [x: string]: Carousel | ChipsInput }): void;
+    constructor(
+      el: HTMLElement,
+      props?: {
+        initialValues?: { tag: string }[];
+      }
+    );
+  }
+  export declare function initTE(init: {
+    [x: string]: Carousel | ChipsInput;
+  }): void;
 }
 declare module React {
   type EnterKeyHintOptions =
@@ -58,7 +63,9 @@ type DotEnv = typeof import("./env.mjs").env;
 
 declare module NodeJS {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface ProcessEnv extends DotEnv { }
+  interface ProcessEnv extends DotEnv {}
 
-  type GoogleServiceKey = import("zod").infer<typeof import("./env.mjs").serviceKey>
+  type GoogleServiceKey = import("zod").infer<
+    typeof import("./env.mjs").serviceKey
+  >;
 }

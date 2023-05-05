@@ -29,7 +29,10 @@ type PostCtx = {
   like: (type: ItemType, id: string) => Promise<void>;
   unlike: (type: ItemType, id: string) => Promise<void>;
   delete: (type: ItemType, id: string) => Promise<void>;
-  create: (data: CreateCommentBody, settings?: { mode: "update", id: string; }) => Promise<boolean>;
+  create: (
+    data: CreateCommentBody,
+    settings?: { mode: "update"; id: string }
+  ) => Promise<boolean>;
   setPage: (page: number) => void;
   likesIsLoading: boolean;
   isLoading: boolean;
@@ -221,8 +224,9 @@ export const PostProvider: React.FC<
               setDialog({
                 reasonInput: true,
                 title: "Reason for report",
-                message: `Please enter a reason for reporting this ${type === "comment" ? "comment" : "post"
-                  }.`,
+                message: `Please enter a reason for reporting this ${
+                  type === "comment" ? "comment" : "post"
+                }.`,
                 open: true,
               });
             });
@@ -501,7 +505,7 @@ export const PostProvider: React.FC<
             });
           }
         },
-        async create(content, settings?: { mode: "update", id: string; }) {
+        async create(content, settings?: { mode: "update"; id: string }) {
           try {
             await mutate(
               async (current) => {
@@ -518,7 +522,9 @@ export const PostProvider: React.FC<
                 }
 
                 if (content.deletedImages) {
-                  content.deletedImages.forEach(item => formData.append("deletedImages[]", item));
+                  content.deletedImages.forEach((item) =>
+                    formData.append("deletedImages[]", item)
+                  );
                 }
 
                 if (content.parentCommentId)
@@ -548,11 +554,7 @@ export const PostProvider: React.FC<
                   );
 
                 for (const image of images)
-                  formData.append(
-                    `image[${image.id}]`,
-                    image.file,
-                    image.id
-                  );
+                  formData.append(`image[${image.id}]`, image.file, image.id);
 
                 const request = await fetch("/api/community/create", {
                   method: settings?.mode === "update" ? "PATCH" : "POST",
@@ -571,7 +573,15 @@ export const PostProvider: React.FC<
                 const comment = (await request.json()) as TComment;
 
                 if (settings?.mode === "update") {
-                  return { ...current, result: [comment, ...current.result.filter(value => value.id !== settings?.id)] };
+                  return {
+                    ...current,
+                    result: [
+                      comment,
+                      ...current.result.filter(
+                        (value) => value.id !== settings?.id
+                      ),
+                    ],
+                  };
                 }
 
                 return { ...current, result: [comment, ...current.result] };
@@ -601,7 +611,7 @@ export const PostProvider: React.FC<
             });
             return false;
           }
-        }
+        },
       }}
     >
       {children}

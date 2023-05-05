@@ -1,6 +1,6 @@
 import { StructuredText } from "react-datocms/structured-text";
 import type { useSession } from "next-auth/react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -15,7 +15,6 @@ import HiFlag from "@components/icons/HiFlag";
 import Spinner from "@/components/ui/Spinner";
 import { singleFetch } from "@/lib/api/fetch";
 import { HiPencil } from "react-icons/hi";
-
 
 //import useComment from "@/hooks/useComment";
 
@@ -39,13 +38,10 @@ const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
       <span className="inline-block h-12 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
       <span className="inline-block h-28 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
     </div>
-  )
+  ),
 });
 
-const Comment: React.FC<Props> = ({
-  comment,
-  session,
-}) => {
+const Comment: React.FC<Props> = ({ comment, session }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState({ state: false, type: "" });
   const { report, like, unlike, delete: deleteComment, create } = usePost();
@@ -76,13 +72,27 @@ const Comment: React.FC<Props> = ({
             </div>
           </div>
           <article className="prose min-h-[50px] max-w-none">
-            {showEdit ? (<CommentBox btnText="Save" defaultValues={() => singleFetch<CommentBoxFormState>(`/api/community/create?id=${comment.id}`, {
-              headers: { "x-type-create": "comment" }
-            })} submit={async (data) => {
-              const result = await create(data, { mode: "update", id: comment.id });
-              if (result) setShowEdit(false);
-              return result;
-            }} />) : comment.content ? (
+            {showEdit ? (
+              <CommentBox
+                btnText="Save"
+                defaultValues={() =>
+                  singleFetch<CommentBoxFormState>(
+                    `/api/community/create?id=${comment.id}`,
+                    {
+                      headers: { "x-type-create": "comment" },
+                    }
+                  )
+                }
+                submit={async (data) => {
+                  const result = await create(data, {
+                    mode: "update",
+                    id: comment.id,
+                  });
+                  if (result) setShowEdit(false);
+                  return result;
+                }}
+              />
+            ) : comment.content ? (
               <StructuredText
                 renderBlock={renderBlock}
                 data={comment.content}
@@ -93,8 +103,15 @@ const Comment: React.FC<Props> = ({
           </article>
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
-              {session.status === "authenticated" && session.data.user.id === comment.owner.id ? (
-                <button onClick={() => setShowEdit(curr => !curr)} type="button" className="hover:text-black p-1 text-gray-500 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" title="Edit comment" aria-label="Edit comment">
+              {session.status === "authenticated" &&
+              session.data.user.id === comment.owner.id ? (
+                <button
+                  onClick={() => setShowEdit((curr) => !curr)}
+                  type="button"
+                  className="rounded-sm p-1 text-gray-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black"
+                  title="Edit comment"
+                  aria-label="Edit comment"
+                >
                   <HiPencil className="h-5 w-5" />
                 </button>
               ) : null}
@@ -112,7 +129,9 @@ const Comment: React.FC<Props> = ({
             </div>
             <div className="flex items-center justify-end gap-1 text-gray-500">
               <button
-                aria-label={comment.likedByMe ? "Unlike comment" : "Like Comment"}
+                aria-label={
+                  comment.likedByMe ? "Unlike comment" : "Like Comment"
+                }
                 disabled={session.status !== "authenticated"}
                 title="like this comment"
                 data-headlessui-state={comment.likedByMe ? "active" : ""}

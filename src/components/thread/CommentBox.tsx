@@ -10,11 +10,11 @@ import type { CreateCommentBody } from "@hook/usePost";
 
 export type CommentBoxFormState = {
   message: Descendant[];
-  deletedImages: string[],
+  deletedImages: string[];
 };
 
 const CommentBox: React.FC<{
-  defaultValues?: () => Promise<CommentBoxFormState>,
+  defaultValues?: () => Promise<CommentBoxFormState>;
   submit: (props: CreateCommentBody) => Promise<boolean>;
   btnText?: string;
 }> = ({ submit, defaultValues, btnText = "Reply" }) => {
@@ -50,7 +50,7 @@ const CommentBox: React.FC<{
 
   if (isLoading) {
     return (
-      <div className="p-2 flex flex-col w-full items-center justify-center not-prose">
+      <div className="not-prose flex w-full flex-col items-center justify-center p-2">
         <Spinner size="h-6 w-6" />
         <div className="mt-4">Loading...</div>
       </div>
@@ -59,17 +59,21 @@ const CommentBox: React.FC<{
 
   return (
     <form
-      className="my-6 flex flex-col justify-evenly gap-1 md:px-4 not-prose"
+      className="not-prose my-6 flex flex-col justify-evenly gap-1 md:px-4"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller
         control={control}
         name="message"
         render={({ field }) => (
-          <TextEditor id={id} value={field.value} onChange={(values) => {
-            field.onChange(values.ast);
-            setValue("deletedImages", values.deletedImages);
-          }} />
+          <TextEditor
+            id={id}
+            value={field.value}
+            onChange={(values) => {
+              field.onChange(values.ast);
+              setValue("deletedImages", values.deletedImages);
+            }}
+          />
         )}
       />
       {errors.message ? (

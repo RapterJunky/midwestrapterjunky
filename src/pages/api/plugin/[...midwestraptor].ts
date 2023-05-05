@@ -7,13 +7,24 @@ import handleReports from "@service/plugin/pluginReports";
 import handleSquare from "@service/plugin/pluginSquare";
 import handleCategory from "@service/plugin/pluginCategory";
 import handleFlags from "@service/plugin/pluginConfigCat";
-import handleUsers from '@service/plugin/pluginUser';
+import handleUsers from "@service/plugin/pluginUser";
 import handleMail from "@service/plugin/pluginMail";
 import handleTAC from "@service/plugin/pluginTAC";
 import { handleError } from "@api/errorHandler";
 
 const allowedRoutes = z
-  .array(z.enum(["authors", "reports", "square", "category", "flags", "mail", "tac", "users"]))
+  .array(
+    z.enum([
+      "authors",
+      "reports",
+      "square",
+      "category",
+      "flags",
+      "mail",
+      "tac",
+      "users",
+    ])
+  )
   .describe("Allowed api paths")
   .max(1);
 

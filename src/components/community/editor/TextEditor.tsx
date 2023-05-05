@@ -20,7 +20,7 @@ import RenderLeaf from "@components/community/editor/RenderLeaf";
 import { withPlugin } from "@lib/utils/editor/textEditorUtils";
 
 type Props = {
-  onChange?: (props: { ast: Descendant[], deletedImages: string[] }) => void;
+  onChange?: (props: { ast: Descendant[]; deletedImages: string[] }) => void;
   value: Descendant[];
   id: string;
 };
@@ -76,7 +76,8 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
         const isAstChange = editor.operations.some(
           (op) => "set_selection" !== op.type
         );
-        if (isAstChange && onChange) onChange({ ast: e, deletedImages: editor.deletedImages });
+        if (isAstChange && onChange)
+          onChange({ ast: e, deletedImages: editor.deletedImages });
       }}
     >
       <EditorToolbar />

@@ -29,7 +29,9 @@ export default async function handle(
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
 
-    const { cursor, query, sort, category, limit, ignore } = schema.parse(req.query);
+    const { cursor, query, sort, category, limit, ignore } = schema.parse(
+      req.query
+    );
 
     const client = new Client({
       accessToken: process.env.SQAURE_ACCESS_TOKEN,
@@ -47,18 +49,18 @@ export default async function handle(
       query:
         query || category
           ? {
-            exactQuery: category
-              ? {
-                attributeName: "category_id",
-                attributeValue: category,
-              }
-              : undefined,
-            textQuery: query
-              ? {
-                keywords: query.split(" "),
-              }
-              : undefined,
-          }
+              exactQuery: category
+                ? {
+                    attributeName: "category_id",
+                    attributeValue: category,
+                  }
+                : undefined,
+              textQuery: query
+                ? {
+                    keywords: query.split(" "),
+                  }
+                : undefined,
+            }
           : undefined,
     });
 
@@ -150,7 +152,7 @@ export default async function handle(
     }
 
     if (ignore) {
-      items = items.filter(value => value.id !== ignore).slice(0, limit);
+      items = items.filter((value) => value.id !== ignore).slice(0, limit);
     }
 
     return res.status(200).json({

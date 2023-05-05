@@ -265,7 +265,9 @@ const TextStyleButton: React.FC = () => {
       title="Text Styles"
       className="border-none pr-8 text-sm"
     >
-      <option value="normal" className="font-medium tracking-tighter">Normal Text</option>
+      <option value="normal" className="font-medium tracking-tighter">
+        Normal Text
+      </option>
       <option value="1" className="text-2xl font-medium tracking-tighter">
         Heading 1
       </option>

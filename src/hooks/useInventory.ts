@@ -20,7 +20,7 @@ const useInventory = (item: string | undefined) => {
     return data.some(
       (value) => value.state === "IN_STOCK" && value.quantity !== "0"
     );
-  }, [data, data?.length]);
+  }, [data]);
 
   return {
     inStock,

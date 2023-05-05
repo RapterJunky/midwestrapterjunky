@@ -3,7 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import type { Session } from "next-auth";
 
-import parseForm, { type TopicSchema, type CommentSchema, commentSchema, topicSchema } from "@lib/utils/editor/parseForm";
+import parseForm, {
+  type TopicSchema,
+  type CommentSchema,
+  commentSchema,
+  topicSchema,
+} from "@lib/utils/editor/parseForm";
 import { slateToDast } from "@lib/utils/editor/slateToDast";
 
 /**
@@ -23,59 +28,59 @@ const handleTC = async (
   const dast = slateToDast(formData.fields.message as NonTextNode[]);
   if (!dast) throw createHttpError.BadRequest("Failed to vaildate dast");
 
-
   if (!dast.blocks) dast.blocks = [];
 
   dast.blocks.push(...formData.imagesBlocks);
 
-  if (req.method === "PATCH") switch (type) {
-    case "comment": {
-      const comment = await prisma.comment.update({
-        where: {
-          id: formData.fields.editId
-        },
-        data: {
-          content: dast,
-        },
-        select: {
-          id: true,
-          content: true,
-          created: true,
-          parentCommentId: true,
-          owner: {
-            select: {
-              image: true,
-              id: true,
-              name: true,
+  if (req.method === "PATCH")
+    switch (type) {
+      case "comment": {
+        const comment = await prisma.comment.update({
+          where: {
+            id: formData.fields.editId,
+          },
+          data: {
+            content: dast,
+          },
+          select: {
+            id: true,
+            content: true,
+            created: true,
+            parentCommentId: true,
+            owner: {
+              select: {
+                image: true,
+                id: true,
+                name: true,
+              },
             },
           },
-        },
-      });
+        });
 
-      return res.status(201).json({
-        ...comment,
-        likedByMe: false,
-        likeCount: 0,
-      });
+        return res.status(201).json({
+          ...comment,
+          likedByMe: false,
+          likeCount: 0,
+        });
+      }
+      case "post": {
+        const topic = await prisma.threadPost.update({
+          where: {
+            id: formData.fields.editId,
+          },
+          data: {
+            content: dast,
+            name: (formData.fields as TopicSchema).title,
+            tags: (formData.fields as TopicSchema).tags,
+            threadId: (formData.fields as TopicSchema).thread,
+          },
+        });
+
+        await res.revalidate(`/community/p/${topic.id}`);
+
+        return res.status(201).json({ postId: topic.id });
+      }
     }
-    case "post": {
-      const topic = await prisma.threadPost.update({
-        where: {
-          id: formData.fields.editId
-        },
-        data: {
-          content: dast,
-          name: (formData.fields as TopicSchema).title,
-          tags: (formData.fields as TopicSchema).tags,
-          threadId: (formData.fields as TopicSchema).thread,
-        },
-      });
-
-      await res.revalidate(`/community/p/${topic.id}`);
-
-      return res.status(201).json({ postId: topic.id });
-    }
-  }
 
   switch (type) {
     case "comment": {

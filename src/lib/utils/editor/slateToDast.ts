@@ -10,7 +10,7 @@ import {
   type Mark,
   type Span as FieldSpan,
   type DefaultMark,
-  type Record as DocumentRecord
+  type Record as DocumentRecord,
 } from "datocms-structured-text-utils";
 import type {
   Block,
@@ -33,7 +33,6 @@ import type {
 import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import type { Node as SlateNode } from "slate";
 import type { SlateImageBlock, DastImageRecord } from "./dastToSlate";
-
 
 type FieldBlockWithFullItem = {
   type: BlockType;
@@ -228,7 +227,9 @@ function innerSerialize(
   });
 }
 
-export function slateToDast(nodes: Node[] | null): StructuredTextGraphQlResponse | null {
+export function slateToDast(
+  nodes: Node[] | null
+): StructuredTextGraphQlResponse | null {
   if (!nodes || nodes.length === 0) {
     return null;
   }
@@ -249,10 +250,10 @@ export function slateToDast(nodes: Node[] | null): StructuredTextGraphQlResponse
             alt: (node as SlateImageBlock).alt,
             height: (node as SlateImageBlock).height,
             width: (node as SlateImageBlock).width,
-            src: (node as SlateImageBlock).src
-          }
-        }
-      } as DastImageRecord)
+            src: (node as SlateImageBlock).src,
+          },
+        },
+      } as DastImageRecord);
     }
 
     const fieldBlock: FieldBlockWithFullItem = {
@@ -268,6 +269,6 @@ export function slateToDast(nodes: Node[] | null): StructuredTextGraphQlResponse
     value: {
       schema: "dast",
       document: { type: "root", children },
-    }
+    },
   };
 }

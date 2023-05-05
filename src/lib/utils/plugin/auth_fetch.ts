@@ -10,7 +10,7 @@ export class RequestError extends Error {
  * @throws FAILED_REQUEST_${statusText}
  */
 export const AuthFetch = async (
-  input: RequestInfo | URL,
+  input: Request | string | URL,
   init?: (RequestInit & { json?: object }) | undefined
 ): Promise<Response> => {
   const token = new URLSearchParams(window.location.search).get("token");

@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import type { Session } from "next-auth";
-import { z } from 'zod';
+import { z } from "zod";
 
 import dastToSlate from "@lib/utils/editor/dastToSlate";
-import prisma from '@api/prisma';
+import prisma from "@api/prisma";
 
 const schema = z.object({ id: z.string().uuid().nonempty() });
 
@@ -22,38 +22,42 @@ const GET = async (
   const { id } = schema.parse(req.query);
 
   if (type === "comment") {
-
     const comment = await prisma.comment.findFirst({
       where: {
         id,
-        ownerId: session.user.id
-      }
+        ownerId: session.user.id,
+      },
     });
-    if (!comment) throw createHttpError.NotFound("Failed to find comment with given id and user.");
+    if (!comment)
+      throw createHttpError.NotFound(
+        "Failed to find comment with given id and user."
+      );
 
     if (!comment.content) throw new Error("Comment has not content.");
 
     return res.status(200).json({
-      message: comment.content ? dastToSlate(comment.content) : emptyDocument
+      message: comment.content ? dastToSlate(comment.content) : emptyDocument,
     });
   }
 
   const post = await prisma.threadPost.findFirst({
     where: {
       id,
-      ownerId: session.user.id
-    }
+      ownerId: session.user.id,
+    },
   });
 
-  if (!post) throw createHttpError.NotFound("Failed to find topic with given id and user.");
+  if (!post)
+    throw createHttpError.NotFound(
+      "Failed to find topic with given id and user."
+    );
 
   return res.status(200).json({
     title: post.name,
     tags: post.tags ?? [],
     categoryId: post.threadId,
-    message: post.content ? dastToSlate(post.content) : emptyDocument
+    message: post.content ? dastToSlate(post.content) : emptyDocument,
   });
-
 };
 
 export default GET;

@@ -5,7 +5,6 @@ import {
   TextInput,
   DropdownOption,
   Button,
-  Spinner,
   DropdownSeparator,
 } from "datocms-react-ui";
 import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
@@ -121,7 +120,9 @@ const ArticleReport: React.FC<
                     <FaChevronUp style={{ fill: "white" }} />
                   ) : (
                     <FaChevronDown style={{ fill: "white" }} />
-                  )}>
+                  )
+                }
+              >
                 Actions
               </Button>
             )}
@@ -132,20 +133,28 @@ const ArticleReport: React.FC<
               </DropdownOption>
               <DropdownOption disabled>
                 <div className="font-semibold">Lock topic</div>
-                <div className="text-sm tracking-tighter text-neutral-500">Stop Users from posting comments on this topic.</div>
+                <div className="text-sm tracking-tighter text-neutral-500">
+                  Stop Users from posting comments on this topic.
+                </div>
               </DropdownOption>
               <DropdownSeparator />
               <DropdownOption red disabled>
                 <div className="font-semibold">Remove topic and ban user</div>
-                <div className="text-sm tracking-tighter font-light">Delete topic and ban its owner.</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Delete topic and ban its owner.
+                </div>
               </DropdownOption>
               <DropdownOption red onClick={deleteItem}>
                 <div className="font-semibold">Remove topic</div>
-                <div className="text-sm tracking-tighter font-light">Delete topic</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Delete topic
+                </div>
               </DropdownOption>
               <DropdownOption red disabled>
                 <div className="font-semibold">Ban reporty</div>
-                <div className="text-sm font-light tracking-tighter">Ban the user who reported this.</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Ban the user who reported this.
+                </div>
               </DropdownOption>
             </DropdownMenu>
           </Dropdown>
@@ -243,15 +252,21 @@ const CommentReport: React.FC<
               <DropdownSeparator />
               <DropdownOption red disabled>
                 <div className="font-semibold">Remove comment and ban user</div>
-                <div className="text-sm tracking-tighter font-light">Delete comment and ban its owner.</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Delete comment and ban its owner.
+                </div>
               </DropdownOption>
               <DropdownOption red onClick={deleteItem}>
                 <div className="font-semibold"> Remove comment</div>
-                <div className="text-sm tracking-tighter font-light">Delete comment</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Delete comment
+                </div>
               </DropdownOption>
               <DropdownOption red disabled>
                 <div className="font-semibold">Ban reporty</div>
-                <div className="text-sm font-light tracking-tighter">Ban the user who reported this.</div>
+                <div className="text-sm font-light tracking-tighter">
+                  Ban the user who reported this.
+                </div>
               </DropdownOption>
             </DropdownMenu>
           </Dropdown>
@@ -378,10 +393,15 @@ export const Reports: React.FC<{
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
-      <DisplayDataStates message={{
-        error: "There was an error, loading reports.",
-        empty: "No reports found!"
-      }} data={data as Paginate<object>} error={error} isLoading={isLoading} />
+      <DisplayDataStates
+        message={{
+          error: "There was an error, loading reports.",
+          empty: "No reports found!",
+        }}
+        data={data as Paginate<object>}
+        error={error}
+        isLoading={isLoading}
+      />
       {data && data.result.length ? (
         <>
           <ul className="w-full space-y-2 p-4">

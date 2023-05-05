@@ -1,5 +1,11 @@
 import type { RenderPageCtx } from "datocms-plugin-sdk";
-import { Button, Dropdown, DropdownMenu, DropdownOption, DropdownSeparator, Spinner } from "datocms-react-ui";
+import {
+  Button,
+  Dropdown,
+  DropdownMenu,
+  DropdownOption,
+  DropdownSeparator,
+} from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import Image from "next/image";
@@ -11,7 +17,6 @@ import DatoCmsPagination from "./Pagination";
 import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
 import DisplayDataStates from "./DisplayDataStates";
-
 
 export const Threads: React.FC<{
   ctx: RenderPageCtx;
@@ -152,66 +157,82 @@ export const Threads: React.FC<{
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
-      <DisplayDataStates data={data as Paginate<object>} error={error} isLoading={isLoading} message={{
-        error: "There was an error loading categories!",
-        empty: "There&apos;s no categories! Try creating one."
-      }} />
+      <DisplayDataStates
+        data={data as Paginate<object>}
+        error={error}
+        isLoading={isLoading}
+        message={{
+          error: "There was an error loading categories!",
+          empty: "There&apos;s no categories! Try creating one.",
+        }}
+      />
       {data && data.result.length ? (
         <>
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                <li
-                  className="flex items-center gap-2 bg-white p-4 shadow"
-                  key={value.id}
-                >
-                  <div>
-                    <Image
-                      unoptimized
-                      className="rounded-full"
-                      src={value.image}
-                      alt="Category Image"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div className="mr-auto">
-                    <h1 className="text-xl font-bold">{value.name}</h1>
-                    <div className="flex flex-wrap gap-1">
-                      {value.tags?.map((tag, i) => (
-                        <span
-                          className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
-                          key={i}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  <li
+                    className="flex items-center gap-2 bg-white p-4 shadow"
+                    key={value.id}
+                  >
+                    <div>
+                      <Image
+                        unoptimized
+                        className="rounded-full"
+                        src={value.image}
+                        alt="Category Image"
+                        width={40}
+                        height={40}
+                      />
                     </div>
-                    <p>{value.description}</p>
-                  </div>
-                  <Dropdown renderTrigger={({ open, onClick }) => (
-                    <Button buttonSize="xxs" buttonType="primary" onClick={onClick}>
-                      <span className="flex items-center gap-2">Actions {open ? (<FaChevronDown />) : (<FaChevronUp />)}</span>
-                    </Button>
-                  )}>
-                    <DropdownMenu alignment="right">
-                      <DropdownOption onClick={() => editModel(value)}>
-                        <div className="flex items-center gap-1">
-                          <FaEdit className="h-4 w-4" />
-                          Edit
-                        </div>
-                      </DropdownOption>
-                      <DropdownSeparator />
-                      <DropdownOption red onClick={() => deleteModel(value.id)}>
-                        <div className="flex items-center gap-1">
-                          <FaTrash className="h-4 w-4" />
-                          Delete
-                        </div>
-                      </DropdownOption>
-                    </DropdownMenu>
-                  </Dropdown>
-                </li>
-              ))
+                    <div className="mr-auto">
+                      <h1 className="text-xl font-bold">{value.name}</h1>
+                      <div className="flex flex-wrap gap-1">
+                        {value.tags?.map((tag, i) => (
+                          <span
+                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            key={i}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <p>{value.description}</p>
+                    </div>
+                    <Dropdown
+                      renderTrigger={({ open, onClick }) => (
+                        <Button
+                          buttonSize="xxs"
+                          buttonType="primary"
+                          onClick={onClick}
+                        >
+                          <span className="flex items-center gap-2">
+                            Actions {open ? <FaChevronDown /> : <FaChevronUp />}
+                          </span>
+                        </Button>
+                      )}
+                    >
+                      <DropdownMenu alignment="right">
+                        <DropdownOption onClick={() => editModel(value)}>
+                          <div className="flex items-center gap-1">
+                            <FaEdit className="h-4 w-4" />
+                            Edit
+                          </div>
+                        </DropdownOption>
+                        <DropdownSeparator />
+                        <DropdownOption
+                          red
+                          onClick={() => deleteModel(value.id)}
+                        >
+                          <div className="flex items-center gap-1">
+                            <FaTrash className="h-4 w-4" />
+                            Delete
+                          </div>
+                        </DropdownOption>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </li>
+                ))
               : null}
           </ul>
           <hr className="mt-dato-m" />

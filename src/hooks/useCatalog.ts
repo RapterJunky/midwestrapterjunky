@@ -18,7 +18,7 @@ interface Opt {
   sort?: Sort;
   category?: string;
   limit?: number;
-  ignore?: string
+  ignore?: string;
 }
 
 const useCatalog = (opt: Opt) => {

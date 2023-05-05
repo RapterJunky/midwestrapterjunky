@@ -83,7 +83,9 @@ export const getStaticProps = async ({
 };
 
 // Loading Slate and all that
-const TextEditor = dynamic(() => import("@components/community/editor/TextEditor"));
+const TextEditor = dynamic(
+  () => import("@components/community/editor/TextEditor")
+);
 
 const CreateTopicDialog: React.FC<{
   data: DialogData;
@@ -178,18 +180,21 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       const editId = params.get("edit");
 
       if (editId) {
-        return singleFetch<FormState>(`/api/community/create?id=${editId}`, { headers: { "X-Type-Create": "post" } })
+        return singleFetch<FormState>(`/api/community/create?id=${editId}`, {
+          headers: { "X-Type-Create": "post" },
+        });
       }
 
       return {
         tags: [] as PrismaJson.Tags,
         message: [{ type: "paragraph", children: [{ text: "" }] }],
-      } as FormState
+      } as FormState;
     },
   });
 
   useEffect(() => {
-    if (session.status === "unauthenticated") replace("/community").catch((e) => console.error(e));
+    if (session.status === "unauthenticated")
+      replace("/community").catch((e) => console.error(e));
   }, [session.status, replace]);
 
   const onSubmit = async (state: FormState) => {
@@ -213,7 +218,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
       if (editId) formData.append("editId", editId);
-      if (state.deletedImages) state.deletedImages.forEach(item => formData.append("deletedImages[]", item));
+      if (state.deletedImages)
+        state.deletedImages.forEach((item) =>
+          formData.append("deletedImages[]", item)
+        );
 
       state.tags.forEach((tag) => formData.append("tags[]", tag));
 
@@ -272,10 +280,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-            ? error.cause === "MAX_IMAGES"
-              ? error.message
-              : ""
-            : "";
+          ? error.cause === "MAX_IMAGES"
+            ? error.message
+            : ""
+          : "";
 
       setDialog({
         open: true,
@@ -300,118 +308,122 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             <Spinner />
             Loading...
           </div>
-        ) : <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="container mb-4 max-w-3xl"
-        >
-          <h1 className="mb-4 text-2xl font-bold">Create a new topic</h1>
-          <div className="mb-4 flex flex-col">
-            <label htmlFor="title" className="mb-1 text-neutral-600">
-              Title
-            </label>
-            <input
-              placeholder="Enter a title..."
-              id="title"
-              type="text"
-              {...register("title", {
-                minLength: {
-                  message: "The title must 3 characters in length.",
-                  value: 3,
-                },
-                maxLength: {
-                  value: 40,
-                  message:
-                    "The title must be less then 40 characters in length.",
-                },
-                required: "A Title is required",
-              })}
-            />
-            {errors.title ? (
-              <span className="text-red-500">{errors.title.message}</span>
-            ) : null}
-          </div>
-          <div className="mb-4 flex flex-col">
-            <label htmlFor="category" className="mb-1 text-neutral-600">
-              Category
-            </label>
-            <select
-              id="category"
-              {...register("categoryId", {
-                required: "A Category is required",
-              })}
-            >
-              {categories.map((cat, i) => (
-                <option key={i} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            {errors.categoryId ? (
-              <span className="text-red-500">{errors.categoryId.message}</span>
-            ) : null}
-          </div>
-          <div className="mb-4 flex flex-col">
-            <label className="mb-1 text-neutral-600">Tags</label>
-            <Controller
-              rules={{
-                max: {
-                  message: "6 is the max amount of tags",
-                  value: 6,
-                },
-              }}
-              control={control}
-              name="tags"
-              render={({ field }) => (
-                <TagInput
-                  className="border border-neutral-400"
-                  max={6}
-                  clearError={() => clearErrors("tags")}
-                  value={field.value}
-                  onChange={field.onChange}
-                  setError={(type, message) =>
-                    setError("tags", { type: type, message: message })
-                  }
-                />
-              )}
-            />
-            {errors.tags ? (
-              <span className="text-red-500">{errors.tags.message}</span>
-            ) : null}
-            <span className="text-neutral-500">
-              Tags must be 3-12 characters in length, with a max of 6 tags
-            </span>
-          </div>
-          <div className="mb-4 flex flex-col gap-1">
-            <label className="text-neutral-600">Post Content</label>
-            <Controller
-              control={control}
-              name="message"
-              render={({ field }) => (
-                <TextEditor
-                  id=":ct"
-                  value={field.value}
-                  onChange={(values) => {
-                    field.onChange(values.ast);
-                    setValue("deletedImages", values.deletedImages);
-                  }}
-                />
-              )}
-            />
-            {errors.message ? (
-              <span className="text-red-500">{errors.message.message}</span>
-            ) : null}
-          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="container mb-4 max-w-3xl"
+          >
+            <h1 className="mb-4 text-2xl font-bold">Create a new topic</h1>
+            <div className="mb-4 flex flex-col">
+              <label htmlFor="title" className="mb-1 text-neutral-600">
+                Title
+              </label>
+              <input
+                placeholder="Enter a title..."
+                id="title"
+                type="text"
+                {...register("title", {
+                  minLength: {
+                    message: "The title must 3 characters in length.",
+                    value: 3,
+                  },
+                  maxLength: {
+                    value: 40,
+                    message:
+                      "The title must be less then 40 characters in length.",
+                  },
+                  required: "A Title is required",
+                })}
+              />
+              {errors.title ? (
+                <span className="text-red-500">{errors.title.message}</span>
+              ) : null}
+            </div>
+            <div className="mb-4 flex flex-col">
+              <label htmlFor="category" className="mb-1 text-neutral-600">
+                Category
+              </label>
+              <select
+                id="category"
+                {...register("categoryId", {
+                  required: "A Category is required",
+                })}
+              >
+                {categories.map((cat, i) => (
+                  <option key={i} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              {errors.categoryId ? (
+                <span className="text-red-500">
+                  {errors.categoryId.message}
+                </span>
+              ) : null}
+            </div>
+            <div className="mb-4 flex flex-col">
+              <label className="mb-1 text-neutral-600">Tags</label>
+              <Controller
+                rules={{
+                  max: {
+                    message: "6 is the max amount of tags",
+                    value: 6,
+                  },
+                }}
+                control={control}
+                name="tags"
+                render={({ field }) => (
+                  <TagInput
+                    className="border border-neutral-400"
+                    max={6}
+                    clearError={() => clearErrors("tags")}
+                    value={field.value}
+                    onChange={field.onChange}
+                    setError={(type, message) =>
+                      setError("tags", { type: type, message: message })
+                    }
+                  />
+                )}
+              />
+              {errors.tags ? (
+                <span className="text-red-500">{errors.tags.message}</span>
+              ) : null}
+              <span className="text-neutral-500">
+                Tags must be 3-12 characters in length, with a max of 6 tags
+              </span>
+            </div>
+            <div className="mb-4 flex flex-col gap-1">
+              <label className="text-neutral-600">Post Content</label>
+              <Controller
+                control={control}
+                name="message"
+                render={({ field }) => (
+                  <TextEditor
+                    id=":ct"
+                    value={field.value}
+                    onChange={(values) => {
+                      field.onChange(values.ast);
+                      setValue("deletedImages", values.deletedImages);
+                    }}
+                  />
+                )}
+              />
+              {errors.message ? (
+                <span className="text-red-500">{errors.message.message}</span>
+              ) : null}
+            </div>
 
-          <div className="flex justify-end">
-            <button
-              disabled={isSubmitting}
-              className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
-              type="submit"
-            >
-              Submit
-            </button>
-          </div>
-        </form>}
+            <div className="flex justify-end">
+              <button
+                disabled={isSubmitting}
+                className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        )}
       </main>
       <Footer />
     </div>
