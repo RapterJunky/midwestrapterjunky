@@ -42,7 +42,7 @@ interface Props extends FullPageProps {
       id: string;
       pinned: boolean;
       locked: boolean;
-      created: Date;
+      createdAt: Date;
     }[];
   }[];
 }
@@ -77,7 +77,7 @@ export const getStaticProps = async ({
           id: true,
           pinned: true,
           locked: true,
-          created: true,
+          createdAt: true,
         },
       },
     },

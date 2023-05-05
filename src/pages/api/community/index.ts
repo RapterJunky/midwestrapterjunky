@@ -79,7 +79,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             orderBy:
               sort === "latest"
                 ? {
-                    created: "desc",
+                    createdAt: "desc",
                   }
                 : {
                     likes: {

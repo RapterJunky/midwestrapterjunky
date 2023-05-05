@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import Sidenav from "@components/layout/Sidenav";
 import HiMenu from "@components/icons/HiMenu";
 import Sidebar from "@components/ui/Sidebar";
 import IconLink from "@/components/ui/IconLink";
+import { HiUser } from "react-icons/hi";
 
 export interface NavProps {
   navbar: {
@@ -31,11 +33,28 @@ const navbarMode = {
 
 const NavDropdown = dynamic(() => import("@/components/ui/NavDropdown"));
 
+const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({ session }) => {
+  if (session.status === "authenticated") return (
+    <Link href="/signout" title="Signout" role="button" className="ml-2">
+      <Image className="rounded-full shadow-lg" width={40} height={40} src={session.data.user.image ?? ""} alt="avatar" />
+    </Link>
+  )
+
+  return (
+    <div className="ml-2">
+      <Link href="/signin" title="Signin" role="button" aria-label="Account" className="h-10 w-10 flex justify-center items-center rounded-full shadow-lg bg-white">
+        <HiUser className="text-black h-6 w-6" />
+      </Link>
+    </div>
+  );
+}
+
 const Navbar: React.FC<NavbarProps> = ({
   logo,
   pageLinks = [],
   mode = "fade-scroll",
 }) => {
+  const session = useSession();
   const [showNav, setShowNav] = useState<boolean>(false);
   const ref = useRef<HTMLElement>(null);
   const onScroll = useCallback(() => {
@@ -69,6 +88,9 @@ const Navbar: React.FC<NavbarProps> = ({
         ref={ref}
         className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
       >
+        <div className="flex lg:hidden items-center">
+          <Account session={session} />
+        </div>
         <Link
           href="/"
           aria-label="Logo"
@@ -105,6 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({
             />
           ))}
           {pageLinks.length > 7 ? <NavDropdown links={pageLinks} /> : null}
+          <Account session={session} />
         </div>
       </nav>
     </>

@@ -20,7 +20,7 @@ type Props = {
     id: string;
     pinned: boolean;
     locked: boolean;
-    created: Date;
+    createdAt: Date;
   }[];
 };
 
@@ -83,7 +83,7 @@ const CategoryCard: React.FC<Props> = ({
                     {topic.name}
                   </span>
                   <span className="text-sm text-neutral-400">
-                    {new Date(topic.created).toLocaleDateString("en-us", {
+                    {new Date(topic.createdAt).toLocaleDateString("en-us", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",

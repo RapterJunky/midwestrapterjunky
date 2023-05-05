@@ -62,6 +62,11 @@ const server = z.object({
   APP_KEY: z.string().min(1),
   SHOP_ID: z.string().min(1),
 
+  KV_URL: z.string(),
+  KV_REST_API_URL: z.string(),
+  KV_REST_API_TOKEN: z.string(),
+  KV_REST_API_READ_ONLY_TOKEN: z.string(),
+
   DATABASE_URL: z.string().min(1),
   NEXTAUTH_URL: z.string().optional(),
 
@@ -126,6 +131,11 @@ const processEnv = {
   DATOCMS_READONLY_TOKEN: process.env.DATOCMS_READONLY_TOKEN,
   DATOCMS_API_TOKEN: process.env.DATOCMS_API_TOKEN,
   DATOCMS_ENVIRONMENT: process.env.DATOCMS_ENVIRONMENT,
+
+  KV_URL: process.env.KV_URL,
+  KV_REST_API_URL: process.env.KV_REST_API_URL,
+  KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+  KV_REST_API_READ_ONLY_TOKEN: process.env.KV_REST_API_READ_ONLY_TOKEN,
 
   GOOGLE_SERVICE_KEY: process.env.GOOGLE_SERVICE_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
