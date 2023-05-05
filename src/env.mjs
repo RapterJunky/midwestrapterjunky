@@ -41,7 +41,7 @@ const server = z.object({
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
-  GOOGLE_SERVICE_KEY: serviceKey.transform((value) => {
+  GOOGLE_SERVICE_KEY: serviceKey.transform((value, ctx) => {
     try {
       return JSON.stringify(value);
     } catch (error) {
