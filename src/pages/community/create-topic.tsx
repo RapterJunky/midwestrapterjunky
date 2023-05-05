@@ -40,6 +40,7 @@ type FormState = {
   tags: PrismaJson.Tags;
   categoryId: string;
   message: Descendant[];
+  deletedImages: string[];
 };
 
 interface Props extends FullPageProps {
@@ -170,6 +171,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
     formState: { errors, isSubmitting, isLoading },
     setError,
     clearErrors,
+    setValue,
   } = useForm<FormState>({
     defaultValues: async () => {
       const params = new URLSearchParams(window.location.search);
@@ -211,6 +213,8 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
       if (editId) formData.append("editId", editId);
+      if (state.deletedImages) state.deletedImages.forEach(item => formData.append("deletedImages[]", item));
+
       state.tags.forEach((tag) => formData.append("tags[]", tag));
 
       const images = extractSlateImages(state.message as NonTextNode[]);
@@ -386,7 +390,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 <TextEditor
                   id=":ct"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(values) => {
+                    field.onChange(values.ast);
+                    setValue("deletedImages", values.deletedImages);
+                  }}
                 />
               )}
             />

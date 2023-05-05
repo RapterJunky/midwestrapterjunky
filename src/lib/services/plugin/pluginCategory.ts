@@ -24,7 +24,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET": {
       const { page } = schema.parse(req.query);
 
-      const [categires, meta] = await prisma.thread.paginate({}).withPages({
+      const [categires, meta] = await prisma.thread.paginate().withPages({
         limit: 15,
         includePageCount: true,
         page,

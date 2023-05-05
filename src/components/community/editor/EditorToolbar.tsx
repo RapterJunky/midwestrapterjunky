@@ -14,8 +14,8 @@ import {
   type ListStyle,
   type HeadingLevel,
   getActiveHeading,
-} from "@/lib/utils/editor/textEditorUtils";
-import SvgIcon from "@/components/ui/FontAwesomeIcon";
+} from "@lib/utils/editor/textEditorUtils";
+import SvgIcon from "@components/ui/FontAwesomeIcon";
 
 const FaBold = () => (
   <SvgIcon
@@ -159,7 +159,7 @@ const MarkButton: React.FC<React.PropsWithChildren<{ mark: Mark }>> = ({
       onClick={() => toggleMark(editor, mark)}
       type="button"
       data-headlessui-state={isMarkActive(editor, mark) ? "active" : ""}
-      className="rounded-sm p-1 text-neutral-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-neutral-600 ui-active:text-black"
+      className="rounded-sm px-1.5 text-neutral-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-neutral-600 ui-active:text-black"
     >
       {children}
     </button>
@@ -174,7 +174,7 @@ const BlockButton: React.FC<
     <button
       onMouseDown={(e) => e.preventDefault()}
       onClick={() => toggleBlock(editor, type, { list })}
-      className="rounded-sm p-1 text-neutral-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-neutral-600 ui-active:text-black"
+      className="rounded-sm px-2 text-neutral-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-neutral-600 ui-active:text-black"
       type="button"
       data-headlessui-state={
         isBlockActive(editor, type, { list }) ? "active" : ""
@@ -265,24 +265,21 @@ const TextStyleButton: React.FC = () => {
       title="Text Styles"
       className="border-none pr-8 text-sm"
     >
-      <option value="normal">Normal Text</option>
-      <option value="1" className="text-3xl">
+      <option value="normal" className="font-medium tracking-tighter">Normal Text</option>
+      <option value="1" className="text-2xl font-medium tracking-tighter">
         Heading 1
       </option>
-      <option value="2" className="text-2xl">
+      <option value="2" className="text-xl font-medium tracking-tighter">
         Heading 2
       </option>
-      <option value="3" className="text-xl">
+      <option value="3" className="text-xl font-medium tracking-tighter">
         Heading 3
       </option>
-      <option value="4" className="text-lg">
+      <option value="4" className="text-lg font-medium tracking-tighter">
         Heading 4
       </option>
-      <option value="5" className="text-sm">
+      <option value="5" className="text-sm font-medium tracking-tighter">
         Heading 5
-      </option>
-      <option value="6" className="text-sm">
-        Heading 6
       </option>
     </select>
   );

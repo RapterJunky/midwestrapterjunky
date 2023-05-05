@@ -10,6 +10,7 @@ import type { CreateCommentBody } from "@hook/usePost";
 
 export type CommentBoxFormState = {
   message: Descendant[];
+  deletedImages: string[],
 };
 
 const CommentBox: React.FC<{
@@ -23,6 +24,7 @@ const CommentBox: React.FC<{
     control,
     formState: { isSubmitting, errors, isLoading },
     setError,
+    setValue,
   } = useForm<CommentBoxFormState>({
     defaultValues: defaultValues ?? {
       message: [{ type: "paragraph", children: [{ text: "" }] }],
@@ -38,8 +40,12 @@ const CommentBox: React.FC<{
       });
     }
 
-    await submit(state);
-    resetEditor(id);
+    try {
+      const result = await submit(state);
+      if (result) resetEditor(id);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (isLoading) {
@@ -60,7 +66,10 @@ const CommentBox: React.FC<{
         control={control}
         name="message"
         render={({ field }) => (
-          <TextEditor id={id} value={field.value} onChange={field.onChange} />
+          <TextEditor id={id} value={field.value} onChange={(values) => {
+            field.onChange(values.ast);
+            setValue("deletedImages", values.deletedImages);
+          }} />
         )}
       />
       {errors.message ? (

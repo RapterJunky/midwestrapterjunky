@@ -160,6 +160,7 @@ const wrapLink = (editor: Editor, url: string) => {
 
 export const withPlugin = (editor: Editor) => {
   const { isVoid, insertData, isInline, insertBreak, deleteBackward } = editor;
+  editor.deletedImages = [];
 
   editor.isInline = (el) =>
     ["link", "itemLink", "inlineItem"].includes(el.type) || isInline(el);

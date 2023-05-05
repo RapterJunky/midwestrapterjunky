@@ -7,12 +7,13 @@ import handleReports from "@service/plugin/pluginReports";
 import handleSquare from "@service/plugin/pluginSquare";
 import handleCategory from "@service/plugin/pluginCategory";
 import handleFlags from "@service/plugin/pluginConfigCat";
+import handleUsers from '@service/plugin/pluginUser';
 import handleMail from "@service/plugin/pluginMail";
 import handleTAC from "@service/plugin/pluginTAC";
 import { handleError } from "@api/errorHandler";
 
 const allowedRoutes = z
-  .array(z.enum(["authors", "reports", "square", "category", "flags", "mail", "tac"]))
+  .array(z.enum(["authors", "reports", "square", "category", "flags", "mail", "tac", "users"]))
   .describe("Allowed api paths")
   .max(1);
 
@@ -40,6 +41,8 @@ export default async function handle(
         return await handleMail(req, res);
       case "tac":
         return await handleTAC(req, res);
+      case "users":
+        return await handleUsers(req, res);
       default:
         throw createHttpError.BadRequest();
     }

@@ -3,6 +3,7 @@ import sharp from 'sharp';
 import type { NextApiRequest } from 'next';
 import { google } from "googleapis";
 import { z } from "zod";
+import { rgbaToDataURL } from 'thumbhash';
 import type { Record as DastReacord } from 'datocms-structured-text-utils'
 import createHttpError from "http-errors";
 import { PassThrough, Writable, pipeline } from "node:stream";
@@ -25,6 +26,7 @@ export const imageDataSchema = z.string().transform((str, ctx) => {
 
 const rootSchema = z.object({
   editId: z.string().uuid().optional(),
+  deletedImages: z.array(z.string()).or(z.string().transform(value => [value])).optional(),
   message: z
     .string()
     .transform((str, ctx) => {
@@ -92,7 +94,7 @@ const parseForm = <T extends z.AnyZodObject>(
 
   return new Promise((resolve, reject) => {
     const uploads: Promise<{ imageId?: string; file: string; }>[] = [];
-    //const uploadBlurs: Promise<{ blur: string; file: string; }>[] = [];
+    const uploadBlurs: Promise<{ blur: string; file: string; }>[] = [];
 
     const form = new IncomingForm({
       keepExtensions: false,
@@ -102,16 +104,21 @@ const parseForm = <T extends z.AnyZodObject>(
         const pass = new PassThrough();
         const webpConvent = sharp().withMetadata().toFormat("webp").webp();
 
-        /* const blur = pipeline(pass, sharp().toColorspace("rgba").toFormat("webp").webp(), (err) => {
-           if (err) logger.error(err);
-         }).toBuffer({ resolveWithObject: true }).then(async value => {
-           logger.debug(value.info);
-           return ({
-             blur: rgbaToDataURL(1000, 1000, value.data),//rgbaToDataURL(value.info.width as number, value.info.height as number, value.data),
-             file: file.newFilename
-           })
-         });
-         uploadBlurs.push(blur);*/
+        const blur = pipeline(pass, sharp().resize(16, 16).blur(2).raw().ensureAlpha(), (err) => {
+          if (err) logger.error(err);
+        }).toBuffer({ resolveWithObject: true }).then(async value => {
+          logger.debug(value.info);
+
+          const pngUrl = rgbaToDataURL(value.info.width, value.info.height, value.data);
+          const buf = Buffer.from(pngUrl.replace("data:image/png;base64,", ""), "base64");
+          const compress = await sharp(buf).toFormat("webp").toBuffer();
+
+          return ({
+            blur: `data:image/webp;base64,${compress.toString("base64")}`,
+            file: file.newFilename
+          })
+        });
+        uploadBlurs.push(blur);
 
         const fileUpload = driveService.files.create({
           requestBody: {
@@ -166,12 +173,22 @@ const parseForm = <T extends z.AnyZodObject>(
       if (err) return reject(err);
 
       const uploadData = await Promise.all(uploads);
-      //const uploadBlurData = await Promise.all(uploadBlurs);
+      const uploadBlurData = await Promise.all(uploadBlurs);
 
       const data = schema.safeParse(fields);
 
       if (!data.success) {
         return reject(data.error);
+      }
+
+      if (req.method === "PATCH" && data.data.deletedImages) {
+        const results = await Promise.allSettled((data.data.deletedImages as string[]).map(value => driveService.files.delete({
+          fileId: value
+        })));
+
+        for (const result of results) {
+          if (result.status === "rejected") logger.error(result.reason);
+        }
       }
 
       const imagesBlocks = Object.entries(files as Record<`image[${string}]`, File>).map(([key, value]) => {
@@ -181,9 +198,9 @@ const parseForm = <T extends z.AnyZodObject>(
 
         const imageData = (data.data.imageData as ImageData[]).find((item) => item.id === uuid);
         const googleData = uploadData.find(item => item.file === value.newFilename);
-        // const blurData = uploadBlurData.find(item => item.file === value.newFilename);
+        const blurData = uploadBlurData.find(item => item.file === value.newFilename);
 
-        if (!imageData || !googleData) return {
+        if (!blurData || !imageData || !googleData) return {
           __typename: "ImageRecord",
           id: uuid,
           content: {
@@ -203,7 +220,7 @@ const parseForm = <T extends z.AnyZodObject>(
           id: uuid,
           content: {
             imageId: googleData.imageId,
-            blurUpThumb: "",
+            blurUpThumb: blurData.blur,
             responsiveImage: {
               src: `https://drive.google.com/uc?export=view&id=${googleData.imageId}`,
               alt: "Uploaded Image",

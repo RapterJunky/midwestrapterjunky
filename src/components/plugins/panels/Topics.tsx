@@ -7,9 +7,10 @@ import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 import { Paginate } from "@/types/page";
 import DisplayDataStates from "./DisplayDataStates";
 import DatoCmsPagination from "./Pagination";
-import { Button, Dropdown, DropdownMenu, DropdownOption, TextField } from "datocms-react-ui";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { Button, Dropdown, DropdownMenu, DropdownOption, DropdownSeparator, TextField } from "datocms-react-ui";
+import { FaChevronDown, FaChevronUp, FaLock, FaThumbtack } from "react-icons/fa";
 import Image from "next/image";
+import Link from "next/link";
 
 type Topic = {
     name: string;
@@ -17,6 +18,10 @@ type Topic = {
     pinned: boolean;
     id: string;
     tags: PrismaJson.Tags | null;
+    notifyOwner: boolean;
+    thread: {
+        name: string;
+    };
     owner: {
         name: string | null;
         image: string | null;
@@ -34,7 +39,7 @@ export const Topics: React.FC<{
 
 
     return (
-        <Panel title="Topics"
+        <Panel title="Topics List"
             mini={mini}
             setMini={() => setMini((state) => !state)}
             actions={<>
@@ -47,16 +52,21 @@ export const Topics: React.FC<{
             }} />
             {data && data.result.length ? (
                 <>
-                    <div className="flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2 mt-2">
                         {data.result.map(topic => (
-                            <div key={topic.id} className="flex justify-between p-4 bg-white gap-2 shadow">
+                            <div key={topic.id} className="flex justify-between p-4 bg-white gap-2 shadow items-center">
                                 <div className="flex gap-2">
-                                    <div>
+                                    <div className="flex flex-col items-center">
                                         <Image className="rounded-full" width={40} height={40} src={topic.owner.image ?? ""} alt="avatar" />
                                         <div className="mt-2">{topic.owner.name}</div>
                                     </div>
                                     <div>
-                                        <h2 className="font-bold">{topic.name}</h2>
+                                        <h1 className="font-bold text-lg line-clamp-1 underline flex items-center">
+                                            {topic.locked ? <FaLock /> : null}
+                                            {topic.pinned ? (<FaThumbtack />) : null}
+                                            <Link href={`/community/p/${topic.id}`} prefetch={false}>{topic.name}</Link>
+                                        </h1>
+                                        <div className="text-sm tracking-tighter mb-1">Category: {topic.thread.name}</div>
                                         <div className="flex gap-2 flex-wrap">{topic.tags ? (topic.tags.map((value, i) => (<span className="text-dato-xs bg-green-500 text-white rounded-sm px-1" key={i}>{value}</span>))) : null}</div>
                                     </div>
                                 </div>
@@ -67,14 +77,60 @@ export const Topics: React.FC<{
                                     </Button>
                                 )}>
                                     <DropdownMenu alignment="right">
-                                        <DropdownOption>
-                                            {topic.pinned ? "Unpin Topic" : "Pin Topic"}
+                                        <DropdownOption onClick={async () => {
+                                            try {
+                                                await mutate(async (current) => {
+                                                    return current;
+                                                }, { revalidate: false, rollbackOnError: true });
+                                            } catch (error) {
+                                                ctx.alert("Failed to delete account.").catch(e => console.error(e));
+                                            }
+                                        }}>
+                                            <div className="font-semibold">{topic.pinned ? "Unpin Topic" : "Pin Topic"}</div>
+                                            <div className="text-sm tracking-tighter text-neutral-500">{topic.pinned ? "Unpin this topic from its category." : "Pin this topic to its category."}</div>
                                         </DropdownOption>
-                                        <DropdownOption>
-                                            {topic.locked ? "Unlock Topic" : "Lock Topic"}
+                                        <DropdownOption onClick={async () => {
+                                            try {
+                                                await mutate(async (current) => {
+                                                    return current;
+                                                }, { revalidate: false, rollbackOnError: true });
+                                            } catch (error) {
+                                                ctx.alert("Failed to delete account.").catch(e => console.error(e));
+                                            }
+                                        }}>
+                                            <div className="font-semibold">{topic.locked ? "Unlock Topic" : "Lock Topic"}</div>
+                                            <div className="text-sm tracking-tighter text-neutral-500">{topic.locked ? "Unlocking will allow new comments to be posted on this topic." : "Locking will stop new comments from being posted to this topic."}</div>
                                         </DropdownOption>
-                                        <DropdownOption red>
-                                            Delete Topic
+                                        <DropdownSeparator />
+                                        <DropdownOption red onClick={async () => {
+                                            try {
+                                                const sure = await ctx.openConfirm({
+                                                    title: 'Confirm Deletion',
+                                                    content:
+                                                        `Are you sure you want to delete topic "${topic.name}"`,
+                                                    choices: [
+                                                        {
+                                                            label: 'Yes',
+                                                            value: true,
+                                                            intent: 'negative',
+                                                        },
+                                                    ],
+                                                    cancel: {
+                                                        label: 'Cancel',
+                                                        value: false,
+                                                    },
+                                                });
+
+                                                if (!sure) return;
+
+                                                await mutate(async (current) => {
+                                                    return current;
+                                                }, { revalidate: false, rollbackOnError: true });
+                                            } catch (error) {
+                                                ctx.alert("Failed to delete account.").catch(e => console.error(e));
+                                            }
+                                        }}>
+                                            <div className="font-semibold">Delete Topic</div>
                                         </DropdownOption>
                                     </DropdownMenu>
                                 </Dropdown>

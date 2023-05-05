@@ -79,7 +79,7 @@ const Comment: React.FC<Props> = ({
             {showEdit ? (<CommentBox btnText="Save" defaultValues={() => singleFetch<CommentBoxFormState>(`/api/community/create?id=${comment.id}`, {
               headers: { "x-type-create": "comment" }
             })} submit={async (data) => {
-              const result = await create(data, { mode: "update", id: comment.id })
+              const result = await create(data, { mode: "update", id: comment.id });
               if (result) setShowEdit(false);
               return result;
             }} />) : comment.content ? (

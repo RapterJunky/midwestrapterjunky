@@ -1,6 +1,6 @@
 import type { RenderPageCtx } from "datocms-plugin-sdk";
-import { Button, Spinner } from "datocms-react-ui";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Button, Dropdown, DropdownMenu, DropdownOption, DropdownSeparator, Spinner } from "datocms-react-ui";
+import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
@@ -189,18 +189,27 @@ export const Threads: React.FC<{
                     </div>
                     <p>{value.description}</p>
                   </div>
-                  <div className="flex gap-dato-m text-white">
-                    <Button
-                      onClick={() => editModel(value)}
-                      rightIcon={<FaEdit style={{ fill: "white" }} />}
-                      buttonType="primary"
-                    />
-                    <Button
-                      onClick={() => deleteModel(value.id)}
-                      rightIcon={<FaTrash style={{ fill: "white" }} />}
-                      buttonType="negative"
-                    />
-                  </div>
+                  <Dropdown renderTrigger={({ open, onClick }) => (
+                    <Button buttonSize="xxs" buttonType="primary" onClick={onClick}>
+                      <span className="flex items-center gap-2">Actions {open ? (<FaChevronDown />) : (<FaChevronUp />)}</span>
+                    </Button>
+                  )}>
+                    <DropdownMenu alignment="right">
+                      <DropdownOption onClick={() => editModel(value)}>
+                        <div className="flex items-center gap-1">
+                          <FaEdit className="h-4 w-4" />
+                          Edit
+                        </div>
+                      </DropdownOption>
+                      <DropdownSeparator />
+                      <DropdownOption red onClick={() => deleteModel(value.id)}>
+                        <div className="flex items-center gap-1">
+                          <FaTrash className="h-4 w-4" />
+                          Delete
+                        </div>
+                      </DropdownOption>
+                    </DropdownMenu>
+                  </Dropdown>
                 </li>
               ))
               : null}

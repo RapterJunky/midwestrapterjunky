@@ -4,7 +4,7 @@ import type { ReactEditor } from "slate-react";
 
 declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
+    Editor: BaseEditor & ReactEditor & { deletedImages: string[] };
     Element: NonTextNode;
     Text: Text;
     Range: BaseRange & {

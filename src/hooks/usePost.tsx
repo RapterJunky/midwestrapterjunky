@@ -20,6 +20,7 @@ type DialogData = {
 type PostLikes = { likesCount: number; likedByMe: boolean };
 export type CreateCommentBody = {
   message: Descendant[];
+  deletedImages?: string[];
   parentCommentId?: string;
 };
 
@@ -508,10 +509,18 @@ export const PostProvider: React.FC<
                   throw new Error("Unable to create comment.", {
                     cause: !postId ? "NO_POST_ID" : undefined,
                   });
-
                 const formData = new FormData();
+
                 formData.append("postId", postId);
-                if (settings?.mode === "update") formData.set("editId", settings.id);
+
+                if (settings?.mode === "update") {
+                  formData.set("editId", settings.id);
+                }
+
+                if (content.deletedImages) {
+                  content.deletedImages.forEach(item => formData.append("deletedImages[]", item));
+                }
+
                 if (content.parentCommentId)
                   formData.append("parentId", content.parentCommentId);
 
@@ -542,7 +551,7 @@ export const PostProvider: React.FC<
                   formData.append(
                     `image[${image.id}]`,
                     image.file,
-                    `${image.id}.${image.file.type.split("/")[1]}`
+                    image.id
                   );
 
                 const request = await fetch("/api/community/create", {

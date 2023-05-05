@@ -1,4 +1,4 @@
-import { FaFlag, FaColumns, FaRegTimesCircle, FaEnvelope, FaRegCommentDots, FaKey } from "react-icons/fa";
+import { FaFlag, FaColumns, FaRegTimesCircle, FaEnvelope, FaRegCommentDots, FaKey, FaUser } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import { Reports } from "./panels/Reports";
 import { MailingList } from "./panels/MailingList";
 import { Topics } from "./panels/Topics";
 import { Features } from "./panels/Features";
+import { UserList } from "./panels/UserList";
 
 const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
   const [mini, setMini] = useState(false);
@@ -29,6 +30,7 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
   return (
     <Canvas ctx={ctx}>
       <Tab.Group
+        defaultValue={2}
         vertical
         as="div"
         className="absolute flex h-full w-full flex-1"
@@ -37,6 +39,12 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
           className={`flex flex-col border-r bg-dato-dark text-dato-light transition ${mini ? "w-12" : "w-52"
             }`}
         >
+          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+            <FaUser /> {mini ? null : "Users List"}
+          </Tab>
+          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+            <FaEnvelope /> {mini ? null : "Mailing List"}
+          </Tab>
           <Tab className="flex items-center gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
             <FaColumns /> {mini ? null : "Categories"}
           </Tab>
@@ -47,17 +55,15 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
             <FaFlag /> {mini ? null : "Reports"}
           </Tab>
           <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
-            <FaEnvelope /> {mini ? null : "Mailing List"}
-          </Tab>
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
             <FaKey /> {mini ? null : "Feature Flags"}
           </Tab>
         </Tab.List>
         <Tab.Panels className="h-full w-full">
+          <UserList mini={mini} setMini={setMini} ctx={ctx} />
+          <MailingList mini={mini} setMini={setMini} ctx={ctx} />
           <Threads mini={mini} setMini={setMini} ctx={ctx} />
           <Topics mini={mini} setMini={setMini} ctx={ctx} />
           <Reports mini={mini} setMini={setMini} />
-          <MailingList mini={mini} setMini={setMini} ctx={ctx} />
           <Features mini={mini} setMini={setMini} ctx={ctx} />
         </Tab.Panels>
       </Tab.Group>

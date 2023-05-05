@@ -6,6 +6,7 @@ import {
   DropdownOption,
   Button,
   Spinner,
+  DropdownSeparator,
 } from "datocms-react-ui";
 import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { StructuredText } from "react-datocms/structured-text";
@@ -120,28 +121,31 @@ const ArticleReport: React.FC<
                     <FaChevronUp style={{ fill: "white" }} />
                   ) : (
                     <FaChevronDown style={{ fill: "white" }} />
-                  )
-                }
-              >
+                  )}>
                 Actions
               </Button>
             )}
           >
             <DropdownMenu alignment="right">
+              <DropdownOption onClick={() => handleDelete(id)}>
+                <div className="font-semibold">Dismiss report</div>
+              </DropdownOption>
+              <DropdownOption disabled>
+                <div className="font-semibold">Lock topic</div>
+                <div className="text-sm tracking-tighter text-neutral-500">Stop Users from posting comments on this topic.</div>
+              </DropdownOption>
+              <DropdownSeparator />
               <DropdownOption red disabled>
-                Remove Topic and Ban User
+                <div className="font-semibold">Remove topic and ban user</div>
+                <div className="text-sm tracking-tighter font-light">Delete topic and ban its owner.</div>
               </DropdownOption>
               <DropdownOption red onClick={deleteItem}>
-                Remove Topic
+                <div className="font-semibold">Remove topic</div>
+                <div className="text-sm tracking-tighter font-light">Delete topic</div>
               </DropdownOption>
               <DropdownOption red disabled>
-                Ban Reporty
-              </DropdownOption>
-              <DropdownOption red disabled>
-                Lock Topic
-              </DropdownOption>
-              <DropdownOption onClick={() => handleDelete(id)}>
-                Dismiss Report
+                <div className="font-semibold">Ban reporty</div>
+                <div className="text-sm font-light tracking-tighter">Ban the user who reported this.</div>
               </DropdownOption>
             </DropdownMenu>
           </Dropdown>
@@ -233,17 +237,21 @@ const CommentReport: React.FC<
             )}
           >
             <DropdownMenu alignment="right">
+              <DropdownOption onClick={() => handleDelete(id)}>
+                <div className="font-semibold">Dismiss report</div>
+              </DropdownOption>
+              <DropdownSeparator />
               <DropdownOption red disabled>
-                Remove Comment and Ban User
+                <div className="font-semibold">Remove comment and ban user</div>
+                <div className="text-sm tracking-tighter font-light">Delete comment and ban its owner.</div>
               </DropdownOption>
               <DropdownOption red onClick={deleteItem}>
-                Remove Comment
+                <div className="font-semibold"> Remove comment</div>
+                <div className="text-sm tracking-tighter font-light">Delete comment</div>
               </DropdownOption>
               <DropdownOption red disabled>
-                Ban Reporty
-              </DropdownOption>
-              <DropdownOption onClick={() => handleDelete(id)}>
-                Dismiss Report
+                <div className="font-semibold">Ban reporty</div>
+                <div className="text-sm font-light tracking-tighter">Ban the user who reported this.</div>
               </DropdownOption>
             </DropdownMenu>
           </Dropdown>

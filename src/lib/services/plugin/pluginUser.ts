@@ -13,35 +13,22 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         case "GET": {
             const { page } = schema.parse(req.query);
 
-            const [topics, meta] = await prisma.threadPost.paginate({
+            const [user, meta] = await prisma.user.paginate({
                 select: {
+                    email: true,
                     name: true,
-                    locked: true,
-                    pinned: true,
                     id: true,
-                    tags: true,
-                    notifyOwner: true,
-                    thread: {
-                        select: {
-                            name: true
-                        }
-                    },
-                    owner: {
-                        select: {
-                            name: true,
-                            image: true
-                        }
-                    }
+                    banned: true,
                 }
             }).withPages({
                 includePageCount: true,
                 page,
-                limit: 15
+                limit: 50
             });
 
             return res.status(200).json({
                 ...meta,
-                result: topics
+                result: user
             });
         }
         default:

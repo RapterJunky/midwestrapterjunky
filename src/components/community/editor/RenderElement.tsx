@@ -12,7 +12,7 @@ import Image from "next/image";
 import HiTrash from "@components/icons/HiTrash";
 import HiLink from "@components/icons/HiLink";
 
-type SlateBlockImage = Block & { src: string; width: number; height: number };
+type SlateBlockImage = Block & { imageId?: string; src: string; width: number; height: number };
 
 const SlateImage: React.FC<RenderElementProps> = ({
   attributes,
@@ -44,7 +44,11 @@ const SlateImage: React.FC<RenderElementProps> = ({
           type="button"
           onMouseDown={(e) => e.preventDefault()}
           data-headlessui-state={selected && focused ? "selected" : ""}
-          onClick={() => Transforms.removeNodes(editor, { at: path })}
+          onClick={() => {
+            const imageId = (element as SlateBlockImage)?.imageId;
+            if (imageId) editor.deletedImages.push(imageId);
+            Transforms.removeNodes(editor, { at: path })
+          }}
           className="focus absolute  left-2 top-2 hidden rounded-sm bg-red-400 p-1 text-white shadow-lg ui-selected:inline"
         >
           <HiTrash className="h-6 w-6" />
