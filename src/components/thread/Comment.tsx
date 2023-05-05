@@ -1,9 +1,10 @@
 import { StructuredText } from "react-datocms/structured-text";
 import type { useSession } from "next-auth/react";
-//import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
 import { useState } from "react";
 import Image from "next/image";
 
+import type { CommentBoxFormState } from "@components/thread/CommentBox";
 import usePost /*, { type CreateCommentBody }*/ from "@hook/usePost";
 import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
@@ -12,6 +13,10 @@ import HiHeart from "@components/icons/HiHeart";
 import HiTrash from "@components/icons/HiTrash";
 import HiFlag from "@components/icons/HiFlag";
 import Spinner from "@/components/ui/Spinner";
+import { singleFetch } from "@/lib/api/fetch";
+import { HiPencil } from "react-icons/hi";
+
+
 //import useComment from "@/hooks/useComment";
 
 type Session = ReturnType<typeof useSession>;
@@ -28,7 +33,6 @@ interface Props {
   isChild?: boolean;
 }
 
-/*const ChildComments = dynamic(() => import("@components/thread/ChildComments"));
 const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
   loading: () => (
     <div className="animate-pulse">
@@ -36,17 +40,15 @@ const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
       <span className="inline-block h-28 w-full flex-auto cursor-wait bg-current align-middle text-base text-neutral-700 opacity-50"></span>
     </div>
   )
-});*/
+});
 
 const Comment: React.FC<Props> = ({
   comment,
   session,
-  //isChild = false
 }) => {
-  //const [showReplies, setShowReplies] = useState(false);
-  //const [showReplyBox, setShowReplyBox] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState({ state: false, type: "" });
-  const { report, like, unlike, delete: deleteComment } = usePost();
+  const { report, like, unlike, delete: deleteComment, create } = usePost();
   return (
     <li
       id={comment.id}
@@ -55,7 +57,6 @@ const Comment: React.FC<Props> = ({
       <div className="flex w-full">
         <div>
           <Image
-            unoptimized
             width={40}
             height={40}
             className="rounded-full"
@@ -75,7 +76,13 @@ const Comment: React.FC<Props> = ({
             </div>
           </div>
           <article className="prose min-h-[50px] max-w-none">
-            {comment.content ? (
+            {showEdit ? (<CommentBox btnText="Save" defaultValues={() => singleFetch<CommentBoxFormState>(`/api/community/create?id=${comment.id}`, {
+              headers: { "x-type-create": "comment" }
+            })} submit={async (data) => {
+              const result = await create(data, { mode: "update", id: comment.id })
+              if (result) setShowEdit(false);
+              return result;
+            }} />) : comment.content ? (
               <StructuredText
                 renderBlock={renderBlock}
                 data={comment.content}
@@ -86,6 +93,11 @@ const Comment: React.FC<Props> = ({
           </article>
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
+              {session.status === "authenticated" && session.data.user.id === comment.owner.id ? (
+                <button onClick={() => setShowEdit(curr => !curr)} type="button" className="hover:text-black p-1 text-gray-500 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" title="Edit comment" aria-label="Edit comment">
+                  <HiPencil className="h-5 w-5" />
+                </button>
+              ) : null}
               {/*session.status === "authenticated" && !isChild ? (
                 <button onClick={() => setShowReplyBox(curr => !curr)} className="hover:text-black p-1 text-gray-500 hover:bg-gray-400 hover:bg-opacity-20 rounded-sm" title="reply to comment" aria-label="reply">
                   <HiReply className="h-5 w-5" />
@@ -100,6 +112,7 @@ const Comment: React.FC<Props> = ({
             </div>
             <div className="flex items-center justify-end gap-1 text-gray-500">
               <button
+                aria-label={comment.likedByMe ? "Unlike comment" : "Like Comment"}
                 disabled={session.status !== "authenticated"}
                 title="like this comment"
                 data-headlessui-state={comment.likedByMe ? "active" : ""}
@@ -118,6 +131,7 @@ const Comment: React.FC<Props> = ({
               {session.status === "authenticated" ? (
                 <>
                   <button
+                    aria-label="Report Comment"
                     disabled={loading.state && loading.type === "report"}
                     title="privately flag this comment for attention or send a private notification about it"
                     className="flex items-center rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black disabled:opacity-70"
@@ -136,6 +150,7 @@ const Comment: React.FC<Props> = ({
                   </button>
                   {session.data?.user.id === comment.owner.id ? (
                     <button
+                      aria-label="Delete your comment"
                       disabled={loading.state && loading.type === "delete"}
                       title="delete your comment"
                       className="flex items-center rounded-sm p-1 text-red-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-red-700 disabled:opacity-70"

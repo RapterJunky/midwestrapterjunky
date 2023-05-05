@@ -1,5 +1,7 @@
 import type { Block, NonTextNode } from "datocms-structured-text-slate-utils";
 
+type UploadedImageBlock = Block & { src: string; width: number; height: number; file: File };
+
 const extractSlateImages = (nodes: NonTextNode[]) => {
   const images: {
     id: string;
@@ -10,15 +12,16 @@ const extractSlateImages = (nodes: NonTextNode[]) => {
 
   for (const node of nodes) {
     if (node.type === "block" && node.blockModelId === "ImageRecord") {
-      if (!node.id) continue;
+      // if no id or if src is not as data image
+      if (!node.id || !(node as UploadedImageBlock).src.startsWith("data:image/")) continue;
 
       images.push({
         id: node.id,
-        width: (node as Block & { width: number; height: number; file: File })
+        width: (node as UploadedImageBlock)
           .width,
-        height: (node as Block & { width: number; height: number; file: File })
+        height: (node as UploadedImageBlock)
           .height,
-        file: (node as Block & { width: number; height: number; file: File })
+        file: (node as UploadedImageBlock)
           .file,
       });
 

@@ -21,7 +21,7 @@ const Comments: React.FC = () => {
   return (
     <div className="my-4">
       {session.status === "authenticated" ? (
-        <CommentBox create={create} />
+        <CommentBox submit={create} />
       ) : (
         <div className="mt-6 flex w-full justify-center gap-4">
           <span>Login to comment</span> •
@@ -54,8 +54,8 @@ const Comments: React.FC = () => {
         ) : null}
         {!isLoading && comments
           ? comments?.result.map((comment) => (
-              <Comment key={comment.id} comment={comment} session={session} />
-            ))
+            <Comment key={comment.id} comment={comment} session={session} />
+          ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

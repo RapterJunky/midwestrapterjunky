@@ -10,13 +10,13 @@ import { Controller, useForm } from "react-hook-form";
 import { Fragment, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Descendant } from "slate";
+import dynamic from "next/dynamic";
 
-import TextEditor from "@components/community/editor/TextEditor";
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import TagInput from "@/components/inputs/TagInput";
-import Spinner from "@/components/ui/Spinner";
+import TagInput from "@components/inputs/TagInput";
+import Spinner from "@components/ui/Spinner";
 
 import extractSlateImages from "@lib/utils/editor/extractSlateImages";
 import { isEditorEmpty } from "@lib/utils/editor/editorActions";
@@ -24,7 +24,8 @@ import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
-import useModRouter from "@hook/useModRouter";
+import useReplace from "@hook/useReplace";
+import { singleFetch } from "@api/fetch";
 import prisma from "@api/prisma";
 
 type DialogData = {
@@ -72,13 +73,16 @@ export const getStaticProps = async ({
       categories,
       preview: preview ?? false,
       seo: genericSeoTags({
-        title: "Create Topic",
-        description: "Create a new topic",
+        title: "Topic",
+        description: "Create or edit an topic",
         url: "https://midwestraptorjunkies.com/community/create-topic",
       }),
     },
   };
 };
+
+// Loading Slate and all that
+const TextEditor = dynamic(() => import("@components/community/editor/TextEditor"));
 
 const CreateTopicDialog: React.FC<{
   data: DialogData;
@@ -154,7 +158,7 @@ const CreateTopicDialog: React.FC<{
 
 const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   const session = useSession();
-  const { router, replace } = useModRouter();
+  const replace = useReplace();
   const [dialog, setDialog] = useState<DialogData>({
     open: false,
     mode: "message",
@@ -163,20 +167,27 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isLoading },
     setError,
     clearErrors,
   } = useForm<FormState>({
-    defaultValues: {
-      tags: [],
-      message: [{ type: "paragraph", children: [{ text: "" }] }],
+    defaultValues: async () => {
+      const params = new URLSearchParams(window.location.search);
+      const editId = params.get("edit");
+
+      if (editId) {
+        return singleFetch<FormState>(`/api/community/create?id=${editId}`, { headers: { "X-Type-Create": "post" } })
+      }
+
+      return {
+        tags: [] as PrismaJson.Tags,
+        message: [{ type: "paragraph", children: [{ text: "" }] }],
+      } as FormState
     },
   });
 
   useEffect(() => {
-    if (session.status === "loading" || session.status === "authenticated")
-      return;
-    replace("/community").catch((e) => console.error(e));
+    if (session.status === "unauthenticated") replace("/community").catch((e) => console.error(e));
   }, [session.status, replace]);
 
   const onSubmit = async (state: FormState) => {
@@ -193,10 +204,13 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         mode: "loading",
       });
 
+      const editId = new URLSearchParams(window.location.search).get("edit");
+
       const formData = new FormData();
 
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
+      if (editId) formData.append("editId", editId);
       state.tags.forEach((tag) => formData.append("tags[]", tag));
 
       const images = extractSlateImages(state.message as NonTextNode[]);
@@ -230,7 +244,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       }
 
       const response = await fetch("/api/community/create", {
-        method: "POST",
+        method: editId ? "PATCH" : "POST",
         body: formData,
         headers: {
           "X-Type-Create": "post",
@@ -241,7 +255,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       const data = (await response.json()) as { postId: string };
 
-      await router.replace({
+      await replace({
         pathname: "/community/p/[slug]",
         query: {
           slug: data.postId,
@@ -254,10 +268,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,
@@ -277,7 +291,12 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         onClose={() => setDialog((current) => ({ ...current, open: false }))}
       />
       <main className="flex flex-1 justify-center">
-        <form
+        {isLoading ? (
+          <div>
+            <Spinner />
+            Loading...
+          </div>
+        ) : <form
           onSubmit={handleSubmit(onSubmit)}
           className="container mb-4 max-w-3xl"
         >
@@ -385,7 +404,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
               Submit
             </button>
           </div>
-        </form>
+        </form>}
       </main>
       <Footer />
     </div>

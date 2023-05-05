@@ -6,6 +6,8 @@ import HiHeart from "@components/icons/HiHeart";
 import HiFlag from "@components/icons/HiFlag";
 import Spinner from "@/components/ui/Spinner";
 import usePost from "@hook/usePost";
+import Link from "next/link";
+import { HiPencil } from "react-icons/hi";
 
 const TopicActions: React.FC<{
   likes: number;
@@ -41,6 +43,12 @@ const TopicActions: React.FC<{
 
   return (
     <div className="flex justify-end gap-1 p-0.5 text-neutral-600">
+      {session.data?.user.id === ownerId ? (
+        <Link title="Edit Post" className="mr-auto flex rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black disabled:text-neutral-800 ui-active:text-red-400 ui-active:hover:text-red-500" href={{ pathname: "/community/create-topic", query: { edit: postId } }}>
+          <HiPencil className="h-6 w-6" />
+        </Link>
+      ) : null}
+
       <button
         disabled={isLoading}
         data-headlessui-state={data?.likedByMe ? "active" : ""}

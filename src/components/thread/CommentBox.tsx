@@ -8,26 +8,28 @@ import Spinner from "@/components/ui/Spinner";
 import { isEditorEmpty, resetEditor } from "@lib/utils/editor/editorActions";
 import type { CreateCommentBody } from "@hook/usePost";
 
-type FormState = {
+export type CommentBoxFormState = {
   message: Descendant[];
 };
 
 const CommentBox: React.FC<{
-  create: (props: CreateCommentBody) => Promise<void>;
-}> = ({ create }) => {
+  defaultValues?: () => Promise<CommentBoxFormState>,
+  submit: (props: CreateCommentBody) => Promise<boolean>;
+  btnText?: string;
+}> = ({ submit, defaultValues, btnText = "Reply" }) => {
   const id = useId();
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, errors, isLoading },
     setError,
-  } = useForm<FormState>({
-    defaultValues: {
+  } = useForm<CommentBoxFormState>({
+    defaultValues: defaultValues ?? {
       message: [{ type: "paragraph", children: [{ text: "" }] }],
     },
   });
 
-  const onSubmit = async (state: FormState) => {
+  const onSubmit = async (state: CommentBoxFormState) => {
     const empty = await isEditorEmpty(id);
     if (empty) {
       return setError("message", {
@@ -36,13 +38,22 @@ const CommentBox: React.FC<{
       });
     }
 
-    await create(state);
+    await submit(state);
     resetEditor(id);
   };
 
+  if (isLoading) {
+    return (
+      <div className="p-2 flex flex-col w-full items-center justify-center not-prose">
+        <Spinner size="h-6 w-6" />
+        <div className="mt-4">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <form
-      className="my-6 flex flex-col justify-evenly gap-1 md:px-4"
+      className="my-6 flex flex-col justify-evenly gap-1 md:px-4 not-prose"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller
@@ -67,7 +78,7 @@ const CommentBox: React.FC<{
               Loading...
             </div>
           ) : (
-            <span>Reply</span>
+            <span>{btnText}</span>
           )}
         </button>
       </div>

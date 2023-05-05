@@ -1,7 +1,10 @@
 import { createReadStream } from "node:fs";
 import { unlink } from "node:fs/promises";
+import sharp from 'sharp';
+import { rgbaToDataURL } from "thumbhash";
 import { type File } from "formidable";
 import { google } from "googleapis";
+
 import { z } from "zod";
 
 import { compileWebp } from "@lib/webp";
@@ -53,6 +56,9 @@ export const uploadImages = async (
     Object.entries(files).map(async ([key, value]) => {
       const uuid = key.replace("image[", "").replace("]", "");
 
+      const data = images.find((item) => item.id === uuid);
+      if (!data) throw new Error("Failed to find image data");
+
       logger.info(
         {
           filename: value.originalFilename,
@@ -86,17 +92,14 @@ export const uploadImages = async (
         fields: "id",
       });
 
-      await driveService.permissions.create({
-        fileId: file.data.id ?? undefined,
-        requestBody: {
-          role: "reader",
-          type: "anyone",
-        },
-      });
+      const blur = await sharp(filepath).toColorspace("rgba").toBuffer()
+
+      const dataUrl = rgbaToDataURL(data.width, data.height, blur);
 
       await unlink(filepath);
 
       return {
+        blurUpThumb: dataUrl,
         recordId: uuid,
         id: file.data.id,
         src: `https://drive.google.com/uc?export=view&id=${file.data.id}`,
@@ -117,6 +120,7 @@ export const uploadImages = async (
   return images.map((value) => {
     const data = links.find((item) => item.recordId === value.id) ?? {
       recordId: value.id,
+      blurUpThumb: "",
       id: "",
       src: "https://api.dicebear.com/6.x/initials/png?seed=%3F",
     };
@@ -125,7 +129,7 @@ export const uploadImages = async (
       id: data.recordId,
       content: {
         imageId: data.id,
-        blurUpThumb: "",
+        blurUpThumb: data.blurUpThumb,
         responsiveImage: {
           src: data.src,
           alt: "Uploaded Image",

@@ -1,6 +1,35 @@
 import { z } from "zod";
 import { Environment } from "square";
 
+const serviceKey = z
+  .string()
+  .transform((arg, ctx) => {
+    try {
+      return JSON.parse(arg);
+    } catch (error) {
+      ctx.addIssue({ type: "custom", message: "Invaild Json" });
+      return z.NEVER;
+    }
+  })
+  .pipe(
+    z.object({
+      key_version: z.string().nonempty(),
+      type: z.literal("service_account"),
+      project_id: z.string().nonempty(),
+      private_key_id: z.string().nonempty(),
+      private_key: z
+        .string()
+        .nonempty()
+        .startsWith("-----BEGIN PRIVATE KEY-----"),
+      client_email: z.string().email(),
+      client_id: z.string().nonempty(),
+      auth_uri: z.string().url(),
+      token_uri: z.string().url(),
+      auth_provider_x509_cert_url: z.string().url(),
+      client_x509_cert_url: z.string().url(),
+    })
+  );
+
 /**
  * Specify your server-side environment variables schema here. This way you can ensure the app isn't
  * built with invalid env vars.
@@ -12,34 +41,14 @@ const server = z.object({
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
-  GOOGLE_SERVICE_KEY: z
-    .string()
-    .transform((arg, ctx) => {
-      try {
-        return JSON.parse(arg);
-      } catch (error) {
-        ctx.addIssue({ type: "custom", message: "Invaild Json" });
-        return z.NEVER;
-      }
-    })
-    .pipe(
-      z.object({
-        key_version: z.string().nonempty(),
-        type: z.literal("service_account"),
-        project_id: z.string().nonempty(),
-        private_key_id: z.string().nonempty(),
-        private_key: z
-          .string()
-          .nonempty()
-          .startsWith("-----BEGIN PRIVATE KEY-----"),
-        client_email: z.string().email(),
-        client_id: z.string().nonempty(),
-        auth_uri: z.string().url(),
-        token_uri: z.string().url(),
-        auth_provider_x509_cert_url: z.string().url(),
-        client_x509_cert_url: z.string().url(),
-      })
-    ),
+  GOOGLE_SERVICE_KEY: serviceKey.transform((value) => {
+    try {
+      return JSON.stringify(value);
+    } catch (error) {
+      ctx.addIssue({ type: "custom", message: "Invaild Json" });
+      return z.NEVER;
+    }
+  }),
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
 
@@ -227,4 +236,4 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   });
 }
 
-export { env };
+export { env, serviceKey };

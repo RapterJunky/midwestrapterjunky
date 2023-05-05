@@ -4,13 +4,13 @@ import {
   type BlockType,
   type Blockquote as FieldBlockquote,
   type Code as FieldCode,
-  type Document as FieldDocument,
   type InlineItem as FieldInlineItem,
   type ItemLink as FieldItemLink,
   type Paragraph as FieldParagraph,
   type Mark,
   type Span as FieldSpan,
   type DefaultMark,
+  type Record as DocumentRecord
 } from "datocms-structured-text-utils";
 import type {
   Block,
@@ -30,7 +30,10 @@ import type {
   InlineNode,
   Code,
 } from "datocms-structured-text-slate-utils";
+import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import type { Node as SlateNode } from "slate";
+import type { SlateImageBlock, DastImageRecord } from "./dastToSlate";
+
 
 type FieldBlockWithFullItem = {
   type: BlockType;
@@ -225,13 +228,32 @@ function innerSerialize(
   });
 }
 
-export function slateToDast(nodes: Node[] | null): FieldDocument | null {
+export function slateToDast(nodes: Node[] | null): StructuredTextGraphQlResponse | null {
   if (!nodes || nodes.length === 0) {
     return null;
   }
 
+  const blocks: DocumentRecord[] = [];
+
   const children = innerSerialize(nodes, (node: Block) => {
     const { id } = node;
+
+    if (node.blockModelId === "ImageRecord" && (node as SlateImageBlock)?.src) {
+      blocks.push({
+        __typename: "ImageRecord",
+        id: node.id,
+        content: {
+          blurUpThumb: (node as SlateImageBlock).blurUpThumb,
+          imageId: (node as SlateImageBlock).imageId,
+          responsiveImage: {
+            alt: (node as SlateImageBlock).alt,
+            height: (node as SlateImageBlock).height,
+            width: (node as SlateImageBlock).width,
+            src: (node as SlateImageBlock).src
+          }
+        }
+      } as DastImageRecord)
+    }
 
     const fieldBlock: FieldBlockWithFullItem = {
       type: "block",
@@ -242,7 +264,10 @@ export function slateToDast(nodes: Node[] | null): FieldDocument | null {
   });
 
   return {
-    schema: "dast",
-    document: { type: "root", children },
+    blocks,
+    value: {
+      schema: "dast",
+      document: { type: "root", children },
+    }
   };
 }
