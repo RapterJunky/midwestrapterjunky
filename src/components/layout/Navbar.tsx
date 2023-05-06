@@ -9,7 +9,7 @@ import Sidenav from "@components/layout/Sidenav";
 import HiMenu from "@components/icons/HiMenu";
 import Sidebar from "@components/ui/Sidebar";
 import IconLink from "@/components/ui/IconLink";
-import { HiUser } from "react-icons/hi";
+import HiUser from "@components/icons/HiUser";
 
 export interface NavProps {
   navbar: {
