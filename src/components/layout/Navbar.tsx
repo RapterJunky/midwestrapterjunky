@@ -33,21 +33,36 @@ const navbarMode = {
 
 const NavDropdown = dynamic(() => import("@/components/ui/NavDropdown"));
 
-const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({ session }) => {
-  if (session.status === "authenticated") return (
-    <Link href="/signout" title="Signout" role="button" className="ml-2">
-      <Image className="rounded-full shadow-lg" width={40} height={40} src={session.data.user.image ?? ""} alt="avatar" />
-    </Link>
-  )
+const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
+  session,
+}) => {
+  if (session.status === "authenticated")
+    return (
+      <Link href="/signout" title="Signout" role="button" className="ml-2">
+        <Image
+          className="rounded-full shadow-lg"
+          width={40}
+          height={40}
+          src={session.data.user.image ?? ""}
+          alt="avatar"
+        />
+      </Link>
+    );
 
   return (
     <div className="ml-2">
-      <Link href="/signin" title="Signin" role="button" aria-label="Account" className="h-10 w-10 flex justify-center items-center rounded-full shadow-lg bg-white">
-        <HiUser className="text-black h-6 w-6" />
+      <Link
+        href="/signin"
+        title="Signin"
+        role="button"
+        aria-label="Account"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg"
+      >
+        <HiUser className="h-6 w-6 text-black" />
       </Link>
     </div>
   );
-}
+};
 
 const Navbar: React.FC<NavbarProps> = ({
   logo,
@@ -88,7 +103,7 @@ const Navbar: React.FC<NavbarProps> = ({
         ref={ref}
         className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
       >
-        <div className="flex lg:hidden items-center">
+        <div className="flex items-center lg:hidden">
           <Account session={session} />
         </div>
         <Link
