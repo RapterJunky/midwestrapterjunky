@@ -420,6 +420,14 @@ const AddressForm: React.FC<Props> = ({
             {...register(ids.postal, {
               disabled,
               required: "Please enter a postal code",
+              minLength: {
+                value: 5,
+                message: "Min length is 4 characters"
+              },
+              pattern: {
+                value: /[0-9]+/,
+                message: "Must only contain numbers"
+              },
               maxLength: {
                 value: 20,
                 message: "Max length is 20 characters.",
@@ -427,6 +435,7 @@ const AddressForm: React.FC<Props> = ({
             })}
             maxLength={20}
             required
+            inputMode="numeric"
             autoComplete="postal-code"
             id={`${name}-postal`}
             className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"

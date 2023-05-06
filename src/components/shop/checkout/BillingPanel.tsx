@@ -322,7 +322,7 @@ const BillingPanel: React.FC<Props> = ({
         query: {
           mode: "shop",
           status: "ok",
-          message: encodeURIComponent("Order make successfully"),
+          message: encodeURIComponent("Order made successfully"),
           shop_receipt_id: result.receiptNumber,
           shop_receipt: encodeURIComponent(result.receiptUrl),
         },
@@ -344,9 +344,8 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${
-        active ? "flex" : "hidden"
-      } flex-col items-center justify-center`}
+      className={`${active ? "flex" : "hidden"
+        } flex-col items-center justify-center`}
     >
       <CheckoutModal
         asLoading={isSubmitting}
