@@ -47,7 +47,9 @@ const ArticleReport: React.FC<
 > = ({ ctx, handleDelete, id, article, reason, created, owner, reporter }) => {
   const deleteItem = async () => {
     try {
-      await AuthFetch(`/api/plugin/reports?type=topic&id=${id}`, { method: "DELETE" });
+      await AuthFetch(`/api/plugin/reports?type=topic&id=${id}`, {
+        method: "DELETE",
+      });
     } catch (error) {
       console.error(error);
       ctx.alert("Failed to remove topic.").catch((e) => console.error(e));
@@ -166,7 +168,9 @@ const CommentReport: React.FC<
 > = ({ id, handleDelete, comment, reason, created, owner, reporter, ctx }) => {
   const deleteItem = async () => {
     try {
-      await AuthFetch(`/api/plugin/reports?type=topic&id=${id}`, { method: "DELETE" });
+      await AuthFetch(`/api/plugin/reports?type=topic&id=${id}`, {
+        method: "DELETE",
+      });
     } catch (error) {
       console.error(error);
       ctx.alert("Failed to remove topic.").catch((e) => console.error(e));
@@ -308,7 +312,9 @@ export const Reports: React.FC<{
       if (!data) throw new Error("NoSourceData");
       await mutate(
         async () => {
-          await AuthFetch(`/api/plugin/reports?type=report&id=${id}`, { method: "DELETE" });
+          await AuthFetch(`/api/plugin/reports?type=report&id=${id}`, {
+            method: "DELETE",
+          });
           return {
             ...data,
             result: data?.result.filter((value) => value.id !== id),

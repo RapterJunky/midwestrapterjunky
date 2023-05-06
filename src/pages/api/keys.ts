@@ -25,7 +25,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-      process.env.KEYS_TOKEN
+        process.env.KEYS_TOKEN
     )
       throw createHttpError.Unauthorized();
 

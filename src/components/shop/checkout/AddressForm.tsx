@@ -422,11 +422,11 @@ const AddressForm: React.FC<Props> = ({
               required: "Please enter a postal code",
               minLength: {
                 value: 5,
-                message: "Min length is 4 characters"
+                message: "Min length is 4 characters",
               },
               pattern: {
                 value: /[0-9]+/,
-                message: "Must only contain numbers"
+                message: "Must only contain numbers",
               },
               maxLength: {
                 value: 20,

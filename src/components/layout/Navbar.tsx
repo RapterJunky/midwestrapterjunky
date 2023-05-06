@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +38,7 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
 }) => {
   if (session.status === "authenticated")
     return (
-      <Link href="/signout" title="Signout" role="button" className="ml-2">
+      <button onClick={() => signOut()} aria-label="Account signout" title="Signout" type="button" className="ml-2">
         <Image
           className="rounded-full shadow-lg"
           width={40}
@@ -46,20 +46,20 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
           src={session.data.user.image ?? ""}
           alt="avatar"
         />
-      </Link>
+      </button>
     );
 
   return (
     <div className="ml-2">
-      <Link
-        href="/signin"
+      <button
+        onClick={() => signIn()}
         title="Signin"
-        role="button"
-        aria-label="Account"
+        type="button"
+        aria-label="Account signin"
         className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg"
       >
         <HiUser className="h-6 w-6 text-black" />
-      </Link>
+      </button>
     </div>
   );
 };

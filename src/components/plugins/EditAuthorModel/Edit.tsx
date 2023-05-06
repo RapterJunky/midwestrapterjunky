@@ -52,11 +52,17 @@ const Edit: React.FC<{
 
       if (!check) return;
 
-      const result = await AuthFetch(`/api/plugin/authors?id=${ctx.parameters.id}`, { method: "DELETE" })
+      const result = await AuthFetch(
+        `/api/plugin/authors?id=${(ctx.parameters as { id: string }).id}`,
+        { method: "DELETE" }
+      );
 
       if (!result.ok) throw result;
 
-      await ctx.resolve({ type: "delete", id: ctx.parameters.id });
+      await ctx.resolve({
+        type: "delete",
+        id: (ctx.parameters as { id: string }).id,
+      });
     } catch (error) {
       let code = "";
       if (error instanceof Response) {
@@ -95,9 +101,10 @@ const Edit: React.FC<{
         );
       if (error instanceof Response) {
         await ctx.alert(
-          `${error.status === 500
-            ? "Internal Server Error"
-            : "Failed to perform action."
+          `${
+            error.status === 500
+              ? "Internal Server Error"
+              : "Failed to perform action."
           } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
         );
       }

@@ -87,9 +87,12 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
 
         const params = new URLSearchParams();
 
-        removelQueue.forEach(key => params.append("keys", key));
+        removelQueue.forEach((key) => params.append("keys", key));
 
-        await AuthFetch(`/api/keys?${params.toString()}`, { method: "DELETE", key: state.keyToken });
+        await AuthFetch(`/api/keys?${params.toString()}`, {
+          method: "DELETE",
+          key: state.keyToken,
+        });
 
         setRemovelQueue([]);
       } catch (error) {

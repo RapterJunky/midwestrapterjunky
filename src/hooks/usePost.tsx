@@ -224,8 +224,9 @@ export const PostProvider: React.FC<
               setDialog({
                 reasonInput: true,
                 title: "Reason for report",
-                message: `Please enter a reason for reporting this ${type === "comment" ? "comment" : "post"
-                  }.`,
+                message: `Please enter a reason for reporting this ${
+                  type === "comment" ? "comment" : "post"
+                }.`,
                 open: true,
               });
             });
@@ -271,9 +272,12 @@ export const PostProvider: React.FC<
             if (type === "post") {
               await likesMutate(
                 async () => {
-                  const response = await fetch(`/api/community/posts?type=like&id=${id}`, {
-                    method: "DELETE"
-                  });
+                  const response = await fetch(
+                    `/api/community/posts?type=like&id=${id}`,
+                    {
+                      method: "DELETE",
+                    }
+                  );
 
                   if (!response.ok) throw response;
                   const data = (await response.json()) as PostLikes;
@@ -304,9 +308,12 @@ export const PostProvider: React.FC<
                 );
                 if (idx === -1) throw new Error("Failed to find comment");
 
-                const response = await fetch(`/api/community/comments?type=like&id=${id}`, {
-                  method: "DELETE",
-                });
+                const response = await fetch(
+                  `/api/community/comments?type=like&id=${id}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
 
                 if (!response.ok) throw response;
 
@@ -434,9 +441,12 @@ export const PostProvider: React.FC<
         async delete(type, id) {
           try {
             if (type === "post") {
-              const response = await fetch(`/api/community/posts?type=post&id=${id}`, {
-                method: "DELETE"
-              });
+              const response = await fetch(
+                `/api/community/posts?type=post&id=${id}`,
+                {
+                  method: "DELETE",
+                }
+              );
 
               if (!response.ok) throw response;
 
@@ -449,9 +459,12 @@ export const PostProvider: React.FC<
               async (current) => {
                 if (!current) throw new Error("No data to populate.");
 
-                const response = await fetch(`/api/community/comments?type=comment&id=${id}`, {
-                  method: "DELETE"
-                });
+                const response = await fetch(
+                  `/api/community/comments?type=comment&id=${id}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
 
                 if (!response.ok) throw response;
 

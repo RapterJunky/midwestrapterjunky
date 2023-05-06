@@ -1,11 +1,11 @@
-import type { FaviconAttributes } from 'react-datocms/seo';
+import type { FaviconAttributes } from "react-datocms/seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import SignInList from '@components/pages/signin/SignList';
-import getFullPageProps from '@lib/cache/getFullPageProps';
+import SignInList from "@components/pages/signin/SignList";
+import getFullPageProps from "@lib/cache/getFullPageProps";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: data._site.faviconMetaTags,
     description: "Login page for Midwest Raptor Junkies.",
     title: "SignIn",
-    url: "https://midwestraptorjunkies.com/signin"
+    url: "https://midwestraptorjunkies.com/signin",
   });
 }
 
@@ -24,12 +24,12 @@ const getIcon = async () => {
     (value) => value.tag === "link" && value.attributes.sizes === "96x96"
   );
   return (icon?.attributes as FaviconAttributes)?.href;
-}
+};
 
 const SignIn = async () => {
   const icon = await getIcon();
   return (
-    <div className="lg:grid lg:grid-cols-12 lg:min-h-screen">
+    <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
       <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
         <Image
           src="https://www.datocms-assets.com/77949/1676234561-220865184_6246667838678383_7191752647666209634_n.webp"
@@ -101,6 +101,6 @@ const SignIn = async () => {
       </main>
     </div>
   );
-}
+};
 
 export default SignIn;
