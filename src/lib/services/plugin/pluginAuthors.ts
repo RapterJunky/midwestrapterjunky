@@ -31,7 +31,7 @@ export default async function handle(
 ) {
   switch (req.method) {
     case "POST": {
-      const data = await authorSchema.parseAsync(req.body);
+      const data = authorSchema.parse(req.body);
 
       const result = await prisma.authors.create({
         data,
@@ -40,7 +40,7 @@ export default async function handle(
       return res.status(201).json(result);
     }
     case "PATCH": {
-      const data = await authorSchema.parseAsync(req.body);
+      const data = authorSchema.parse(req.body);
 
       const result = await prisma.authors.update({
         data: data,
@@ -52,7 +52,7 @@ export default async function handle(
       return res.status(202).json(result);
     }
     case "GET": {
-      const { page } = await querySchema.parseAsync(req.query);
+      const { page } = querySchema.parse(req.query);
 
       const [authors, meta] = await prisma.authors.paginate().withPages({
         page,
@@ -63,7 +63,7 @@ export default async function handle(
       return res.status(200).json({ result: authors, ...meta });
     }
     case "DELETE": {
-      const query = await z.object({ id: z.string() }).parseAsync(req.body);
+      const query = z.object({ id: z.string() }).parse(req.query);
 
       await prisma.authors.delete({
         where: {

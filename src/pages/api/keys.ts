@@ -25,7 +25,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.KEYS_TOKEN
+      process.env.KEYS_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -49,9 +49,9 @@ export default async function handle(
         return res.status(200).json(pairs);
       }
       case "DELETE": {
-        const data = getVaildataion.parse(req.body);
+        const { keys } = z.object({ keys: getVaildataion }).parse(req.query);
 
-        const count = await dropKeys(data);
+        const count = await dropKeys(keys);
 
         return res.status(200).json({ count });
       }

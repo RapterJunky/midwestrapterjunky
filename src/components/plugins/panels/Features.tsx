@@ -8,7 +8,7 @@ import {
   FieldGroup,
 } from "datocms-react-ui";
 import { Panel } from "./Panel";
-import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 type FeatureFlag = {
   value: boolean;

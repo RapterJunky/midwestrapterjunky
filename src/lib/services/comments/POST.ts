@@ -3,6 +3,8 @@ import createHttpError from "http-errors";
 import type { Session } from "next-auth";
 import { z } from "zod";
 
+import prisma from "@api/prisma";
+
 const schema = z.object({
   type: z.enum(["like", "report"]),
 });

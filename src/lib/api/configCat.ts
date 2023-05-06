@@ -124,8 +124,7 @@ class LazyLoadConfigCat {
       }
 
       logger.error(
-        `1Failed to download feature flags & settings from ConfigCat. Status: ${
-          response && response.status
+        `1Failed to download feature flags & settings from ConfigCat. Status: ${response && response.status
         } - ${response && response.statusText}`
       );
       logger.info(
@@ -137,8 +136,8 @@ class LazyLoadConfigCat {
         error instanceof Response
           ? error.statusText
           : error instanceof Error
-          ? error.message
-          : "";
+            ? error.message
+            : "";
       logger.error(
         error,
         `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`
@@ -151,20 +150,17 @@ class LazyLoadConfigCat {
   }
 }
 
-declare global {
-  // eslint-disable-next-line no-var
-  var configCat: LazyLoadConfigCat;
-}
+type Global = typeof globalThis & { configCat: LazyLoadConfigCat };
 
 let configCat: LazyLoadConfigCat;
 
 if (process.env.VERCEL_ENV !== "development") {
   configCat = new LazyLoadConfigCat();
 } else {
-  if (!global.configCat) {
-    global.configCat = new LazyLoadConfigCat();
+  if (!(global as Global).configCat) {
+    (global as Global).configCat = new LazyLoadConfigCat();
   }
-  configCat = global.configCat;
+  configCat = (global as Global).configCat;
 }
 
 export default configCat;

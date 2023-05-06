@@ -35,21 +35,17 @@ const getExtendPrismaClient = () => {
 };
 
 type ExtendPrismaClient = ReturnType<typeof getExtendPrismaClient>;
-
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: ExtendPrismaClient;
-}
+type Global = typeof globalThis & { prisma: ExtendPrismaClient };
 
 let prisma: ExtendPrismaClient;
 
 if (process.env.VERCEL_ENV !== "development") {
   prisma = getExtendPrismaClient();
 } else {
-  if (!global.prisma) {
-    global.prisma = getExtendPrismaClient();
+  if (!(global as Global).prisma) {
+    (global as Global).prisma = getExtendPrismaClient();
   }
-  prisma = global.prisma;
+  prisma = (global as Global).prisma;
 }
 
 export type { Comment, Thread, ThreadPost, User, Authors };

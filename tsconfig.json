@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,19 +21,50 @@
     "incremental": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@api/*": ["lib/api/*"],
-      "@hook/*": ["hooks/*"],
-      "@type/*": ["types/*"],
-      "@lib/*": ["lib/*"],
-      "@service/*": ["lib/services/*"],
-      "@components/*": ["components/*"],
-      "@query/*": ["gql/*"],
-      "@utils/*": ["lib/utils/*"]
-    }
+      "@/*": [
+        "./*"
+      ],
+      "@api/*": [
+        "lib/api/*"
+      ],
+      "@hook/*": [
+        "hooks/*"
+      ],
+      "@type/*": [
+        "types/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@service/*": [
+        "lib/services/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@query/*": [
+        "gql/*"
+      ],
+      "@utils/*": [
+        "lib/utils/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "src/*.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/*.mjs"
+  ],
   "ts-node": {
     "esm": true
   }

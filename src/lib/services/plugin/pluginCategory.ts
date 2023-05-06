@@ -77,8 +77,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "DELETE": {
       const { id } = z
-        .object({ id: z.number().positive().min(1) })
-        .parse(req.body);
+        .object({ id: z.coerce.number().positive().min(1) })
+        .parse(req.query);
 
       const data = await prisma.thread.delete({
         where: {

@@ -2,9 +2,8 @@ import { GraphQLClient, type Variables, ClientError } from "graphql-request";
 import type { RequestConfig } from "graphql-request/src/types";
 import { logger } from "@lib/logger";
 
-const DATO_CMS = `https://graphql.datocms.com/environments/${
-  process.env.DATOCMS_ENVIRONMENT ?? "main"
-}`;
+const DATO_CMS = `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT ?? "main"
+  }`;
 
 interface FetchOptions {
   variables?: Variables;
@@ -58,7 +57,7 @@ async function GQLFetch<T extends object>(
   opts?: RequestConfig
 ): Promise<T> {
   try {
-    const client = new GraphQLClient(url, opts);
+    const client = new GraphQLClient(url, { ...opts, fetch });
 
     const request = await client.rawRequest<T>(query, variables);
 

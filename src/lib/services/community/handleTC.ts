@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import type { Session } from "next-auth";
 
+import prisma from "@api/prisma";
+
 import parseForm, {
   type TopicSchema,
   type CommentSchema,

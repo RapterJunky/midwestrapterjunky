@@ -11,16 +11,16 @@ export class RequestError extends Error {
  */
 export const AuthFetch = async (
   input: Request | string | URL,
-  init?: (RequestInit & { json?: object }) | undefined
+  init?: (RequestInit & { json?: object, key?: string; }) | undefined
 ): Promise<Response> => {
-  const token = new URLSearchParams(window.location.search).get("token");
+  const token = new URLSearchParams(window.location.search).get("token")
   if (!token)
     throw new Error("Failed to fetch data.", {
       cause: "MISSING_AUTH_TOKEN",
     });
 
   const headers = new Headers(init?.headers);
-  headers.append("Authorization", `Bearer ${token}`);
+  headers.append("Authorization", `Bearer ${init?.key ?? token}`);
   if (init?.json) {
     headers.append("Content-Type", "application/json");
   }

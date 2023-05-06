@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 import prisma from "@api/prisma";
 
@@ -11,6 +12,8 @@ export const fetchCachedQuery = async <R = unknown>(
   if (opt?.preview) return request(true) as Promise<R>;
 
   let cache = await prisma.cache.findFirst({ where: { key } });
+
+  logger.info(`Fetch cache query ${key}`);
 
   if (!cache || cache.isDirty || opt?.ci) {
     const data = (await request()) as Prisma.InputJsonValue;

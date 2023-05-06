@@ -19,7 +19,7 @@ const DELETE = async (
 ) => {
   if (!session) throw createHttpError.Unauthorized();
 
-  const { type, id } = schema.parse(req.body);
+  const { type, id } = schema.parse(req.query);
 
   switch (type) {
     case "like": {

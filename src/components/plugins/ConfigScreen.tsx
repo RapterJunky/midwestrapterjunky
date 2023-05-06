@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { normalizeConfig, type VaildConfig } from "@/lib/utils/plugin/config";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
+import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 
 const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
   const keys: string[] = [];
@@ -84,14 +85,12 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
       try {
         if (removelQueue.length < 1) return ok();
 
-        await fetch("/api/keys", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${state.keyToken}`,
-          },
-          body: JSON.stringify(removelQueue),
-        });
+        const params = new URLSearchParams();
+
+        removelQueue.forEach(key => params.append("keys", key));
+
+        await AuthFetch(`/api/keys?${params.toString()}`, { method: "DELETE", key: state.keyToken });
+
         setRemovelQueue([]);
       } catch (error) {
         console.error(error);

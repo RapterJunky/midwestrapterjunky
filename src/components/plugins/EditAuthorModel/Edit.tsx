@@ -52,22 +52,7 @@ const Edit: React.FC<{
 
       if (!check) return;
 
-      const token = new URLSearchParams(window.location.search).get("token");
-      if (!token)
-        throw new Error("Failed to perform action.", {
-          cause: "MISSING_AUTH_TOKEN",
-        });
-
-      const result = await fetch("/api/plugin/authors", {
-        method: "DELETE",
-        body: JSON.stringify({
-          id: ctx.parameters.id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const result = await AuthFetch(`/api/plugin/authors?id=${ctx.parameters.id}`, { method: "DELETE" })
 
       if (!result.ok) throw result;
 
@@ -110,10 +95,9 @@ const Edit: React.FC<{
         );
       if (error instanceof Response) {
         await ctx.alert(
-          `${
-            error.status === 500
-              ? "Internal Server Error"
-              : "Failed to perform action."
+          `${error.status === 500
+            ? "Internal Server Error"
+            : "Failed to perform action."
           } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
         );
       }

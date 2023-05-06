@@ -12,7 +12,7 @@ const getSchema = z.object({
 });
 
 const deleteSchema = z.object({
-  id: z.number().positive().or(z.string().uuid()),
+  id: z.coerce.number().positive().or(z.string().uuid()),
   type: z.enum(["comment", "report", "topic"]),
 });
 
@@ -51,7 +51,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ ...meta, result: reports });
     }
     case "DELETE": {
-      const { id, type } = deleteSchema.parse(req.body);
+      const { id, type } = deleteSchema.parse(req.query);
       switch (type) {
         case "comment": {
           if (typeof id !== "string")
