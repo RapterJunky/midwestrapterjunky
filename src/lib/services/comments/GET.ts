@@ -17,43 +17,44 @@ const GET = async (
 ) => {
   const { post, page, parent } = schema.parse(req.query);
 
-  const [comments, meta] = await prisma.comment.paginate({
-    where: {
-      threadPostId: post,
-      parentCommentId: parent ?? null,
-    },
-    select: {
-      id: true,
-      content: true,
-      created: true,
-      _count: {
-        select: {
-          likes: true,
-          // children: !parent
-        },
+  const [comments, meta] = await prisma.comment
+    .paginate({
+      where: {
+        threadPostId: post,
+        parentCommentId: parent ?? null,
       },
-      owner: {
-        select: {
-          image: true,
-          id: true,
-          name: true,
+      select: {
+        id: true,
+        content: true,
+        created: true,
+        _count: {
+          select: {
+            likes: true,
+            // children: !parent
+          },
         },
+        owner: {
+          select: {
+            image: true,
+            id: true,
+            name: true,
+          },
+        },
+        parentCommentId: true,
       },
-      parentCommentId: true,
-    },
-    orderBy: {
-      created: "desc",
-    },
-  })
+      orderBy: {
+        created: "desc",
+      },
+    })
     .withPages({ limit: 20, page });
 
   const likes = session
     ? await prisma.like.findMany({
-      where: {
-        userId: session?.user.id,
-        commentId: { in: comments.map((value) => value.id) },
-      },
-    })
+        where: {
+          userId: session?.user.id,
+          commentId: { in: comments.map((value) => value.id) },
+        },
+      })
     : [];
 
   const result = [];

@@ -38,7 +38,13 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
 }) => {
   if (session.status === "authenticated")
     return (
-      <button onClick={() => signOut()} aria-label="Account signout" title="Signout" type="button" className="ml-2">
+      <button
+        onClick={() => signOut()}
+        aria-label="Account signout"
+        title="Signout"
+        type="button"
+        className="ml-2"
+      >
         <Image
           className="rounded-full shadow-lg"
           width={40}

@@ -1,12 +1,13 @@
 import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { Button, Spinner } from "datocms-react-ui";
-import { useState } from "react";
-import useSWR from "swr";
-import Image from "next/image";
+import type { Authors } from "@prisma/client";
 import { FaPlus } from "react-icons/fa";
-import type { Paginate } from "types/page";
-import type { Authors } from "@api/prisma";
+import { useState } from "react";
+import Image from "next/image";
+import useSWR from "swr";
+
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import type { Paginate } from "types/page";
 
 const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
   const [page, setPage] = useState(1);

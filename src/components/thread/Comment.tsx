@@ -1,3 +1,4 @@
+import type { User, Comment as DbComment } from "@prisma/client";
 import { StructuredText } from "react-datocms/structured-text";
 import type { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -6,7 +7,6 @@ import Image from "next/image";
 
 import type { CommentBoxFormState } from "@components/thread/CommentBox";
 import usePost /*, { type CreateCommentBody }*/ from "@hook/usePost";
-import type { User, Comment as DbComment } from "@api/prisma";
 import { formatLocalDate } from "@lib/utils/timeFormat";
 import { renderBlock } from "@lib/structuredTextRules";
 import HiHeart from "@components/icons/HiHeart";
