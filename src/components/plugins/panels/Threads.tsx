@@ -7,6 +7,7 @@ import {
   DropdownSeparator,
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
+import update from 'immutability-helper';
 import { useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
@@ -36,7 +37,6 @@ export const Threads: React.FC<{
 
   const createModel = async () => {
     try {
-      if (!data) throw new Error("Missing Source Data");
       const result = (await ctx.openModal({
         id: "thread-model",
         parameters: {
@@ -47,21 +47,25 @@ export const Threads: React.FC<{
       if (!result) return;
 
       await mutate(
-        async () => {
-          const request = await AuthFetch("/api/plugin/category", {
+        async (current) => {
+          if (!current) throw new Error("Missing Source Data");
+          const response = await AuthFetch("/api/plugin/category", {
             method: "POST",
             json: result,
           });
 
-          const body = (await request.json()) as Thread;
+          const category = await response.json() as Thread;
 
-          return { ...data, result: [body, ...data.result] };
+          return update(current, {
+            result: { $push: [category] }
+          })
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
+      ctx.notice("Successfully created category.").catch(e => console.error(e));
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
@@ -69,7 +73,6 @@ export const Threads: React.FC<{
   };
   const editModel = async (thread: Thread) => {
     try {
-      if (!data) throw new Error("Missing Source Data");
       const result = (await ctx.openModal({
         id: "thread-model",
         parameters: {
@@ -81,23 +84,29 @@ export const Threads: React.FC<{
       if (!result) return;
 
       await mutate(
-        async () => {
-          await AuthFetch("/api/plugin/category", {
+        async (current) => {
+          if (!current) throw new Error("Missing Source Data");
+
+          const idx = current.result.findIndex(item => item.id === thread.id);
+          if (idx === -1) throw new Error("Failed to find topic.");
+
+          const response = await AuthFetch("/api/plugin/category", {
             method: "PATCH",
             json: result,
           });
-          return {
-            ...data,
-            result: [result].concat(
-              data.result.filter((value) => value.id !== thread.id)
-            ),
-          };
+
+          const category = await response.json() as Thread;
+
+          return update(current, {
+            result: { [idx]: { $set: category } }
+          })
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
+      ctx.notice("Successfully updated category.").catch(e => console.error(e));
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to create thread.").catch((e) => console.error(e));
@@ -105,7 +114,6 @@ export const Threads: React.FC<{
   };
   const deleteModel = async (id: number) => {
     try {
-      if (!data) throw new Error("Missing Source Data");
       const confirm = await ctx.openConfirm({
         title: "Delete Category",
         content:
@@ -125,23 +133,29 @@ export const Threads: React.FC<{
       if (!confirm) return;
 
       await mutate(
-        async () => {
+        async (current) => {
+          if (!current) throw new Error("Unable to process.");
+
+          const idx = current.result.findIndex(item => item.id === id);
+          if (idx === -1) throw new Error("Failed to find topic.");
+
           await AuthFetch(`/api/plugin/category?id=${id}`, {
             method: "DELETE",
           });
-          return {
-            ...data,
-            result: data.result.filter((value) => value.id !== id),
-          };
+
+          return update(current, {
+            result: { $splice: [[idx, 1]] }
+          })
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
+      ctx.notice("Successfully deleted category.").catch(e => console.error(e));
     } catch (error) {
       console.error(error);
-      ctx.alert("Was unable to delete thread.").catch((e) => console.error(e));
+      ctx.alert("Was unable to delete category.").catch((e) => console.error(e));
     }
   };
 
@@ -170,68 +184,68 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                  <li
-                    className="flex items-center gap-2 bg-white p-4 shadow"
-                    key={value.id}
+                <li
+                  className="flex items-center gap-2 bg-white p-4 shadow"
+                  key={value.id}
+                >
+                  <div>
+                    <Image
+                      unoptimized
+                      className="rounded-full"
+                      src={value.image}
+                      alt="Category Image"
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                  <div className="mr-auto">
+                    <h1 className="text-xl font-bold">{value.name}</h1>
+                    <div className="flex flex-wrap gap-1">
+                      {value.tags?.map((tag, i) => (
+                        <span
+                          className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                          key={i}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <p>{value.description}</p>
+                  </div>
+                  <Dropdown
+                    renderTrigger={({ open, onClick }) => (
+                      <Button
+                        buttonSize="xxs"
+                        buttonType="primary"
+                        onClick={onClick}
+                      >
+                        <span className="flex items-center gap-2">
+                          Actions {open ? <FaChevronDown /> : <FaChevronUp />}
+                        </span>
+                      </Button>
+                    )}
                   >
-                    <div>
-                      <Image
-                        unoptimized
-                        className="rounded-full"
-                        src={value.image}
-                        alt="Category Image"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div className="mr-auto">
-                      <h1 className="text-xl font-bold">{value.name}</h1>
-                      <div className="flex flex-wrap gap-1">
-                        {value.tags?.map((tag, i) => (
-                          <span
-                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
-                            key={i}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <p>{value.description}</p>
-                    </div>
-                    <Dropdown
-                      renderTrigger={({ open, onClick }) => (
-                        <Button
-                          buttonSize="xxs"
-                          buttonType="primary"
-                          onClick={onClick}
-                        >
-                          <span className="flex items-center gap-2">
-                            Actions {open ? <FaChevronDown /> : <FaChevronUp />}
-                          </span>
-                        </Button>
-                      )}
-                    >
-                      <DropdownMenu alignment="right">
-                        <DropdownOption onClick={() => editModel(value)}>
-                          <div className="flex items-center gap-1">
-                            <FaEdit className="h-4 w-4" />
-                            Edit
-                          </div>
-                        </DropdownOption>
-                        <DropdownSeparator />
-                        <DropdownOption
-                          red
-                          onClick={() => deleteModel(value.id)}
-                        >
-                          <div className="flex items-center gap-1">
-                            <FaTrash className="h-4 w-4" />
-                            Delete
-                          </div>
-                        </DropdownOption>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </li>
-                ))
+                    <DropdownMenu alignment="right">
+                      <DropdownOption onClick={() => editModel(value)}>
+                        <div className="flex items-center gap-1">
+                          <FaEdit className="h-4 w-4" />
+                          Edit
+                        </div>
+                      </DropdownOption>
+                      <DropdownSeparator />
+                      <DropdownOption
+                        red
+                        onClick={() => deleteModel(value.id)}
+                      >
+                        <div className="flex items-center gap-1">
+                          <FaTrash className="h-4 w-4" />
+                          Delete
+                        </div>
+                      </DropdownOption>
+                    </DropdownMenu>
+                  </Dropdown>
+                </li>
+              ))
               : null}
           </ul>
           <hr className="mt-dato-m" />

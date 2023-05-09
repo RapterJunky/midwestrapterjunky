@@ -13,12 +13,16 @@ import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 
 import "datocms-react-ui/styles.css";
+import GDriveAddon from "@/components/plugins/GDriveAddon";
+import GDriveModel from "@/components/plugins/GDriveModal";
 
+const FIELD_ADDON_GDRIVE_ID = "mrj_gdrive";
 const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const MESSAGE_BOARD_PAGE_ID = "community";
+
 
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
 const ShopFieldExtension = dynamic(
@@ -154,6 +158,12 @@ const MidwestRaptor: NextPage = () => {
           fieldTypes: ["json"],
         },
         {
+          id: FIELD_ADDON_GDRIVE_ID,
+          type: "addon",
+          fieldTypes: ["file", "gallery"],
+          name: "Google Drive"
+        },
+        {
           id: FIELD_EXTENSION_ID,
           name: "Shop Products",
           type: "editor",
@@ -211,6 +221,8 @@ const MidwestRaptor: NextPage = () => {
     }
     case "FieldExtension": {
       switch (id) {
+        case FIELD_ADDON_GDRIVE_ID:
+          return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />
         case FIELD_EXTENSION_ID: {
           return <ShopFieldExtension ctx={ctx as RenderFieldExtensionCtx} />;
         }
@@ -233,15 +245,20 @@ const MidwestRaptor: NextPage = () => {
       return null;
     }
     case "Modal":
-      if (id === "thread-model")
-        return <EditThreadModel ctx={ctx as RenderModalCtx} />;
-      if (id === "browseProducts")
-        return <BrowseProductsModel ctx={ctx as RenderModalCtx} />;
-      if (id === "editAuthor")
-        return <EditAuthorModal ctx={ctx as RenderModalCtx} />;
-      if (id === "storefrontModel")
-        return <StorefrontModel ctx={ctx as RenderModalCtx} />;
-      return null;
+      switch (id) {
+        case "thread-model":
+          return <EditThreadModel ctx={ctx as RenderModalCtx} />;
+        case "browseProducts":
+          return <BrowseProductsModel ctx={ctx as RenderModalCtx} />;
+        case "editAuthor":
+          return <EditAuthorModal ctx={ctx as RenderModalCtx} />;
+        case "storefrontModel":
+          return <StorefrontModel ctx={ctx as RenderModalCtx} />
+        case "gDriveModel":
+          return <GDriveModel ctx={ctx as RenderModalCtx} />
+        default:
+          return null;
+      }
     case "AssetSource": {
       return <AssetSourceOptimized ctx={ctx as RenderAssetSourceCtx} />;
     }

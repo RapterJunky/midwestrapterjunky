@@ -6,6 +6,7 @@ import {
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
+import update from 'immutability-helper';
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -49,7 +50,7 @@ export const UserList: React.FC<{
         isLoading={isLoading}
         message={{
           error: "There was an error loading the users list.",
-          empty: "There&apos;s no users yet!",
+          empty: "There's no users yet!",
         }}
       />
       {data && data.result.length ? (
@@ -96,16 +97,36 @@ export const UserList: React.FC<{
                 >
                   <DropdownMenu alignment="right">
                     <DropdownOption
-                      disabled
                       red
                       onClick={async () => {
                         try {
                           await mutate(
-                            (current) => {
-                              return current;
+                            async (current) => {
+                              if (!current) throw new Error("No data to update.");
+
+                              const idx = current.result.findIndex(item => item.id === value.id);
+                              if (idx === -1) throw new Error("Unable to find user index");
+
+                              const response = await AuthFetch("/api/plugin/users", {
+                                method: "PATCH",
+                                json: {
+                                  id: value.id,
+                                  ban: !value.banned
+                                }
+                              });
+
+                              const user = await response.json() as User;
+
+                              return update(current, {
+                                result: { [idx]: { $set: user } }
+                              })
                             },
-                            { revalidate: false, rollbackOnError: true }
+                            {
+                              revalidate: false,
+                              rollbackOnError: true
+                            }
                           );
+                          ctx.notice(`Successfully ${value.banned ? "banned" : "unbanned"} user ${value.name}`).catch(e => console.error(e));
                         } catch (error) {
                           ctx
                             .alert("Failed to delete account.")
@@ -113,10 +134,9 @@ export const UserList: React.FC<{
                         }
                       }}
                     >
-                      Ban Account
+                      {value.banned ? "Unban" : "Ban"} Account
                     </DropdownOption>
                     <DropdownOption
-                      disabled
                       red
                       onClick={async () => {
                         try {
@@ -139,8 +159,17 @@ export const UserList: React.FC<{
                           if (!sure) return;
 
                           await mutate(
-                            (current) => {
-                              return current;
+                            async (current) => {
+                              if (!current) throw new Error("No data to update.");
+
+                              const user = current.result.findIndex(item => item.id === value.id);
+                              if (user !== -1) throw new Error("Unable to find user index.");
+
+                              await AuthFetch(`/api/plugin/users?id=${value.id}`, { method: "DELETE" });
+
+                              return update(current, {
+                                result: { $splice: [[user, 1]] }
+                              })
                             },
                             { revalidate: false, rollbackOnError: true }
                           );

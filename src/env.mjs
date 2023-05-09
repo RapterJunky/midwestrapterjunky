@@ -39,8 +39,11 @@ const server = z.object({
   DATOCMS_READONLY_TOKEN: z.string(),
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
+
+  CONFIG_CAT_CACHE: z.enum("kv", "memory").default("kv"),
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
+
   GOOGLE_SERVICE_KEY: serviceKey.transform((value, ctx) => {
     try {
       return JSON.stringify(value);
@@ -125,6 +128,7 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  CONFIG_CAT_CACHE: process.env.CONFIG_CAT_CACHE,
   CONFIG_CAT_MANAGEMENT: process.env.CONFIG_CAT_MANAGEMENT,
   CONFIG_CAT_KEY: process.env.CONFIG_CAT_KEY,
   NODE_ENV: process.env.NODE_ENV,

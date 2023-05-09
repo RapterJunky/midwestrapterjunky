@@ -33,6 +33,36 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         result: user,
       });
     }
+    case "PATCH": {
+      const { id, ban } = z.object({ id: z.string().cuid(), ban: z.boolean() }).parse(req.body);
+
+      const data = await prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          banned: ban
+        }
+      });
+
+      return res.status(200).json({
+        email: data.email,
+        name: data.name,
+        id: data.id,
+        banned: data.banned,
+      });
+    }
+    case "DELETE": {
+      const { id } = z.object({ id: z.string().cuid() }).parse(req.query);
+
+      await prisma.user.delete({
+        where: {
+          id
+        }
+      });
+
+      return res.status(200).json({ ok: true, now: new Date().getTime() });
+    }
     default:
       throw createHttpError.MethodNotAllowed();
   }
