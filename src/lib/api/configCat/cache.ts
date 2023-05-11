@@ -12,7 +12,7 @@ export class InMemoryCache implements Cache {
     this.cache.set(key, config);
   }
   get(key: string): Promise<ProjectConfig<string | boolean | number> | null> {
-    return this.get(key) ?? null;
+    return new Promise((ok) => ok(this.cache.get(key) ?? null));
   }
 }
 

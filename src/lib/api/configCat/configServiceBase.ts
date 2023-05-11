@@ -84,7 +84,9 @@ export default class ConfigServiceBase {
   ): Promise<ProjectConfig<T> | null> {
     const config = await this.fetch<T>(lastConfig);
     if (!config) throw new Error("Failed to fetch config");
+
     this.cache.set(process.env.CONFIG_CAT_KEY, config);
+
     return config;
   }
 }

@@ -40,7 +40,7 @@ const server = z.object({
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
 
-  CONFIG_CAT_CACHE: z.enum("kv", "memory").default("kv"),
+  CONFIG_CAT_CACHE: z.enum(["kv", "memory"]).default("kv"),
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
 
