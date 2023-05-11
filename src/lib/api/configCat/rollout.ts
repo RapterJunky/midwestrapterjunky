@@ -1,4 +1,4 @@
-import { ProjectConfig } from "./types";
+import type { ProjectConfig } from "./types";
 import { logger } from "@lib/logger";
 
 type ValueAndVariationId<TDefault extends string | boolean | number> = {

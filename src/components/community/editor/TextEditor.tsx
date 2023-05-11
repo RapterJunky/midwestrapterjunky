@@ -7,7 +7,7 @@ import {
 } from "slate-react";
 import { createEditor, Transforms, type Descendant, Editor } from "slate";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
-import { useMemo, useCallback, useEffect } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 
 import {
   EDITOR_ISEMPTY_ID_R,
@@ -73,22 +73,18 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
       editor={editor}
       value={value}
       onChange={(e) => {
-        const isAstChange = editor.operations.some(
-          (op) => "set_selection" !== op.type
-        );
-        if (isAstChange && onChange)
-          onChange({ ast: e, deletedImages: editor.deletedImages });
+        if (onChange) onChange({ ast: e, deletedImages: editor.deletedImages });
       }}
     >
       <EditorToolbar />
       <Editable
-        disableDefaultStyles
+        style={{ minHeight: "100px" }}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         spellCheck
         autoFocus
         placeholder="Write something here..."
-        className="prose relative min-h-[100px] max-w-none rounded-sm border border-neutral-400 px-2 py-1 focus:outline-none"
+        className="prose relative max-w-none rounded-sm border border-neutral-400 px-2 py-1 focus:outline-none"
       />
     </Slate>
   );

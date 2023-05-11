@@ -18,11 +18,11 @@ export class InMemoryCache implements Cache {
 }
 
 export class KVCache implements Cache {
-    set(key: string, config: ProjectConfig<string | boolean | number>): void {
-        VercelKV.set(key, config);
+    async set(key: string, config: ProjectConfig<string | boolean | number>): Promise<void> {
+        await VercelKV.set(key, config);
     }
     get(key: string): Promise<ProjectConfig<string | boolean | number> | null> {
-        return VercelKV.get(key) as Promise<ProjectConfig<string | boolean | number> | null>;
+        return VercelKV.get(key);
     }
 
 }

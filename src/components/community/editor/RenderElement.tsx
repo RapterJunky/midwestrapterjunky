@@ -6,6 +6,7 @@ import {
   useSlateStatic,
 } from "slate-react";
 import type { Block } from "datocms-structured-text-slate-utils";
+import { DefaultElement } from "slate-react";
 import { Transforms } from "slate";
 import Image from "next/image";
 
@@ -127,7 +128,11 @@ const RenderElement: React.FC<RenderElementProps> = ({
     case "inlineItem":
     case "itemLink":
     default:
-      return null;
+      return (
+        <DefaultElement attributes={attributes} element={element}>
+          {children}
+        </DefaultElement>
+      );
   }
 };
 

@@ -15,9 +15,7 @@ import type {
   BlockquoteSource,
 } from "datocms-structured-text-slate-utils";
 import type {
-  Document,
-  InlineNode as DastInlineNode,
-  ListItem as DastListItem,
+  Node as DastNode,
   Record,
 } from "datocms-structured-text-utils";
 import type { StructuredTextGraphQlResponse } from "react-datocms";
@@ -47,7 +45,7 @@ export interface SlateImageBlock extends Block {
 }
 
 const parseNode = (
-  node: Document["document"]["children"][0] | DastInlineNode | DastListItem,
+  node: DastNode,
   blocks?: Record[],
   inline?: Record[]
 ): NonTextNode | Link | ItemLink | InlineItem | Text | ListItem => {
@@ -57,10 +55,10 @@ const parseNode = (
       for (const child of node.children) {
         children.push(
           parseNode(child, blocks, inline) as
-            | Link
-            | ItemLink
-            | InlineItem
-            | Text
+          | Link
+          | ItemLink
+          | InlineItem
+          | Text
         );
       }
       const el: Paragraph = {
@@ -75,10 +73,10 @@ const parseNode = (
       for (const child of node.children) {
         children.push(
           parseNode(child, blocks, inline) as
-            | Link
-            | ItemLink
-            | InlineItem
-            | Text
+          | Link
+          | ItemLink
+          | InlineItem
+          | Text
         );
       }
 

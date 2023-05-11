@@ -1,9 +1,10 @@
-import { Cache } from "./cache";
-import ConfigServiceBase, { ConfigFetcher } from "./configServiceBase";
+import type { Cache } from "./cache";
+import type { ConfigFetcher } from "./configServiceBase";
+import ConfigServiceBase from "./configServiceBase";
 import type { ProjectConfig } from "./types";
 
 export default class LazyConfigService extends ConfigServiceBase implements ConfigFetcher {
-    private cacheTimeToLiveSeconds: number = 60;
+    private cacheTimeToLiveSeconds = 60;
     constructor(cache: Cache) {
         super(cache);
 

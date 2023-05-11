@@ -1,4 +1,5 @@
-import ConfigServiceBase, { ConfigFetcher } from "./configServiceBase";
+import type { ConfigFetcher } from "./configServiceBase";
+import type ConfigServiceBase from "./configServiceBase";
 import type LazyConfigService from "./lazyConfigService";
 import { type User, RolloutEvaluate } from "./rollout";
 

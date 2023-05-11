@@ -1,4 +1,4 @@
-import { RenderModalCtx } from "datocms-plugin-sdk";
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { Canvas, TextField, TextInput } from "datocms-react-ui";
 
 const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
