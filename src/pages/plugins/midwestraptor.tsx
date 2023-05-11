@@ -23,7 +23,6 @@ const FIELD_EXTENSION_ID = "shopProduct";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const MESSAGE_BOARD_PAGE_ID = "community";
 
-
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
 const ShopFieldExtension = dynamic(
   () => import("@components/plugins/ShopFieldExtension")
@@ -161,7 +160,7 @@ const MidwestRaptor: NextPage = () => {
           id: FIELD_ADDON_GDRIVE_ID,
           type: "addon",
           fieldTypes: ["file", "gallery"],
-          name: "Google Drive"
+          name: "Google Drive",
         },
         {
           id: FIELD_EXTENSION_ID,
@@ -222,7 +221,7 @@ const MidwestRaptor: NextPage = () => {
     case "FieldExtension": {
       switch (id) {
         case FIELD_ADDON_GDRIVE_ID:
-          return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />
+          return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />;
         case FIELD_EXTENSION_ID: {
           return <ShopFieldExtension ctx={ctx as RenderFieldExtensionCtx} />;
         }
@@ -253,9 +252,9 @@ const MidwestRaptor: NextPage = () => {
         case "editAuthor":
           return <EditAuthorModal ctx={ctx as RenderModalCtx} />;
         case "storefrontModel":
-          return <StorefrontModel ctx={ctx as RenderModalCtx} />
+          return <StorefrontModel ctx={ctx as RenderModalCtx} />;
         case "gDriveModel":
-          return <GDriveModel ctx={ctx as RenderModalCtx} />
+          return <GDriveModel ctx={ctx as RenderModalCtx} />;
         default:
           return null;
       }

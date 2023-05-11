@@ -34,15 +34,17 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "PATCH": {
-      const { id, ban } = z.object({ id: z.string().cuid(), ban: z.boolean() }).parse(req.body);
+      const { id, ban } = z
+        .object({ id: z.string().cuid(), ban: z.boolean() })
+        .parse(req.body);
 
       const data = await prisma.user.update({
         where: {
-          id
+          id,
         },
         data: {
-          banned: ban
-        }
+          banned: ban,
+        },
       });
 
       return res.status(200).json({
@@ -57,8 +59,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       await prisma.user.delete({
         where: {
-          id
-        }
+          id,
+        },
       });
 
       return res.status(200).json({ ok: true, now: new Date().getTime() });

@@ -12,7 +12,7 @@ import {
   FaThumbtack,
 } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
-import update from 'immutability-helper';
+import update from "immutability-helper";
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -105,13 +105,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                          <span
-                            className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
-                            key={i}
-                          >
-                            {value}
-                          </span>
-                        ))
+                            <span
+                              className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
+                              key={i}
+                            >
+                              {value}
+                            </span>
+                          ))
                         : null}
                     </div>
                   </div>
@@ -136,31 +136,42 @@ export const Topics: React.FC<{
                         try {
                           await mutate(
                             async (current) => {
-                              if (!current) throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(item => item.id === topic.id);
-                              if (idx === -1) throw new Error("Failed to find topic");
+                              if (!current)
+                                throw new Error("Unable to process.");
+                              const idx = current.result.findIndex(
+                                (item) => item.id === topic.id
+                              );
+                              if (idx === -1)
+                                throw new Error("Failed to find topic");
 
-                              const response = await AuthFetch(`/api/plugin/tac`, {
-                                method: "PATCH",
-                                json: {
-                                  id: topic.id,
-                                  type: "topic",
-                                  prop: "pinned",
-                                  value: !topic.pinned
+                              const response = await AuthFetch(
+                                `/api/plugin/tac`,
+                                {
+                                  method: "PATCH",
+                                  json: {
+                                    id: topic.id,
+                                    type: "topic",
+                                    prop: "pinned",
+                                    value: !topic.pinned,
+                                  },
                                 }
-                              });
+                              );
 
-                              const data = await response.json() as Topic;
+                              const data = (await response.json()) as Topic;
 
                               return update(current, {
-                                result: { [idx]: { $set: data } }
-                              })
+                                result: { [idx]: { $set: data } },
+                              });
                             },
                             { revalidate: false, rollbackOnError: true }
                           );
                         } catch (error) {
                           ctx
-                            .alert(`Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"}`)
+                            .alert(
+                              `Failed to ${
+                                topic.pinned ? "Unpin Topic" : "Pin Topic"
+                              }`
+                            )
                             .catch((e) => console.error(e));
                         }
                       }}
@@ -179,25 +190,32 @@ export const Topics: React.FC<{
                         try {
                           await mutate(
                             async (current) => {
-                              if (!current) throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(item => item.id === topic.id);
-                              if (idx === -1) throw new Error("Failed to find topic");
+                              if (!current)
+                                throw new Error("Unable to process.");
+                              const idx = current.result.findIndex(
+                                (item) => item.id === topic.id
+                              );
+                              if (idx === -1)
+                                throw new Error("Failed to find topic");
 
-                              const response = await AuthFetch("/api/plugin/tac", {
-                                method: "PATCH",
-                                json: {
-                                  id: topic.id,
-                                  type: "topic",
-                                  prop: "locked",
-                                  value: !topic.locked
+                              const response = await AuthFetch(
+                                "/api/plugin/tac",
+                                {
+                                  method: "PATCH",
+                                  json: {
+                                    id: topic.id,
+                                    type: "topic",
+                                    prop: "locked",
+                                    value: !topic.locked,
+                                  },
                                 }
-                              });
+                              );
 
-                              const data = await response.json() as Topic;
+                              const data = (await response.json()) as Topic;
 
                               return update(current, {
-                                result: { [idx]: { $set: data } }
-                              })
+                                result: { [idx]: { $set: data } },
+                              });
                             },
                             { revalidate: false, rollbackOnError: true }
                           );
@@ -242,15 +260,22 @@ export const Topics: React.FC<{
 
                           await mutate(
                             async (current) => {
-                              if (!current) throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(item => item.id === topic.id);
-                              if (idx === -1) throw new Error("Failed to find topic.");
+                              if (!current)
+                                throw new Error("Unable to process.");
+                              const idx = current.result.findIndex(
+                                (item) => item.id === topic.id
+                              );
+                              if (idx === -1)
+                                throw new Error("Failed to find topic.");
 
-                              await AuthFetch(`/api/plugin/tac?type=topic&id=${topic.id}`, { method: "DELETE" });
+                              await AuthFetch(
+                                `/api/plugin/tac?type=topic&id=${topic.id}`,
+                                { method: "DELETE" }
+                              );
 
                               return update(current, {
-                                result: { $splice: [[idx, 1]] }
-                              })
+                                result: { $splice: [[idx, 1]] },
+                              });
                             },
                             { revalidate: false, rollbackOnError: true }
                           );

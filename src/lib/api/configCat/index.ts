@@ -6,7 +6,14 @@ type Global = typeof globalThis & { configCat: ConfigCatClient };
 
 let configCat: ConfigCatClient;
 
-const getClient = () => new ConfigCatClient(new LazyConfigService(process.env.CONFIG_CAT_CACHE === "kv" ? new KVCache() : new InMemoryCache()));
+const getClient = () =>
+  new ConfigCatClient(
+    new LazyConfigService(
+      process.env.CONFIG_CAT_CACHE === "kv"
+        ? new KVCache()
+        : new InMemoryCache()
+    )
+  );
 
 if (process.env.VERCEL_ENV !== "development") {
   configCat = getClient();

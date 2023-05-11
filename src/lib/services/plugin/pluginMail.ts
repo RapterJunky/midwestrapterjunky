@@ -25,15 +25,17 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "DELETE": {
-      const { id } = z.object({ id: z.coerce.number().positive().min(1) }).parse(req.query);
+      const { id } = z
+        .object({ id: z.coerce.number().positive().min(1) })
+        .parse(req.query);
 
       await prisma.mailingList.delete({
         where: {
-          id
-        }
+          id,
+        },
       });
 
-      return res.status(200).json({ ok: true, now: new Date().getTime() })
+      return res.status(200).json({ ok: true, now: new Date().getTime() });
     }
     default:
       throw createHttpError.MethodNotAllowed();

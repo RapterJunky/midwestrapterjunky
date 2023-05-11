@@ -7,7 +7,7 @@ import {
   DropdownSeparator,
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
-import update from 'immutability-helper';
+import update from "immutability-helper";
 import { useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
@@ -54,18 +54,20 @@ export const Threads: React.FC<{
             json: result,
           });
 
-          const category = await response.json() as Thread;
+          const category = (await response.json()) as Thread;
 
           return update(current, {
-            result: { $push: [category] }
-          })
+            result: { $push: [category] },
+          });
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
-      ctx.notice("Successfully created category.").catch(e => console.error(e));
+      ctx
+        .notice("Successfully created category.")
+        .catch((e) => console.error(e));
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to edit thread.").catch((e) => console.error(e));
@@ -87,7 +89,7 @@ export const Threads: React.FC<{
         async (current) => {
           if (!current) throw new Error("Missing Source Data");
 
-          const idx = current.result.findIndex(item => item.id === thread.id);
+          const idx = current.result.findIndex((item) => item.id === thread.id);
           if (idx === -1) throw new Error("Failed to find topic.");
 
           const response = await AuthFetch("/api/plugin/category", {
@@ -95,18 +97,20 @@ export const Threads: React.FC<{
             json: result,
           });
 
-          const category = await response.json() as Thread;
+          const category = (await response.json()) as Thread;
 
           return update(current, {
-            result: { [idx]: { $set: category } }
-          })
+            result: { [idx]: { $set: category } },
+          });
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
-      ctx.notice("Successfully updated category.").catch(e => console.error(e));
+      ctx
+        .notice("Successfully updated category.")
+        .catch((e) => console.error(e));
     } catch (error) {
       console.error(error);
       ctx.alert("Was unable to create thread.").catch((e) => console.error(e));
@@ -136,7 +140,7 @@ export const Threads: React.FC<{
         async (current) => {
           if (!current) throw new Error("Unable to process.");
 
-          const idx = current.result.findIndex(item => item.id === id);
+          const idx = current.result.findIndex((item) => item.id === id);
           if (idx === -1) throw new Error("Failed to find topic.");
 
           await AuthFetch(`/api/plugin/category?id=${id}`, {
@@ -144,18 +148,22 @@ export const Threads: React.FC<{
           });
 
           return update(current, {
-            result: { $splice: [[idx, 1]] }
-          })
+            result: { $splice: [[idx, 1]] },
+          });
         },
         {
           revalidate: false,
           rollbackOnError: true,
         }
       );
-      ctx.notice("Successfully deleted category.").catch(e => console.error(e));
+      ctx
+        .notice("Successfully deleted category.")
+        .catch((e) => console.error(e));
     } catch (error) {
       console.error(error);
-      ctx.alert("Was unable to delete category.").catch((e) => console.error(e));
+      ctx
+        .alert("Was unable to delete category.")
+        .catch((e) => console.error(e));
     }
   };
 
@@ -184,68 +192,68 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                <li
-                  className="flex items-center gap-2 bg-white p-4 shadow"
-                  key={value.id}
-                >
-                  <div>
-                    <Image
-                      unoptimized
-                      className="rounded-full"
-                      src={value.image}
-                      alt="Category Image"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div className="mr-auto">
-                    <h1 className="text-xl font-bold">{value.name}</h1>
-                    <div className="flex flex-wrap gap-1">
-                      {value.tags?.map((tag, i) => (
-                        <span
-                          className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
-                          key={i}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <p>{value.description}</p>
-                  </div>
-                  <Dropdown
-                    renderTrigger={({ open, onClick }) => (
-                      <Button
-                        buttonSize="xxs"
-                        buttonType="primary"
-                        onClick={onClick}
-                      >
-                        <span className="flex items-center gap-2">
-                          Actions {open ? <FaChevronDown /> : <FaChevronUp />}
-                        </span>
-                      </Button>
-                    )}
+                  <li
+                    className="flex items-center gap-2 bg-white p-4 shadow"
+                    key={value.id}
                   >
-                    <DropdownMenu alignment="right">
-                      <DropdownOption onClick={() => editModel(value)}>
-                        <div className="flex items-center gap-1">
-                          <FaEdit className="h-4 w-4" />
-                          Edit
-                        </div>
-                      </DropdownOption>
-                      <DropdownSeparator />
-                      <DropdownOption
-                        red
-                        onClick={() => deleteModel(value.id)}
-                      >
-                        <div className="flex items-center gap-1">
-                          <FaTrash className="h-4 w-4" />
-                          Delete
-                        </div>
-                      </DropdownOption>
-                    </DropdownMenu>
-                  </Dropdown>
-                </li>
-              ))
+                    <div>
+                      <Image
+                        unoptimized
+                        className="rounded-full"
+                        src={value.image}
+                        alt="Category Image"
+                        width={40}
+                        height={40}
+                      />
+                    </div>
+                    <div className="mr-auto">
+                      <h1 className="text-xl font-bold">{value.name}</h1>
+                      <div className="flex flex-wrap gap-1">
+                        {value.tags?.map((tag, i) => (
+                          <span
+                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            key={i}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <p>{value.description}</p>
+                    </div>
+                    <Dropdown
+                      renderTrigger={({ open, onClick }) => (
+                        <Button
+                          buttonSize="xxs"
+                          buttonType="primary"
+                          onClick={onClick}
+                        >
+                          <span className="flex items-center gap-2">
+                            Actions {open ? <FaChevronDown /> : <FaChevronUp />}
+                          </span>
+                        </Button>
+                      )}
+                    >
+                      <DropdownMenu alignment="right">
+                        <DropdownOption onClick={() => editModel(value)}>
+                          <div className="flex items-center gap-1">
+                            <FaEdit className="h-4 w-4" />
+                            Edit
+                          </div>
+                        </DropdownOption>
+                        <DropdownSeparator />
+                        <DropdownOption
+                          red
+                          onClick={() => deleteModel(value.id)}
+                        >
+                          <div className="flex items-center gap-1">
+                            <FaTrash className="h-4 w-4" />
+                            Delete
+                          </div>
+                        </DropdownOption>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </li>
+                ))
               : null}
           </ul>
           <hr className="mt-dato-m" />

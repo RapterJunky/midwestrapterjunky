@@ -1,7 +1,12 @@
-import { Button, Dropdown, DropdownMenu, DropdownOption } from "datocms-react-ui";
+import {
+  Button,
+  Dropdown,
+  DropdownMenu,
+  DropdownOption,
+} from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
-import update from 'immutability-helper';
+import update from "immutability-helper";
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -49,7 +54,7 @@ export const MailingList: React.FC<{
           <ul className="mt-2 grid grid-cols-3 gap-2">
             {data.result.map((value) => (
               <li
-                className="flex items-center justify-between py-1.5 px-1 shadow odd:bg-neutral-200"
+                className="flex items-center justify-between px-1 py-1.5 shadow odd:bg-neutral-200"
                 key={value.id}
               >
                 <a
@@ -104,19 +109,30 @@ export const MailingList: React.FC<{
 
                           await mutate(
                             async (current) => {
-                              if (!current) throw new Error("Unable to process.");
-                              const idx = current?.result.findIndex(item => item.id === value.id);
-                              if (idx === -1) throw new Error("Unable to find email.");
+                              if (!current)
+                                throw new Error("Unable to process.");
+                              const idx = current?.result.findIndex(
+                                (item) => item.id === value.id
+                              );
+                              if (idx === -1)
+                                throw new Error("Unable to find email.");
 
-                              await AuthFetch(`/api/plugin/mail?id=${value.id}`, { method: "DELETE" });
+                              await AuthFetch(
+                                `/api/plugin/mail?id=${value.id}`,
+                                { method: "DELETE" }
+                              );
 
                               return update(current, {
-                                result: { $splice: [[idx, 1]] }
+                                result: { $splice: [[idx, 1]] },
                               });
                             },
                             { revalidate: false, rollbackOnError: true }
                           );
-                          ctx.notice(`Successfully removed email "${value.email}"`).catch(e => console.error(e));
+                          ctx
+                            .notice(
+                              `Successfully removed email "${value.email}"`
+                            )
+                            .catch((e) => console.error(e));
                         } catch (error) {
                           ctx
                             .alert("Failed to delete account.")

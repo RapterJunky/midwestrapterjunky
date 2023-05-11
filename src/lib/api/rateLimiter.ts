@@ -17,17 +17,19 @@ export const getRateLimitMiddlewares = ({
 } = {}) =>
   [
     slowDown({
-      keyGenerator: (request) => (request?.headers["x-forwarded-for"] as string) ??
+      keyGenerator: (request) =>
+        (request?.headers["x-forwarded-for"] as string) ??
         (request?.headers["x-real-ip"] as string) ??
-        (request.socket.remoteAddress),
+        request.socket.remoteAddress,
       windowMs,
       delayAfter,
       delayMs,
     }) as never as MiddlewareHandler,
     rateLimit({
-      keyGenerator: (request) => (request?.headers["x-forwarded-for"] as string) ??
+      keyGenerator: (request) =>
+        (request?.headers["x-forwarded-for"] as string) ??
         (request?.headers["x-real-ip"] as string) ??
-        (request.socket.remoteAddress),
+        request.socket.remoteAddress,
       windowMs,
       max: limit,
     }) as never as MiddlewareHandler,

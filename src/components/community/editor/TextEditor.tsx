@@ -7,7 +7,7 @@ import {
 } from "slate-react";
 import { createEditor, Transforms, type Descendant, Editor } from "slate";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 
 import {
   EDITOR_ISEMPTY_ID_R,
@@ -77,6 +77,10 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
       }}
     >
       <EditorToolbar />
+      {/**
+       * disableDefaultStyles breaks input so set use sytle to set style  *
+       * @see https://github.com/ianstormtaylor/slate/issues/5379
+       */}
       <Editable
         style={{ minHeight: "100px" }}
         renderElement={renderElement}

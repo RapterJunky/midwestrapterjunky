@@ -12,7 +12,7 @@ import { StructuredText } from "react-datocms/structured-text";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { useDebounce } from "use-debounce";
 import { useCtx } from "datocms-react-ui";
-import update from 'immutability-helper';
+import update from "immutability-helper";
 import { useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
@@ -36,7 +36,7 @@ type ContentType = Paginate<
 
 type FullReport = {
   id: number;
-  handleBan: (userId?: string, name?: string | null) => Promise<void>
+  handleBan: (userId?: string, name?: string | null) => Promise<void>;
   handleDelete: (id: number) => void;
   reason: string;
   created: string;
@@ -44,7 +44,13 @@ type FullReport = {
   reporter: User | null;
 };
 
-const patchItem = async (ctx: RenderPageCtx, type: "comment" | "topic", prop: string, value: boolean | string | number, id?: string) => {
+const patchItem = async (
+  ctx: RenderPageCtx,
+  type: "comment" | "topic",
+  prop: string,
+  value: boolean | string | number,
+  id?: string
+) => {
   try {
     await AuthFetch(`/api/plugin/tac`, {
       method: "PATCH",
@@ -52,27 +58,46 @@ const patchItem = async (ctx: RenderPageCtx, type: "comment" | "topic", prop: st
         id,
         type,
         prop,
-        value
-      }
+        value,
+      },
     });
-    ctx.notice(`Successfully updated ${type}`).catch(e => console.error(e));
+    ctx.notice(`Successfully updated ${type}`).catch((e) => console.error(e));
   } catch (error) {
-    ctx.alert(`Failed to update ${type}`).catch(e => console.error(e));
+    ctx.alert(`Failed to update ${type}`).catch((e) => console.error(e));
   }
-}
+};
 
-const deleteItem = async (ctx: RenderPageCtx, type: "comment" | "topic", id?: string) => {
+const deleteItem = async (
+  ctx: RenderPageCtx,
+  type: "comment" | "topic",
+  id?: string
+) => {
   try {
-    await AuthFetch(`/api/plugin/tac?type=${type}&id=${id}`, { method: "DELETE" });
-    ctx.notice(`Successfully deleted ${type}`).catch(e => console.error(e));
+    await AuthFetch(`/api/plugin/tac?type=${type}&id=${id}`, {
+      method: "DELETE",
+    });
+    ctx.notice(`Successfully deleted ${type}`).catch((e) => console.error(e));
   } catch (error) {
-    ctx.alert(`Failed to delete ${type}.`).catch(e => console.error(e));
+    ctx.alert(`Failed to delete ${type}.`).catch((e) => console.error(e));
   }
-}
+};
 
 const ArticleReport: React.FC<
-  { ctx: RenderPageCtx; article: { id?: string, slug: string; name: string } } & FullReport
-> = ({ handleBan, ctx, handleDelete, id, article, reason, created, owner, reporter }) => {
+  {
+    ctx: RenderPageCtx;
+    article: { id?: string; slug: string; name: string };
+  } & FullReport
+> = ({
+  handleBan,
+  ctx,
+  handleDelete,
+  id,
+  article,
+  reason,
+  created,
+  owner,
+  reporter,
+}) => {
   return (
     <li className="bg-white p-4 shadow">
       <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
@@ -147,29 +172,44 @@ const ArticleReport: React.FC<
               <DropdownOption onClick={() => handleDelete(id)}>
                 <div className="font-semibold">Dismiss report</div>
               </DropdownOption>
-              <DropdownOption onClick={() => patchItem(ctx, "topic", "locked", true, article.id)}>
+              <DropdownOption
+                onClick={() =>
+                  patchItem(ctx, "topic", "locked", true, article.id)
+                }
+              >
                 <div className="font-semibold">Lock topic</div>
                 <div className="text-sm tracking-tighter text-neutral-500">
                   Stop Users from posting comments on this topic.
                 </div>
               </DropdownOption>
               <DropdownSeparator />
-              <DropdownOption red onClick={() => Promise.all([
-                deleteItem(ctx, "topic", article.id),
-                handleBan(owner?.id, owner?.name)
-              ])}>
+              <DropdownOption
+                red
+                onClick={() =>
+                  Promise.all([
+                    deleteItem(ctx, "topic", article.id),
+                    handleBan(owner?.id, owner?.name),
+                  ])
+                }
+              >
                 <div className="font-semibold">Remove topic and ban user</div>
                 <div className="text-sm font-light tracking-tighter">
                   Delete topic and ban its owner.
                 </div>
               </DropdownOption>
-              <DropdownOption red onClick={() => deleteItem(ctx, "topic", article.id)}>
+              <DropdownOption
+                red
+                onClick={() => deleteItem(ctx, "topic", article.id)}
+              >
                 <div className="font-semibold">Remove topic</div>
                 <div className="text-sm font-light tracking-tighter">
                   Delete topic
                 </div>
               </DropdownOption>
-              <DropdownOption red onClick={() => handleBan(reporter?.id, reporter?.name)}>
+              <DropdownOption
+                red
+                onClick={() => handleBan(reporter?.id, reporter?.name)}
+              >
                 <div className="font-semibold">Ban reporty</div>
                 <div className="text-sm font-light tracking-tighter">
                   Ban the user who reported this.
@@ -185,7 +225,17 @@ const ArticleReport: React.FC<
 
 const CommentReport: React.FC<
   { ctx: RenderPageCtx; comment: Comment } & FullReport
-> = ({ handleBan, id, handleDelete, comment, reason, created, owner, reporter, ctx }) => {
+> = ({
+  handleBan,
+  id,
+  handleDelete,
+  comment,
+  reason,
+  created,
+  owner,
+  reporter,
+  ctx,
+}) => {
   return (
     <li className="bg-white p-4 shadow">
       <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
@@ -257,22 +307,33 @@ const CommentReport: React.FC<
                 <div className="font-semibold">Dismiss report</div>
               </DropdownOption>
               <DropdownSeparator />
-              <DropdownOption red onClick={() => Promise.all([
-                deleteItem(ctx, "comment", comment.id),
-                handleBan(owner?.id, owner?.name)
-              ])}>
+              <DropdownOption
+                red
+                onClick={() =>
+                  Promise.all([
+                    deleteItem(ctx, "comment", comment.id),
+                    handleBan(owner?.id, owner?.name),
+                  ])
+                }
+              >
                 <div className="font-semibold">Remove comment and ban user</div>
                 <div className="text-sm font-light tracking-tighter">
                   Delete comment and ban its owner.
                 </div>
               </DropdownOption>
-              <DropdownOption red onClick={() => deleteItem(ctx, "comment", comment.id)}>
+              <DropdownOption
+                red
+                onClick={() => deleteItem(ctx, "comment", comment.id)}
+              >
                 <div className="font-semibold">Remove comment</div>
                 <div className="text-sm font-light tracking-tighter">
                   Delete comment
                 </div>
               </DropdownOption>
-              <DropdownOption red onClick={() => handleBan(reporter?.id, reporter?.name)}>
+              <DropdownOption
+                red
+                onClick={() => handleBan(reporter?.id, reporter?.name)}
+              >
                 <div className="font-semibold">Ban reporty</div>
                 <div className="text-sm font-light tracking-tighter">
                   Ban the user who reported this.
@@ -326,21 +387,25 @@ export const Reports: React.FC<{
         method: "PATCH",
         json: {
           id: userId,
-          ban: true
-        }
+          ban: true,
+        },
       });
-      ctx.notice(`User ${name} has been banned.`).catch(e => console.error(e));
+      ctx
+        .notice(`User ${name} has been banned.`)
+        .catch((e) => console.error(e));
     } catch (error) {
-      ctx.alert(`Failed to ban user ${name ?? "?????"}.`).catch(e => console.error(e));
+      ctx
+        .alert(`Failed to ban user ${name ?? "?????"}.`)
+        .catch((e) => console.error(e));
     }
-  }
+  };
 
   const handleDelete = async (id: number) => {
     try {
       await mutate(
         async (current) => {
           if (!current) throw new Error("NoSourceData");
-          const idx = current.result.findIndex(item => item.id === id);
+          const idx = current.result.findIndex((item) => item.id === id);
           if (idx === -1) throw new Error("Failed to find report.");
 
           await AuthFetch(`/api/plugin/reports?type=report&id=${id}`, {
@@ -348,8 +413,8 @@ export const Reports: React.FC<{
           });
 
           return update(current, {
-            result: { $splice: [[idx, 1]] }
-          })
+            result: { $splice: [[idx, 1]] },
+          });
         },
         {
           revalidate: false,

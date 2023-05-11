@@ -14,10 +14,7 @@ import type {
   ListItem,
   BlockquoteSource,
 } from "datocms-structured-text-slate-utils";
-import type {
-  Node as DastNode,
-  Record,
-} from "datocms-structured-text-utils";
+import type { Node as DastNode, Record } from "datocms-structured-text-utils";
 import type { StructuredTextGraphQlResponse } from "react-datocms";
 
 export interface DastImageRecord extends Record {
@@ -55,10 +52,10 @@ const parseNode = (
       for (const child of node.children) {
         children.push(
           parseNode(child, blocks, inline) as
-          | Link
-          | ItemLink
-          | InlineItem
-          | Text
+            | Link
+            | ItemLink
+            | InlineItem
+            | Text
         );
       }
       const el: Paragraph = {
@@ -73,10 +70,10 @@ const parseNode = (
       for (const child of node.children) {
         children.push(
           parseNode(child, blocks, inline) as
-          | Link
-          | ItemLink
-          | InlineItem
-          | Text
+            | Link
+            | ItemLink
+            | InlineItem
+            | Text
         );
       }
 
