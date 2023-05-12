@@ -20,7 +20,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // lasts for an hour.
     res.setPreviewData({}, { maxAge: PreviewTimeWindow, path: slug });
 
-    return res.redirect(slug);
+    return res.redirect(308, slug);
   } catch (error) {
     return handleError(error, res);
   }
