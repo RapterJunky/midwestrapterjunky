@@ -26,83 +26,81 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
   });
 
   const onSubmit = async (state: VaildConfig) => {
-    if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
-      return ctx.alert(
-        "User does not have the permission to perform the operation."
-      );
+    try {
+      if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
+        return ctx.alert(
+          "User does not have the permission to perform the operation."
+        );
+      }
+      await ctx.updatePluginParameters(state);
+
+      await new Promise<void>(async (ok, reject) => {
+        if (state.storefronts.length < 0 || !state.keyToken) return ok();
+        try {
+          const keys = state.storefronts
+            .map((value) => {
+              if (value.type === "S") {
+                return [
+                  {
+                    key: `${value.domain}_SHOPIFY_ACCESS_TOKEN`,
+                    value: value.token,
+                  },
+                  { key: `${value.domain}_SHOPIFY_DOMAIN`, value: value.domain },
+                ];
+              }
+              if (value.type === "SQ") {
+                return [
+                  {
+                    key: `${value.domain}_SQAURE_ACCESS_TOKEN`,
+                    value: value.token,
+                  },
+                  {
+                    key: `${value.domain}_SQAURE_MODE`,
+                    value: value.test
+                      ? "connect.squareupsandbox.com"
+                      : "connect.squareup.com",
+                  },
+                ];
+              }
+              return [];
+            })
+            .flat();
+
+          await AuthFetch("/api/keys", { method: "PATCH", json: keys, key: state.keyToken });
+
+          ok();
+        } catch (error) {
+          console.error(error);
+          reject();
+        }
+      });
+
+      await new Promise<void>(async (ok, reject) => {
+        try {
+          if (removelQueue.length < 1) return ok();
+
+          const params = new URLSearchParams();
+
+          removelQueue.forEach((key) => params.append("keys", key));
+
+          await AuthFetch(`/api/keys?${params.toString()}`, {
+            method: "DELETE",
+            key: state.keyToken,
+          });
+
+          setRemovelQueue([]);
+          ok();
+        } catch (error) {
+          console.error(error);
+          reject();
+        }
+      });
+
+      ctx.notice("Settings updated successfully!").catch(e => console.error(e));
+    } catch (error) {
+      console.error(error);
+      ctx.alert("Failed to update settings.").catch(e => console.error(e));
     }
-    await ctx.updatePluginParameters(state);
-
-    await new Promise<void>(async (ok) => {
-      if (state.storefronts.length < 0 || !state.keyToken) return ok();
-      try {
-        const keys = state.storefronts
-          .map((value) => {
-            if (value.type === "S") {
-              return [
-                {
-                  key: `${value.domain}_SHOPIFY_ACCESS_TOKEN`,
-                  value: value.token,
-                },
-                { key: `${value.domain}_SHOPIFY_DOMAIN`, value: value.domain },
-              ];
-            }
-            if (value.type === "SQ") {
-              return [
-                {
-                  key: `${value.domain}_SQAURE_ACCESS_TOKEN`,
-                  value: value.token,
-                },
-                {
-                  key: `${value.domain}_SQAURE_MODE`,
-                  value: value.test
-                    ? "connect.squareupsandbox.com"
-                    : "connect.squareup.com",
-                },
-              ];
-            }
-            return [];
-          })
-          .flat();
-
-        await fetch("/api/keys", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${state.keyToken}`,
-          },
-          body: JSON.stringify(keys),
-        });
-
-        ok();
-      } catch (error) {
-        console.error(error);
-        ok();
-      }
-    });
-
-    await new Promise<void>(async (ok) => {
-      try {
-        if (removelQueue.length < 1) return ok();
-
-        const params = new URLSearchParams();
-
-        removelQueue.forEach((key) => params.append("keys", key));
-
-        await AuthFetch(`/api/keys?${params.toString()}`, {
-          method: "DELETE",
-          key: state.keyToken,
-        });
-
-        setRemovelQueue([]);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        ok();
-      }
-    });
-
-    await ctx.notice("Settings updated successfully!");
   };
 
   return (

@@ -36,13 +36,13 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
   const data = await DatoCMS<FullPageProps>(GenericPageQuery, {
-    preview: ctx.preview,
+    preview: ctx.draftMode || ctx.preview,
   });
 
   return {
     props: {
       ...data,
-      preview: ctx?.preview ?? false,
+      preview: (ctx.draftMode || ctx.preview) ?? false,
       seo: genericSeoTags({
         title: "Articles",
         description: "All of Midwest Raptor Junkies published articles.",

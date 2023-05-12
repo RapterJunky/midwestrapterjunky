@@ -1,7 +1,6 @@
 import type { NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
 import createHttpError from "http-errors";
-import { errors } from "formidable";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { logger } from "@lib/logger";
@@ -45,10 +44,6 @@ export const handleError = (
   }
 
   const ie = createHttpError.InternalServerError();
-
-  if (error instanceof errors.FormidableError) {
-    return res.status(ie.statusCode).json(ie);
-  }
 
   return res.status(ie.statusCode).json(ie);
 };

@@ -133,7 +133,7 @@ export const getStaticProps = async (
 
   const id = schema.data;
 
-  if (ctx.preview) {
+  if (ctx.draftMode || ctx.preview) {
     const data = await getBlogPage(id, true);
     return {
       props: data,

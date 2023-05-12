@@ -99,7 +99,7 @@ export default async function handler(
         await Promise.all([res.revalidate(slugs[0]), res.revalidate(slugs[1])]);
         return res.status(200).json({ revalidated: true });
       }
-      case "rebuild":
+      case "rebuild": {
         await prisma.cache.updateMany({
           where: { isDirty: false },
           data: { isDirty: true },
@@ -111,7 +111,8 @@ export default async function handler(
           await client.buildTriggers.trigger(BUILD_TRIGGER_ID);
         }
         return res.status(200).json({ revalidated: true });
-      case "page-cache":
+      }
+      case "page-cache": {
         if (!data?.slug || !data?.cache) throw createHttpError.BadRequest();
         if (body.event_type === "publish")
           await res.revalidate(
@@ -124,6 +125,7 @@ export default async function handler(
           data: { isDirty: true },
         });
         return res.status(200).json({ revalidated: true });
+      }
       default:
         return res.status(200).json({ revalidated: false });
     }

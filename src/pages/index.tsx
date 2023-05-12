@@ -26,14 +26,17 @@ interface HomeContent extends FullPageProps {
 export async function getStaticProps(
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<HomeContent>> {
+
+
+
   const data = await DatoCMS<HomeContent>(HomePageQuery, {
-    preview: context.preview,
+    preview: context.draftMode || context.preview,
   });
 
   return {
     props: {
       ...data,
-      preview: context?.preview ?? false,
+      preview: (context.draftMode || context.preview) ?? false,
     },
     revalidate: REVAILDATE_IN_12H,
   };

@@ -53,7 +53,8 @@ interface Props extends FullPageProps {
 }
 
 export const getStaticProps = async ({
-  preview,
+  draftMode,
+  preview
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
@@ -72,7 +73,7 @@ export const getStaticProps = async ({
     props: {
       ...props,
       categories,
-      preview: preview ?? false,
+      preview: (draftMode || preview) ?? false,
       seo: genericSeoTags({
         title: "Topic",
         description: "Create or edit an topic",
@@ -280,10 +281,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,

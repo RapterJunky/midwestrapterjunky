@@ -38,7 +38,7 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<BlogLatestProps>> => {
   const data = await DatoCMS<BlogLatestProps>(QueryBlogLatest, {
-    preview: ctx.preview,
+    preview: ctx.draftMode || ctx.preview,
     variables: {
       first: MAX_DISPLAY,
     },
@@ -47,7 +47,7 @@ export const getStaticProps = async (
   return {
     props: {
       ...data,
-      preview: ctx?.preview ?? false,
+      preview: (ctx.draftMode || ctx.preview) ?? false,
       seo: genericSeoTags({
         title: "Blog Lastest",
         description: "Midwest Raptor Junkies latest published articles.",

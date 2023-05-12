@@ -39,7 +39,7 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
   const props = await DatoCMS<Props>(terms_of_service, {
-    preview: ctx.preview,
+    preview: ctx.draftMode || ctx.preview,
   });
 
   props.terms._seoMetaTags = props.terms._seoMetaTags.map((tag) => {
@@ -74,7 +74,7 @@ export const getStaticProps = async (
   return {
     props: {
       ...props,
-      preview: ctx.preview ?? false,
+      preview: (ctx.draftMode || ctx.preview) ?? false,
     },
   };
 };

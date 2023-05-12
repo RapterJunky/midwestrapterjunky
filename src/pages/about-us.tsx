@@ -63,13 +63,13 @@ export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<AboutUsProps>> => {
   const data = await DatoCMS<AboutUsProps>(about_us, {
-    preview: ctx.preview,
+    preview: ctx.draftMode || ctx.preview,
   });
 
   return {
     props: {
       ...data,
-      preview: ctx?.preview ?? false,
+      preview: (ctx?.draftMode || ctx.preview) ?? false,
     },
   };
 };

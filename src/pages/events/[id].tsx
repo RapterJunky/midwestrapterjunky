@@ -1,3 +1,4 @@
+import { draftMode } from 'next/headers';
 import type {
   GetStaticPropsContext,
   GetStaticPropsResult,
@@ -102,7 +103,7 @@ export const getStaticProps = async (
 
   const id = check.data;
 
-  if (ctx.preview) {
+  if (ctx.draftMode || ctx.preview) {
     const data = await getPage(id, true);
     return {
       props: data,
@@ -209,8 +210,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

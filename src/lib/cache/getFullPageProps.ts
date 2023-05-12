@@ -1,4 +1,6 @@
 import { cache } from "react";
+import "server-only";
+
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";

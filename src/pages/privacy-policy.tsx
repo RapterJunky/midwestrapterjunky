@@ -38,7 +38,7 @@ interface Props extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const props = await DatoCMS<Props>(privcy_policy, { preview: ctx.preview });
+  const props = await DatoCMS<Props>(privcy_policy, { preview: ctx.draftMode || ctx.preview });
 
   props.policy._seoMetaTags = props.policy._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {
@@ -72,7 +72,7 @@ export const getStaticProps = async (
   return {
     props: {
       ...props,
-      preview: ctx.preview ?? false,
+      preview: (ctx.draftMode || ctx.preview) ?? false,
     },
   };
 };

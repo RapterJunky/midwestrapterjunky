@@ -48,7 +48,8 @@ interface Props extends FullPageProps {
 }
 
 export const getStaticProps = async ({
-  preview,
+  draftMode,
+  preview
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
@@ -90,7 +91,7 @@ export const getStaticProps = async ({
     props: {
       ...props,
       categories: json as never as Props["categories"],
-      preview: preview ?? false,
+      preview: (draftMode || preview) ?? false,
       seo: genericSeoTags({
         title: "Community",
         description: "Midwest Raptor Junkies Community Hub",

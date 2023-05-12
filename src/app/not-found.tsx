@@ -18,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
+ * @link https://github.com/vercel/next.js/issues/45620
  * @author Vojislav
  * @see https://tailwindcomponents.com/u/vojislav
  */
