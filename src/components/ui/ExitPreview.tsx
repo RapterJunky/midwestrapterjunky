@@ -3,16 +3,14 @@ import HiEyeOff from "@components/icons/HiEyeOff";
 
 export default function ExitPreview() {
   return (
-    <Link
-      role="button"
-      data-cy="exit-preview"
-      aria-label="Exit Preview"
-      type="button"
-      prefetch={false}
-      href="/api/exit-preview"
-      className="fixed bottom-10 left-10 z-50 inline-block rounded-full bg-red-600 p-3 text-lg font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg"
-    >
-      <HiEyeOff />
-    </Link>
+    <div className="fixed bottom-10 left-10 z-50">
+      <div
+        className="mb-4 rounded-lg flex items-center gap-1 bg-danger-100 px-6 py-5 text-base text-danger-700"
+        role="alert">
+        <HiEyeOff />
+        <Link href="/api/exit-preview" prefetch={false} className="underline">Exit draft mode.</Link>
+      </div>
+    </div>
+
   );
 }

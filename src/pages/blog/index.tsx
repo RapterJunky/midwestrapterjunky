@@ -37,11 +37,13 @@ const MAX_DISPLAY = 5;
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<BlogLatestProps>> => {
-  const data = await DatoCMS<BlogLatestProps>(QueryBlogLatest, {
-    preview: ctx.draftMode || ctx.preview,
+  const data = await DatoCMS<BlogLatestProps>({
+    query: QueryBlogLatest,
     variables: {
       first: MAX_DISPLAY,
-    },
+    }
+  }, {
+    draft: ctx.draftMode || ctx.preview,
   });
 
   return {

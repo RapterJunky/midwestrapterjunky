@@ -1,8 +1,8 @@
-import type { NextApiResponse } from "next";
-import { Prisma } from "@prisma/client";
-import createHttpError from "http-errors";
-import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import type { NextApiResponse } from "next";
+import createHttpError from "http-errors";
+import { Prisma } from "@prisma/client";
+import { ZodError } from "zod";
 import { logger } from "@lib/logger";
 
 export type ApiErrorResponse = {
@@ -10,7 +10,10 @@ export type ApiErrorResponse = {
   status?: number;
   details?: unknown[] | { message: string }[];
 };
-
+/**
+ * Pages directory error handler
+ * @deprecated
+ */
 export const handleError = (
   error: unknown,
   res: NextApiResponse<ApiErrorResponse>

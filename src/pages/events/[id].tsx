@@ -1,4 +1,3 @@
-import { draftMode } from 'next/headers';
 import type {
   GetStaticPropsContext,
   GetStaticPropsResult,
@@ -74,21 +73,23 @@ const schema = z.string();
 const loadPages = async () => {
   const data = await DatoCMS<{
     allEvents: { id: string; slug: string }[];
-  }>(EventsQuery);
+  }>({ query: EventsQuery });
   return data.allEvents.map((value) => value.slug);
 };
 
-const getPage = async (id = "", preview = false) => {
-  logger.info(`Event page (${id}) - preview(${preview}) | Generating`);
-  const data = await DatoCMS<EventPageProps>(EventPageQuery, {
+const getPage = async (id = "", draft = false) => {
+  logger.info(`Event page (${id}) - preview(${draft}) | Generating`);
+  const data = await DatoCMS<EventPageProps>({
+    query: EventPageQuery,
     variables: {
       eq: id,
-    },
-    preview,
+    }
+  }, {
+    draft,
   });
   return {
     ...data,
-    preview,
+    preview: draft,
   };
 };
 

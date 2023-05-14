@@ -29,8 +29,8 @@ export async function getStaticProps(
 
 
 
-  const data = await DatoCMS<HomeContent>(HomePageQuery, {
-    preview: context.draftMode || context.preview,
+  const data = await DatoCMS<HomeContent>({ query: HomePageQuery }, {
+    draft: context.draftMode || context.preview,
   });
 
   return {

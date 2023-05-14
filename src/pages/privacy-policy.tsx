@@ -38,7 +38,7 @@ interface Props extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const props = await DatoCMS<Props>(privcy_policy, { preview: ctx.draftMode || ctx.preview });
+  const props = await DatoCMS<Props>({ query: privcy_policy }, { draft: ctx.draftMode || ctx.preview });
 
   props.policy._seoMetaTags = props.policy._seoMetaTags.map((tag) => {
     if (tag.tag === "title") {

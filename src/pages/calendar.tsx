@@ -37,12 +37,14 @@ export const getStaticProps = async (
   const currDate = new Date();
   currDate.setMonth(currDate.getMonth() - 1);
 
-  const data = await DatoCMS<CalendarProps>(Query, {
-    preview: ctx.draftMode || ctx.preview,
+  const data = await DatoCMS<CalendarProps>({
+    query: Query,
     variables: {
       first: MAX_FETCH,
       date: currDate.toISOString(),
-    },
+    }
+  }, {
+    draft: ctx.draftMode || ctx.preview,
   });
 
   return {

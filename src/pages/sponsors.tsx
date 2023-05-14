@@ -31,8 +31,8 @@ interface PageProps extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<PageProps>> => {
-  const data = await DatoCMS<PageProps>(SponsorsQuery, {
-    preview: ctx.draftMode || ctx.preview,
+  const data = await DatoCMS<PageProps>({ query: SponsorsQuery }, {
+    draft: ctx.draftMode || ctx.preview,
   });
 
   return {

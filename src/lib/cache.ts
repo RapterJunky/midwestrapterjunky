@@ -8,7 +8,7 @@ export const fetchCachedQuery = async <R = unknown>(
   query: string,
   opt?: { ci?: boolean; preview?: true }
 ): Promise<R> => {
-  const request = async (preview = false) => DatoCMS(query, { preview });
+  const request = async (draft = false) => DatoCMS({ query }, { draft });
   if (opt?.preview) return request(true) as Promise<R>;
 
   let cache = await prisma.cache.findFirst({ where: { key } });

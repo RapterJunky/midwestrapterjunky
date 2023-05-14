@@ -79,37 +79,41 @@ const param_check = z.string();
 
 const getBlogPage = async (
   id: string,
-  preview: boolean
+  draft: boolean
 ): Promise<ArticleProps> => {
-  logger.info(`Blog Page (${id}) - preview(${preview}) | Genearting`);
-  const data = await DatoCMS<ArticleProps>(ArticleQuery, {
-    preview: preview,
+  logger.info(`Blog Page (${id}) - draft(${draft}) | Genearting`);
+  const data = await DatoCMS<ArticleProps>({
+    query: ArticleQuery,
     variables: {
       slug: id,
-    },
+    }
+  }, {
+    draft
   });
 
   const extra = await DatoCMS<{
     next: ArticleProps["next"];
     prev: ArticleProps["prev"];
-  }>(GetNextArticles, {
-    preview: preview,
+  }>({
+    query: GetNextArticles,
     variables: {
       id: data.post.id,
-      date: preview ? new Date().toISOString() : data.post.publishedAt,
-    },
+      date: draft ? new Date().toISOString() : data.post.publishedAt,
+    }
+  }, {
+    draft
   });
 
   return {
     ...data,
     ...extra,
-    preview,
+    preview: draft,
   };
 };
 
 const loadBlogPages = async () => {
   const data = await DatoCMS<{ articles: { slug: string }[] }>(
-    ArticlesListQuery
+    { query: ArticlesListQuery }
   );
   return data.articles.map((value) => value.slug);
 };

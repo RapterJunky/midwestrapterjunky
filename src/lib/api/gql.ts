@@ -1,83 +1,85 @@
-import { GraphQLClient, type Variables, ClientError } from "graphql-request";
-import type { RequestConfig } from "graphql-request/src/types";
 import { logger } from "@lib/logger";
 
-const DATO_CMS = `https://graphql.datocms.com/environments/${
-  process.env.DATOCMS_ENVIRONMENT ?? "main"
-}`;
-
-interface FetchOptions {
-  variables?: Variables;
-  preview?: boolean;
+type GraphQLClientOptions = {
+  method?: "POST" | "GET" | "PATCH" | "DELETE" | "PUT";
+  next?: NextFetchRequestConfig;
+  headers?: HeadersInit;
+  draft?: boolean;
 }
 
-export async function DatoCMS<T extends object>(
+type GraphQLClientQuery = {
+  url: string;
+  query: string;
+  variables?: Record<string, unknown>
+}
+
+type Query = {
   query: string,
-  opts?: FetchOptions
-): Promise<T> {
+  variables?: Record<string, unknown>
+}
+
+export async function DatoCMS<T extends object>({ query, variables }: Query, opts?: GraphQLClientOptions): Promise<T> {
   logger.debug(
     {
-      preview: opts?.preview,
+      preview: opts?.draft,
       env: process.env.DATOCMS_ENVIRONMENT,
     },
     "DATOCMS CALL"
   );
   return GQLFetch<T>(
-    `${DATO_CMS}${opts?.preview ? "/preview" : ""}`,
-    query,
-    opts,
     {
+      url: `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT}${opts?.draft ? "/preview" : ""}`,
+      query,
+      variables
+    },
+    {
+      ...opts,
       headers: {
+        ...opts?.headers,
         Authorization: `Bearer ${process.env.DATOCMS_READONLY_TOKEN}`,
-      },
+      }
     }
   );
 }
 export async function Shopify<T extends object>(
   query: string,
   args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string },
-  opts?: FetchOptions
+  opts?: GraphQLClientOptions
 ): Promise<T> {
-  return GQLFetch<T>(
-    `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,
-    query,
-    opts,
+  return GQLFetch<T>({
+    url: `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,
+    query
+  },
     {
+      ...opts,
       headers: {
+        ...opts?.headers,
         "X-Shopify-Storefront-Access-Token":
           args.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-      },
+      }
     }
   );
 }
 
-async function GQLFetch<T extends object>(
-  url: string,
-  query: string,
-  { variables }: FetchOptions = {},
-  opts?: RequestConfig
-): Promise<T> {
+async function GQLFetch<T extends object>({ url, query, variables = {} }: GraphQLClientQuery, { method = "POST", next, headers }: GraphQLClientOptions): Promise<T> {
   try {
-    const client = new GraphQLClient(url, { ...opts, fetch });
+    const responce = await fetch(url, {
+      method,
+      headers,
+      next,
+      body: JSON.stringify({
+        query,
+        variables
+      })
+    });
 
-    const request = await client.rawRequest<T>(query, variables);
+    if (!responce.ok) throw responce;
 
-    if (request?.errors) throw request.errors;
+    const body = await responce.json() as { data: T };
 
-    return request.data;
+    return body.data;
   } catch (error) {
-    if (error instanceof ClientError) {
-      logger.error(
-        {
-          message: error.message,
-          errors: error.response.errors,
-          url: url,
-        },
-        "GraphQL Error"
-      );
-      throw new Error("GraphQL Error");
-    }
-
-    throw new Error(JSON.stringify(error, undefined, 2));
+    logger.error(error, "GraphQL");
+    throw new Error("GraphQL Error");
   }
 }

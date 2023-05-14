@@ -38,8 +38,8 @@ interface Props extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const props = await DatoCMS<Props>(terms_of_service, {
-    preview: ctx.draftMode || ctx.preview,
+  const props = await DatoCMS<Props>({ query: terms_of_service }, {
+    draft: ctx.draftMode || ctx.preview,
   });
 
   props.terms._seoMetaTags = props.terms._seoMetaTags.map((tag) => {

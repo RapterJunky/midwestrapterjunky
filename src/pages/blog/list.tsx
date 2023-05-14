@@ -35,8 +35,10 @@ type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<Props>> => {
-  const data = await DatoCMS<FullPageProps>(GenericPageQuery, {
-    preview: ctx.draftMode || ctx.preview,
+  const data = await DatoCMS<FullPageProps>({
+    query: GenericPageQuery
+  }, {
+    draft: ctx.draftMode || ctx.preview
   });
 
   return {

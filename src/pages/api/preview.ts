@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 import { handleError } from "@api/errorHandler";
+import { logger } from "@/lib/logger";
 
-const PreviewTimeWindow = 60 * 60;
 const slugValidation = z.string().startsWith("/");
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,11 +14,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const slug = slugValidation.parse(req.query.slug);
 
-    // fetch headless for data.
-    // make sure object exits
+    logger.info("Enabling draft mode");
 
-    // lasts for an hour.
-    res.setPreviewData({}, { maxAge: PreviewTimeWindow, path: slug });
+    res.setDraftMode({ enable: true });
 
     return res.redirect(308, slug);
   } catch (error) {
