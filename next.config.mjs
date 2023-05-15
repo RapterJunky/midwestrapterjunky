@@ -32,6 +32,7 @@ const nextConfig = withAnalyzer({
       "square-catalog-sandbox.s3.amazonaws.com",
       "square-catalog.s3.amazonaws.com",
       "drive.google.com",
+      "platform-lookaside.fbsbx.com",
     ],
   },
   async redirects() {

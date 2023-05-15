@@ -15,6 +15,10 @@ const patchVaildation = z
   )
   .nonempty();
 
+const getVaildataion = z
+  .array(z.string().transform((value) => value.toUpperCase()))
+  .nonempty();
+
 export const PATCH = async (request: Request) => {
   try {
     auth(process.env.KEYS_TOKEN);
@@ -41,10 +45,6 @@ export const POST = async (request: Request) => {
     return onError(error);
   }
 };
-
-const getVaildataion = z
-  .array(z.string().transform((value) => value.toUpperCase()))
-  .nonempty();
 
 export const GET = async (request: Request) => {
   try {

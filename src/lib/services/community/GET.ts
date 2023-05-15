@@ -54,6 +54,7 @@ const GET = async (
 
   return res.status(200).json({
     title: post.name,
+    notification: post.notifyOwner,
     tags: post.tags ?? [],
     categoryId: post.threadId,
     message: post.content ? dastToSlate(post.content) : emptyDocument,

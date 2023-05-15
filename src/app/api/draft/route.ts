@@ -2,8 +2,8 @@ import createHttpError from "http-errors";
 import { draftMode } from "next/headers";
 import { z } from "zod";
 
-import onError from "@api/onError";
 import { logger } from "@lib/logger";
+import onError from "@api/onError";
 
 const slugValidation = z.string().startsWith("/");
 
@@ -14,9 +14,7 @@ export function GET(request: Request) {
 
   const result = slugValidation.safeParse(searchParams.get("slug"));
 
-  if (!result.success) {
-    return onError(result.error);
-  }
+  if (!result.success) return onError(result.error);
 
   logger.info(`(${new Date().toISOString()}) Enabled Daft Mode`);
 

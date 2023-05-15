@@ -14,13 +14,15 @@ const CommentBox = dynamic(() => import("@components/thread/CommentBox"), {
   ),
 });
 
-const Comments: React.FC = () => {
+const Comments: React.FC<{ locked?: boolean }> = ({ locked = false }) => {
   const { isLoading, comments, error, setPage, create } = usePost();
   const session = useSession();
 
   return (
     <div className="my-4">
-      {session.status === "authenticated" ? (
+      {locked ? (
+        <div className="mt-6 flex w-full justify-center gap-4">Topic is locked</div>
+      ) : session.status === "authenticated" ? (
         <CommentBox submit={create} />
       ) : (
         <div className="mt-6 flex w-full justify-center gap-4">
@@ -30,6 +32,7 @@ const Comments: React.FC = () => {
           </button>
         </div>
       )}
+
       <div className="mb-2 flex items-center justify-between">
         <div className="p-1">Comments</div>
       </div>
@@ -54,8 +57,8 @@ const Comments: React.FC = () => {
         ) : null}
         {!isLoading && comments
           ? comments?.result.map((comment) => (
-              <Comment key={comment.id} comment={comment} session={session} />
-            ))
+            <Comment key={comment.id} comment={comment} session={session} />
+          ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

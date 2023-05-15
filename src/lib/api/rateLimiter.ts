@@ -44,6 +44,11 @@ export const getRateLimitMiddlewares = ({
 
 const middlewares = getRateLimitMiddlewares();
 
+/**
+ * @deprecated
+ * @param req 
+ * @param res 
+ */
 export const applyRateLimit = async (
   req: NextApiRequest,
   res: NextApiResponse

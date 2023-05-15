@@ -8,7 +8,10 @@ import { fetchCachedQuery } from "@lib/cache";
 const getFullPageProps = cache(async () => {
   const data = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
+    {
+      next: { tags: ["navbar"] }
+    }
   );
   return data;
 });

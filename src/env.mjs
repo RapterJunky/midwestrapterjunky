@@ -55,6 +55,9 @@ const server = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
 
+  FACEBOOK_CLIENT_ID: z.string().min(1),
+  FACEBOOK_CLIENT_SECRET: z.string().min(1),
+
   SQAURE_ACCESS_TOKEN: z.string().min(1),
   SQUARE_MODE: z.nativeEnum(Environment),
 
@@ -144,6 +147,9 @@ const processEnv = {
   GOOGLE_SERVICE_KEY: process.env.GOOGLE_SERVICE_KEY,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
+  FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+  FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
 
   NEXT_PUBLIC_SQUARE_MODE: process.env.NEXT_PUBLIC_SQUARE_MODE,
 

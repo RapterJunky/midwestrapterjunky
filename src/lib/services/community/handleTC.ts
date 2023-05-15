@@ -12,6 +12,7 @@ import parseForm, {
   topicSchema,
 } from "@lib/utils/editor/parseForm";
 import { slateToDast } from "@lib/utils/editor/slateToDast";
+import { logger } from "@/lib/logger";
 
 /**
  * Handle updating post/comments with new slate content.
@@ -71,6 +72,7 @@ const handleTC = async (
             id: formData.fields.editId,
           },
           data: {
+            notifyOwner: (formData.fields as TopicSchema).notification,
             content: dast,
             name: (formData.fields as TopicSchema).title,
             tags: (formData.fields as TopicSchema).tags,
@@ -94,6 +96,11 @@ const handleTC = async (
           threadPostId: (formData.fields as CommentSchema).postId,
         },
         select: {
+          threadPost: {
+            select: {
+              notifyOwner: true
+            }
+          },
           id: true,
           content: true,
           created: true,
@@ -108,6 +115,10 @@ const handleTC = async (
         },
       });
 
+      if (comment.threadPost.notifyOwner) {
+        logger.info("Sending notification");
+      }
+
       return res.status(201).json({
         ...comment,
         likedByMe: false,
@@ -117,6 +128,7 @@ const handleTC = async (
     case "post": {
       const topic = await prisma.threadPost.create({
         data: {
+          notifyOwner: (formData.fields as TopicSchema).notification,
           ownerId: session.user.id,
           content: dast,
           name: (formData.fields as TopicSchema).title,

@@ -178,7 +178,7 @@ const CommunityPost: NextPage<Props> = ({ navbar, _site, post, seo }) => {
                 />
               </div>
             </div>
-            <Comments />
+            <Comments locked={post.locked} />
           </div>
           <div className="mb-4 w-full max-w-5xl px-4">
             <h1 className="text-xl font-bold">Suggested Topics</h1>

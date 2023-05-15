@@ -1,6 +1,8 @@
-import { type NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import type { NextAuthOptions, AdapterUser } from "next-auth";
+import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import GoogleProvider from "next-auth/providers/google";
+
 
 import type { PrismaClient } from "@prisma/client";
 import { logger } from "@lib/logger";
@@ -10,6 +12,7 @@ export const authConfig = {
   pages: {
     signIn: "/signin",
     signOut: "/signout",
+    error: "/auth/error"
   },
   logger: {
     debug(code, metadata) {
@@ -23,6 +26,10 @@ export const authConfig = {
     },
   },
   callbacks: {
+    signIn(settings) {
+      if ((settings.user as never as AdapterUser).banned) return false;
+      return true;
+    },
     session: ({ session, user }) => {
       if (session?.user) {
         session.user.id = user.id;
@@ -32,6 +39,10 @@ export const authConfig = {
   },
   adapter: PrismaAdapter(prisma as never as PrismaClient),
   providers: [
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
