@@ -62,9 +62,9 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
         title="Signin"
         type="button"
         aria-label="Account signin"
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg"
+        className="flex h-10 w-10 transition-all duration-700 ease-in-out items-center justify-center rounded-full group-hover:bg-neutral-300 text-black bg-white shadow-lg"
       >
-        <HiUser className="h-6 w-6 text-black" />
+        <HiUser className="h-6 w-6" />
       </button>
     </div>
   );
@@ -107,7 +107,7 @@ const Navbar: React.FC<NavbarProps> = ({
       ) : null}
       <nav
         ref={ref}
-        className={`top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
+        className={`top-0 z-40 group flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row ${navbarMode[mode]}`}
       >
         <div className="flex items-center lg:hidden">
           <Account session={session} />

@@ -140,7 +140,7 @@ const BlogLatest: NextPage<BlogLatestProps> = ({
           </ul>
         </div>
 
-        <div className="flex justify-end text-base font-medium leading-6">
+        <div className="flex justify-end text-base font-medium leading-6 mb-4">
           <Link
             href="/blog/list"
             className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
