@@ -34,13 +34,18 @@ export default async function handle(
 
     const skip = page * MAX_ITEMS;
 
-    const data = await DatoCMS<DataResponse>(PagedArticles, {
-      preview: req.preview,
-      variables: {
-        first: MAX_ITEMS,
-        skip,
+    const data = await DatoCMS<DataResponse>(
+      {
+        query: PagedArticles,
+        variables: {
+          first: MAX_ITEMS,
+          skip,
+        },
       },
-    });
+      {
+        draft: req.draftMode || req.preview,
+      }
+    );
 
     const posts = data.posts.map((item) => ({
       ...item,
@@ -52,7 +57,7 @@ export default async function handle(
     }));
 
     // Two Hour wait
-    if (!req.preview && process.env.VERCEL_ENV !== "development")
+    if (!(req.draftMode || req.preview) && process.env.VERCEL_ENV !== "development")
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     const pageCount = Math.ceil(data.totalArticles.count / MAX_ITEMS);

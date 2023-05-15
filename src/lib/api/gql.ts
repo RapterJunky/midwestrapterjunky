@@ -5,20 +5,23 @@ type GraphQLClientOptions = {
   next?: NextFetchRequestConfig;
   headers?: HeadersInit;
   draft?: boolean;
-}
+};
 
 type GraphQLClientQuery = {
   url: string;
   query: string;
-  variables?: Record<string, unknown>
-}
+  variables?: Record<string, unknown>;
+};
 
 type Query = {
-  query: string,
-  variables?: Record<string, unknown>
-}
+  query: string;
+  variables?: Record<string, unknown>;
+};
 
-export async function DatoCMS<T extends object>({ query, variables }: Query, opts?: GraphQLClientOptions): Promise<T> {
+export async function DatoCMS<T extends object>(
+  { query, variables }: Query,
+  opts?: GraphQLClientOptions
+): Promise<T> {
   logger.debug(
     {
       preview: opts?.draft,
@@ -28,16 +31,18 @@ export async function DatoCMS<T extends object>({ query, variables }: Query, opt
   );
   return GQLFetch<T>(
     {
-      url: `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT}${opts?.draft ? "/preview" : ""}`,
+      url: `https://graphql.datocms.com/environments/${
+        process.env.DATOCMS_ENVIRONMENT
+      }${opts?.draft ? "/preview" : ""}`,
       query,
-      variables
+      variables,
     },
     {
       ...opts,
       headers: {
         ...opts?.headers,
         Authorization: `Bearer ${process.env.DATOCMS_READONLY_TOKEN}`,
-      }
+      },
     }
   );
 }
@@ -46,22 +51,26 @@ export async function Shopify<T extends object>(
   args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string },
   opts?: GraphQLClientOptions
 ): Promise<T> {
-  return GQLFetch<T>({
-    url: `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,
-    query
-  },
+  return GQLFetch<T>(
+    {
+      url: `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,
+      query,
+    },
     {
       ...opts,
       headers: {
         ...opts?.headers,
         "X-Shopify-Storefront-Access-Token":
           args.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-      }
+      },
     }
   );
 }
 
-async function GQLFetch<T extends object>({ url, query, variables = {} }: GraphQLClientQuery, { method = "POST", next, headers }: GraphQLClientOptions): Promise<T> {
+async function GQLFetch<T extends object>(
+  { url, query, variables = {} }: GraphQLClientQuery,
+  { method = "POST", next, headers }: GraphQLClientOptions
+): Promise<T> {
   try {
     const responce = await fetch(url, {
       method,
@@ -69,13 +78,13 @@ async function GQLFetch<T extends object>({ url, query, variables = {} }: GraphQ
       next,
       body: JSON.stringify({
         query,
-        variables
-      })
+        variables,
+      }),
     });
 
     if (!responce.ok) throw responce;
 
-    const body = await responce.json() as { data: T };
+    const body = (await responce.json()) as { data: T };
 
     return body.data;
   } catch (error) {

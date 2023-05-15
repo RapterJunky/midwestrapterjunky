@@ -75,34 +75,39 @@ interface ArticleProps extends FullPageProps {
 }
 
 const PAGE_CACHE_KEY = "blog-pages";
-const param_check = z.string();
 
 const getBlogPage = async (
   id: string,
   draft: boolean
 ): Promise<ArticleProps> => {
   logger.info(`Blog Page (${id}) - draft(${draft}) | Genearting`);
-  const data = await DatoCMS<ArticleProps>({
-    query: ArticleQuery,
-    variables: {
-      slug: id,
+  const data = await DatoCMS<ArticleProps>(
+    {
+      query: ArticleQuery,
+      variables: {
+        slug: id,
+      },
+    },
+    {
+      draft,
     }
-  }, {
-    draft
-  });
+  );
 
   const extra = await DatoCMS<{
     next: ArticleProps["next"];
     prev: ArticleProps["prev"];
-  }>({
-    query: GetNextArticles,
-    variables: {
-      id: data.post.id,
-      date: draft ? new Date().toISOString() : data.post.publishedAt,
+  }>(
+    {
+      query: GetNextArticles,
+      variables: {
+        id: data.post.id,
+        date: draft ? new Date().toISOString() : data.post.publishedAt,
+      },
+    },
+    {
+      draft,
     }
-  }, {
-    draft
-  });
+  );
 
   return {
     ...data,
@@ -112,9 +117,9 @@ const getBlogPage = async (
 };
 
 const loadBlogPages = async () => {
-  const data = await DatoCMS<{ articles: { slug: string }[] }>(
-    { query: ArticlesListQuery }
-  );
+  const data = await DatoCMS<{ articles: { slug: string }[] }>({
+    query: ArticlesListQuery,
+  });
   return data.articles.map((value) => value.slug);
 };
 
@@ -129,7 +134,7 @@ export const getStaticPaths = async (): Promise<GetStaticPathsResult> => {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<ArticleProps>> => {
-  const schema = param_check.safeParse(ctx.params?.id);
+  const schema = z.string().uuid().safeParse(ctx.params?.id);
   if (!schema.success)
     return {
       notFound: true,

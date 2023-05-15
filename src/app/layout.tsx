@@ -3,7 +3,8 @@ import "../styles/globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.VERCEL_URL
+    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${
+      process.env.VERCEL_URL
     }`
   ),
 };

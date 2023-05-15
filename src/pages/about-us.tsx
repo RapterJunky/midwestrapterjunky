@@ -62,9 +62,12 @@ interface AboutUsProps extends FullPageProps {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<AboutUsProps>> => {
-  const data = await DatoCMS<AboutUsProps>({ query: about_us }, {
-    draft: ctx.draftMode || ctx.preview,
-  });
+  const data = await DatoCMS<AboutUsProps>(
+    { query: about_us },
+    {
+      draft: ctx.draftMode || ctx.preview,
+    }
+  );
 
   return {
     props: {

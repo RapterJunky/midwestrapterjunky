@@ -16,7 +16,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     logger.info("Enabling draft mode");
 
-    res.setDraftMode({ enable: true });
+    //res.setDraftMode({ enable: true });
+    res.setPreviewData({}, { maxAge: 60 * 60, path: slug });
 
     return res.redirect(308, slug);
   } catch (error) {

@@ -79,14 +79,17 @@ const loadPages = async () => {
 
 const getPage = async (id = "", draft = false) => {
   logger.info(`Event page (${id}) - preview(${draft}) | Generating`);
-  const data = await DatoCMS<EventPageProps>({
-    query: EventPageQuery,
-    variables: {
-      eq: id,
+  const data = await DatoCMS<EventPageProps>(
+    {
+      query: EventPageQuery,
+      variables: {
+        eq: id,
+      },
+    },
+    {
+      draft,
     }
-  }, {
-    draft,
-  });
+  );
   return {
     ...data,
     preview: draft,

@@ -45,7 +45,10 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                     key: `${value.domain}_SHOPIFY_ACCESS_TOKEN`,
                     value: value.token,
                   },
-                  { key: `${value.domain}_SHOPIFY_DOMAIN`, value: value.domain },
+                  {
+                    key: `${value.domain}_SHOPIFY_DOMAIN`,
+                    value: value.domain,
+                  },
                 ];
               }
               if (value.type === "SQ") {
@@ -66,7 +69,11 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
             })
             .flat();
 
-          await AuthFetch("/api/keys", { method: "PATCH", json: keys, key: state.keyToken });
+          await AuthFetch("/api/keys", {
+            method: "PATCH",
+            json: keys,
+            key: state.keyToken,
+          });
 
           ok();
         } catch (error) {
@@ -96,10 +103,12 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
         }
       });
 
-      ctx.notice("Settings updated successfully!").catch(e => console.error(e));
+      ctx
+        .notice("Settings updated successfully!")
+        .catch((e) => console.error(e));
     } catch (error) {
       console.error(error);
-      ctx.alert("Failed to update settings.").catch(e => console.error(e));
+      ctx.alert("Failed to update settings.").catch((e) => console.error(e));
     }
   };
 

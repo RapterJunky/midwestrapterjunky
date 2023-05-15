@@ -26,12 +26,12 @@ interface HomeContent extends FullPageProps {
 export async function getStaticProps(
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<HomeContent>> {
-
-
-
-  const data = await DatoCMS<HomeContent>({ query: HomePageQuery }, {
-    draft: context.draftMode || context.preview,
-  });
+  const data = await DatoCMS<HomeContent>(
+    { query: HomePageQuery },
+    {
+      draft: context.draftMode || context.preview,
+    }
+  );
 
   return {
     props: {

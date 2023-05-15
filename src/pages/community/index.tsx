@@ -49,7 +49,7 @@ interface Props extends FullPageProps {
 
 export const getStaticProps = async ({
   draftMode,
-  preview
+  preview,
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
