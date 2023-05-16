@@ -10,7 +10,7 @@ const getFullPageProps = cache(async () => {
     "GenericPage",
     GenericPageQuery,
     {
-      next: { tags: ["navbar"] }
+      next: { tags: ["navbar"] },
     }
   );
   return data;

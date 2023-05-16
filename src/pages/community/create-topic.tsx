@@ -40,7 +40,7 @@ type FormState = {
   tags: PrismaJson.Tags;
   categoryId: string;
   message: Descendant[];
-  notification: boolean,
+  notification: boolean;
   deletedImages: string[];
 };
 
@@ -217,7 +217,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       const formData = new FormData();
 
-      formData.append("notification", state.notification === true ? "true" : "false");
+      formData.append(
+        "notification",
+        state.notification === true ? "true" : "false"
+      );
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
       if (editId) formData.append("editId", editId);
@@ -283,10 +286,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-            ? error.cause === "MAX_IMAGES"
-              ? error.message
-              : ""
-            : "";
+          ? error.cause === "MAX_IMAGES"
+            ? error.message
+            : ""
+          : "";
 
       setDialog({
         open: true,
@@ -395,8 +398,13 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 Tags must be 3-12 characters in length, with a max of 6 tags
               </span>
             </div>
-            <div className="mb-4 flex gap-2 items-center">
-              <input {...register("notification")} id="notification" type="checkbox" defaultChecked />
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                {...register("notification")}
+                id="notification"
+                type="checkbox"
+                defaultChecked
+              />
               <label htmlFor="notification">Send me email notifications</label>
             </div>
             <div className="mb-4 flex flex-col gap-1">

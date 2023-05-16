@@ -21,7 +21,9 @@ const Comments: React.FC<{ locked?: boolean }> = ({ locked = false }) => {
   return (
     <div className="my-4">
       {locked ? (
-        <div className="mt-6 flex w-full justify-center gap-4">Topic is locked</div>
+        <div className="mt-6 flex w-full justify-center gap-4">
+          Topic is locked
+        </div>
       ) : session.status === "authenticated" ? (
         <CommentBox submit={create} />
       ) : (
@@ -57,8 +59,8 @@ const Comments: React.FC<{ locked?: boolean }> = ({ locked = false }) => {
         ) : null}
         {!isLoading && comments
           ? comments?.result.map((comment) => (
-            <Comment key={comment.id} comment={comment} session={session} />
-          ))
+              <Comment key={comment.id} comment={comment} session={session} />
+            ))
           : null}
       </ul>
       <div className="mt-5 flex items-center justify-evenly">

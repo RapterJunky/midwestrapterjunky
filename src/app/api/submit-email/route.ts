@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { fromZodError } from "zod-validation-error";
-import validate from 'deep-email-validator';
+import validate from "deep-email-validator";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { z, ZodError } from "zod";
@@ -10,17 +10,22 @@ import prisma from "@api/prisma";
 import ratelimit from "@api/rateLimit";
 
 const emailValidator = z.object({
-  email: z.string().email().superRefine(async (email, ctx) => {
-    const result = await validate({ email, validateRegex: false })
-    if (!result.valid) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: result.validators[result.reason as keyof typeof result.validators]?.reason ?? "Failed to vaild email.",
-        fatal: true,
-      });
-      return z.NEVER;
-    }
-  }),
+  email: z
+    .string()
+    .email()
+    .superRefine(async (email, ctx) => {
+      const result = await validate({ email, validateRegex: false });
+      if (!result.valid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            result.validators[result.reason as keyof typeof result.validators]
+              ?.reason ?? "Failed to vaild email.",
+          fatal: true,
+        });
+        return z.NEVER;
+      }
+    }),
 });
 
 export const POST = async (request: NextRequest) => {
@@ -29,20 +34,26 @@ export const POST = async (request: NextRequest) => {
 
   const { success, remaining, reset, limit } = await ratelimit(request.ip);
 
-  if (!success) return NextResponse.json({
-    message: "Too Many Requests"
-  }, {
-    status: 429,
-    headers: {
-      "X-RateLimit-Limit": limit.toString(),
-      "X-RateLimit-Remaining": remaining.toString(),
-      "X-RateLimit-Reset": reset.toString()
-    }
-  });
+  if (!success)
+    return NextResponse.json(
+      {
+        message: "Too Many Requests",
+      },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      }
+    );
 
   try {
     const body = await request.formData();
-    const { email } = await emailValidator.parseAsync({ email: body.get("email") });
+    const { email } = await emailValidator.parseAsync({
+      email: body.get("email"),
+    });
 
     await prisma.mailingList.create({
       data: {
@@ -70,14 +81,26 @@ export const POST = async (request: NextRequest) => {
     logger.error(error, "Mailing list error");
   }
 
-  return NextResponse.redirect(new URL(`/confirmation?mode=email&status=${ok ? "ok" : "error"}&message=${encodeURIComponent(message)}`, request.nextUrl.origin), {
-    headers: {
-      "X-RateLimit-Limit": limit.toString(),
-      "X-RateLimit-Remaining": remaining.toString(),
-      "X-RateLimit-Reset": reset.toString()
-    },
-    status: 302
-  })
+  return NextResponse.redirect(
+    new URL(
+      `/confirmation?mode=email&status=${
+        ok ? "ok" : "error"
+      }&message=${encodeURIComponent(message)}`,
+      request.nextUrl.origin
+    ),
+    {
+      headers: {
+        "X-RateLimit-Limit": limit.toString(),
+        "X-RateLimit-Remaining": remaining.toString(),
+        "X-RateLimit-Reset": reset.toString(),
+      },
+      status: 302,
+    }
+  );
 
-  redirect(`/confirmation?mode=email&status=${ok ? "ok" : "error"}&message=${encodeURIComponent(message)}`)
+  redirect(
+    `/confirmation?mode=email&status=${
+      ok ? "ok" : "error"
+    }&message=${encodeURIComponent(message)}`
+  );
 };

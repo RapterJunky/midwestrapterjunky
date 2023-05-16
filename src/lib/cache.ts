@@ -6,9 +6,10 @@ import prisma from "@api/prisma";
 export const fetchCachedQuery = async <R = unknown>(
   key: string,
   query: string,
-  opt?: { ci?: boolean; preview?: true, next?: NextFetchRequestConfig }
+  opt?: { ci?: boolean; preview?: true; next?: NextFetchRequestConfig }
 ): Promise<R> => {
-  const request = async (draft = false) => DatoCMS({ query }, { draft, next: opt?.next });
+  const request = async (draft = false) =>
+    DatoCMS({ query }, { draft, next: opt?.next });
   if (opt?.preview) return request(true) as Promise<R>;
 
   let cache = await prisma.cache.findFirst({ where: { key } });

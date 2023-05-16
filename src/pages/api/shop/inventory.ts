@@ -31,7 +31,10 @@ export default async function handler(
       return res.status(200).json([]);
     }
 
-    if (!(req.draftMode || req.preview) && process.env.VERCEL_ENV !== "development")
+    if (
+      !(req.draftMode || req.preview) &&
+      process.env.VERCEL_ENV !== "development"
+    )
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_1H);
 
     return res.status(200).json(item.result.counts);

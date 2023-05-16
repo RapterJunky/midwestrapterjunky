@@ -13,6 +13,7 @@ import parseForm, {
 } from "@lib/utils/editor/parseForm";
 import { slateToDast } from "@lib/utils/editor/slateToDast";
 import { logger } from "@/lib/logger";
+import sendMail from "@/lib/api/sendMail";
 
 /**
  * Handle updating post/comments with new slate content.
@@ -98,8 +99,15 @@ const handleTC = async (
         select: {
           threadPost: {
             select: {
-              notifyOwner: true
-            }
+              notifyOwner: true,
+              id: true,
+              name: true,
+              owner: {
+                select: {
+                  email: true,
+                },
+              },
+            },
           },
           id: true,
           content: true,
@@ -117,7 +125,27 @@ const handleTC = async (
 
       if (comment.threadPost.notifyOwner) {
         logger.info("Sending notification");
+        if (comment.threadPost.owner.email)
+          await sendMail(
+            {
+              to: comment.threadPost.owner.email,
+              templete: {
+                id: "d-09d6805d0013445eb03fa020c5fabb7c",
+                data: {
+                  topic_title: comment.threadPost.name,
+                  topic_link: `http${
+                    process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/p/${
+                    comment.threadPost.id
+                  }`,
+                },
+              },
+            },
+            comment.threadPost.id
+          );
       }
+
+      delete (comment as Partial<typeof comment>).threadPost;
 
       return res.status(201).json({
         ...comment,

@@ -57,7 +57,10 @@ export default async function handle(
     }));
 
     // Two Hour wait
-    if (!(req.draftMode || req.preview) && process.env.VERCEL_ENV !== "development")
+    if (
+      !(req.draftMode || req.preview) &&
+      process.env.VERCEL_ENV !== "development"
+    )
       res.setHeader("Cache-Control", PUBLIC_CACHE_FOR_2H);
 
     const pageCount = Math.ceil(data.totalArticles.count / MAX_ITEMS);

@@ -53,7 +53,9 @@ const rootSchema = z.object({
 export const topicSchema = rootSchema.extend({
   thread: z.coerce.number().positive().min(1),
   title: z.string().nonempty(),
-  notification: z.enum(["true", "false"]).transform(value => value === "true"),
+  notification: z
+    .enum(["true", "false"])
+    .transform((value) => value === "true"),
   tags: tagsSchema.or(
     z
       .string()

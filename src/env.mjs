@@ -44,6 +44,8 @@ const server = z.object({
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
 
+  SENDGIRD_API_KEY: z.string().min(1),
+
   GOOGLE_SERVICE_KEY: serviceKey.transform((value, ctx) => {
     try {
       return JSON.stringify(value);
@@ -152,6 +154,8 @@ const processEnv = {
   FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
 
   NEXT_PUBLIC_SQUARE_MODE: process.env.NEXT_PUBLIC_SQUARE_MODE,
+
+  SENDGIRD_API_KEY: process.env.SENDGIRD_API_KEY,
 
   SQAURE_ACCESS_TOKEN: process.env.SQAURE_ACCESS_TOKEN,
   SQUARE_MODE: process.env.SQUARE_MODE,
