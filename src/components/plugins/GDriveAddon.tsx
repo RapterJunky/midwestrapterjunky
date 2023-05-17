@@ -6,13 +6,17 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
   return (
     <Canvas ctx={ctx}>
       <Button
-        onClick={() =>
-          ctx.openModal({
+        onClick={async () => {
+          await ctx.openModal({
             id: "gDriveModel",
             title: "Choose from Google Drive",
             width: "xl",
-          })
-        }
+          });
+
+          console.log(ctx.fieldPath, ctx.formValues)
+
+
+        }}
         leftIcon={<FaGoogleDrive />}
         buttonSize="s"
       >

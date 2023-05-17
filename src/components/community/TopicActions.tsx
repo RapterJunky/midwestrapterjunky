@@ -72,6 +72,7 @@ const TopicActions: React.FC<{
         <HiHeart className="h-6 w-6" />
       </button>
       <button
+        disabled={!!session.data.user.banned}
         onClick={async () => {
           setLoading({ state: true, type: "report" });
           await report("post", postId);

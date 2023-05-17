@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownOption,
+  DropdownSeparator,
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
@@ -20,7 +21,7 @@ type User = {
   email: string | null;
   name: string | null;
   id: string;
-  banned: boolean;
+  banned: 0 | 1 | 2;
 };
 
 export const UserList: React.FC<{
@@ -65,7 +66,7 @@ export const UserList: React.FC<{
                   <h3 className="line-clamp-1 flex items-center gap-1 font-bold">
                     {value.banned ? (
                       <span className="[word-wrap: break-word] flex h-4 w-fit cursor-pointer items-center justify-between rounded-sm bg-red-600 px-3 py-0.5 text-xs font-normal normal-case leading-loose text-neutral-100 shadow-none transition-[opacity] duration-300 ease-linear hover:!shadow-none">
-                        Banned
+                        {value.banned === 1 ? "Soft" : "Hard"} Banned
                       </span>
                     ) : null}{" "}
                     {value.name}
@@ -97,7 +98,7 @@ export const UserList: React.FC<{
                 >
                   <DropdownMenu alignment="right">
                     <DropdownOption
-                      red
+                      red={!value.banned}
                       onClick={async () => {
                         try {
                           await mutate(
@@ -117,7 +118,7 @@ export const UserList: React.FC<{
                                   method: "PATCH",
                                   json: {
                                     id: value.id,
-                                    ban: !value.banned,
+                                    ban: !value.banned ? 1 : 0,
                                   },
                                 }
                               );
@@ -135,20 +136,84 @@ export const UserList: React.FC<{
                           );
                           ctx
                             .notice(
-                              `Successfully ${
-                                value.banned ? "banned" : "unbanned"
+                              `Successfully ${!value.banned ? "soft banned" : "unbanned"
                               } user ${value.name}`
                             )
                             .catch((e) => console.error(e));
                         } catch (error) {
                           ctx
-                            .alert("Failed to delete account.")
+                            .alert(`Failed to ${!value.banned ? "soft banned" : "unbanned"} user`)
                             .catch((e) => console.error(e));
                         }
                       }}
                     >
-                      {value.banned ? "Unban" : "Ban"} Account
+                      <div className="font-semibold">
+                        {!value.banned ? "Soft ban" : "Unban"} account
+                      </div>
+                      <div className="text-sm tracking-tighter text-neutral-500 peer-hover:text-inherit">
+                        {!value.banned ? "Stop user from posting new topics and comments." : "Unban user"}
+                      </div>
                     </DropdownOption>
+                    {!value.banned ? (
+                      <DropdownOption
+                        red={!value.banned}
+                        onClick={async () => {
+                          try {
+                            await mutate(
+                              async (current) => {
+                                if (!current)
+                                  throw new Error("No data to update.");
+
+                                const idx = current.result.findIndex(
+                                  (item) => item.id === value.id
+                                );
+                                if (idx === -1)
+                                  throw new Error("Unable to find user index");
+
+                                const response = await AuthFetch(
+                                  "/api/plugin/users",
+                                  {
+                                    method: "PATCH",
+                                    json: {
+                                      id: value.id,
+                                      ban: !value.banned ? 2 : 0,
+                                    },
+                                  }
+                                );
+
+                                const user = (await response.json()) as User;
+
+                                return update(current, {
+                                  result: { [idx]: { $set: user } },
+                                });
+                              },
+                              {
+                                revalidate: false,
+                                rollbackOnError: true,
+                              }
+                            );
+                            ctx
+                              .notice(
+                                `Successfully hard banned
+                                } user ${value.name}`
+                              )
+                              .catch((e) => console.error(e));
+                          } catch (error) {
+                            ctx
+                              .alert("Failed to hard banned user")
+                              .catch((e) => console.error(e));
+                          }
+                        }}
+                      >
+                        <div className="font-semibold">
+                          {!value.banned ? "Hard ban" : "Unban"} account
+                        </div>
+                        <div className="text-sm tracking-tighter text-neutral-500 peer-hover:text-inherit">
+                          {!value.banned ? "Stop user from login." : "Unban user"}
+                        </div>
+                      </DropdownOption>
+                    ) : null}
+                    <DropdownSeparator />
                     <DropdownOption
                       red
                       onClick={async () => {
@@ -200,7 +265,7 @@ export const UserList: React.FC<{
                         }
                       }}
                     >
-                      Delete Account
+                      Delete account
                     </DropdownOption>
                   </DropdownMenu>
                 </Dropdown>

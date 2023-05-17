@@ -104,7 +104,7 @@ const Comment: React.FC<Props> = ({ comment, session }) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               {session.status === "authenticated" &&
-              session.data.user.id === comment.owner.id ? (
+                session.data.user.id === comment.owner.id ? (
                 <button
                   onClick={() => setShowEdit((curr) => !curr)}
                   type="button"
@@ -151,7 +151,7 @@ const Comment: React.FC<Props> = ({ comment, session }) => {
                 <>
                   <button
                     aria-label="Report Comment"
-                    disabled={loading.state && loading.type === "report"}
+                    disabled={(loading.state && loading.type === "report") || !!session.data?.user.banned}
                     title="privately flag this comment for attention or send a private notification about it"
                     className="flex items-center rounded-sm p-1 hover:bg-gray-400 hover:bg-opacity-20 hover:text-black disabled:opacity-70"
                     onClick={async () => {

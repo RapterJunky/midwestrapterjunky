@@ -14,7 +14,7 @@ import {
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import update from "immutability-helper";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { type KeyedMutator } from "swr";
 
 import { Panel } from "./Panel";
 import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
@@ -40,6 +40,75 @@ type Topic = {
     image: string | null;
   };
 };
+
+type DropdownActionProps = {
+  mutate: KeyedMutator<Paginate<Topic>>,
+  ctx: RenderPageCtx;
+  title: string;
+  subtitle: string;
+  data: {
+    id: string;
+    type: string;
+    prop: string;
+    value: boolean
+  };
+  messages: {
+    success: string;
+    error: string;
+  }
+}
+
+const DropdownAction: React.FC<DropdownActionProps> = ({ mutate, data, ctx, messages, title, subtitle }) => {
+  return (
+    <DropdownOption
+      onClick={async () => {
+        try {
+          await mutate(
+            async (current) => {
+              if (!current)
+                throw new Error("Unable to process.");
+              const idx = current.result.findIndex(
+                (item) => item.id === data.id
+              );
+              if (idx === -1)
+                throw new Error("Failed to find topic");
+
+              const response = await AuthFetch(
+                `/api/plugin/tac`,
+                {
+                  method: "PATCH",
+                  json: {
+                    id: data.id,
+                    type: data.type,
+                    prop: data.prop,
+                    value: !data.value,
+                  },
+                }
+              );
+
+              const body = (await response.json()) as Topic;
+
+              return update(current, {
+                result: { [idx]: { $set: body } },
+              });
+            },
+            { revalidate: false, rollbackOnError: true }
+          );
+          ctx.notice(messages.success).catch((e) => console.error(e));
+        } catch (error) {
+          ctx.alert(messages.error).catch((e) => console.error(e));
+        }
+      }}
+    >
+      <div className="font-semibold">
+        {title}
+      </div>
+      <div className="text-sm tracking-tighter text-neutral-500">
+        {subtitle}
+      </div>
+    </DropdownOption>
+  );
+}
 
 export const Topics: React.FC<{
   ctx: RenderPageCtx;
@@ -105,13 +174,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                            <span
-                              className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
-                              key={i}
-                            >
-                              {value}
-                            </span>
-                          ))
+                          <span
+                            className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
+                            key={i}
+                          >
+                            {value}
+                          </span>
+                        ))
                         : null}
                     </div>
                   </div>
@@ -131,110 +200,22 @@ export const Topics: React.FC<{
                   )}
                 >
                   <DropdownMenu alignment="right">
-                    <DropdownOption
-                      onClick={async () => {
-                        try {
-                          await mutate(
-                            async (current) => {
-                              if (!current)
-                                throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(
-                                (item) => item.id === topic.id
-                              );
-                              if (idx === -1)
-                                throw new Error("Failed to find topic");
-
-                              const response = await AuthFetch(
-                                `/api/plugin/tac`,
-                                {
-                                  method: "PATCH",
-                                  json: {
-                                    id: topic.id,
-                                    type: "topic",
-                                    prop: "pinned",
-                                    value: !topic.pinned,
-                                  },
-                                }
-                              );
-
-                              const data = (await response.json()) as Topic;
-
-                              return update(current, {
-                                result: { [idx]: { $set: data } },
-                              });
-                            },
-                            { revalidate: false, rollbackOnError: true }
-                          );
-                        } catch (error) {
-                          ctx
-                            .alert(
-                              `Failed to ${
-                                topic.pinned ? "Unpin Topic" : "Pin Topic"
-                              }`
-                            )
-                            .catch((e) => console.error(e));
-                        }
-                      }}
-                    >
-                      <div className="font-semibold">
-                        {topic.pinned ? "Unpin Topic" : "Pin Topic"}
-                      </div>
-                      <div className="text-sm tracking-tighter text-neutral-500">
-                        {topic.pinned
-                          ? "Unpin this topic from its category."
-                          : "Pin this topic to its category."}
-                      </div>
-                    </DropdownOption>
-                    <DropdownOption
-                      onClick={async () => {
-                        try {
-                          await mutate(
-                            async (current) => {
-                              if (!current)
-                                throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(
-                                (item) => item.id === topic.id
-                              );
-                              if (idx === -1)
-                                throw new Error("Failed to find topic");
-
-                              const response = await AuthFetch(
-                                "/api/plugin/tac",
-                                {
-                                  method: "PATCH",
-                                  json: {
-                                    id: topic.id,
-                                    type: "topic",
-                                    prop: "locked",
-                                    value: !topic.locked,
-                                  },
-                                }
-                              );
-
-                              const data = (await response.json()) as Topic;
-
-                              return update(current, {
-                                result: { [idx]: { $set: data } },
-                              });
-                            },
-                            { revalidate: false, rollbackOnError: true }
-                          );
-                        } catch (error) {
-                          ctx
-                            .alert("Failed to delete account.")
-                            .catch((e) => console.error(e));
-                        }
-                      }}
-                    >
-                      <div className="font-semibold">
-                        {topic.locked ? "Unlock Topic" : "Lock Topic"}
-                      </div>
-                      <div className="text-sm tracking-tighter text-neutral-500">
-                        {topic.locked
-                          ? "Unlocking will allow new comments to be posted on this topic."
-                          : "Locking will stop new comments from being posted to this topic."}
-                      </div>
-                    </DropdownOption>
+                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
+                      success: `Successfully ${topic.pinned ? "unpinned" : "pinned"} topic.`,
+                      error: `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"}`
+                    }} data={{ id: topic.id, type: "topic", prop: "pinned", value: topic.pinned }} title={topic.pinned ? "Unpin Topic" : "Pin Topic"} subtitle={topic.pinned ? "Unpin this topic from its category." : "Pin this topic to its category."} />
+                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
+                      success: `Successfully ${topic.locked ? "unlocked" : "locked"} topic.`,
+                      error: `Failed to ${topic.locked ? "unlock" : "lock"} topic.`
+                    }} data={{ id: topic.id, type: "topic", prop: "locked", value: topic.locked }} title={topic.locked ? "Unlock Topic" : "Lock Topic"} subtitle={topic.locked
+                      ? "Unlocking will allow new comments to be posted on this topic."
+                      : "Locking will stop new comments from being posted to this topic."} />
+                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
+                      success: "Successfully updated topic.",
+                      error: "Failed to update topic"
+                    }} data={{ id: topic.id, type: "topic", prop: "notifyOwner", value: topic.notifyOwner }} title={topic.notifyOwner ? "Don't Send Notifications" : "Send Notifications"} subtitle={topic.notifyOwner
+                      ? "Disallow sending email notifications to user for new comments."
+                      : "Allow sending email notification for new comments."} />
                     <DropdownSeparator />
                     <DropdownOption
                       red
@@ -299,3 +280,64 @@ export const Topics: React.FC<{
     </Panel>
   );
 };
+
+/*
+ <DropdownOption
+                      onClick={async () => {
+                        try {
+                          await mutate(
+                            async (current) => {
+                              if (!current)
+                                throw new Error("Unable to process.");
+                              const idx = current.result.findIndex(
+                                (item) => item.id === topic.id
+                              );
+                              if (idx === -1)
+                                throw new Error("Failed to find topic");
+
+                              const response = await AuthFetch(
+                                `/api/plugin/tac`,
+                                {
+                                  method: "PATCH",
+                                  json: {
+                                    id: topic.id,
+                                    type: "topic",
+                                    prop: "pinned",
+                                    value: !topic.pinned,
+                                  },
+                                }
+                              );
+
+                              const data = (await response.json()) as Topic;
+
+                              return update(current, {
+                                result: { [idx]: { $set: data } },
+                              });
+                            },
+                            { revalidate: false, rollbackOnError: true }
+                          );
+                          ctx
+                            .notice(
+                              `Successfully ${topic.pinned ? "unpinned" : "pinned"} topic.`
+                            )
+                            .catch((e) => console.error(e));
+                        } catch (error) {
+                          ctx
+                            .alert(
+                              `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"
+                              }`
+                            )
+                            .catch((e) => console.error(e));
+                        }
+                      }}
+                    >
+                      <div className="font-semibold">
+                        {topic.pinned ? "Unpin Topic" : "Pin Topic"}
+                      </div>
+                      <div className="text-sm tracking-tighter text-neutral-500">
+                        {topic.pinned
+                          ? "Unpin this topic from its category."
+                          : "Pin this topic to its category."}
+                      </div>
+                    </DropdownOption>
+ */

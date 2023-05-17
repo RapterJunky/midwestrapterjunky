@@ -35,7 +35,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "PATCH": {
       const { id, ban } = z
-        .object({ id: z.string().cuid(), ban: z.boolean() })
+        .object({ id: z.string().cuid(), ban: z.number().min(0).max(2) })
         .parse(req.body);
 
       const data = await prisma.user.update({

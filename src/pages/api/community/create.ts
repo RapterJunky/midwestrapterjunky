@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
+import handleTC from "@service/community/handleTC";
 import { applyRateLimit } from "@api/rateLimiter";
 import { handleError } from "@api/errorHandler";
 import { getSession } from "@lib/getSession";
-import handleTC from "@/lib/services/community/handleTC";
 import GET from "@service/community/GET";
 
 export const config = {
@@ -28,6 +28,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "PATCH":
       case "POST": {
+        if (!session.user.banned && req.method === "POST") throw createHttpError.Unauthorized();
         if (!req.headers["content-type"]?.startsWith("multipart/form-data"))
           throw createHttpError.BadRequest("Bad Content Type");
         return await handleTC(req, res, session, contentType);

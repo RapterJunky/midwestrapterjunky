@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["clientExtensions","jsonProtocol"]
+  previewFeatures = ["clientExtensions", "jsonProtocol"]
 }
 
 generator json {
@@ -75,7 +75,7 @@ model User {
   email         String?      @unique
   emailVerified DateTime?
   image         String?
-  banned        Boolean      @default(false)
+  banned        Int          @default(0) @db.UnsignedTinyInt // 0 = false 1 = soft 2 = hard
   accounts      Account[]
   sessions      Session[]
   theadPosts    ThreadPost[]

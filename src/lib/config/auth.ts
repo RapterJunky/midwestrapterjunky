@@ -1,7 +1,8 @@
 import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
-import type { NextAuthOptions, User } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import type { AdapterUser } from 'next-auth/adapters';
 
 import type { PrismaClient } from "@prisma/client";
 import { logger } from "@lib/logger";
@@ -26,12 +27,13 @@ export const authConfig = {
   },
   callbacks: {
     signIn(settings) {
-      if ((settings.user as User & { banned: boolean }).banned) return false;
+      if ((settings.user as AdapterUser & { banned: 0 | 1 | 2 }).banned === 2) return false;
       return true;
     },
     session({ session, user }) {
       if (session?.user) {
         session.user.id = user.id;
+        session.user.banned = (user as AdapterUser & { banned: 0 | 1 | 2 }).banned;
       }
       return session;
     },

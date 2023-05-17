@@ -195,9 +195,9 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   });
 
   useEffect(() => {
-    if (session.status === "unauthenticated")
+    if (session.status === "unauthenticated" || (session.status === "authenticated" && !session.data?.user.banned))
       replace("/community").catch((e) => console.error(e));
-  }, [session.status, replace]);
+  }, [session.status, replace, session.data?.user.banned]);
 
   const onSubmit = async (state: FormState) => {
     if (await isEditorEmpty(":ct")) {
@@ -286,10 +286,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,

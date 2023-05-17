@@ -85,7 +85,6 @@ export const MailingList: React.FC<{
                 >
                   <DropdownMenu alignment="right">
                     <DropdownOption
-                      disabled
                       red
                       onClick={async () => {
                         try {
