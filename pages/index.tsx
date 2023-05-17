@@ -11,7 +11,6 @@ const Home: NextPage = () => {
         <meta name="description" content="The home of Midwest Raptor Junkies" />
         <link rel="icon" href="/logo.png" />
         <meta name="robots" content="index, follow"/>
-        <meta http-equiv="content-language" content="en"></meta>
       </Head>
 
       <main className={styles.main}>
