@@ -98,130 +98,130 @@ const ArticleReport: React.FC<
   owner,
   reporter,
 }) => {
-  return (
-    <li className="bg-white p-4 shadow">
-      <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
-      <span className="text-sm">
-        Reported:{" "}
-        {new Date(created).toLocaleDateString(undefined, {
-          weekday: "short",
-          day: "numeric",
-          month: "long",
-        })}
-      </span>
-      <hr />
-      <details>
-        <summary className="cursor-pointer py-1">View Report</summary>
-        <h4 className="font-bold">Type: Topic</h4>
-        <h4 className="font-bold">Reason:</h4>
-        <p className="line-clamp-1 p-1 text-sm">{reason}</p>
-        <h4 className="font-bold">Link to Topic:</h4>
-        <a
-          className="ml-4 text-blue-400 underline"
-          target="_blank"
-          href={article.slug}
-        >
-          {article.name}
-        </a>
-        <h4 className="font-bold">Owner:</h4>
-        <div className="ml-4">
-          <Image
-            width={32}
-            height={32}
-            className="h-8 w-8"
-            src={owner?.image ?? ""}
-            alt="avatar"
-          />
-          <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
-        </div>
-        <h4 className="font-bold">Reported By:</h4>
-        <div className="ml-4">
-          <Image
-            unoptimized
-            width={32}
-            height={32}
-            className="h-8 w-8"
-            src={reporter?.image ?? ""}
-            alt="avatar"
-          />
-          <span className="text-sm">
-            {reporter?.name ?? "Deleted Reporter"}
-          </span>
-        </div>
-
-        <div className="flex w-full justify-end">
-          <Dropdown
-            renderTrigger={({ open, onClick }) => (
-              <Button
-                onClick={onClick}
-                buttonSize="xxs"
-                buttonType="primary"
-                rightIcon={
-                  open ? (
-                    <FaChevronUp style={{ fill: "white" }} />
-                  ) : (
-                    <FaChevronDown style={{ fill: "white" }} />
-                  )
-                }
-              >
-                Actions
-              </Button>
-            )}
+    return (
+      <li className="bg-white p-4 shadow">
+        <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
+        <span className="text-sm">
+          Reported:{" "}
+          {new Date(created).toLocaleDateString(undefined, {
+            weekday: "short",
+            day: "numeric",
+            month: "long",
+          })}
+        </span>
+        <hr />
+        <details>
+          <summary className="cursor-pointer py-1">View Report</summary>
+          <h4 className="font-bold">Type: Topic</h4>
+          <h4 className="font-bold">Reason:</h4>
+          <p className="line-clamp-1 p-1 text-sm">{reason}</p>
+          <h4 className="font-bold">Link to Topic:</h4>
+          <a
+            className="ml-4 text-blue-400 underline"
+            target="_blank"
+            href={article.slug}
           >
-            <DropdownMenu alignment="right">
-              <DropdownOption onClick={() => handleDelete(id)}>
-                <div className="font-semibold">Dismiss report</div>
-              </DropdownOption>
-              <DropdownOption
-                onClick={() =>
-                  patchItem(ctx, "topic", "locked", true, article.id)
-                }
-              >
-                <div className="font-semibold">Lock topic</div>
-                <div className="text-sm tracking-tighter text-neutral-500">
-                  Stop Users from posting comments on this topic.
-                </div>
-              </DropdownOption>
-              <DropdownSeparator />
-              <DropdownOption
-                red
-                onClick={() =>
-                  Promise.all([
-                    deleteItem(ctx, "topic", article.id),
-                    handleBan(owner?.id, owner?.name),
-                  ])
-                }
-              >
-                <div className="font-semibold">Remove topic and ban user</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Delete topic and ban its owner.
-                </div>
-              </DropdownOption>
-              <DropdownOption
-                red
-                onClick={() => deleteItem(ctx, "topic", article.id)}
-              >
-                <div className="font-semibold">Remove topic</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Delete topic
-                </div>
-              </DropdownOption>
-              <DropdownOption
-                red
-                onClick={() => handleBan(reporter?.id, reporter?.name)}
-              >
-                <div className="font-semibold">Ban reporty</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Ban the user who reported this.
-                </div>
-              </DropdownOption>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </details>
-    </li>
-  );
-};
+            {article.name}
+          </a>
+          <h4 className="font-bold">Owner:</h4>
+          <div className="ml-4">
+            <Image
+              width={32}
+              height={32}
+              className="h-8 w-8"
+              src={owner?.image ?? ""}
+              alt="avatar"
+            />
+            <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
+          </div>
+          <h4 className="font-bold">Reported By:</h4>
+          <div className="ml-4">
+            <Image
+              unoptimized
+              width={32}
+              height={32}
+              className="h-8 w-8"
+              src={reporter?.image ?? ""}
+              alt="avatar"
+            />
+            <span className="text-sm">
+              {reporter?.name ?? "Deleted Reporter"}
+            </span>
+          </div>
+
+          <div className="flex w-full justify-end">
+            <Dropdown
+              renderTrigger={({ open, onClick }) => (
+                <Button
+                  onClick={onClick}
+                  buttonSize="xxs"
+                  buttonType="primary"
+                  rightIcon={
+                    open ? (
+                      <FaChevronUp style={{ fill: "white" }} />
+                    ) : (
+                      <FaChevronDown style={{ fill: "white" }} />
+                    )
+                  }
+                >
+                  Actions
+                </Button>
+              )}
+            >
+              <DropdownMenu alignment="right">
+                <DropdownOption onClick={() => handleDelete(id)}>
+                  <div className="font-semibold">Dismiss report</div>
+                </DropdownOption>
+                <DropdownOption
+                  onClick={() =>
+                    patchItem(ctx, "topic", "locked", true, article.id)
+                  }
+                >
+                  <div className="font-semibold">Lock topic</div>
+                  <div className="text-sm tracking-tighter text-neutral-500">
+                    Stop Users from posting comments on this topic.
+                  </div>
+                </DropdownOption>
+                <DropdownSeparator />
+                <DropdownOption
+                  red
+                  onClick={() =>
+                    Promise.all([
+                      deleteItem(ctx, "topic", article.id),
+                      handleBan(owner?.id, owner?.name),
+                    ])
+                  }
+                >
+                  <div className="font-semibold">Remove topic and ban user</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Delete topic and ban its owner.
+                  </div>
+                </DropdownOption>
+                <DropdownOption
+                  red
+                  onClick={() => deleteItem(ctx, "topic", article.id)}
+                >
+                  <div className="font-semibold">Remove topic</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Delete topic
+                  </div>
+                </DropdownOption>
+                <DropdownOption
+                  red
+                  onClick={() => handleBan(reporter?.id, reporter?.name)}
+                >
+                  <div className="font-semibold">Ban reporty</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Ban the user who reported this.
+                  </div>
+                </DropdownOption>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </details>
+      </li>
+    );
+  };
 
 const CommentReport: React.FC<
   { ctx: RenderPageCtx; comment: Comment } & FullReport
@@ -236,116 +236,116 @@ const CommentReport: React.FC<
   reporter,
   ctx,
 }) => {
-  return (
-    <li className="bg-white p-4 shadow">
-      <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
-      <span className="text-sm">
-        Reported:{" "}
-        {new Date(created).toLocaleDateString(undefined, {
-          weekday: "short",
-          day: "numeric",
-          month: "long",
-        })}
-      </span>
-      <hr />
-      <details>
-        <summary className="cursor-pointer py-1">View Report</summary>
-        <h4 className="font-bold">Type: Comment</h4>
-        <h4 className="font-bold">Reason for report:</h4>
-        <p className="p-1 text-sm">{reason}</p>
-        <h4 className="font-bold">Offending Comment:</h4>
-        <div className="w-1/2 p-1 text-sm">
-          <StructuredText renderBlock={renderBlock} data={comment.content} />
-        </div>
-        <h4 className="font-bold">Owner:</h4>
-        <div className="ml-4">
-          <Image
-            unoptimized
-            width={32}
-            height={32}
-            className="h-8 w-8"
-            src={owner?.image ?? ""}
-            alt="avatar"
-          />
-          <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
-        </div>
-        <h4 className="font-bold">Reported By:</h4>
-        <div className="ml-4">
-          <Image
-            width={32}
-            height={32}
-            className="h-8 w-8"
-            src={reporter?.image ?? ""}
-            alt="avatar"
-          />
-          <span className="text-sm">
-            {reporter?.name ?? "Deleted Reporter"}
-          </span>
-        </div>
+    return (
+      <li className="bg-white p-4 shadow">
+        <h2 className="line-clamp-1 text-lg font-bold">{reason}</h2>
+        <span className="text-sm">
+          Reported:{" "}
+          {new Date(created).toLocaleDateString(undefined, {
+            weekday: "short",
+            day: "numeric",
+            month: "long",
+          })}
+        </span>
+        <hr />
+        <details>
+          <summary className="cursor-pointer py-1">View Report</summary>
+          <h4 className="font-bold">Type: Comment</h4>
+          <h4 className="font-bold">Reason for report:</h4>
+          <p className="p-1 text-sm">{reason}</p>
+          <h4 className="font-bold">Offending Comment:</h4>
+          <div className="w-1/2 p-1 text-sm">
+            <StructuredText renderBlock={renderBlock} data={comment.content} />
+          </div>
+          <h4 className="font-bold">Owner:</h4>
+          <div className="ml-4">
+            <Image
+              unoptimized
+              width={32}
+              height={32}
+              className="h-8 w-8"
+              src={owner?.image ?? ""}
+              alt="avatar"
+            />
+            <span className="text-sm">{owner?.name ?? "Deleted User"}</span>
+          </div>
+          <h4 className="font-bold">Reported By:</h4>
+          <div className="ml-4">
+            <Image
+              width={32}
+              height={32}
+              className="h-8 w-8"
+              src={reporter?.image ?? ""}
+              alt="avatar"
+            />
+            <span className="text-sm">
+              {reporter?.name ?? "Deleted Reporter"}
+            </span>
+          </div>
 
-        <div className="flex w-full justify-end">
-          <Dropdown
-            renderTrigger={({ open, onClick }) => (
-              <Button
-                onClick={onClick}
-                buttonSize="xxs"
-                buttonType="primary"
-                rightIcon={
-                  open ? (
-                    <FaChevronUp style={{ fill: "white" }} />
-                  ) : (
-                    <FaChevronDown style={{ fill: "white" }} />
-                  )
-                }
-              >
-                Actions
-              </Button>
-            )}
-          >
-            <DropdownMenu alignment="right">
-              <DropdownOption onClick={() => handleDelete(id)}>
-                <div className="font-semibold">Dismiss report</div>
-              </DropdownOption>
-              <DropdownSeparator />
-              <DropdownOption
-                red
-                onClick={() =>
-                  Promise.all([
-                    deleteItem(ctx, "comment", comment.id),
-                    handleBan(owner?.id, owner?.name),
-                  ])
-                }
-              >
-                <div className="font-semibold">Remove comment and ban user</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Delete comment and ban its owner.
-                </div>
-              </DropdownOption>
-              <DropdownOption
-                red
-                onClick={() => deleteItem(ctx, "comment", comment.id)}
-              >
-                <div className="font-semibold">Remove comment</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Delete comment
-                </div>
-              </DropdownOption>
-              <DropdownOption
-                red
-                onClick={() => handleBan(reporter?.id, reporter?.name)}
-              >
-                <div className="font-semibold">Ban reporty</div>
-                <div className="text-sm font-light tracking-tighter">
-                  Ban the user who reported this.
-                </div>
-              </DropdownOption>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </details>
-    </li>
-  );
-};
+          <div className="flex w-full justify-end">
+            <Dropdown
+              renderTrigger={({ open, onClick }) => (
+                <Button
+                  onClick={onClick}
+                  buttonSize="xxs"
+                  buttonType="primary"
+                  rightIcon={
+                    open ? (
+                      <FaChevronUp style={{ fill: "white" }} />
+                    ) : (
+                      <FaChevronDown style={{ fill: "white" }} />
+                    )
+                  }
+                >
+                  Actions
+                </Button>
+              )}
+            >
+              <DropdownMenu alignment="right">
+                <DropdownOption onClick={() => handleDelete(id)}>
+                  <div className="font-semibold">Dismiss report</div>
+                </DropdownOption>
+                <DropdownSeparator />
+                <DropdownOption
+                  red
+                  onClick={() =>
+                    Promise.all([
+                      deleteItem(ctx, "comment", comment.id),
+                      handleBan(owner?.id, owner?.name),
+                    ])
+                  }
+                >
+                  <div className="font-semibold">Remove comment and ban user</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Delete comment and ban its owner.
+                  </div>
+                </DropdownOption>
+                <DropdownOption
+                  red
+                  onClick={() => deleteItem(ctx, "comment", comment.id)}
+                >
+                  <div className="font-semibold">Remove comment</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Delete comment
+                  </div>
+                </DropdownOption>
+                <DropdownOption
+                  red
+                  onClick={() => handleBan(reporter?.id, reporter?.name)}
+                >
+                  <div className="font-semibold">Ban reporty</div>
+                  <div className="text-sm font-light tracking-tighter">
+                    Ban the user who reported this.
+                  </div>
+                </DropdownOption>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </details>
+      </li>
+    );
+  };
 
 export const Reports: React.FC<{
   mini: boolean;
@@ -382,12 +382,12 @@ export const Reports: React.FC<{
 
   const handleBan = async (userId?: string, name?: string | null) => {
     try {
-      if (!userId || !name) throw new Error("Missong userId");
+      if (!userId || !name) throw new Error("Missing userId");
       await AuthFetch(`/api/plugin/users`, {
         method: "PATCH",
         json: {
           id: userId,
-          ban: true,
+          ban: 1,
         },
       });
       ctx
