@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint && prettier --check ./src",
     "fix": "next lint --fix && prettier --write ./src",
+    "cli-lint": "cross-env SKIP_ENV_VALIDATION=true npm run lint",
     "cypress:open": "cypress open",
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "cypress:run": "cypress run",
