@@ -136,13 +136,18 @@ export const UserList: React.FC<{
                           );
                           ctx
                             .notice(
-                              `Successfully ${!value.banned ? "soft banned" : "unbanned"
+                              `Successfully ${
+                                !value.banned ? "soft banned" : "unbanned"
                               } user ${value.name}`
                             )
                             .catch((e) => console.error(e));
                         } catch (error) {
                           ctx
-                            .alert(`Failed to ${!value.banned ? "soft banned" : "unbanned"} user`)
+                            .alert(
+                              `Failed to ${
+                                !value.banned ? "soft banned" : "unbanned"
+                              } user`
+                            )
                             .catch((e) => console.error(e));
                         }
                       }}
@@ -151,7 +156,9 @@ export const UserList: React.FC<{
                         {!value.banned ? "Soft ban" : "Unban"} account
                       </div>
                       <div className="text-sm tracking-tighter text-neutral-500 peer-hover:text-inherit">
-                        {!value.banned ? "Stop user from posting new topics and comments." : "Unban user"}
+                        {!value.banned
+                          ? "Stop user from posting new topics and comments."
+                          : "Unban user"}
                       </div>
                     </DropdownOption>
                     {!value.banned ? (
@@ -209,7 +216,9 @@ export const UserList: React.FC<{
                           {!value.banned ? "Hard ban" : "Unban"} account
                         </div>
                         <div className="text-sm tracking-tighter text-neutral-500 peer-hover:text-inherit">
-                          {!value.banned ? "Stop user from login." : "Unban user"}
+                          {!value.banned
+                            ? "Stop user from login."
+                            : "Unban user"}
                         </div>
                       </DropdownOption>
                     ) : null}

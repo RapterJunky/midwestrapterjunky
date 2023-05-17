@@ -13,9 +13,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
             width: "xl",
           });
 
-          console.log(ctx.fieldPath, ctx.formValues)
-
-
+          console.log(ctx.fieldPath, ctx.formValues);
         }}
         leftIcon={<FaGoogleDrive />}
         buttonSize="s"

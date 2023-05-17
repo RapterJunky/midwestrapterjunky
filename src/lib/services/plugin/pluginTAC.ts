@@ -12,7 +12,7 @@ const schemaPatch = z.object({
   id: z.string().uuid(),
   type: z.literal("topic"),
   prop: z.enum(["locked", "pinned", "notifyOwner"]),
-  value: z.boolean()
+  value: z.boolean(),
 });
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -58,10 +58,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const post = await prisma.threadPost.update({
         where: {
-          id
+          id,
         },
         data: {
-          [prop]: value
+          [prop]: value,
         },
         select: {
           name: true,
@@ -81,7 +81,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
               image: true,
             },
           },
-        }
+        },
       });
 
       return res.status(200).json(post);

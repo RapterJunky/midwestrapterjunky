@@ -42,7 +42,7 @@ type Topic = {
 };
 
 type DropdownActionProps = {
-  mutate: KeyedMutator<Paginate<Topic>>,
+  mutate: KeyedMutator<Paginate<Topic>>;
   ctx: RenderPageCtx;
   title: string;
   subtitle: string;
@@ -50,41 +50,43 @@ type DropdownActionProps = {
     id: string;
     type: string;
     prop: string;
-    value: boolean
+    value: boolean;
   };
   messages: {
     success: string;
     error: string;
-  }
-}
+  };
+};
 
-const DropdownAction: React.FC<DropdownActionProps> = ({ mutate, data, ctx, messages, title, subtitle }) => {
+const DropdownAction: React.FC<DropdownActionProps> = ({
+  mutate,
+  data,
+  ctx,
+  messages,
+  title,
+  subtitle,
+}) => {
   return (
     <DropdownOption
       onClick={async () => {
         try {
           await mutate(
             async (current) => {
-              if (!current)
-                throw new Error("Unable to process.");
+              if (!current) throw new Error("Unable to process.");
               const idx = current.result.findIndex(
                 (item) => item.id === data.id
               );
-              if (idx === -1)
-                throw new Error("Failed to find topic");
+              if (idx === -1) throw new Error("Failed to find topic");
 
-              const response = await AuthFetch(
-                `/api/plugin/tac`,
-                {
-                  method: "PATCH",
-                  json: {
-                    id: data.id,
-                    type: data.type,
-                    prop: data.prop,
-                    value: !data.value,
-                  },
-                }
-              );
+              const response = await AuthFetch(`/api/plugin/tac`, {
+                method: "PATCH",
+                json: {
+                  id: data.id,
+                  type: data.type,
+                  prop: data.prop,
+                  value: !data.value,
+                },
+              });
 
               const body = (await response.json()) as Topic;
 
@@ -100,15 +102,13 @@ const DropdownAction: React.FC<DropdownActionProps> = ({ mutate, data, ctx, mess
         }
       }}
     >
-      <div className="font-semibold">
-        {title}
-      </div>
+      <div className="font-semibold">{title}</div>
       <div className="text-sm tracking-tighter text-neutral-500">
         {subtitle}
       </div>
     </DropdownOption>
   );
-}
+};
 
 export const Topics: React.FC<{
   ctx: RenderPageCtx;
@@ -174,13 +174,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                          <span
-                            className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
-                            key={i}
-                          >
-                            {value}
-                          </span>
-                        ))
+                            <span
+                              className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
+                              key={i}
+                            >
+                              {value}
+                            </span>
+                          ))
                         : null}
                     </div>
                   </div>
@@ -200,22 +200,78 @@ export const Topics: React.FC<{
                   )}
                 >
                   <DropdownMenu alignment="right">
-                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
-                      success: `Successfully ${topic.pinned ? "unpinned" : "pinned"} topic.`,
-                      error: `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"}`
-                    }} data={{ id: topic.id, type: "topic", prop: "pinned", value: topic.pinned }} title={topic.pinned ? "Unpin Topic" : "Pin Topic"} subtitle={topic.pinned ? "Unpin this topic from its category." : "Pin this topic to its category."} />
-                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
-                      success: `Successfully ${topic.locked ? "unlocked" : "locked"} topic.`,
-                      error: `Failed to ${topic.locked ? "unlock" : "lock"} topic.`
-                    }} data={{ id: topic.id, type: "topic", prop: "locked", value: topic.locked }} title={topic.locked ? "Unlock Topic" : "Lock Topic"} subtitle={topic.locked
-                      ? "Unlocking will allow new comments to be posted on this topic."
-                      : "Locking will stop new comments from being posted to this topic."} />
-                    <DropdownAction mutate={mutate} ctx={ctx} messages={{
-                      success: "Successfully updated topic.",
-                      error: "Failed to update topic"
-                    }} data={{ id: topic.id, type: "topic", prop: "notifyOwner", value: topic.notifyOwner }} title={topic.notifyOwner ? "Don't Send Notifications" : "Send Notifications"} subtitle={topic.notifyOwner
-                      ? "Disallow sending email notifications to user for new comments."
-                      : "Allow sending email notification for new comments."} />
+                    <DropdownAction
+                      mutate={mutate}
+                      ctx={ctx}
+                      messages={{
+                        success: `Successfully ${
+                          topic.pinned ? "unpinned" : "pinned"
+                        } topic.`,
+                        error: `Failed to ${
+                          topic.pinned ? "Unpin Topic" : "Pin Topic"
+                        }`,
+                      }}
+                      data={{
+                        id: topic.id,
+                        type: "topic",
+                        prop: "pinned",
+                        value: topic.pinned,
+                      }}
+                      title={topic.pinned ? "Unpin Topic" : "Pin Topic"}
+                      subtitle={
+                        topic.pinned
+                          ? "Unpin this topic from its category."
+                          : "Pin this topic to its category."
+                      }
+                    />
+                    <DropdownAction
+                      mutate={mutate}
+                      ctx={ctx}
+                      messages={{
+                        success: `Successfully ${
+                          topic.locked ? "unlocked" : "locked"
+                        } topic.`,
+                        error: `Failed to ${
+                          topic.locked ? "unlock" : "lock"
+                        } topic.`,
+                      }}
+                      data={{
+                        id: topic.id,
+                        type: "topic",
+                        prop: "locked",
+                        value: topic.locked,
+                      }}
+                      title={topic.locked ? "Unlock Topic" : "Lock Topic"}
+                      subtitle={
+                        topic.locked
+                          ? "Unlocking will allow new comments to be posted on this topic."
+                          : "Locking will stop new comments from being posted to this topic."
+                      }
+                    />
+                    <DropdownAction
+                      mutate={mutate}
+                      ctx={ctx}
+                      messages={{
+                        success: "Successfully updated topic.",
+                        error: "Failed to update topic",
+                      }}
+                      data={{
+                        id: topic.id,
+                        type: "topic",
+                        prop: "notifyOwner",
+                        value: topic.notifyOwner,
+                      }}
+                      title={
+                        topic.notifyOwner
+                          ? "Don't Send Notifications"
+                          : "Send Notifications"
+                      }
+                      subtitle={
+                        topic.notifyOwner
+                          ? "Disallow sending email notifications to user for new comments."
+                          : "Allow sending email notification for new comments."
+                      }
+                    />
                     <DropdownSeparator />
                     <DropdownOption
                       red
