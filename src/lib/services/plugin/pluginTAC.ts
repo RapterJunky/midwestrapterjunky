@@ -6,6 +6,10 @@ import prisma from "@api/prisma";
 
 const schema = z.object({
   page: z.coerce.number().positive().min(1).optional().default(1),
+  search: z
+    .string()
+    .transform((value) => decodeURIComponent(value))
+    .optional(),
 });
 
 const schemaPatch = z.object({
@@ -18,7 +22,7 @@ const schemaPatch = z.object({
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
-      const { page } = schema.parse(req.query);
+      const { page, search } = schema.parse(req.query);
 
       const [topics, meta] = await prisma.threadPost
         .paginate({
@@ -39,6 +43,11 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: true,
                 image: true,
               },
+            },
+          },
+          where: {
+            name: {
+              contains: search,
             },
           },
         })

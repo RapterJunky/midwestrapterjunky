@@ -4,11 +4,13 @@ import {
   DropdownMenu,
   DropdownOption,
   DropdownSeparator,
+  TextInput,
 } from "datocms-react-ui";
 import {
   FaChevronDown,
   FaChevronUp,
   FaLock,
+  FaSearch,
   FaThumbtack,
 } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
@@ -116,20 +118,43 @@ export const Topics: React.FC<{
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ ctx, mini, setMini }) => {
   const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
   const { data, error, isLoading, mutate } = useSWR<
     Paginate<Topic>,
     Response,
     string
   >(
-    `/api/plugin/tac?page=${page}`,
+    `/api/plugin/tac?page=${page}&search=${encodeURIComponent(search)}`,
     (url) =>
       AuthFetch(url).then((value) => value.json()) as Promise<Paginate<Topic>>
   );
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const data = new FormData(e.target as HTMLFormElement);
+    const search = data.get("search");
+
+    setSearch(search ? search.toString() : "");
+  };
 
   return (
     <Panel
       title="Topics List"
       mini={mini}
+      actions={
+        <form onSubmit={onSubmit} className="flex gap-2">
+          <TextInput name="search" id="search" placeholder="Search" />
+          <Button
+            buttonType="primary"
+            type="submit"
+            buttonSize="s"
+            className="flex flex-col items-center justify-center p-2"
+          >
+            <FaSearch />
+          </Button>
+        </form>
+      }
       setMini={() => setMini((state) => !state)}
     >
       <DisplayDataStates
