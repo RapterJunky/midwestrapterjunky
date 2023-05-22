@@ -194,8 +194,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["InterVariable", ...defaultTheme.fontFamily.sans],
-        serif: ["Inter", ...defaultTheme.fontFamily.serif],
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
       transitionTimingFunction: {
         "carousel-in-out": "cubic-bezier(0.25,0.1,0.25,1.0)",

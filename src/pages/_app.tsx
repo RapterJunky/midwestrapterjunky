@@ -1,20 +1,24 @@
 import type { NextComponentType, NextPageContext } from "next";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 import { SWRConfig, type SWRConfiguration } from "swr";
+import { Inter } from 'next/font/google';
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import type { Session } from "next-auth";
 
 import Head from "next/head";
 
-import "@fontsource/inter/variable-full.css";
 import "../styles/globals.css";
-
 interface CustomAppProps extends AppProps<{ session?: Session }> {
   Component: NextComponentType<NextPageContext, object, object> & {
     provider?: React.FC;
   };
 }
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"]
+});
 
 const swrConfig = {
   revalidateOnFocus: false,

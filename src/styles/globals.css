@@ -2,24 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
+@layer base {
+  html {
+    --font-inter: "__Inter_41196e", "__Inter_Fallback_41196e";
+  }
+  html,
+  body {
+    @apply m-0 h-full p-0 font-sans;
+  }
+  #__next {
+    @apply h-full;
+  }
 }
 
 @layer components {
   .shadow-square-input > div > div.sq-card-iframe-container {
     @apply shadow-sm;
   }
-}
-
-html,
-body {
-  padding: 0;
-  margin: 0;
-  height: 100%;
-}
-
-#__next {
-  height: 100%;
 }
 
 .backdrop-blur-08 {
