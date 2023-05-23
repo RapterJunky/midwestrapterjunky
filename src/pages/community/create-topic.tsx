@@ -11,11 +11,12 @@ import { Fragment, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Descendant } from "slate";
 import dynamic from "next/dynamic";
+import { WithContext as ReactTags } from 'react-tag-input';
 
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-import TagInput from "@components/inputs/TagInput";
+//import TagInput from "@components/inputs/TagInput";
 import Spinner from "@components/ui/Spinner";
 
 import extractSlateImages from "@lib/utils/editor/extractSlateImages";
@@ -172,7 +173,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isLoading },
+    formState: { errors, isSubmitting, isLoading, isValid },
     setError,
     clearErrors,
     setValue,
@@ -222,7 +223,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       formData.append(
         "notification",
-        state.notification === true ? "true" : "false"
+        state.notification ? "true" : "false"
       );
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
@@ -381,24 +382,46 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 }}
                 control={control}
                 name="tags"
-                render={({ field }) => (
-                  <TagInput
-                    className="border border-neutral-400"
-                    max={6}
-                    clearError={() => clearErrors("tags")}
-                    value={field.value}
-                    onChange={field.onChange}
-                    setError={(type, message) =>
-                      setError("tags", { type: type, message: message })
-                    }
-                  />
+                render={({ field, fieldState }) => (
+                  <div>
+                    <ReactTags
+                      inline
+                      classNames={{
+                        selected: "flex flex-wrap gap-1",
+                        tags: "flex",
+                        tagInputField: "h-full",
+                        tag: "py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
+                        remove: "text-red-500 text-lg font-bold flex items-center text-center justify-center"
+                      }}
+                      allowUnique
+                      autofocus
+                      maxLength={12}
+                      inputFieldPosition="inline"
+                      handleInputBlur={field.onBlur}
+                      tags={field.value.map((tag, i) => ({ id: i.toString(), text: tag }))}
+                      handleDelete={(idx) => {
+                        const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag })).map(value => value.text).filter((_tag, i) => i !== idx);
+                        field.onChange(tags)
+                      }}
+                      handleAddition={(tag: { id: string; text: string; }) => {
+                        field.onChange([...field.value, tag.text]);
+                      }}
+                      handleDrag={(tag: { id: string; text: string; }, curr: number, next: number) => {
+                        const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag }));
+
+                        tags.splice(curr, 1);
+                        tags.splice(next, 0, tag);
+                        field.onChange(tags.map(value => value.text));
+                      }}
+                    />
+                    {fieldState.error ? (
+                      <span className="text-red-500">{fieldState.error.message}</span>
+                    ) : null}
+                  </div>
                 )}
               />
-              {errors.tags ? (
-                <span className="text-red-500">{errors.tags.message}</span>
-              ) : null}
               <span className="text-neutral-500">
-                Tags must be 3-12 characters in length, with a max of 6 tags
+                Tags are short 1-2 word descriptions that describe this post. Tags must be 3-12 characters with a maxium of 6 tags.
               </span>
             </div>
             <div className="mb-4 flex items-center gap-2">
@@ -432,11 +455,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             </div>
 
             <div className="flex justify-end">
-              <button
-                disabled={isSubmitting}
-                className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
-                type="submit"
-              >
+              <button disabled={isSubmitting || !isValid} className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">
                 Submit
               </button>
             </div>
@@ -449,3 +468,17 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 };
 
 export default CreateTopic;
+/*
+tags={field.value.map((item, i) => ({ id: i, tag: item }))}
+                      handleAddition={(item: { id: number; tag: string; }) => field.onChange([...field.value, item.tag])}
+                      handleDelete={(idx: number) => {
+                        const tags = field.value.map((item, i) => ({ id: i, tag: item }))
+                        field.onChange(tags.filter(item => item.id !== idx).map(value => value.tag));
+                      }}
+                      handleDrag={(tag: { id: number; tag: string; }, currPos: number, newPos: number) => {
+                        const tags = field.value.map((item, i) => ({ id: i, tag: item })).slice();
+                        tags.splice(currPos, 1);
+                        tags.splice(newPos, 0, tag);
+                        field.onChange(tags.map(value => value.tag));
+                      }} />
+ */
