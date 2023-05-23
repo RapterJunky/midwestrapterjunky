@@ -390,7 +390,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                         selected: "flex flex-wrap gap-1",
                         tags: "flex",
                         tagInputField: "h-full",
-                        tag: "py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
+                        tag: "font-bold py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
                         remove: "text-red-500 text-lg font-bold flex items-center text-center justify-center"
                       }}
                       allowUnique

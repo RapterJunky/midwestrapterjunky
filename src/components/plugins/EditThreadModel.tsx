@@ -6,10 +6,10 @@ import {
   Form,
   FieldError,
 } from "datocms-react-ui";
+import { WithContext as ReactTags } from 'react-tag-input';
 import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
-import TagInput from "../inputs/TagInput";
 
 interface State {
   name: string;
@@ -20,14 +20,11 @@ interface State {
 }
 
 const generateImage = () =>
-  `https://api.dicebear.com/6.x/shapes/png?seed=${
-    crypto.randomUUID().split("-")[0]
+  `https://api.dicebear.com/6.x/shapes/png?seed=${crypto.randomUUID().split("-")[0]
   }`;
 
 const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
   const {
-    setError,
-    clearErrors,
     control,
     handleSubmit,
     register,
@@ -89,11 +86,10 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${
-              errors.description
-                ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
-                : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-            } text-dato-m focus:outline-0 focus:ring-0`}
+            className={`w-full border placeholder:text-dato-placeholder ${errors.description
+              ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
+              : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
+              } text-dato-m focus:outline-0 focus:ring-0`}
             placeholder="description"
             id="description"
             {...register("description", {
@@ -109,26 +105,52 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Tags</span>
           </FormLabel>
           <Controller
+            rules={{
+              max: {
+                message: "6 is the max amount of tags",
+                value: 6,
+              },
+            }}
             control={control}
             name="tags"
-            render={({ field }) => (
-              <TagInput
-                className={`border ${
-                  errors.tags
-                    ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
-                    : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-                }`}
-                onChange={field.onChange}
-                value={field.value}
-                max={6}
-                setError={(type, message) =>
-                  setError("tags", { message, type })
-                }
-                clearError={clearErrors}
-              />
+            render={({ field, fieldState }) => (
+              <div>
+                <ReactTags
+                  inline
+                  classNames={{
+                    selected: "flex flex-wrap gap-1",
+                    tags: "flex",
+                    tagInputField: "h-full",
+                    tag: "py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
+                    remove: "text-red-500 text-lg font-bold flex items-center text-center justify-center"
+                  }}
+                  allowUnique
+                  autofocus
+                  maxLength={12}
+                  inputFieldPosition="inline"
+                  handleInputBlur={field.onBlur}
+                  tags={field.value.map((tag, i) => ({ id: i.toString(), text: tag }))}
+                  handleDelete={(idx) => {
+                    const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag })).map(value => value.text).filter((_tag, i) => i !== idx);
+                    field.onChange(tags)
+                  }}
+                  handleAddition={(tag: { id: string; text: string; }) => {
+                    field.onChange([...field.value, tag.text]);
+                  }}
+                  handleDrag={(tag: { id: string; text: string; }, curr: number, next: number) => {
+                    const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag }));
+
+                    tags.splice(curr, 1);
+                    tags.splice(next, 0, tag);
+                    field.onChange(tags.map(value => value.text));
+                  }}
+                />
+                {fieldState.error ? (
+                  <FieldError>{fieldState.error.message}</FieldError>
+                ) : null}
+              </div>
             )}
           />
-          {errors.tags ? <FieldError>{errors.tags.message}</FieldError> : null}
         </div>
         <div>
           <FormLabel htmlFor="image" error={!!errors.image}>
