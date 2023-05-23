@@ -1,4 +1,4 @@
-import VercelKV from "@vercel/kv";
+import { kv } from "@vercel/kv";
 import type { ProjectConfig } from "./types";
 
 export type Cache = {
@@ -21,9 +21,9 @@ export class KVCache implements Cache {
     key: string,
     config: ProjectConfig<string | boolean | number>
   ): Promise<void> {
-    await VercelKV.set(key, config);
+    await kv.set(key, config);
   }
   get(key: string): Promise<ProjectConfig<string | boolean | number> | null> {
-    return VercelKV.get(key);
+    return kv.get(key);
   }
 }
