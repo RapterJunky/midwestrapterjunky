@@ -4,6 +4,7 @@
 
 @layer base {
   html {
+    /*This is a hack for now. After moving to app dir this can be removed.*/
     --font-inter: "__Inter_41196e", "__Inter_Fallback_41196e";
   }
   html,
