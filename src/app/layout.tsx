@@ -10,13 +10,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${
-      process.env.VERCEL_URL
+    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.VERCEL_URL
     }`
   ),
 };
 
-const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
+const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en" className={inter.variable}>
       <head>
@@ -27,4 +26,4 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default RootLayout;
