@@ -4,7 +4,7 @@ import type {
   NextPage,
 } from "next";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
-import { WithContext as ReactTags } from 'react-tag-input';
+import { WithContext as ReactTags } from "react-tag-input";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Dialog, Transition } from "@headlessui/react";
 import { Controller, useForm } from "react-hook-form";
@@ -219,10 +219,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       const formData = new FormData();
 
-      formData.append(
-        "notification",
-        state.notification ? "true" : "false"
-      );
+      formData.append("notification", state.notification ? "true" : "false");
       formData.append("title", state.title);
       formData.append("thread", state.categoryId);
       if (editId) formData.append("editId", editId);
@@ -275,7 +272,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       const data = (await response.json()) as { postId: string };
 
-      const path = `/community/p/${data.postId}`
+      const path = `/community/p/${data.postId}`;
 
       if (editId) await router.prefetch(path);
       await replace(path);
@@ -286,10 +283,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-            ? error.cause === "MAX_IMAGES"
-              ? error.message
-              : ""
-            : "";
+          ? error.cause === "MAX_IMAGES"
+            ? error.message
+            : ""
+          : "";
 
       setDialog({
         open: true,
@@ -387,37 +384,54 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                         tags: "flex",
                         tagInputField: "h-full",
                         tag: "font-bold py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
-                        remove: "text-red-500 text-lg font-bold flex items-center text-center justify-center"
+                        remove:
+                          "text-red-500 text-lg font-bold flex items-center text-center justify-center",
                       }}
                       allowUnique
                       autofocus
                       maxLength={12}
                       inputFieldPosition="inline"
                       handleInputBlur={field.onBlur}
-                      tags={field.value.map((tag, i) => ({ id: i.toString(), text: tag }))}
+                      tags={field.value.map((tag, i) => ({
+                        id: i.toString(),
+                        text: tag,
+                      }))}
                       handleDelete={(idx) => {
-                        const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag })).map(value => value.text).filter((_tag, i) => i !== idx);
-                        field.onChange(tags)
+                        const tags = field.value
+                          .map((tag, i) => ({ id: i.toString(), text: tag }))
+                          .map((value) => value.text)
+                          .filter((_tag, i) => i !== idx);
+                        field.onChange(tags);
                       }}
-                      handleAddition={(tag: { id: string; text: string; }) => {
+                      handleAddition={(tag: { id: string; text: string }) => {
                         field.onChange([...field.value, tag.text]);
                       }}
-                      handleDrag={(tag: { id: string; text: string; }, curr: number, next: number) => {
-                        const tags = field.value.map((tag, i) => ({ id: i.toString(), text: tag }));
+                      handleDrag={(
+                        tag: { id: string; text: string },
+                        curr: number,
+                        next: number
+                      ) => {
+                        const tags = field.value.map((tag, i) => ({
+                          id: i.toString(),
+                          text: tag,
+                        }));
 
                         tags.splice(curr, 1);
                         tags.splice(next, 0, tag);
-                        field.onChange(tags.map(value => value.text));
+                        field.onChange(tags.map((value) => value.text));
                       }}
                     />
                     {fieldState.error ? (
-                      <span className="text-red-500">{fieldState.error.message}</span>
+                      <span className="text-red-500">
+                        {fieldState.error.message}
+                      </span>
                     ) : null}
                   </div>
                 )}
               />
               <span className="text-neutral-500">
-                Tags are short 1-2 word descriptions that describe this post. Tags must be 3-12 characters with a maxium of 6 tags.
+                Tags are short 1-2 word descriptions that describe this post.
+                Tags must be 3-12 characters with a maxium of 6 tags.
               </span>
             </div>
             <div className="mb-4 flex items-center gap-2">
@@ -451,7 +465,11 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             </div>
 
             <div className="flex justify-end">
-              <button disabled={isSubmitting} className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">
+              <button
+                disabled={isSubmitting}
+                className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
+                type="submit"
+              >
                 Submit
               </button>
             </div>

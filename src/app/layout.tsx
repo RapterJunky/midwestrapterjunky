@@ -5,12 +5,13 @@ import "../styles/globals.css";
 const inter = Inter({
   variable: "--font-inter",
   display: "swap",
-  subsets: ["latin", "latin-ext"]
+  subsets: ["latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.VERCEL_URL
+    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${
+      process.env.VERCEL_URL
     }`
   ),
 };

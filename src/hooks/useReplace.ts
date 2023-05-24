@@ -14,7 +14,7 @@ const useReplace = () => {
     replace: (path) => routerRef.current.replace(path),
   });
 
-  return { replace, router }
+  return { replace, router };
 };
 
 export default useReplace;

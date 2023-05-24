@@ -1,4 +1,3 @@
-import { kv } from "@vercel/kv";
 import type { ProjectConfig } from "./types";
 
 export type Cache = {
@@ -13,17 +12,5 @@ export class InMemoryCache implements Cache {
   }
   get(key: string): Promise<ProjectConfig<string | boolean | number> | null> {
     return new Promise((ok) => ok(this.cache.get(key) ?? null));
-  }
-}
-
-export class KVCache implements Cache {
-  async set(
-    key: string,
-    config: ProjectConfig<string | boolean | number>
-  ): Promise<void> {
-    await kv.set(key, config);
-  }
-  get(key: string): Promise<ProjectConfig<string | boolean | number> | null> {
-    return kv.get(key);
   }
 }

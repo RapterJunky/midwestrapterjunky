@@ -56,7 +56,15 @@ export const topicSchema = rootSchema.extend({
   notification: z
     .enum(["true", "false"])
     .transform((value) => value === "true"),
-  tags: tagsSchema.or(z.string().transform((val) => [val]).pipe(tagsSchema)).optional().default([]),
+  tags: tagsSchema
+    .or(
+      z
+        .string()
+        .transform((val) => [val])
+        .pipe(tagsSchema)
+    )
+    .optional()
+    .default([]),
 });
 
 export const commentSchema = rootSchema.extend({
@@ -183,9 +191,6 @@ const parseForm = <T extends z.AnyZodObject>(
     });
     form.parse(req, async (err, fields, files) => {
       if (err) {
-
-
-
         return reject(err);
       }
 

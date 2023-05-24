@@ -132,9 +132,11 @@ const handleTC = async (
                 id: "d-09d6805d0013445eb03fa020c5fabb7c",
                 data: {
                   topic_title: comment.threadPost.name,
-                  topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
-                    }://${process.env.VERCEL_URL}/community/p/${comment.threadPost.id
-                    }`,
+                  topic_link: `http${
+                    process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/p/${
+                    comment.threadPost.id
+                  }`,
                 },
               },
             },

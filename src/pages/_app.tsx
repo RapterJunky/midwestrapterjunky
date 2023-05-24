@@ -1,7 +1,7 @@
 import type { NextComponentType, NextPageContext } from "next";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 import { SWRConfig, type SWRConfiguration } from "swr";
-import { Inter } from 'next/font/google';
+import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import type { Session } from "next-auth";
@@ -15,9 +15,10 @@ interface CustomAppProps extends AppProps<{ session?: Session }> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin", "latin-ext"]
+  subsets: ["latin", "latin-ext"],
 });
 
 const swrConfig = {

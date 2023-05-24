@@ -1,13 +1,12 @@
 import { ConfigCatClient } from "./client";
 import LazyConfigService from "./lazyConfigService";
-import { InMemoryCache, KVCache } from "./cache";
+import { InMemoryCache } from "./cache";
 
 type Global = typeof globalThis & { configCat: ConfigCatClient };
 
 let configCat: ConfigCatClient;
 
-const cache =
-  process.env.CONFIG_CAT_CACHE === "kv" ? new KVCache() : new InMemoryCache();
+const cache = new InMemoryCache();
 
 const getClient = () => new ConfigCatClient(new LazyConfigService(cache));
 
