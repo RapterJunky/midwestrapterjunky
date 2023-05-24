@@ -140,13 +140,14 @@ model ThreadPost {
 }
 
 model Thread {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
-  description String
-  image       String
+  allowUserPosts Boolean      @default(true)
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  description    String
+  image          String
   /// [Tags]
-  tags        Json?
-  posts       ThreadPost[]
+  tags           Json?
+  posts          ThreadPost[]
 }
 
 model Report {

@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
+import client from "@sendgrid/client";
 import { z } from "zod";
 
 import prisma from "@api/prisma";
 
 const schema = z.object({
   page: z.coerce.number().positive().min(1).optional().default(1),
+  type: z.enum(["list", "export"]).optional().default("list")
 });
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {

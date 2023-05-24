@@ -1,13 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
+import client from "@sendgrid/client";
 import { fromZodError } from "zod-validation-error";
 import validate from "deep-email-validator";
-import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { z, ZodError } from "zod";
 
 import { logger } from "@lib/logger";
-import prisma from "@api/prisma";
 import ratelimit from "@api/rateLimit";
+import prisma from "@/lib/api/prisma";
 
 const emailValidator = z.object({
   email: z
@@ -55,11 +55,27 @@ export const POST = async (request: NextRequest) => {
       email: body.get("email"),
     });
 
+    client.setApiKey(process.env.SENDGIRD_API_KEY);
+
     await prisma.mailingList.create({
       data: {
-        email,
-      },
+        email
+      }
     });
+
+    const response = await client.request({
+      url: `/v3/marketing/contacts`,
+      method: "PUT",
+      body: {
+        contacts: [
+          {
+            email
+          }
+        ]
+      }
+    });
+
+    logger.info(response, "Add email to mailing list");
 
     ok = true;
     message = "Your email was add to the mailing list.";
@@ -83,8 +99,7 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${
-        ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin
     ),
@@ -96,11 +111,5 @@ export const POST = async (request: NextRequest) => {
       },
       status: 302,
     }
-  );
-
-  redirect(
-    `/confirmation?mode=email&status=${
-      ok ? "ok" : "error"
-    }&message=${encodeURIComponent(message)}`
   );
 };

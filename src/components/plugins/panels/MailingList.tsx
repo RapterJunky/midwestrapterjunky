@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownOption,
+  ButtonLink
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
@@ -27,7 +28,7 @@ export const MailingList: React.FC<{
     Response,
     string
   >(
-    `/api/plugin/mail?page=${page}`,
+    `/api/plugin/mail?page=${page}&type=list`,
     (url) =>
       AuthFetch(url).then((e) => e.json()) as Promise<
         Paginate<{ id: number; email: string }>
@@ -36,6 +37,7 @@ export const MailingList: React.FC<{
 
   return (
     <Panel
+      actions={<ButtonLink buttonType="primary" target="_blank" href="https://mc.sendgrid.com/contacts/all">Download List</ButtonLink>}
       title="Mailing List"
       mini={mini}
       setMini={() => setMini((state) => !state)}

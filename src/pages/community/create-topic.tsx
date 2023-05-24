@@ -68,6 +68,9 @@ export const getStaticProps = async ({
       name: true,
       tags: true,
     },
+    where: {
+      allowUserPosts: true
+    }
   });
 
   return {
@@ -283,10 +286,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         error instanceof Response
           ? `STATUS_CODE: ${error.statusText}`
           : error instanceof Error
-          ? error.cause === "MAX_IMAGES"
-            ? error.message
-            : ""
-          : "";
+            ? error.cause === "MAX_IMAGES"
+              ? error.message
+              : ""
+            : "";
 
       setDialog({
         open: true,

@@ -20,5 +20,5 @@ export function GET(request: Request) {
 
   draftMode().enable();
 
-  return Response.redirect(result.data, 308);
+  return Response.redirect(`http://${process.env.VERCEL_URL}${result.data}`);
 }
