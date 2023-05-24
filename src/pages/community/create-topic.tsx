@@ -4,6 +4,7 @@ import type {
   NextPage,
 } from "next";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
+import { WithContext as ReactTags } from 'react-tag-input';
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Dialog, Transition } from "@headlessui/react";
 import { Controller, useForm } from "react-hook-form";
@@ -11,12 +12,10 @@ import { Fragment, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Descendant } from "slate";
 import dynamic from "next/dynamic";
-import { WithContext as ReactTags } from 'react-tag-input';
 
 import Footer from "@components/layout/Footer";
 import Navbar from "@components/layout/Navbar";
 import SiteTags from "@components/SiteTags";
-//import TagInput from "@components/inputs/TagInput";
 import Spinner from "@components/ui/Spinner";
 
 import extractSlateImages from "@lib/utils/editor/extractSlateImages";
@@ -164,7 +163,7 @@ const CreateTopicDialog: React.FC<{
 
 const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   const session = useSession();
-  const replace = useReplace();
+  const { replace, router } = useReplace();
   const [dialog, setDialog] = useState<DialogData>({
     open: false,
     mode: "message",
@@ -173,9 +172,8 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isLoading, isValid },
+    formState: { errors, isSubmitting, isLoading },
     setError,
-    clearErrors,
     setValue,
   } = useForm<FormState>({
     defaultValues: async () => {
@@ -277,12 +275,10 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
       const data = (await response.json()) as { postId: string };
 
-      await replace({
-        pathname: "/community/p/[slug]",
-        query: {
-          slug: data.postId,
-        },
-      });
+      const path = `/community/p/${data.postId}`
+
+      if (editId) await router.prefetch(path);
+      await replace(path);
     } catch (error) {
       console.error(error);
 
@@ -342,7 +338,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                     message:
                       "The title must be less then 40 characters in length.",
                   },
-                  required: "A Title is required",
+                  required: "A title is required",
                 })}
               />
               {errors.title ? (
@@ -455,7 +451,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             </div>
 
             <div className="flex justify-end">
-              <button disabled={isSubmitting || !isValid} className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">
+              <button disabled={isSubmitting} className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70" type="submit">
                 Submit
               </button>
             </div>

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import type { Session } from "next-auth";
-import { google } from "googleapis";
 import { z } from "zod";
 
+import googleDrive from "@api/googleDrive";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 
@@ -102,10 +102,7 @@ const DELETE = async (
         ).filter((block) => block.__typename === "ImageRecord");
 
         if (images.length) {
-          const auth = new google.auth.GoogleAuth({
-            scopes: ["https://www.googleapis.com/auth/drive"],
-          });
-          const driveService = google.drive({ version: "v3", auth });
+          const driveService = googleDrive();
 
           const results = await Promise.allSettled(
             images.map((image) => {

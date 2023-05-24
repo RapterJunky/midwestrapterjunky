@@ -12,8 +12,8 @@ import parseForm, {
   topicSchema,
 } from "@lib/utils/editor/parseForm";
 import { slateToDast } from "@lib/utils/editor/slateToDast";
-import { logger } from "@/lib/logger";
-import sendMail from "@/lib/api/sendMail";
+import { logger } from "@lib/logger";
+import sendMail from "@api/sendMail";
 
 /**
  * Handle updating post/comments with new slate content.
@@ -82,9 +82,6 @@ const handleTC = async (
         });
 
         await res.revalidate(`/community/p/${topic.id}`);
-
-        //await new Promise<void>((ok)=>setTimeout(()=>ok(),3000));
-
         return res.status(201).json({ postId: topic.id });
       }
     }

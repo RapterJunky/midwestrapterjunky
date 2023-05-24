@@ -1,13 +1,13 @@
 import { IncomingForm, type File } from "formidable";
 import sharp from "sharp";
 import type { NextApiRequest } from "next";
-import { google } from "googleapis";
 import { z } from "zod";
 import { rgbaToDataURL } from "thumbhash";
 import type { Record as DastReacord } from "datocms-structured-text-utils";
 import createHttpError from "http-errors";
 import { PassThrough, type Writable, pipeline } from "node:stream";
 import { logger } from "@/lib/logger";
+import googleDrive from "@api/googleDrive";
 
 const MAX_IMAGES = 5;
 
@@ -86,21 +86,7 @@ const parseForm = <T extends z.AnyZodObject>(
   files: Record<`image[${string}]`, File>;
   imagesBlocks: DastReacord[];
 }> => {
-  const creds = JSON.parse(
-    process.env.GOOGLE_SERVICE_KEY
-  ) as NodeJS.GoogleServiceKey;
-
-  const auth = new google.auth.GoogleAuth({
-    projectId: creds.project_id,
-    credentials: {
-      type: creds.type,
-      private_key: creds.private_key,
-      client_email: creds.client_email,
-      client_id: creds.client_id,
-    },
-    scopes: ["https://www.googleapis.com/auth/drive"],
-  });
-  const driveService = google.drive({ version: "v3", auth });
+  const driveService = googleDrive();
 
   return new Promise((resolve, reject) => {
     const uploads: Promise<{ imageId?: string; file: string }>[] = [];
