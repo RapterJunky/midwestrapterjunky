@@ -37,7 +37,14 @@ export const MailingList: React.FC<{
 
   return (
     <Panel
-      actions={<ButtonLink buttonType="primary" target="_blank" href="https://mc.sendgrid.com/contacts/all">Download List</ButtonLink>}
+      actions={<div className="flex gap-2">
+        <Button buttonSize="s" buttonType="primary" onClick={() => ctx.openModal({
+          id: "mrj_mail_settings",
+          title: "Mail Wizard",
+          width: "xl"
+        })}>Email All</Button>
+        <ButtonLink buttonSize="s" buttonType="primary" target="_blank" href="https://mc.sendgrid.com/contacts/all">Download List</ButtonLink>
+      </div>}
       title="Mailing List"
       mini={mini}
       setMini={() => setMini((state) => !state)}

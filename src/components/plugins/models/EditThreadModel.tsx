@@ -156,6 +156,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                     field.onChange(tags);
                   }}
                   handleAddition={(tag: { id: string; text: string }) => {
+                    if (field.value.includes(tag.text)) return;
                     field.onChange([...field.value, tag.text]);
                   }}
                   handleDrag={(

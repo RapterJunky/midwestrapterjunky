@@ -13,50 +13,58 @@ import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 
 import "datocms-react-ui/styles.css";
-import GDriveAddon from "@/components/plugins/GDriveAddon";
-import GDriveModel from "@/components/plugins/GDriveModal";
+
+const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
+const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
+const FIELD_EXTENSION_ID = "shopProduct";
+
+const MODEL_THEAD_ID = "thread-model";
+const MODEL_BROWSE_PRODUCTS_ID = "browseProducts";
+const MODEL_EDIT_AUTHOR_ID = "editAuthor";
+const MODEL_STOREFRONT_ID = "storefrontModel";
+const MODEL_GDRIVE_ID = "gDriveModel";
+const MODEL_MAIL_SETTINGS_ID = "mrj_mail_settings";
 
 const FIELD_ADDON_GDRIVE_ID = "mrj_gdrive";
-const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
-const FIELD_EXTENSION_ID = "shopProduct";
-const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
+
 const MESSAGE_BOARD_PAGE_ID = "community";
+
+const MailSettingsModel = dynamic(() => import("@/components/plugins/models/MailSettingsModel"));
+
+const GDriveAddon = dynamic(() => import("@components/plugins/addon/GDriveAddon"));
+const GDriveModel = dynamic(() => import("@components/plugins/models/GDriveModal"));
 
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
 const ShopFieldExtension = dynamic(
-  () => import("@components/plugins/ShopFieldExtension")
+  () => import("@components/plugins/extension/ShopFieldExtension")
 );
 const AuthorEditorExtension = dynamic(
-  () => import("@components/plugins/AuthorEditorExtension")
+  () => import("@components/plugins/extension/AuthorEditorExtension")
 );
-
 const AssetSourceOptimized = dynamic(
-  () => import("@components/plugins/AssetSourceOptimized")
+  () => import("@components/plugins/asset/AssetSourceOptimized")
 );
-
 const EditAuthorModal = dynamic(
-  () => import("@components/plugins/EditAuthorModel")
+  () => import("@components/plugins/models/EditAuthorModel")
 );
 const StorefrontModel = dynamic(
-  () => import("@components/plugins/StorefrontModel")
+  () => import("@components/plugins/models/StorefrontModel")
 );
 const BrowseProductsModel = dynamic(
-  () => import("@components/plugins/BrowseProductsModal")
+  () => import("@components/plugins/models/BrowseProductsModal")
 );
 const MessageBoardManagerPage = dynamic(
-  () => import("@/components/plugins/CommunityPage")
+  () => import("@components/plugins/page/CommunityPage")
 );
 const EditThreadModel = dynamic(
-  () => import("@components/plugins/EditThreadModel")
+  () => import("@components/plugins/models/EditThreadModel")
 );
-
 const DocxImportFieldAddon = dynamic(
-  () => import("@components/plugins/DocxImportFieldAddon")
+  () => import("@components/plugins/addon/DocxImportFieldAddon")
 );
-
 const PreviewLinkExtension = dynamic(
-  () => import("@components/plugins/PreviewLinkExtension")
+  () => import("@components/plugins/extension/PreviewLinkExtension")
 );
 
 const MidwestRaptor: NextPage = () => {
@@ -245,16 +253,18 @@ const MidwestRaptor: NextPage = () => {
     }
     case "Modal":
       switch (id) {
-        case "thread-model":
+        case MODEL_THEAD_ID:
           return <EditThreadModel ctx={ctx as RenderModalCtx} />;
-        case "browseProducts":
+        case MODEL_BROWSE_PRODUCTS_ID:
           return <BrowseProductsModel ctx={ctx as RenderModalCtx} />;
-        case "editAuthor":
+        case MODEL_EDIT_AUTHOR_ID:
           return <EditAuthorModal ctx={ctx as RenderModalCtx} />;
-        case "storefrontModel":
+        case MODEL_STOREFRONT_ID:
           return <StorefrontModel ctx={ctx as RenderModalCtx} />;
-        case "gDriveModel":
+        case MODEL_GDRIVE_ID:
           return <GDriveModel ctx={ctx as RenderModalCtx} />;
+        case MODEL_MAIL_SETTINGS_ID:
+          return <MailSettingsModel ctx={ctx as RenderModalCtx} />
         default:
           return null;
       }

@@ -7,12 +7,11 @@ import { z, ZodError } from "zod";
 
 import { logger } from "@lib/logger";
 import ratelimit from "@api/rateLimit";
-import prisma from "@/lib/api/prisma";
 
 const emailValidator = z.object({
   email: z
     .string()
-    .email()
+    .email().max(254)
     .superRefine(async (email, ctx) => {
       const result = await validate({ email, validateRegex: false });
       if (!result.valid) {
@@ -56,12 +55,6 @@ export const POST = async (request: NextRequest) => {
     });
 
     client.setApiKey(process.env.SENDGIRD_API_KEY);
-
-    await prisma.mailingList.create({
-      data: {
-        email
-      }
-    });
 
     const response = await client.request({
       url: `/v3/marketing/contacts`,
