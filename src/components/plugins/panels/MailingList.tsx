@@ -3,17 +3,14 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownOption,
-  ButtonLink
 } from "datocms-react-ui";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import update from "immutability-helper";
-import { useState } from "react";
 import useSWR from "swr";
 
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import DisplayDataStates from "./DisplayDataStates";
-import DatoCmsPagination from "./Pagination";
 import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
 
@@ -22,13 +19,12 @@ export const MailingList: React.FC<{
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ ctx, mini, setMini }) => {
-  const [page, setPage] = useState<number>(1);
   const { data, isLoading, error, mutate } = useSWR<
     Paginate<{ id: number; email: string }>,
     Response,
     string
   >(
-    `/api/plugin/mail?page=${page}&type=list`,
+    `/api/plugin/mail?type=list`,
     (url) =>
       AuthFetch(url).then((e) => e.json()) as Promise<
         Paginate<{ id: number; email: string }>
@@ -38,12 +34,31 @@ export const MailingList: React.FC<{
   return (
     <Panel
       actions={<div className="flex gap-2">
-        <Button buttonSize="s" buttonType="primary" onClick={() => ctx.openModal({
-          id: "mrj_mail_settings",
-          title: "Mail Wizard",
-          width: "xl"
-        })}>Email All</Button>
-        <ButtonLink buttonSize="s" buttonType="primary" target="_blank" href="https://mc.sendgrid.com/contacts/all">Download List</ButtonLink>
+        <Dropdown
+          renderTrigger={({ open, onClick }) => (
+            <Button
+              buttonSize="s"
+              buttonType="primary"
+              onClick={onClick}
+              rightIcon={open ? <FaChevronUp style={{ fill: "white" }} /> : <FaChevronDown style={{ fill: "white" }} />}
+            >
+              Options
+            </Button>
+          )}
+        >
+          <DropdownMenu alignment="right">
+            <DropdownOption onClick={() => ctx.openModal({
+              id: "mrj_mail_settings",
+              title: "Mail Wizard",
+              width: "xl"
+            })}>Email All</DropdownOption>
+            <DropdownOption onClick={() => {
+              window.open("https://mc.sendgrid.com/contacts/all", "_blank")
+            }}>
+              Download List
+            </DropdownOption>
+          </DropdownMenu>
+        </Dropdown>
       </div>}
       title="Mailing List"
       mini={mini}
@@ -155,7 +170,6 @@ export const MailingList: React.FC<{
               </li>
             ))}
           </ul>
-          <DatoCmsPagination setPage={setPage} data={data} />
         </>
       ) : null}
     </Panel>

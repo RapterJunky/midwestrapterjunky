@@ -6,10 +6,13 @@ import TopicTable from "@components/community/TopicTable";
 import TopicCard from "@components/community/TopicCard";
 import type { Paginate } from "@type/page";
 import { singleFetch } from "@api/fetch";
+import TopicCardSkeletion from "./TopicCardSkeletion";
 
 type Props = {
-  mode: "top" | "latest" | "suggest";
+  sort: "top" | "latest";
+  mode?: "suggest" | "category" | "default";
   tags?: string[];
+  categoryId?: string;
   ignore?: string;
 };
 
@@ -24,7 +27,7 @@ type Post = {
   }[];
 };
 
-const TopicsList: React.FC<Props> = ({ mode, tags = [], ignore }) => {
+const TopicsList: React.FC<Props> = ({ mode = "default", sort, tags = [], ignore, categoryId }) => {
   const wrapper = useRef<HTMLTableSectionElement>(null);
   const { data, size, setSize, error, isLoading } = useSWRInfinite<
     Paginate<Post>,
@@ -32,15 +35,13 @@ const TopicsList: React.FC<Props> = ({ mode, tags = [], ignore }) => {
   >(
     (index: number, previousData: Paginate<Post>) => {
       if (previousData?.isLastPage) return null;
-      return `/api/community?page=${index + 1}&sort=${mode}${
-        ignore ? `&ignore=${ignore}` : ""
-      }${
-        mode === "suggest"
-          ? `&tags=${tags
-              .map((item) => encodeURIComponent(item))
-              .join("&tags=")}`
+      return `/api/community?page=${index + 1}&sort=${sort}${ignore ? `&ignore=${ignore}` : ""
+        }${mode === "suggest"
+          ? `mode=suggest&tags=${tags
+            .map((item) => encodeURIComponent(item))
+            .join("&tags=")}`
           : ""
-      }`;
+        }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
     },
     singleFetch as () => Promise<Paginate<Post>>,
     {
@@ -99,9 +100,13 @@ const TopicsList: React.FC<Props> = ({ mode, tags = [], ignore }) => {
         </div>
       ) : null}
       {isLoading ? (
-        <div className="flex justify-center border-t-2">
-          <span className="mt-4 p-2 text-neutral-600">Loading Data...</span>
-        </div>
+        <TopicTable>
+          <tbody className="divide-y-2">
+            <TopicCardSkeletion />
+            <TopicCardSkeletion />
+            <TopicCardSkeletion />
+          </tbody>
+        </TopicTable>
       ) : null}
       {mode !== "suggest" ? (
         <div className="mt-4 flex justify-center">

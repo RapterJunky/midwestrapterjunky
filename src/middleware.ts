@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
     if (enabled?.value) return NextResponse.next();
 
-    return NextResponse.rewrite(new URL("/not-found", request.nextUrl.origin));
+    return NextResponse.redirect("/not-found", 301);
   }
 
   if (request.nextUrl.pathname.startsWith("/shop")) {
@@ -26,9 +26,7 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/plugins")) {
     const token = request.nextUrl.searchParams.get("token");
     if (!token || token !== process.env.PLUGIN_TOKEN)
-      return NextResponse.rewrite(
-        new URL("/not-found", request.nextUrl.origin)
-      );
+      return NextResponse.redirect("/not-found", 301);
   }
 
   return NextResponse.next();

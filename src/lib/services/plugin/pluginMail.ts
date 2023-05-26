@@ -123,7 +123,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         qs: {
           ids: id
         }
-      })
+      });
 
       return res.status(200).json({ ok: true, now: new Date().getTime() });
     }

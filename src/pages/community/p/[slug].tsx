@@ -182,7 +182,7 @@ const CommunityPost: NextPage<Props> = ({ navbar, _site, post, seo }) => {
           </div>
           <div className="mb-4 w-full max-w-5xl px-4">
             <h1 className="text-xl font-bold">Suggested Topics</h1>
-            <TopicsList mode="suggest" tags={post.tags} ignore={post.id} />
+            <TopicsList mode="suggest" sort="latest" tags={post.tags} ignore={post.id} />
           </div>
         </main>
       </PostProvider>

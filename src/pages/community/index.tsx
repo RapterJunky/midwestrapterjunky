@@ -204,10 +204,10 @@ const Community: NextPage<Props> = ({
                 </table>
               </Tab.Panel>
               <Tab.Panel>
-                <TopicsList mode="latest" />
+                <TopicsList sort="latest" />
               </Tab.Panel>
               <Tab.Panel>
-                <TopicsList mode="top" />
+                <TopicsList sort="top" />
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
