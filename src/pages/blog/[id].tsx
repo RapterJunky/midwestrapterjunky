@@ -9,7 +9,6 @@ import {
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { z } from "zod";
@@ -66,9 +65,6 @@ interface ArticleProps extends FullPageProps {
     slug: string;
     tags: string[];
     id: string;
-    displayComments: number;
-    enableComments: boolean | null;
-    commentsAdmins: string[] | null;
   };
 }
 
@@ -183,11 +179,7 @@ const Article: NextPage<ArticleProps> = ({
                 content: `https://midwestraptorjunkies.com/blog/${post.id}`,
               },
             },
-          ],
-          post.commentsAdmins?.map((value) => ({
-            tag: "meta",
-            attributes: { property: "fb:admins", content: value },
-          })) ?? [],
+          ]
         ]}
       />
       <Navbar {...navbar} mode="none" />

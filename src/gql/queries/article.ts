@@ -18,9 +18,6 @@ query ArticlePageQuery($slug: String = "") {
             content
             tag
         }
-        displayComments
-        enableComments
-        commentsAdmins
         publishedAt: _publishedAt
         authors
         id
