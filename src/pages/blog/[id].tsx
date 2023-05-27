@@ -32,8 +32,6 @@ import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 
-const Comments = dynamic(() => import("@components/blog/Comments"));
-
 interface ArticleProps extends FullPageProps {
   next: { slug: string; title: string } | null;
   prev: { slug: string; title: string } | null;
@@ -263,12 +261,6 @@ const Article: NextPage<ArticleProps> = ({
                     data={post.content}
                   />
                 </div>
-                {post.enableComments ? (
-                  <Comments
-                    pageSlug={post.slug}
-                    numPosts={post.displayComments}
-                  />
-                ) : null}
               </section>
               <section>
                 <div className="divide-gray-200 text-sm font-medium leading-5 xl:col-start-1 xl:row-start-2 xl:divide-y">
