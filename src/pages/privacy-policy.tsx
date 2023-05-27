@@ -15,7 +15,7 @@ import type {
 
 import ScrollToTop from "@components/blog/ScrollToTop";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import SiteTags from "@components/SiteTags";
 
 import type { FullPageProps } from "@type/page";

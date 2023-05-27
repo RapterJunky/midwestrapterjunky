@@ -16,7 +16,7 @@ import HiLockClosed from "@components/icons/HiLockClosed";
 import FaThumbtack from "@components/icons/FaThumbtack";
 import TagList from "@components/community/TagList";
 import Comments from "@components/thread/Comments";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 

@@ -9,7 +9,7 @@ import ShopOption from "@components/shop/ShopOption";
 import Skeleton from "@components/shop/Skeleton";
 import ShopCard from "@components/shop/ShopCard";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import SiteTags from "@components/SiteTags";
 
 import type { FullPageProps, NextPageWithProvider } from "@type/page";
@@ -132,8 +132,8 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
               {data && !error && !isLoading
                 ? data.result.map((item, i) => <ShopCard key={i} {...item} />)
                 : Array.from({ length: 15 }).map((_, i) => (
-                    <Skeleton key={i} />
-                  ))}
+                  <Skeleton key={i} />
+                ))}
             </div>
             <div className="mt-10 flex w-full justify-center">
               <ul className="list-style-none flex space-x-4">

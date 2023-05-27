@@ -8,7 +8,7 @@ import Link from "next/link";
 
 import HiArrowRight from "@components/icons/HiArrowRight";
 import ExitPreview from "@/components/ui/ExitPreview";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 import Tag from "@components/blog/tag";

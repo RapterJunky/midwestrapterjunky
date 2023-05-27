@@ -1,21 +1,5 @@
 import { HiArrowLeft } from "react-icons/hi";
-import type { Metadata } from "next";
 import Link from "next/link";
-
-import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import getFullPageProps from "@lib/cache/getFullPageProps";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getFullPageProps();
-
-  return getGenericSeoTags({
-    icons: data._site.faviconMetaTags,
-    robots: false,
-    description:
-      "Midwest Raptor Junkies failed to find what you where looking for.",
-    title: "Not Found",
-  });
-}
 
 /**
  * @link https://github.com/vercel/next.js/issues/45620

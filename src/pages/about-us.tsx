@@ -13,7 +13,7 @@ import Image from "next/image";
 import ModuleContent from "@components/layout/ModuleContent";
 import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import SiteTags from "@components/SiteTags";
 
 import {

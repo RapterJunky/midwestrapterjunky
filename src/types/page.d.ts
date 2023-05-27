@@ -1,5 +1,5 @@
 import type { SeoOrFaviconTag } from "react-datocms";
-import type { NavProps } from "@components/layout/Navbar";
+import type { NavProps } from "@/components/layout/OldNavbar";
 import type { NextPage } from "next";
 
 export type NextPageWithProvider<P = object, I = object> = NextPage<P, I> & {
@@ -35,7 +35,7 @@ export type ResponsiveImage<E = never> = {
   responsiveImage: [E] extends [never] ? Image : Image & E;
 };
 
-export type ModulerContent = { _modelApiKey: string; [key: string]: unknown };
+export type ModulerContent = { _modelApiKey: string;[key: string]: unknown };
 
 export interface FullPageProps extends NavProps {
   _site: {

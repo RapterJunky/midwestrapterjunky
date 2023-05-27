@@ -20,7 +20,7 @@ import HiArrowLeft from "@components/icons/HiArrowLeft";
 import ScrollToTop from "@components/blog/ScrollToTop";
 import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import IconLink from "@/components/ui/IconLink";
 import SiteTags from "@components/SiteTags";
 
@@ -214,8 +214,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

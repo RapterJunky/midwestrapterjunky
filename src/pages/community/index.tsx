@@ -15,7 +15,7 @@ import CategoryCard from "@components/community/CategoryCard";
 import TopicsList from "@components/community/TopicsList";
 import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import HiPlus from "@components/icons/HiPlus";
 import SiteTags from "@components/SiteTags";
 

@@ -10,7 +10,7 @@ import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@/gql/queries/generic";
 import type { FullPageProps } from "@type/page";
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import HiPlus from "@components/icons/HiPlus";
 import { fetchCachedQuery } from "@lib/cache";
 import SiteTags from "@components/SiteTags";

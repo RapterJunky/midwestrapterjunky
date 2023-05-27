@@ -14,7 +14,7 @@ import type { Descendant } from "slate";
 import dynamic from "next/dynamic";
 
 import Footer from "@components/layout/Footer";
-import Navbar from "@components/layout/Navbar";
+import Navbar from "@/components/layout/OldNavbar";
 import SiteTags from "@components/SiteTags";
 import Spinner from "@components/ui/Spinner";
 
