@@ -21,11 +21,6 @@ model Authors {
   id     String @unique
 }
 
-model MailingList {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-}
-
 model Cache {
   id      Int     @id @default(autoincrement())
   key     String  @unique
