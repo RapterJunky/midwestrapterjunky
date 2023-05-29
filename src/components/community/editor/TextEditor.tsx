@@ -7,7 +7,8 @@ import {
 } from "slate-react";
 import { createEditor, Transforms, type Descendant, Editor } from "slate";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
-import { useMemo, useCallback, useEffect } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 import {
   EDITOR_ISEMPTY_ID_R,
@@ -17,7 +18,9 @@ import {
 import EditorToolbar from "@components/community/editor/EditorToolbar";
 import RenderElement from "@components/community/editor/RenderElement";
 import RenderLeaf from "@components/community/editor/RenderLeaf";
-import { withPlugin } from "@lib/utils/editor/textEditorUtils";
+import { insertLink, withPlugin } from "@lib/utils/editor/textEditorUtils";
+
+const LinkDialog = dynamic(() => import("@/components/dialogs/TextEditorLinkDialog"));
 
 type Props = {
   onChange?: (props: { ast: Descendant[]; deletedImages: string[] }) => void;
@@ -26,7 +29,8 @@ type Props = {
 };
 
 const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
-  const editor = useMemo(() => withPlugin(withReact(createEditor())), []);
+  const [linkDialog, setLinkDialog] = useState({ url: "", open: false, title: "Add Link" });
+  const editor = useMemo(() => withPlugin(withReact(createEditor()), (url) => setLinkDialog({ open: true, title: "Edit Link", url })), []);
   const renderElement = useCallback(
     (props: RenderElementProps) => <RenderElement {...props} />,
     []
@@ -69,28 +73,34 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
   }, [id, reset, isEmpty]);
 
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(e) => {
-        if (onChange) onChange({ ast: e, deletedImages: editor.deletedImages });
-      }}
-    >
-      <EditorToolbar />
-      {/**
-       * disableDefaultStyles breaks input so set use sytle to set style  *
+    <>
+      {linkDialog.open ? <LinkDialog close={(value) => {
+        if (value) insertLink(editor, value);
+        setLinkDialog({ open: false, title: "Add Link", url: "" });
+      }} state={linkDialog} /> : null}
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(e) => {
+          if (onChange) onChange({ ast: e, deletedImages: editor.deletedImages });
+        }}
+      >
+        <EditorToolbar openLinkDialog={() => setLinkDialog({ open: true, title: "Add Link", url: "" })} />
+        {/**
+       * disableDefaultStyles breaks input so set styles using style  *
        * @see https://github.com/ianstormtaylor/slate/issues/5379
        */}
-      <Editable
-        style={{ minHeight: "100px" }}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        spellCheck
-        autoFocus
-        placeholder="Write something here..."
-        className="prose relative max-w-none rounded-sm border border-neutral-400 px-2 py-1 focus:outline-none"
-      />
-    </Slate>
+        <Editable
+          style={{ minHeight: "100px" }}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          spellCheck
+          autoFocus
+          placeholder="Write something here..."
+          className="prose relative max-w-none rounded-sm border border-neutral-400 px-2 py-1 focus:outline-none"
+        />
+      </Slate>
+    </>
   );
 };
 

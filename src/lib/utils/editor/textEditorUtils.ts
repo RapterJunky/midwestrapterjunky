@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element, Range, Path, Node } from "slate";
+import { Editor, Transforms, Element, Range, Path, Node, type Location } from "slate";
 import type {
   Text,
   NonTextNode,
@@ -7,6 +7,7 @@ import type {
   Link,
   Paragraph,
 } from "datocms-structured-text-slate-utils";
+import { ReactEditor } from "slate-react";
 
 export type Mark = keyof Omit<Text, "text">;
 type BlockType = keyof NonTextNode;
@@ -120,8 +121,51 @@ export const insertImage = (
   Transforms.insertNodes(editor, el);
 };
 
+export const removeLink = (editor: Editor) => {
+  Transforms.unwrapNodes(editor, {
+    match: (n) => !Editor.isEditor(n) && Element.isElement(n) && n.type === "link"
+  });
+}
+
 export const insertLink = (editor: Editor, url: string) => {
-  if (editor.selection) wrapLink(editor, url);
+  const { selection } = editor;
+  const link: Link = {
+    type: "link",
+    url,
+    children: [
+      { text: url }
+    ]
+  };
+
+  ReactEditor.focus(editor);
+
+  if (selection) {
+    const [parentNode, parentPath] = Editor.parent(editor, selection.focus?.path);
+
+    // Remove the Link node if we're inserting a new link node inside of another
+    // link.
+    if ((parentNode as NonTextNode).type === "link") removeLink(editor);
+
+    if (editor.isVoid(parentNode as NonTextNode)) {
+      // Insert the new link after the void node
+      Transforms.insertNodes(editor, { type: "paragraph", children: [link] } as Paragraph, {
+        at: Path.next(parentPath),
+        select: true
+      });
+    } else if (Range.isCollapsed(selection)) {
+      // Insert the new link in our last known location
+      Transforms.insertNodes(editor, link, { select: true });
+    } else {
+      // Wrap the currently selected range of text into a Link
+      Transforms.wrapNodes(editor, link, { split: true });
+      // Remove the highlight and move the cursor to the end of the highlight
+      Transforms.collapse(editor, { edge: "end" });
+    }
+
+    return;
+  }
+
+  Transforms.insertNodes(editor, { type: "paragraph", children: [link] } as Paragraph);
 };
 
 export const isLinkActive = (editor: Editor) => {
@@ -132,35 +176,10 @@ export const isLinkActive = (editor: Editor) => {
   return !!link;
 };
 
-const unwrapLink = (editor: Editor) =>
-  Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
-  });
-
-const wrapLink = (editor: Editor, url: string) => {
-  if (isLinkActive(editor)) unwrapLink(editor);
-
-  const { selection } = editor;
-  const isCollapsed = selection && Range.isCollapsed(selection);
-
-  const link: Link = {
-    type: "link",
-    url,
-    children: [{ text: "" }],
-  };
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, link);
-  } else {
-    Transforms.wrapNodes(editor, link, { split: true });
-    Transforms.collapse(editor, { edge: "end" });
-  }
-};
-
-export const withPlugin = (editor: Editor) => {
+export const withPlugin = (editor: Editor, openDialog: (url: string) => void) => {
   const { isVoid, insertData, isInline, insertBreak, deleteBackward } = editor;
   editor.deletedImages = [];
+  editor.editLink = openDialog;
 
   editor.isInline = (el) =>
     ["link", "itemLink", "inlineItem"].includes(el.type) || isInline(el);

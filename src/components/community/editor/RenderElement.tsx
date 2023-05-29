@@ -12,6 +12,7 @@ import Image from "next/image";
 
 import HiTrash from "@components/icons/HiTrash";
 import HiLink from "@components/icons/HiLink";
+import { removeLink } from "@/lib/utils/editor/textEditorUtils";
 
 type SlateBlockImage = Block & {
   imageId?: string;
@@ -63,6 +64,33 @@ const SlateImage: React.FC<RenderElementProps> = ({
     </div>
   );
 };
+
+const SlateLink: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
+  const editor = useSlateStatic();
+  const selected = useSelected();
+  const focused = useFocused();
+
+  if (element.type !== "link") return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 relative" {...attributes}>
+      <HiLink />
+      <span className="underline">
+        {children}
+      </span>
+      {selected && focused ? (
+        <div contentEditable={false} className="absolute -bottom-8 px-1.5 py-1 z-10 flex bg-white shadow">
+          <button onClick={() => editor.editLink(element.url)} type="button" className="border-r border-neutral-600 pr-2 mr-2 group hover:text-neutral-500">
+            Edit
+          </button>
+          <button type="button" className="text-red-500 hover:text-red-600" onClick={() => removeLink(editor)}>
+            <HiTrash />
+          </button>
+        </div>
+      ) : null}
+    </span>
+  );
+}
 
 const RenderElement: React.FC<RenderElementProps> = ({
   attributes,
@@ -118,12 +146,9 @@ const RenderElement: React.FC<RenderElementProps> = ({
     }
     case "link":
       return (
-        <span className="inline-flex items-center gap-1" {...attributes}>
-          <HiLink />
-          <a href={element.url} className="underline">
-            {children}
-          </a>
-        </span>
+        <SlateLink element={element} attributes={attributes}>
+          {children}
+        </SlateLink>
       );
     case "inlineItem":
     case "itemLink":

@@ -185,12 +185,12 @@ const BlockButton: React.FC<
   );
 };
 
-const LinkButton: React.FC = () => {
+const LinkButton: React.FC<{ openLinkDialog: () => void }> = ({ openLinkDialog }) => {
   const editor = useSlate();
   return (
     <button
       onMouseDown={(e) => e.preventDefault()}
-      onClick={() => insertLink(editor, "")}
+      onClick={openLinkDialog}
       className="rounded-sm p-1 text-neutral-500 hover:bg-gray-400 hover:bg-opacity-20 hover:text-neutral-600 ui-active:text-black"
       type="button"
       data-headlessui-state={isLinkActive(editor) ? "active" : ""}
@@ -287,7 +287,7 @@ const TextStyleButton: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC = () => {
+const EditorToolbar: React.FC<{ openLinkDialog: () => void }> = ({ openLinkDialog }) => {
   return (
     <div className="flex flex-wrap gap-1 rounded-sm border border-neutral-400 p-1">
       <TextStyleButton />
@@ -315,7 +315,7 @@ const EditorToolbar: React.FC = () => {
       <BlockButton type="blockquote">
         <FaQuoteRight />
       </BlockButton>
-      <LinkButton />
+      <LinkButton openLinkDialog={openLinkDialog} />
       <ImageButton />
     </div>
   );

@@ -37,7 +37,7 @@ const TopicsList: React.FC<Props> = ({ mode = "default", sort, tags = [], ignore
       if (previousData?.isLastPage) return null;
       return `/api/community?page=${index + 1}&sort=${sort}${ignore ? `&ignore=${ignore}` : ""
         }${mode === "suggest"
-          ? `mode=suggest&tags=${tags
+          ? `&mode=suggest&tags=${tags
             .map((item) => encodeURIComponent(item))
             .join("&tags=")}`
           : ""
