@@ -69,8 +69,8 @@ export const getStaticProps = async ({
       tags: true,
     },
     where: {
-      allowUserPosts: true
-    }
+      allowUserPosts: true,
+    },
   });
 
   return {
@@ -166,15 +166,17 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status}`;
+    return `Failed to process request. \n STATUS CODE: ${
+      error.statusText ?? error.status
+    }`;
   }
 
   if (!(error instanceof Error)) {
-    return "An unkown error occured"
+    return "An unkown error occured";
   }
 
   return error.message;
-}
+};
 
 const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   const session = useSession();
@@ -298,7 +300,9 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         open: true,
         mode: "message",
         title: "Error",
-        message: `There was an error creating your post. ${getErrorMessage(error)}`,
+        message: `There was an error creating your post. ${getErrorMessage(
+          error
+        )}`,
       });
     }
   };

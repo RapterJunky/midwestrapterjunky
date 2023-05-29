@@ -7,7 +7,6 @@ import {
   toggleBlock,
   toggleMark,
   insertImage,
-  insertLink,
   isLinkActive,
   type Mark,
   type FormatType,
@@ -185,7 +184,9 @@ const BlockButton: React.FC<
   );
 };
 
-const LinkButton: React.FC<{ openLinkDialog: () => void }> = ({ openLinkDialog }) => {
+const LinkButton: React.FC<{ openLinkDialog: () => void }> = ({
+  openLinkDialog,
+}) => {
   const editor = useSlate();
   return (
     <button
@@ -287,7 +288,9 @@ const TextStyleButton: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC<{ openLinkDialog: () => void }> = ({ openLinkDialog }) => {
+const EditorToolbar: React.FC<{ openLinkDialog: () => void }> = ({
+  openLinkDialog,
+}) => {
   return (
     <div className="flex flex-wrap gap-1 rounded-sm border border-neutral-400 p-1">
       <TextStyleButton />

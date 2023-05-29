@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element, Range, Path, Node, type Location } from "slate";
+import { Editor, Transforms, Element, Range, Path, Node } from "slate";
 import type {
   Text,
   NonTextNode,
@@ -123,24 +123,26 @@ export const insertImage = (
 
 export const removeLink = (editor: Editor) => {
   Transforms.unwrapNodes(editor, {
-    match: (n) => !Editor.isEditor(n) && Element.isElement(n) && n.type === "link"
+    match: (n) =>
+      !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
   });
-}
+};
 
 export const insertLink = (editor: Editor, url: string) => {
   const { selection } = editor;
   const link: Link = {
     type: "link",
     url,
-    children: [
-      { text: url }
-    ]
+    children: [{ text: url }],
   };
 
   ReactEditor.focus(editor);
 
   if (selection) {
-    const [parentNode, parentPath] = Editor.parent(editor, selection.focus?.path);
+    const [parentNode, parentPath] = Editor.parent(
+      editor,
+      selection.focus?.path
+    );
 
     // Remove the Link node if we're inserting a new link node inside of another
     // link.
@@ -148,10 +150,14 @@ export const insertLink = (editor: Editor, url: string) => {
 
     if (editor.isVoid(parentNode as NonTextNode)) {
       // Insert the new link after the void node
-      Transforms.insertNodes(editor, { type: "paragraph", children: [link] } as Paragraph, {
-        at: Path.next(parentPath),
-        select: true
-      });
+      Transforms.insertNodes(
+        editor,
+        { type: "paragraph", children: [link] } as Paragraph,
+        {
+          at: Path.next(parentPath),
+          select: true,
+        }
+      );
     } else if (Range.isCollapsed(selection)) {
       // Insert the new link in our last known location
       Transforms.insertNodes(editor, link, { select: true });
@@ -165,7 +171,10 @@ export const insertLink = (editor: Editor, url: string) => {
     return;
   }
 
-  Transforms.insertNodes(editor, { type: "paragraph", children: [link] } as Paragraph);
+  Transforms.insertNodes(editor, {
+    type: "paragraph",
+    children: [link],
+  } as Paragraph);
 };
 
 export const isLinkActive = (editor: Editor) => {
@@ -176,7 +185,10 @@ export const isLinkActive = (editor: Editor) => {
   return !!link;
 };
 
-export const withPlugin = (editor: Editor, openDialog: (url: string) => void) => {
+export const withPlugin = (
+  editor: Editor,
+  openDialog: (url: string) => void
+) => {
   const { isVoid, insertData, isInline, insertBreak, deleteBackward } = editor;
   editor.deletedImages = [];
   editor.editLink = openDialog;

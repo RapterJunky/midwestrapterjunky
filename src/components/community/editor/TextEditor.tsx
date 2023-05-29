@@ -20,7 +20,9 @@ import RenderElement from "@components/community/editor/RenderElement";
 import RenderLeaf from "@components/community/editor/RenderLeaf";
 import { insertLink, withPlugin } from "@lib/utils/editor/textEditorUtils";
 
-const LinkDialog = dynamic(() => import("@/components/dialogs/TextEditorLinkDialog"));
+const LinkDialog = dynamic(
+  () => import("@/components/dialogs/TextEditorLinkDialog")
+);
 
 type Props = {
   onChange?: (props: { ast: Descendant[]; deletedImages: string[] }) => void;
@@ -29,8 +31,18 @@ type Props = {
 };
 
 const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
-  const [linkDialog, setLinkDialog] = useState({ url: "", open: false, title: "Add Link" });
-  const editor = useMemo(() => withPlugin(withReact(createEditor()), (url) => setLinkDialog({ open: true, title: "Edit Link", url })), []);
+  const [linkDialog, setLinkDialog] = useState({
+    url: "",
+    open: false,
+    title: "Add Link",
+  });
+  const editor = useMemo(
+    () =>
+      withPlugin(withReact(createEditor()), (url) =>
+        setLinkDialog({ open: true, title: "Edit Link", url })
+      ),
+    []
+  );
   const renderElement = useCallback(
     (props: RenderElementProps) => <RenderElement {...props} />,
     []
@@ -74,22 +86,32 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
 
   return (
     <>
-      {linkDialog.open ? <LinkDialog close={(value) => {
-        if (value) insertLink(editor, value);
-        setLinkDialog({ open: false, title: "Add Link", url: "" });
-      }} state={linkDialog} /> : null}
+      {linkDialog.open ? (
+        <LinkDialog
+          close={(value) => {
+            if (value) insertLink(editor, value);
+            setLinkDialog({ open: false, title: "Add Link", url: "" });
+          }}
+          state={linkDialog}
+        />
+      ) : null}
       <Slate
         editor={editor}
         value={value}
         onChange={(e) => {
-          if (onChange) onChange({ ast: e, deletedImages: editor.deletedImages });
+          if (onChange)
+            onChange({ ast: e, deletedImages: editor.deletedImages });
         }}
       >
-        <EditorToolbar openLinkDialog={() => setLinkDialog({ open: true, title: "Add Link", url: "" })} />
+        <EditorToolbar
+          openLinkDialog={() =>
+            setLinkDialog({ open: true, title: "Add Link", url: "" })
+          }
+        />
         {/**
-       * disableDefaultStyles breaks input so set styles using style  *
-       * @see https://github.com/ianstormtaylor/slate/issues/5379
-       */}
+         * disableDefaultStyles breaks input so set styles using style  *
+         * @see https://github.com/ianstormtaylor/slate/issues/5379
+         */}
         <Editable
           style={{ minHeight: "100px" }}
           renderElement={renderElement}

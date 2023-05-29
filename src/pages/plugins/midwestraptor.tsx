@@ -30,10 +30,16 @@ const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 
 const MESSAGE_BOARD_PAGE_ID = "community";
 
-const MailSettingsModel = dynamic(() => import("@/components/plugins/models/MailSettingsModel"));
+const MailSettingsModel = dynamic(
+  () => import("@/components/plugins/models/MailSettingsModel")
+);
 
-const GDriveAddon = dynamic(() => import("@components/plugins/addon/GDriveAddon"));
-const GDriveModel = dynamic(() => import("@components/plugins/models/GDriveModal"));
+const GDriveAddon = dynamic(
+  () => import("@components/plugins/addon/GDriveAddon")
+);
+const GDriveModel = dynamic(
+  () => import("@components/plugins/models/GDriveModal")
+);
 
 const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
 const ShopFieldExtension = dynamic(
@@ -264,7 +270,7 @@ const MidwestRaptor: NextPage = () => {
         case MODEL_GDRIVE_ID:
           return <GDriveModel ctx={ctx as RenderModalCtx} />;
         case MODEL_MAIL_SETTINGS_ID:
-          return <MailSettingsModel ctx={ctx as RenderModalCtx} />
+          return <MailSettingsModel ctx={ctx as RenderModalCtx} />;
         default:
           return null;
       }

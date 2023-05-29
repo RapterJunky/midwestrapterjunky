@@ -66,12 +66,12 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                  (shop_receipt_url.startsWith(
-                    "https://squareupsandbox.com/receipt"
-                  ) ||
-                    shop_receipt_url.startsWith(
-                      "https://squareup.com/receipt"
-                    )) ? (
+                (shop_receipt_url.startsWith(
+                  "https://squareupsandbox.com/receipt"
+                ) ||
+                  shop_receipt_url.startsWith(
+                    "https://squareup.com/receipt"
+                  )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
                     target="_blank"

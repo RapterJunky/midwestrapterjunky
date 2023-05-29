@@ -7,7 +7,10 @@ import prisma from "@api/prisma";
 
 const getSchema = z.object({
   sort: z.enum(["latest", "top"]),
-  mode: z.enum(["suggest", "category", "default"]).optional().default("default"),
+  mode: z
+    .enum(["suggest", "category", "default"])
+    .optional()
+    .default("default"),
   tags: z
     .array(z.string().transform((value) => decodeURIComponent(value)))
     .or(z.string().transform((val) => [decodeURIComponent(val)]))
@@ -21,15 +24,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "GET": {
-        const { sort, page, mode, categoryId, tags, ignore } = getSchema.parse(req.query);
+        const { sort, page, mode, categoryId, tags, ignore } = getSchema.parse(
+          req.query
+        );
 
         if (mode === "suggest") {
           const data = await prisma.threadPost.findMany({
             where: {
               NOT: ignore
                 ? {
-                  id: ignore,
-                }
+                    id: ignore,
+                  }
                 : undefined,
               tags: {
                 array_contains: tags,
@@ -61,41 +66,43 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         if (mode === "category") {
-          const [posts, meta] = await prisma.threadPost.paginate({
-            where: {
-              threadId: categoryId
-            },
-            select: {
-              id: true,
-              name: true,
-              locked: true,
-              pinned: true,
-              tags: true,
-              comments: {
-                take: 1,
-                orderBy: {
-                  created: "desc",
-                },
-                select: {
-                  updatedAt: true,
-                },
+          const [posts, meta] = await prisma.threadPost
+            .paginate({
+              where: {
+                threadId: categoryId,
               },
-            },
-            orderBy:
-              sort === "latest"
-                ? {
-                  createdAt: "desc",
-                }
-                : {
-                  likes: {
-                    _count: "desc",
+              select: {
+                id: true,
+                name: true,
+                locked: true,
+                pinned: true,
+                tags: true,
+                comments: {
+                  take: 1,
+                  orderBy: {
+                    created: "desc",
+                  },
+                  select: {
+                    updatedAt: true,
                   },
                 },
-          }).withPages({
-            includePageCount: true,
-            limit: 15,
-            page: page,
-          });
+              },
+              orderBy:
+                sort === "latest"
+                  ? {
+                      createdAt: "desc",
+                    }
+                  : {
+                      likes: {
+                        _count: "desc",
+                      },
+                    },
+            })
+            .withPages({
+              includePageCount: true,
+              limit: 15,
+              page: page,
+            });
 
           return res.status(200).json({ result: posts, ...meta });
         }
@@ -121,13 +128,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             orderBy:
               sort === "latest"
                 ? {
-                  createdAt: "desc",
-                }
+                    createdAt: "desc",
+                  }
                 : {
-                  likes: {
-                    _count: "desc",
+                    likes: {
+                      _count: "desc",
+                    },
                   },
-                },
           })
           .withPages({
             includePageCount: true,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
@@ -25,7 +26,9 @@ const AuthError = () => {
         <p className="text-6xl font-bold tracking-wider text-gray-300 md:text-7xl lg:text-9xl">
           Error
         </p>
-        <ErrorMessage />
+        <Suspense fallback={<span>Loading...</span>}>
+          <ErrorMessage />
+        </Suspense>
         <Link
           href="/"
           className="mt-6 flex items-center space-x-2 rounded bg-blue-600 px-4 py-2 text-gray-100 transition duration-150 hover:bg-blue-700"

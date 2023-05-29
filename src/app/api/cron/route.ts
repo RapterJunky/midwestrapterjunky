@@ -9,13 +9,15 @@ import prisma from "@api/prisma";
 
 const requests = z.enum(["session"]);
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (request: NextRequest) => {
   try {
     const { success } = await ratelimit(request?.ip);
     if (!success) throw createHttpError.TooManyRequests();
 
-    const params = new URL(request.url).searchParams;
-    const type = requests.parse(params.get("type"));
+    const { searchParams } = new URL(request.url);
+    const type = requests.parse(searchParams.get("type"));
 
     switch (type) {
       case "session": {

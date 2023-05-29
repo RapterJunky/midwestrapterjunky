@@ -179,7 +179,7 @@ const Article: NextPage<ArticleProps> = ({
                 content: `https://midwestraptorjunkies.com/blog/${post.id}`,
               },
             },
-          ]
+          ],
         ]}
       />
       <Navbar {...navbar} mode="none" />

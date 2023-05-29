@@ -13,7 +13,7 @@ const createCategory = z.object({
   description: z.string().nonempty(),
   tags: z.array(z.string().min(3).max(15)).max(6),
   image: z.string().url(),
-  allowUserPosts: z.boolean()
+  allowUserPosts: z.boolean(),
 });
 
 const patchSchema = createCategory.extend({
@@ -34,7 +34,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ ...meta, result: categires });
     }
     case "POST": {
-      const { tags, name, description, image, allowUserPosts } = createCategory.parse(req.body);
+      const { tags, name, description, image, allowUserPosts } =
+        createCategory.parse(req.body);
 
       const data = await prisma.thread.create({
         data: {
@@ -54,9 +55,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(201).json(data);
     }
     case "PATCH": {
-      const { id, tags, name, description, image, allowUserPosts } = patchSchema.parse(
-        req.body
-      );
+      const { id, tags, name, description, image, allowUserPosts } =
+        patchSchema.parse(req.body);
 
       const data = await prisma.thread.update({
         where: {

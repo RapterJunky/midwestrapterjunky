@@ -33,33 +33,49 @@ export const MailingList: React.FC<{
 
   return (
     <Panel
-      actions={<div className="flex gap-2">
-        <Dropdown
-          renderTrigger={({ open, onClick }) => (
-            <Button
-              buttonSize="s"
-              buttonType="primary"
-              onClick={onClick}
-              rightIcon={open ? <FaChevronUp style={{ fill: "white" }} /> : <FaChevronDown style={{ fill: "white" }} />}
-            >
-              Options
-            </Button>
-          )}
-        >
-          <DropdownMenu alignment="right">
-            <DropdownOption onClick={() => ctx.openModal({
-              id: "mrj_mail_settings",
-              title: "Mail Wizard",
-              width: "xl"
-            })}>Email All</DropdownOption>
-            <DropdownOption onClick={() => {
-              window.open("https://mc.sendgrid.com/contacts/all", "_blank")
-            }}>
-              Download List
-            </DropdownOption>
-          </DropdownMenu>
-        </Dropdown>
-      </div>}
+      actions={
+        <div className="flex gap-2">
+          <Dropdown
+            renderTrigger={({ open, onClick }) => (
+              <Button
+                buttonSize="s"
+                buttonType="primary"
+                onClick={onClick}
+                rightIcon={
+                  open ? (
+                    <FaChevronUp style={{ fill: "white" }} />
+                  ) : (
+                    <FaChevronDown style={{ fill: "white" }} />
+                  )
+                }
+              >
+                Options
+              </Button>
+            )}
+          >
+            <DropdownMenu alignment="right">
+              <DropdownOption
+                onClick={() =>
+                  ctx.openModal({
+                    id: "mrj_mail_settings",
+                    title: "Mail Wizard",
+                    width: "xl",
+                  })
+                }
+              >
+                Email All
+              </DropdownOption>
+              <DropdownOption
+                onClick={() => {
+                  window.open("https://mc.sendgrid.com/contacts/all", "_blank");
+                }}
+              >
+                Download List
+              </DropdownOption>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      }
       title="Mailing List"
       mini={mini}
       setMini={() => setMini((state) => !state)}

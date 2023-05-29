@@ -1,5 +1,6 @@
 import type { FaviconAttributes } from "react-datocms/seo";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -72,7 +73,9 @@ const SignIn = async () => {
           </div>
           <div className="mt-8 grid grid-cols-6 gap-6">
             <div className="col-span-6">
-              <SignInList />
+              <Suspense fallback={<span>Loading...</span>}>
+                <SignInList />
+              </Suspense>
             </div>
 
             <hr className="col-span-6" />

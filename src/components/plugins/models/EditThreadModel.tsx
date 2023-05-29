@@ -22,7 +22,8 @@ interface State {
 }
 
 const generateImage = () =>
-  `https://api.dicebear.com/6.x/shapes/png?seed=${crypto.randomUUID().split("-")[0]
+  `https://api.dicebear.com/6.x/shapes/png?seed=${
+    crypto.randomUUID().split("-")[0]
   }`;
 
 const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
@@ -37,9 +38,10 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
         ctx.parameters.type === "edit"
           ? (ctx.parameters as { data: State })?.data.name
           : "",
-      allowUserPosts: ctx.parameters.type === "edit"
-        ? (ctx.parameters as { data: State })?.data.allowUserPosts
-        : true,
+      allowUserPosts:
+        ctx.parameters.type === "edit"
+          ? (ctx.parameters as { data: State })?.data.allowUserPosts
+          : true,
       description:
         ctx.parameters.type === "edit"
           ? (ctx.parameters as { data: State })?.data.description
@@ -82,15 +84,21 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             />
           )}
         />
-        <Controller control={control} name="allowUserPosts" render={({ field, fieldState }) => (
-          <SwitchField
-            id={field.name}
-            name={field.name}
-            value={field.value}
-            onChange={field.onChange}
-            label="Users allowed to post."
-            hint="Are users allowed to create a post in this category." error={fieldState.error?.message} />
-        )} />
+        <Controller
+          control={control}
+          name="allowUserPosts"
+          render={({ field, fieldState }) => (
+            <SwitchField
+              id={field.name}
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              label="Users allowed to post."
+              hint="Are users allowed to create a post in this category."
+              error={fieldState.error?.message}
+            />
+          )}
+        />
         <div className="mt-dato-l">
           <FormLabel
             required
@@ -100,10 +108,11 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${errors.description
-              ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
-              : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-              } text-dato-m focus:outline-0 focus:ring-0`}
+            className={`w-full border placeholder:text-dato-placeholder ${
+              errors.description
+                ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
+                : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
+            } text-dato-m focus:outline-0 focus:ring-0`}
             placeholder="description"
             id="description"
             {...register("description", {

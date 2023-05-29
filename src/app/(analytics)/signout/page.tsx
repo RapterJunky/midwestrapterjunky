@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 import getFullPageProps from "@lib/cache/getFullPageProps";
@@ -24,7 +25,9 @@ const Page = () => {
         <p className="mb-4 text-base text-neutral-600">
           Are you sure you want to sign out?
         </p>
-        <SignoutBtn />
+        <Suspense fallback={<span>Loading...</span>}>
+          <SignoutBtn />
+        </Suspense>
       </div>
     </div>
   );

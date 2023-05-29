@@ -27,7 +27,13 @@ type Post = {
   }[];
 };
 
-const TopicsList: React.FC<Props> = ({ mode = "default", sort, tags = [], ignore, categoryId }) => {
+const TopicsList: React.FC<Props> = ({
+  mode = "default",
+  sort,
+  tags = [],
+  ignore,
+  categoryId,
+}) => {
   const wrapper = useRef<HTMLTableSectionElement>(null);
   const { data, size, setSize, error, isLoading } = useSWRInfinite<
     Paginate<Post>,
@@ -35,13 +41,15 @@ const TopicsList: React.FC<Props> = ({ mode = "default", sort, tags = [], ignore
   >(
     (index: number, previousData: Paginate<Post>) => {
       if (previousData?.isLastPage) return null;
-      return `/api/community?page=${index + 1}&sort=${sort}${ignore ? `&ignore=${ignore}` : ""
-        }${mode === "suggest"
+      return `/api/community?page=${index + 1}&sort=${sort}${
+        ignore ? `&ignore=${ignore}` : ""
+      }${
+        mode === "suggest"
           ? `&mode=suggest&tags=${tags
-            .map((item) => encodeURIComponent(item))
-            .join("&tags=")}`
+              .map((item) => encodeURIComponent(item))
+              .join("&tags=")}`
           : ""
-        }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
+      }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
     },
     singleFetch as () => Promise<Paginate<Post>>,
     {

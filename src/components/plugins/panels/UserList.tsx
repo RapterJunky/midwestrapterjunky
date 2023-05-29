@@ -146,7 +146,6 @@ export const UserList: React.FC<{
       mini={mini}
       setMini={() => setMini((state) => !state)}
     >
-
       {!isLoading ? (
         <div className="px-4">
           <table className="w-full border-collapse border">
@@ -170,7 +169,7 @@ export const UserList: React.FC<{
                               {typeof table
                                 .getPreFilteredRowModel()
                                 .flatRows[0]?.getValue(header.column.id) ===
-                                "number" ? (
+                              "number" ? (
                                 <SelectInput
                                   value={header.column.getFilterValue()}
                                   onChange={(e) =>
@@ -282,14 +281,16 @@ export const UserList: React.FC<{
                                   );
                                   ctx
                                     .notice(
-                                      `Successfully ${!rowBanned ? "soft banned" : "unbanned"
+                                      `Successfully ${
+                                        !rowBanned ? "soft banned" : "unbanned"
                                       } user ${rowName}`
                                     )
                                     .catch((e) => console.error(e));
                                 } catch (error) {
                                   ctx
                                     .alert(
-                                      `Failed to ${!rowBanned ? "soft banned" : "unbanned"
+                                      `Failed to ${
+                                        !rowBanned ? "soft banned" : "unbanned"
                                       } user`
                                     )
                                     .catch((e) => console.error(e));
@@ -471,8 +472,9 @@ export const UserList: React.FC<{
               options={pageSizes}
             />
           </div>
-        </div>) : (
-        <div className="h-full w-full flex justify-center items-center">
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
           <Spinner size={54} />
         </div>
       )}

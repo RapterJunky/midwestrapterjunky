@@ -65,7 +65,11 @@ const SlateImage: React.FC<RenderElementProps> = ({
   );
 };
 
-const SlateLink: React.FC<RenderElementProps> = ({ attributes, element, children }) => {
+const SlateLink: React.FC<RenderElementProps> = ({
+  attributes,
+  element,
+  children,
+}) => {
   const editor = useSlateStatic();
   const selected = useSelected();
   const focused = useFocused();
@@ -73,24 +77,33 @@ const SlateLink: React.FC<RenderElementProps> = ({ attributes, element, children
   if (element.type !== "link") return null;
 
   return (
-    <span className="inline-flex items-center gap-1 relative" {...attributes}>
+    <span className="relative inline-flex items-center gap-1" {...attributes}>
       <HiLink />
-      <span className="underline">
-        {children}
-      </span>
+      <span className="underline">{children}</span>
       {selected && focused ? (
-        <div contentEditable={false} className="absolute -bottom-8 px-1.5 py-1 z-10 flex bg-white shadow">
-          <button onClick={() => editor.editLink(element.url)} type="button" className="border-r border-neutral-600 pr-2 mr-2 group hover:text-neutral-500">
+        <div
+          contentEditable={false}
+          className="absolute -bottom-8 z-10 flex bg-white px-1.5 py-1 shadow"
+        >
+          <button
+            onClick={() => editor.editLink(element.url)}
+            type="button"
+            className="group mr-2 border-r border-neutral-600 pr-2 hover:text-neutral-500"
+          >
             Edit
           </button>
-          <button type="button" className="text-red-500 hover:text-red-600" onClick={() => removeLink(editor)}>
+          <button
+            type="button"
+            className="text-red-500 hover:text-red-600"
+            onClick={() => removeLink(editor)}
+          >
             <HiTrash />
           </button>
         </div>
       ) : null}
     </span>
   );
-}
+};
 
 const RenderElement: React.FC<RenderElementProps> = ({
   attributes,

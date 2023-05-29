@@ -11,7 +11,8 @@ import ratelimit from "@api/rateLimit";
 const emailValidator = z.object({
   email: z
     .string()
-    .email().max(254)
+    .email()
+    .max(254)
     .superRefine(async (email, ctx) => {
       const result = await validate({ email, validateRegex: false });
       if (!result.valid) {
@@ -62,10 +63,10 @@ export const POST = async (request: NextRequest) => {
       body: {
         contacts: [
           {
-            email
-          }
-        ]
-      }
+            email,
+          },
+        ],
+      },
     });
 
     logger.info(response, "Add email to mailing list");
@@ -92,7 +93,8 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${
+        ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin
     ),

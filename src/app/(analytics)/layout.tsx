@@ -1,9 +1,5 @@
 const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-    return (
-        <>
-            {children}
-        </>
-    );
-}
+  return <>{children}</>;
+};
 
 export default AnalyticsLayout;

@@ -5,18 +5,19 @@ import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 import getFullPageProps from "@lib/cache/getFullPageProps";
 
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await getFullPageProps();
+  const data = await getFullPageProps();
 
-    return getGenericSeoTags({
-        icons: data._site.faviconMetaTags,
-        robots: false,
-        description: "Midwest Raptor Junkies failed to find what you where looking for.",
-        title: "Not Found",
-    });
+  return getGenericSeoTags({
+    icons: data._site.faviconMetaTags,
+    robots: false,
+    description:
+      "Midwest Raptor Junkies failed to find what you where looking for.",
+    title: "Not Found",
+  });
 }
 
 const NotFoundCatchAll = () => {
-    notFound();
-}
+  notFound();
+};
 
 export default NotFoundCatchAll;

@@ -35,7 +35,7 @@ export type ResponsiveImage<E = never> = {
   responsiveImage: [E] extends [never] ? Image : Image & E;
 };
 
-export type ModulerContent = { _modelApiKey: string;[key: string]: unknown };
+export type ModulerContent = { _modelApiKey: string; [key: string]: unknown };
 
 export interface FullPageProps extends NavProps {
   _site: {
