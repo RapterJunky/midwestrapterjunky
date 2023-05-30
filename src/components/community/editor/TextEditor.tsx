@@ -97,7 +97,7 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
       ) : null}
       <Slate
         editor={editor}
-        value={value}
+        initialValue={value}
         onChange={(e) => {
           if (onChange)
             onChange({ ast: e, deletedImages: editor.deletedImages });
@@ -117,7 +117,6 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           spellCheck
-          autoFocus
           placeholder="Write something here..."
           className="prose relative max-w-none rounded-sm border border-neutral-400 px-2 py-1 focus:outline-none"
         />

@@ -93,8 +93,7 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${
-        ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin
     ),

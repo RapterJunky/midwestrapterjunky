@@ -4,7 +4,6 @@ import type {
   NextPage,
 } from "next";
 import type { NonTextNode } from "datocms-structured-text-slate-utils";
-import { WithContext as ReactTags } from "react-tag-input";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Dialog, Transition } from "@headlessui/react";
 import { Controller, useForm } from "react-hook-form";
@@ -27,6 +26,7 @@ import { fetchCachedQuery } from "@lib/cache";
 import useReplace from "@hook/useReplace";
 import { singleFetch } from "@api/fetch";
 import prisma from "@api/prisma";
+import TagInput from "@/components/TagInput";
 
 type DialogData = {
   open: boolean;
@@ -166,9 +166,8 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${
-      error.statusText ?? error.status
-    }`;
+    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status
+      }`;
   }
 
   if (!(error instanceof Error)) {
@@ -387,51 +386,32 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 name="tags"
                 render={({ field, fieldState }) => (
                   <div>
-                    <ReactTags
-                      inline
-                      classNames={{
-                        selected: "flex flex-wrap gap-1",
-                        tags: "flex",
-                        tagInputField: "h-full",
-                        tag: "font-bold py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
-                        remove:
-                          "text-red-500 text-lg font-bold flex items-center text-center justify-center",
-                      }}
-                      allowUnique
-                      autofocus
-                      maxLength={12}
-                      inputFieldPosition="inline"
-                      handleInputBlur={field.onBlur}
-                      tags={field.value.map((tag, i) => ({
-                        id: i.toString(),
-                        text: tag,
-                      }))}
-                      handleDelete={(idx) => {
-                        const tags = field.value
-                          .map((tag, i) => ({ id: i.toString(), text: tag }))
-                          .map((value) => value.text)
-                          .filter((_tag, i) => i !== idx);
-                        field.onChange(tags);
-                      }}
-                      handleAddition={(tag: { id: string; text: string }) => {
-                        if (field.value.includes(tag.text)) return;
-                        field.onChange([...field.value, tag.text]);
-                      }}
-                      handleDrag={(
-                        tag: { id: string; text: string },
-                        curr: number,
-                        next: number
-                      ) => {
-                        const tags = field.value.map((tag, i) => ({
-                          id: i.toString(),
-                          text: tag,
-                        }));
+                    <TagInput name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} vailidate={(tag, tags) => {
+                      if (!tag.length || tag.length < 3) {
+                        setError("tags", {
+                          message: "The minium length for a tag is 3.",
+                          type: "minLength"
+                        });
+                        return false;
+                      }
+                      if (tag.length > 12) {
+                        setError("tags", {
+                          message: "The maxium length for a tag is 12.",
+                          type: "maxLength"
+                        });
+                        return false;
+                      }
 
-                        tags.splice(curr, 1);
-                        tags.splice(next, 0, tag);
-                        field.onChange(tags.map((value) => value.text));
-                      }}
-                    />
+                      if (tags.includes(tag)) {
+                        setError("tags", {
+                          message: `The tag "${tag}" is already in the list.`,
+                          type: "pattern"
+                        });
+                        return false;
+                      }
+
+                      return true;
+                    }} />
                     {fieldState.error ? (
                       <span className="text-red-500">
                         {fieldState.error.message}
@@ -493,17 +473,3 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 };
 
 export default CreateTopic;
-/*
-tags={field.value.map((item, i) => ({ id: i, tag: item }))}
-                      handleAddition={(item: { id: number; tag: string; }) => field.onChange([...field.value, item.tag])}
-                      handleDelete={(idx: number) => {
-                        const tags = field.value.map((item, i) => ({ id: i, tag: item }))
-                        field.onChange(tags.filter(item => item.id !== idx).map(value => value.tag));
-                      }}
-                      handleDrag={(tag: { id: number; tag: string; }, currPos: number, newPos: number) => {
-                        const tags = field.value.map((item, i) => ({ id: i, tag: item })).slice();
-                        tags.splice(currPos, 1);
-                        tags.splice(newPos, 0, tag);
-                        field.onChange(tags.map(value => value.tag));
-                      }} />
- */

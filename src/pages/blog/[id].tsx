@@ -128,11 +128,13 @@ export const getStaticPaths = async (): Promise<GetStaticPathsResult> => {
 export const getStaticProps = async (
   ctx: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<ArticleProps>> => {
-  const schema = z.string().uuid().safeParse(ctx.params?.id);
+  const schema = z.string().safeParse(ctx.params?.id);
   if (!schema.success)
     return {
       notFound: true,
     };
+
+  console.log("ID Fine")
 
   const id = schema.data;
 
