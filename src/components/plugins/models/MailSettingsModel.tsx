@@ -13,12 +13,13 @@ import {
   ButtonLink,
 } from "datocms-react-ui";
 import { useForm, Controller } from "react-hook-form";
-import { WithContext as ReactTags } from "react-tag-input";
-import { useState } from "react";
 import type { RenderModalCtx } from "datocms-plugin-sdk";
+import { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
-import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
+
+import TagInput from "@components/TagInput";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 type MailSettingsForm = {
   name: string;
@@ -64,6 +65,7 @@ const MailSettings: React.FC<{
     handleSubmit,
     register,
     formState: { errors },
+    setError,
     watch,
   } = useForm<MailSettingsForm>({
     defaultValues: {
@@ -130,49 +132,34 @@ const MailSettings: React.FC<{
             <FormLabel error={!!fieldState.error} htmlFor="tags">
               <span>Categories</span>
             </FormLabel>
-            <ReactTags
-              inline
-              classNames={{
-                selected: "flex flex-wrap gap-1",
-                tags: "flex",
-                tagInputField: "h-full",
-                tag: "font-bold py-2 px-2.5 flex gap-2 border border-neutral-500 items-center justify-center",
-                remove:
-                  "text-red-500 text-lg font-bold flex items-center text-center justify-center",
+            <TagInput
+              classOverride={{
+                button: `inline-block rounded-r-md bg-dato-accent px-3 py-2 text-lg font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:opacity-80 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:opacity-80 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70`,
+                input:
+                  "h-full border-r-0 border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)] text-dato-m focus:outline-0 focus:ring-0",
               }}
-              allowUnique
-              autofocus
-              maxLength={12}
-              inputFieldPosition="inline"
-              handleInputBlur={field.onBlur}
-              tags={field.value.map((tag, i) => ({
-                id: i.toString(),
-                text: tag,
-              }))}
-              handleDelete={(idx) => {
-                const tags = field.value
-                  .map((tag, i) => ({ id: i.toString(), text: tag }))
-                  .map((value) => value.text)
-                  .filter((_tag, i) => i !== idx);
-                field.onChange(tags);
-              }}
-              handleAddition={(tag: { id: string; text: string }) => {
-                if (field.value.includes(tag.text)) return;
-                field.onChange([...field.value, tag.text]);
-              }}
-              handleDrag={(
-                tag: { id: string; text: string },
-                curr: number,
-                next: number
-              ) => {
-                const tags = field.value.map((tag, i) => ({
-                  id: i.toString(),
-                  text: tag,
-                }));
+              id="tags"
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              vailidate={(tag, tags) => {
+                if (!tag.length || tag.length < 3) {
+                  setError("categories", {
+                    message: "The minium length for a tag is 3.",
+                    type: "minLength",
+                  });
+                  return false;
+                }
 
-                tags.splice(curr, 1);
-                tags.splice(next, 0, tag);
-                field.onChange(tags.map((value) => value.text));
+                if (tags.includes(tag)) {
+                  setError("categories", {
+                    message: `The tag "${tag}" is already in the list.`,
+                    type: "pattern",
+                  });
+                  return false;
+                }
+                return true;
               }}
             />
             {fieldState.error ? (

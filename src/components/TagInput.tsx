@@ -3,6 +3,7 @@ import HiPlus from "./icons/HiPlus";
 import HiX from "./icons/HiX";
 
 type Props = {
+  id?: string;
   value: string[];
   name: string;
   classOverride?: {
@@ -54,6 +55,7 @@ const TagInput: React.FC<Props> = ({
   onChange,
   name,
   classOverride,
+  id,
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isKeyReleased, setIsKeyReleased] = useState<boolean>(false);
@@ -126,6 +128,7 @@ const TagInput: React.FC<Props> = ({
       ))}
       <div className="flex">
         <input
+          id={id}
           enterKeyHint="enter"
           name={name}
           spellCheck

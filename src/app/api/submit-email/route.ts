@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import client from "@sendgrid/client";
 import { fromZodError } from "zod-validation-error";
 import validate from "deep-email-validator";
 import { Prisma } from "@prisma/client";
+import client from "@sendgrid/client";
 import { z, ZodError } from "zod";
 
-import { logger } from "@lib/logger";
 import ratelimit from "@api/rateLimit";
+import { logger } from "@lib/logger";
 
 const emailValidator = z.object({
   email: z

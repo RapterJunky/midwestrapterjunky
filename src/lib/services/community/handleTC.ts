@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import type { Session } from "next-auth";
 
-import prisma from "@api/prisma";
-
 import parseForm, {
   type TopicSchema,
   type CommentSchema,
@@ -14,6 +12,7 @@ import parseForm, {
 import { slateToDast } from "@lib/utils/editor/slateToDast";
 import { logger } from "@lib/logger";
 import sendMail from "@api/sendMail";
+import prisma from "@api/prisma";
 
 /**
  * Handle updating post/comments with new slate content.
