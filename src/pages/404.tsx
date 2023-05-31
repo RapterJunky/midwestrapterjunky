@@ -1,25 +1,22 @@
 import type { GetStaticPropsResult, NextPage } from "next";
 
 export function getStaticProps(): GetStaticPropsResult<object> {
-
-    if (process.env.CI) {
-        return {
-            props: {}
-        }
-    }
-
+  if (process.env.CI) {
     return {
-        redirect: {
-            permanent: true,
-            destination: "/not-found"
-        }
-    }
+      props: {},
+    };
+  }
+
+  return {
+    redirect: {
+      permanent: true,
+      destination: "/not-found",
+    },
+  };
 }
 
 const NotFound: NextPage = () => {
-    return (
-        null
-    );
-}
+  return null;
+};
 
 export default NotFound;

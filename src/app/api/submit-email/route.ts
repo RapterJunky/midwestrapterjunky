@@ -14,7 +14,13 @@ const emailValidator = z.object({
     .email()
     .max(254)
     .superRefine(async (email, ctx) => {
-      const result = await validate({ email, validateRegex: false });
+      console.time("Vaildate Time");
+      const result = await validate({
+        email,
+        validateRegex: false,
+        validateMx: false,
+      });
+      console.timeEnd("Vaildate Time");
       if (!result.valid) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -93,7 +99,8 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${
+        ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin
     ),

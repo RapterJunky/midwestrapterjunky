@@ -134,7 +134,7 @@ export const getStaticProps = async (
       notFound: true,
     };
 
-  console.log("ID Fine")
+  console.log("ID Fine");
 
   const id = schema.data;
 

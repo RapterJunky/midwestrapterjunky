@@ -166,8 +166,9 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status
-      }`;
+    return `Failed to process request. \n STATUS CODE: ${
+      error.statusText ?? error.status
+    }`;
   }
 
   if (!(error instanceof Error)) {
@@ -386,32 +387,38 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 name="tags"
                 render={({ field, fieldState }) => (
                   <div>
-                    <TagInput name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} vailidate={(tag, tags) => {
-                      if (!tag.length || tag.length < 3) {
-                        setError("tags", {
-                          message: "The minium length for a tag is 3.",
-                          type: "minLength"
-                        });
-                        return false;
-                      }
-                      if (tag.length > 12) {
-                        setError("tags", {
-                          message: "The maxium length for a tag is 12.",
-                          type: "maxLength"
-                        });
-                        return false;
-                      }
+                    <TagInput
+                      name={field.name}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      vailidate={(tag, tags) => {
+                        if (!tag.length || tag.length < 3) {
+                          setError("tags", {
+                            message: "The minium length for a tag is 3.",
+                            type: "minLength",
+                          });
+                          return false;
+                        }
+                        if (tag.length > 12) {
+                          setError("tags", {
+                            message: "The maxium length for a tag is 12.",
+                            type: "maxLength",
+                          });
+                          return false;
+                        }
 
-                      if (tags.includes(tag)) {
-                        setError("tags", {
-                          message: `The tag "${tag}" is already in the list.`,
-                          type: "pattern"
-                        });
-                        return false;
-                      }
+                        if (tags.includes(tag)) {
+                          setError("tags", {
+                            message: `The tag "${tag}" is already in the list.`,
+                            type: "pattern",
+                          });
+                          return false;
+                        }
 
-                      return true;
-                    }} />
+                        return true;
+                      }}
+                    />
                     {fieldState.error ? (
                       <span className="text-red-500">
                         {fieldState.error.message}

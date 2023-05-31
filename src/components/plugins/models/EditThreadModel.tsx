@@ -7,7 +7,6 @@ import {
   Form,
   FieldError,
 } from "datocms-react-ui";
-import { WithContext as ReactTags } from "react-tag-input";
 import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
@@ -23,7 +22,8 @@ interface State {
 }
 
 const generateImage = () =>
-  `https://api.dicebear.com/6.x/shapes/png?seed=${crypto.randomUUID().split("-")[0]
+  `https://api.dicebear.com/6.x/shapes/png?seed=${
+    crypto.randomUUID().split("-")[0]
   }`;
 
 const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
@@ -110,10 +110,11 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${errors.description
-              ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
-              : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
-              } text-dato-m focus:outline-0 focus:ring-0`}
+            className={`w-full border placeholder:text-dato-placeholder ${
+              errors.description
+                ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
+                : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
+            } text-dato-m focus:outline-0 focus:ring-0`}
             placeholder="description"
             id="description"
             {...register("description", {
@@ -139,36 +140,44 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             name="tags"
             render={({ field, fieldState }) => (
               <div>
-                <TagInput classOverride={{
-                  button: `inline-block rounded-r-md bg-dato-accent px-3 py-2 text-lg font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:opacity-80 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:opacity-80 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70`,
-                  input: "h-full border-r-0 border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)] text-dato-m focus:outline-0 focus:ring-0"
-                }} name={field.name} value={field.value} onChange={field.onChange} onBlur={field.onBlur} vailidate={(tag, tags) => {
-                  if (!tag.length || tag.length < 3) {
-                    setError("tags", {
-                      message: "The minium length for a tag is 3.",
-                      type: "minLength"
-                    });
-                    return false;
-                  }
-                  if (tag.length > 12) {
-                    setError("tags", {
-                      message: "The maxium length for a tag is 12.",
-                      type: "maxLength"
-                    });
-                    return false;
-                  }
+                <TagInput
+                  classOverride={{
+                    button: `inline-block rounded-r-md bg-dato-accent px-3 py-2 text-lg font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:opacity-80 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:opacity-80 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70`,
+                    input:
+                      "h-full border-r-0 border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)] text-dato-m focus:outline-0 focus:ring-0",
+                  }}
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  vailidate={(tag, tags) => {
+                    if (!tag.length || tag.length < 3) {
+                      setError("tags", {
+                        message: "The minium length for a tag is 3.",
+                        type: "minLength",
+                      });
+                      return false;
+                    }
+                    if (tag.length > 12) {
+                      setError("tags", {
+                        message: "The maxium length for a tag is 12.",
+                        type: "maxLength",
+                      });
+                      return false;
+                    }
 
-                  if (tags.includes(tag)) {
-                    setError("tags", {
-                      message: `The tag "${tag}" is already in the list.`,
-                      type: "pattern"
-                    });
-                    return false;
-                  }
+                    if (tags.includes(tag)) {
+                      setError("tags", {
+                        message: `The tag "${tag}" is already in the list.`,
+                        type: "pattern",
+                      });
+                      return false;
+                    }
 
-                  clearErrors("tags");
-                  return true;
-                }} />
+                    clearErrors("tags");
+                    return true;
+                  }}
+                />
                 {fieldState.error ? (
                   <FieldError>{fieldState.error.message}</FieldError>
                 ) : null}
