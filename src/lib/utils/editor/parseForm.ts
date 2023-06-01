@@ -84,6 +84,7 @@ const UPLOAD_FOLDER_ID = "1V8YE-FBAK3tYenL0CHwiMIOFbdEvEuf2";
  * @see https://blog.appsignal.com/2022/02/02/use-streams-to-build-high-performing-nodejs-applications.html
  * @see https://dev.to/bryce/generate-thumbhash-at-edge-for-tiny-progressive-images-282h
  * @see https://github.com/node-formidable/formidable/blob/master/examples/store-files-on-s3.js
+ * @see https://daily-dev-tips.com/posts/host-images-via-google-drive/
  */
 const parseForm = <T extends z.AnyZodObject>(
   req: NextApiRequest,
@@ -257,7 +258,7 @@ const parseForm = <T extends z.AnyZodObject>(
             imageId: googleData.imageId,
             blurUpThumb: blurData.blur,
             responsiveImage: {
-              src: `https://drive.google.com/uc?export=view&id=${googleData.imageId}`,
+              src: `https://drive.google.com/uc?id=${googleData.imageId}`,
               alt: "Uploaded Image",
               height: imageData.height,
               width: imageData.width,

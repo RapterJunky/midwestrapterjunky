@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { type File, IncomingForm } from "formidable";
 import { unlink, readFile } from "node:fs/promises";
 import createHttpError from "http-errors";
-import { type File, IncomingForm } from "formidable";
 
+import { handleError } from "@api/errorHandler";
 import { compileWebp } from "@lib/webp";
 import { logger } from "@lib/logger";
-import { handleError } from "@api/errorHandler";
 
 export const config = {
   api: {
@@ -26,7 +26,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 

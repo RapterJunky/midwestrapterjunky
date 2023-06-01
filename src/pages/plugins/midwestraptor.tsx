@@ -172,8 +172,8 @@ const MidwestRaptor: NextPage = () => {
         },
         {
           id: FIELD_ADDON_GDRIVE_ID,
-          type: "addon",
-          fieldTypes: ["file", "gallery"],
+          type: "editor",
+          fieldTypes: ["json"],
           name: "Google Drive",
         },
         {

@@ -2,14 +2,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
-import handleAuthors from "@service/plugin/pluginAuthors";
-import handleReports from "@service/plugin/pluginReports";
-import handleSquare from "@service/plugin/pluginSquare";
 import handleCategory from "@service/plugin/pluginCategory";
 import handleFlags from "@service/plugin/pluginConfigCat";
+import handleAuthors from "@service/plugin/pluginAuthors";
+import handleReports from "@service/plugin/pluginReports";
+import handleImages from "@service/plugin/pluginImages";
+import handleSquare from "@service/plugin/pluginSquare";
 import handleUsers from "@service/plugin/pluginUser";
 import handleMail from "@service/plugin/pluginMail";
 import handleTAC from "@service/plugin/pluginTAC";
+
 import { handleError } from "@api/errorHandler";
 
 const allowedRoutes = z
@@ -23,6 +25,7 @@ const allowedRoutes = z
       "mail",
       "tac",
       "users",
+      "images"
     ])
   )
   .describe("Allowed api paths")
@@ -54,6 +57,8 @@ export default async function handle(
         return await handleTAC(req, res);
       case "users":
         return await handleUsers(req, res);
+      case "images":
+        return await handleImages(req, res);
       default:
         throw createHttpError.BadRequest();
     }
