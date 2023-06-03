@@ -116,6 +116,8 @@ const DELETE = async (
             if (result.status !== "rejected") continue;
             logger.error(result.reason);
           }
+
+          await driveService.files.emptyTrash();
         }
       }
 

@@ -33,6 +33,8 @@ export async function getStaticProps(
     }
   );
 
+  if (!data) throw new Error("Failed to get page content");
+
   return {
     props: {
       ...data,

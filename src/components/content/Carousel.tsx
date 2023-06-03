@@ -31,7 +31,7 @@ export default function CarouselElement(props: CarouselProps) {
       data-te-carousel-slide="carousel"
       data-te-interval="8000"
     >
-      <CarouselRuntime />
+      <CarouselRuntime enable={!!props.images.length} />
       <div
         className="absolute bottom-0 left-0 right-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0"
         data-te-carousel-indicators

@@ -4,10 +4,10 @@ import { useEffect } from "react";
 /**
  * Have to load this via dynamic import with ssr = false
  */
-const Runtime = () => {
+const Runtime: React.FC<{ enable: boolean }> = ({ enable }) => {
   useEffect(() => {
-    initTE({ Carousel });
-  }, []);
+    if (enable) initTE({ Carousel });
+  }, [enable]);
   return null;
 };
 

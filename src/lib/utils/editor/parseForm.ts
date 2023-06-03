@@ -9,7 +9,11 @@ import { PassThrough, type Writable, pipeline } from "node:stream";
 import { logger } from "@/lib/logger";
 import googleDrive from "@api/googleDrive";
 
-const MAX_IMAGES = 5;
+const uploadConfig = {
+  max_images: 5,
+  upload_folder_id: "15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO",
+  user_email: "rapterjunky@gmail.com"
+} as const;
 
 const tagsSchema = z.array(z.string().min(3).max(15)).max(6);
 
@@ -76,7 +80,17 @@ export type ImageData = z.infer<typeof imageDataSchema>;
 export type TopicSchema = z.infer<typeof topicSchema>;
 export type CommentSchema = z.infer<typeof commentSchema>;
 
-const UPLOAD_FOLDER_ID = "1V8YE-FBAK3tYenL0CHwiMIOFbdEvEuf2";
+
+const handleDeleteImages = async (data: string[], service: ReturnType<typeof googleDrive>["files"]) => {
+  const results = await Promise.allSettled(data.map(imageId => service.delete({
+    fileId: imageId
+  })));
+  for (const result of results) {
+    if (result.status === "rejected") logger.error(result.reason, "Failed to delete image.");
+  }
+
+  await service.emptyTrash();
+}
 
 /**
  * @see https://www.labnol.org/google-api-service-account-220404
@@ -100,6 +114,7 @@ const parseForm = <T extends z.AnyZodObject>(
   return new Promise((resolve, reject) => {
     const uploads: Promise<{ imageId?: string; file: string }>[] = [];
     const uploadBlurs: Promise<{ blur: string; file: string }>[] = [];
+    const uploadImageIds: string[] = [];
 
     const form = new IncomingForm({
       keepExtensions: false,
@@ -142,7 +157,12 @@ const parseForm = <T extends z.AnyZodObject>(
           .create({
             requestBody: {
               name: `${file.newFilename}.webp`,
-              parents: [UPLOAD_FOLDER_ID],
+              parents: [uploadConfig.upload_folder_id],
+              appProperties: {
+                blurthumb: "",
+                alt: "",
+                sizes: ""
+              },
             },
             media: {
               mimeType: "image/webp",
@@ -153,6 +173,7 @@ const parseForm = <T extends z.AnyZodObject>(
             fields: "id",
           })
           .then(async (res) => {
+            if (res.data.id) uploadImageIds.push(res.data.id);
             await driveService.permissions.create({
               fileId: res.data.id ?? undefined,
               requestBody: {
@@ -164,12 +185,12 @@ const parseForm = <T extends z.AnyZodObject>(
               imageId: res.data.id ?? undefined,
               file: file.newFilename,
             };
-          });
+          })
         uploads.push(fileUpload);
 
         return pass as Writable;
       }) as () => Writable,
-      maxFiles: MAX_IMAGES,
+      maxFiles: uploadConfig.max_images,
       filter({ mimetype }) {
         return !!(mimetype && mimetype.includes("image"));
       },
@@ -191,32 +212,39 @@ const parseForm = <T extends z.AnyZodObject>(
         throw createHttpError.BadRequest("Missing editId from request.");
     });
     form.parse(req, async (err, fields, files) => {
-      if (err) {
-        return reject(err);
-      }
-
-      const uploadData = await Promise.all(uploads);
-      const uploadBlurData = await Promise.all(uploadBlurs);
+      if (err) return reject(err);
 
       const data = schema.safeParse(fields);
+      if (!data.success) return reject(data.error);
 
-      if (!data.success) {
-        return reject(data.error);
-      }
+      const rawUploadData = await Promise.allSettled(uploads);
+      const rawUploadBlurData = await Promise.allSettled(uploadBlurs);
 
-      if (req.method === "PATCH" && data.data.deletedImages) {
-        const results = await Promise.allSettled(
-          (data.data.deletedImages as string[]).map((value) =>
-            driveService.files.delete({
-              fileId: value,
-            })
-          )
-        );
-
-        for (const result of results) {
-          if (result.status === "rejected") logger.error(result.reason);
+      const uploadData: {
+        imageId?: string | undefined;
+        file: string;
+      }[] = [];
+      for (const check of rawUploadData) {
+        if (check.status === "rejected") {
+          logger.error(check, "Image upload failed.");
+          // try deleteing images
+          await handleDeleteImages(uploadImageIds, driveService.files);
+          return reject("Image upload failed");
         }
+        uploadData.push(check.value);
       }
+
+      const uploadBlurData: { file: string; blur: string; }[] = [];
+      for (const check of rawUploadBlurData) {
+        if (check.status === "rejected") {
+          // we can live without a image blur
+          logger.error(check, "Failed to generate image blur");
+          break;
+        }
+        uploadBlurData.push(check.value);
+      }
+
+      if (req.method === "PATCH" && data.data.deletedImages) await handleDeleteImages(data.data.deletedImages as string[], driveService.files);
 
       const imagesBlocks = Object.entries(
         files as Record<`image[${string}]`, File>
@@ -235,13 +263,13 @@ const parseForm = <T extends z.AnyZodObject>(
           (item) => item.file === value.newFilename
         );
 
-        if (!blurData || !imageData || !googleData)
+        if (!imageData || !googleData)
           return {
             __typename: "ImageRecord",
             id: uuid,
             content: {
               imageId: "",
-              blurUpThumb: "",
+              blurUpThumb: blurData?.blur ?? "",
               responsiveImage: {
                 src: "https://api.dicebear.com/6.x/initials/png?seed=%3F",
                 alt: "Failed Image Upload",
@@ -256,7 +284,7 @@ const parseForm = <T extends z.AnyZodObject>(
           id: uuid,
           content: {
             imageId: googleData.imageId,
-            blurUpThumb: blurData.blur,
+            blurUpThumb: blurData?.blur ?? "",
             responsiveImage: {
               src: `https://drive.google.com/uc?id=${googleData.imageId}`,
               alt: "Uploaded Image",

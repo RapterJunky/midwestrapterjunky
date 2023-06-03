@@ -31,9 +31,8 @@ export async function DatoCMS<T extends object>(
   );
   return GQLFetch<T>(
     {
-      url: `https://graphql.datocms.com/environments/${
-        process.env.DATOCMS_ENVIRONMENT
-      }${opts?.draft ? "/preview" : ""}`,
+      url: `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT
+        }${opts?.draft ? "/preview" : ""}`,
       query,
       variables,
     },
@@ -84,7 +83,9 @@ async function GQLFetch<T extends object>(
 
     if (!responce.ok) throw responce;
 
-    const body = (await responce.json()) as { data: T };
+    const body = await responce.json() as { data: T };
+
+    if ("errors" in body) throw body;
 
     return body.data;
   } catch (error) {

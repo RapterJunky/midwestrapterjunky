@@ -6,6 +6,7 @@ import { z } from "zod";
 import googleDrive from "@api/googleDrive";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
+import { drive } from "googleapis/build/src/apis/drive";
 
 const schema = z.object({
   type: z.enum(["post", "like"]),
@@ -85,6 +86,8 @@ const DELETE = async (
             if (result.status !== "rejected") continue;
             logger.error(result.reason);
           }
+
+          await driveService.files.emptyTrash();
         }
       }
 
