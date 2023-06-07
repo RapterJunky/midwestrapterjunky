@@ -1,18 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { type File, IncomingForm } from "formidable";
-import { unlink, readFile } from "node:fs/promises";
+import { PassThrough, type Writable, pipeline } from "node:stream";
+import { randomUUID } from 'node:crypto';
+import { rgbaToDataURL } from "thumbhash";
+import sharp from "sharp";
 import createHttpError from "http-errors";
 
 import { handleError } from "@api/errorHandler";
-import { compileWebp } from "@lib/webp";
+
 import { logger } from "@lib/logger";
+import type { GoogleImage } from "@type/google";
+import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
 
 export const config = {
   api: {
     bodyParser: false, // Disallow body parsing, consume as stream
   },
 };
-
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
@@ -30,46 +34,104 @@ export default async function handle(
     )
       throw createHttpError.Unauthorized();
 
+    const driveService = googleDrive();
+
+    const uuid = randomUUID();
+    let blur: Promise<string>;
+    let imageId: Promise<object>;
+
     const form = new IncomingForm({
       maxFiles: 1,
       multiples: false,
       allowEmptyFiles: false,
+      // 5MB
+      maxFileSize: imageConfig.maxSize,
       keepExtensions: true,
+      fileWriteStreamHandler: ((file: File) => {
+        const pass = new PassThrough();
+        const webpConvent = sharp().withMetadata().toFormat("webp").webp();
+        blur = pipeline(
+          pass,
+          sharp().resize(16, 16).blur(2).raw().ensureAlpha(),
+          (err) => {
+            if (err) logger.error(err);
+          }
+        )
+          .toBuffer({ resolveWithObject: true })
+          .then(async (value) => {
+            logger.debug(value.info);
+
+            const pngUrl = rgbaToDataURL(
+              value.info.width,
+              value.info.height,
+              value.data
+            );
+            const buf = Buffer.from(
+              pngUrl.replace("data:image/png;base64,", ""),
+              "base64"
+            );
+            const compress = await sharp(buf).toFormat("webp").toBuffer();
+
+            return `data:image/webp;base64,${compress.toString("base64")}`;
+          });
+
+        imageId = driveService.files
+          .create({
+            requestBody: {
+              name: `${uuid}.webp`,
+              parents: [driveConfig.uploadFolderId],
+              originalFilename: file.originalFilename,
+              appProperties: {
+                blurthumb: "",
+                alt: file.newFilename,
+                sizes: "((min-width: 10em) and (max-width: 20em)) 10em, ((min-width: 30em) and (max-width: 40em)) 30em, (min-width: 40em) 40em",
+                label: "cms_upload"
+              },
+            },
+            media: {
+              mimeType: "image/webp",
+              body: pipeline(pass, webpConvent, (err) => {
+                if (err) logger.error(err);
+              }),
+            },
+            fields: "name,id,appProperties,imageMediaMetadata(width,height)",
+          })
+          .then(async (res) => {
+            await driveService.permissions.create({
+              fileId: res.data.id ?? undefined,
+              requestBody: {
+                role: "reader",
+                type: "anyone",
+              },
+            });
+            return res.data;
+          });
+
+        return pass as Writable;
+      }) as () => Writable,
       filter({ mimetype }) {
         return !!(mimetype && mimetype.includes("image"));
       },
     });
 
-    const file = await new Promise<File>((ok, reject) => {
-      form.parse(req, (err, _fields, files) => {
+    const file = await new Promise<GoogleImage>((ok, reject) => {
+      form.parse(req, async (err, _fields, _files) => {
         if (err) {
           return reject(err);
         }
+        const [blurthumb, imageData] = await Promise.all([blur, imageId]);
 
-        ok(files["image"] as File);
+        ok({
+          ...(imageData as GoogleImage),
+          appProperties: {
+            ...(imageData as GoogleImage).appProperties,
+            blurthumb
+          }
+        } as GoogleImage);
       });
     });
 
-    logger.info(file, `${file.mimetype} | ${file.originalFilename}`);
-
-    let filename = file.newFilename;
-    let filepath = file.filepath;
-
-    if (file.mimetype !== "image/webp") {
-      const data = await compileWebp(filepath);
-
-      filepath = data.filepath;
-      filename = data.filename;
-    }
-
-    const filebase64 = await readFile(filepath, { encoding: "base64" });
-
-    await unlink(filepath);
-
-    return res.status(200).json({
-      base64: `data:image/webp;base64,${filebase64}`,
-      filename: filename,
-    });
+    return res.status(200).json(file);
   } catch (error) {
     handleError(error, res);
   }

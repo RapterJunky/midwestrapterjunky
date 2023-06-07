@@ -18,14 +18,19 @@ type Query = {
   variables?: Record<string, unknown>;
 };
 
+const getQueryName = (query: string) => query.match(/query\s(?<name>\w+)[\s|\(]/)?.groups?.name;
+
 export async function DatoCMS<T extends object>(
   { query, variables }: Query,
   opts?: GraphQLClientOptions
 ): Promise<T> {
+
   logger.debug(
     {
+      query: getQueryName(query),
+      variables,
       preview: opts?.draft,
-      env: process.env.DATOCMS_ENVIRONMENT,
+      environment: process.env.DATOCMS_ENVIRONMENT,
     },
     "DATOCMS CALL"
   );

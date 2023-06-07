@@ -19,4 +19,18 @@ const googleDrive = () => {
   return google.drive({ version: "v3", auth });
 };
 
+export const driveConfig = {
+  uploadFolderId: "15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO",
+  userEmail: "rapterjunky@gmail.com",
+} as const;
+
+export const imageConfig = {
+  size: 16,
+  blur: 2,
+  /** 
+   * Max Size about 5MB
+  */
+  maxSize: 5 * 1024 * 1024
+} as const
+
 export default googleDrive;

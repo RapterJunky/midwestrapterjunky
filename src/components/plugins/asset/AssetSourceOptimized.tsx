@@ -5,6 +5,11 @@ import Image from "next/image";
 
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
+/**
+ * @deprecated
+ * @param param0 
+ * @returns 
+ */
 const AssetSourceOptimized: React.FC<{
   ctx: RenderAssetSourceCtx;
 }> = ({ ctx }) => {

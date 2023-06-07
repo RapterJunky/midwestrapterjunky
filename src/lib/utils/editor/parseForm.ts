@@ -1,19 +1,14 @@
-import { IncomingForm, type File } from "formidable";
-import sharp from "sharp";
-import type { NextApiRequest } from "next";
-import { z } from "zod";
-import { rgbaToDataURL } from "thumbhash";
 import type { Record as DastReacord } from "datocms-structured-text-utils";
-import createHttpError from "http-errors";
 import { PassThrough, type Writable, pipeline } from "node:stream";
-import { logger } from "@/lib/logger";
-import googleDrive from "@api/googleDrive";
+import { IncomingForm, type File } from "formidable";
+import type { NextApiRequest } from "next";
+import { rgbaToDataURL } from "thumbhash";
+import createHttpError from "http-errors";
+import sharp from "sharp";
+import { z } from "zod";
 
-const uploadConfig = {
-  max_images: 5,
-  upload_folder_id: "15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO",
-  user_email: "rapterjunky@gmail.com"
-} as const;
+import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
+import { logger } from "@lib/logger";
 
 const tagsSchema = z.array(z.string().min(3).max(15)).max(6);
 
@@ -126,7 +121,7 @@ const parseForm = <T extends z.AnyZodObject>(
 
         const blur = pipeline(
           pass,
-          sharp().resize(16, 16).blur(2).raw().ensureAlpha(),
+          sharp().resize(imageConfig.size, imageConfig.size).blur(imageConfig.blur).raw().ensureAlpha(),
           (err) => {
             if (err) logger.error(err);
           }
@@ -157,11 +152,12 @@ const parseForm = <T extends z.AnyZodObject>(
           .create({
             requestBody: {
               name: `${file.newFilename}.webp`,
-              parents: [uploadConfig.upload_folder_id],
+              parents: [driveConfig.uploadFolderId],
               appProperties: {
                 blurthumb: "",
                 alt: "",
-                sizes: ""
+                sizes: "((min-width: 10em) and (max-width: 20em)) 10em, ((min-width: 30em) and (max-width: 40em)) 30em, (min-width: 40em) 40em",
+                label: "user_upload"
               },
             },
             media: {
@@ -190,7 +186,8 @@ const parseForm = <T extends z.AnyZodObject>(
 
         return pass as Writable;
       }) as () => Writable,
-      maxFiles: uploadConfig.max_images,
+      maxFileSize: imageConfig.maxSize,
+      maxFiles: 5,
       filter({ mimetype }) {
         return !!(mimetype && mimetype.includes("image"));
       },

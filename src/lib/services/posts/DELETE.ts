@@ -6,7 +6,6 @@ import { z } from "zod";
 import googleDrive from "@api/googleDrive";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
-import { drive } from "googleapis/build/src/apis/drive";
 
 const schema = z.object({
   type: z.enum(["post", "like"]),
