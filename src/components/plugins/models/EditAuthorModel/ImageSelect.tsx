@@ -1,17 +1,18 @@
-import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { Button, FieldError, FormLabel } from "datocms-react-ui";
-import Image from "next/image";
 import { Controller, type Control } from "react-hook-form";
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { FaTrash } from "react-icons/fa";
+import Image from "next/image";
+
 import type { FormState } from "./Edit";
 
-interface ImageSelectProps {
+type ImageSelectProps = {
   ctx: RenderModalCtx;
   name: string | undefined;
   control: Control<FormState>;
 }
 
-const ImageSelect = ({ ctx, name, control }: ImageSelectProps) => {
+const ImageSelect: React.FC<ImageSelectProps> = ({ ctx, name, control }) => {
   return (
     <Controller
       rules={{ required: "Please Select a image" }}

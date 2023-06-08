@@ -9,9 +9,10 @@ import {
   SwitchField,
 } from "datocms-react-ui";
 import { useForm, Controller } from "react-hook-form";
+
+import type { StorefrontPluginConfig } from "@lib/utils/plugin/config";
 import ShopifyClient from "@lib/plugin/ShopifyClient";
 import SquareClient from "@lib/plugin/SquareClient";
-import type { StorefrontPluginConfig } from "@lib/utils/plugin/config";
 
 const options = [
   { label: "Shopify", value: "S" },

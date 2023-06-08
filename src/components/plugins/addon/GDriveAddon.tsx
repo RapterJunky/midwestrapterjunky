@@ -1,6 +1,6 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { FaPlus, FaTrash } from "react-icons/fa";
 import { Canvas, Button } from "datocms-react-ui";
+import { FaGoogleDrive } from "react-icons/fa";
 import update from 'immutability-helper'
 import { useState } from "react";
 import Image from "next/image";
@@ -8,13 +8,26 @@ import get from "lodash.get";
 
 import type { ResponsiveImage } from "@type/page";
 
-const SelectedImage: React.FC<{ drop: () => void, image: ResponsiveImage<{ width: number; height: number }> }> = ({ image, drop }) => {
+const SelectedImage: React.FC<{
+  drop: () => void,
+  onDrop: (from: number, to: number) => void,
+  idx: number,
+  image: ResponsiveImage<{ width: number; height: number }>
+}> = ({ image, drop, idx, onDrop }) => {
   return (
-    <div className="shadow relative group">
-      <div className="hidden group-hover:flex items-center justify-center gap-2 absolute w-full h-full bg-opacity-80 bg-neutral-600">
-        <Button buttonType="negative" buttonSize="xs" onClick={drop}>
-          <FaTrash />
-        </Button>
+    <div
+      onDrop={(ev) => {
+        ev.preventDefault();
+        const fromIndex = parseInt(ev.dataTransfer.getData("index"));
+        onDrop(fromIndex, idx);
+      }}
+      onDragOver={ev => ev.preventDefault()}
+      onDragStart={(ev) => ev.dataTransfer.setData("index", idx.toString())}
+      draggable className="cursor-move shadow relative group h-32 w-56 bg-dato-lighter rounded-md border border-dato-border hover:border-dato-darker flex justify-center items-center">
+      <div className="hidden group-hover:flex items-center justify-center absolute shadow bg-white rounded-sm py-2">
+        <button className="text-lg hover:bg-dato-light hover:text-dato-alert w-full py-0.5 px-4" onClick={drop}>
+          Remove
+        </button>
       </div>
       <Image height={100} width={100} sizes={image.responsiveImage.sizes} placeholder={image.blurUpThumb.length ? "blur" : "empty"} src={image.responsiveImage.src} alt={image.responsiveImage.alt ?? "GDrive Image"} blurDataURL={image.blurUpThumb} />
     </div>
@@ -23,37 +36,62 @@ const SelectedImage: React.FC<{ drop: () => void, image: ResponsiveImage<{ width
 
 const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
   const [images, setImages] = useState<ResponsiveImage<{ width: number; height: number }>[]>(JSON.parse(get(ctx.formValues as never as object, ctx.fieldPath, "[]")) as ResponsiveImage[]);
-
   return (
     <Canvas ctx={ctx}>
-      <div className="flex flex-wrap gap-2 items-center">
-        {images.map((image, i) => (
-          <SelectedImage key={i} image={image} drop={() => setImages(current => {
-            const data = update(current, { $splice: [[i, 1]] });
-            ctx.setFieldValue(ctx.fieldPath, JSON.stringify(data)).catch(e => console.error(e));
-            return data;
-          })} />
-        ))}
-        <div>
+      <div className="flex flex-col gap-dato-m">
+        <div className="flex flex-wrap gap-dato-m items-center">
+          {images.map((image, i) => (
+            <SelectedImage onDrop={(from, to) => {
+              setImages((current) => {
+                const copy = [...current];
+                const copyTo = copy[to];
+                const copyFrom = copy[from];
+                if (!copyTo || !copyFrom) return current;
+
+                copy.splice(from, 1, copyTo);
+                copy.splice(to, 1, copyFrom);
+
+                ctx.setFieldValue(ctx.fieldPath, JSON.stringify(copy)).catch(e => console.error(e));
+                return copy;
+              });
+            }} idx={i} key={i} image={image} drop={() => setImages(current => {
+              const data = update(current, { $splice: [[i, 1]] });
+              ctx.setFieldValue(ctx.fieldPath, JSON.stringify(data)).catch(e => console.error(e));
+              return data;
+            })} />
+          ))}
+        </div>
+        <div className="flex gap-dato-s">
+
           <Button
             onClick={async () => {
               const data = await ctx.openModal({
                 id: "gDriveModel",
                 closeDisabled: true,
-                width: "fullWidth"
-              }) as ResponsiveImage<{ width: number; height: number }> | null;
+                width: "fullWidth",
+              }) as ResponsiveImage<{ width: number; height: number }> | ResponsiveImage<{ width: number; height: number }>[] | null;
               if (!data) return;
 
               setImages((current) => {
-                const next = [...current, data];
+                const next = [...current];
+                if (Array.isArray(data)) {
+                  next.push(...data);
+                } else {
+                  next.push(data);
+                }
+
+                console.log(next);
+
                 ctx.setFieldValue(ctx.fieldPath, JSON.stringify(next)).catch(e => console.error(e));
                 return next;
               });
             }}
-            buttonSize="l"
-            buttonType="primary"
+            buttonSize="xs"
           >
-            <FaPlus />
+            <span className="flex items-center justify-center gap-dato-s">
+              <FaGoogleDrive />
+              From Google Drive
+            </span>
           </Button>
         </div>
       </div>

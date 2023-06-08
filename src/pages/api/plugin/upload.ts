@@ -1,16 +1,14 @@
+import { PassThrough, type Writable, pipeline } from "node:stream";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { type File, IncomingForm } from "formidable";
-import { PassThrough, type Writable, pipeline } from "node:stream";
-import { randomUUID } from 'node:crypto';
 import { rgbaToDataURL } from "thumbhash";
-import sharp from "sharp";
 import createHttpError from "http-errors";
+import sharp from "sharp";
 
-import { handleError } from "@api/errorHandler";
-
-import { logger } from "@lib/logger";
-import type { GoogleImage } from "@type/google";
 import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
+import { handleError } from "@api/errorHandler";
+import type { GoogleImage } from "@type/google";
+import { logger } from "@lib/logger";
 
 export const config = {
   api: {
@@ -36,7 +34,6 @@ export default async function handle(
 
     const driveService = googleDrive();
 
-    const uuid = randomUUID();
     let blur: Promise<string>;
     let imageId: Promise<object>;
 
@@ -46,7 +43,7 @@ export default async function handle(
       allowEmptyFiles: false,
       // 5MB
       maxFileSize: imageConfig.maxSize,
-      keepExtensions: true,
+      keepExtensions: false,
       fileWriteStreamHandler: ((file: File) => {
         const pass = new PassThrough();
         const webpConvent = sharp().withMetadata().toFormat("webp").webp();
@@ -78,13 +75,13 @@ export default async function handle(
         imageId = driveService.files
           .create({
             requestBody: {
-              name: `${uuid}.webp`,
+              name: `${file.originalFilename}.webp`,
               parents: [driveConfig.uploadFolderId],
               originalFilename: file.originalFilename,
               appProperties: {
                 blurthumb: "",
                 alt: file.newFilename,
-                sizes: "((min-width: 10em) and (max-width: 20em)) 10em, ((min-width: 30em) and (max-width: 40em)) 30em, (min-width: 40em) 40em",
+                sizes: "",
                 label: "cms_upload"
               },
             },

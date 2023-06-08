@@ -1,11 +1,11 @@
-import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { Form, Button, FieldGroup, TextField } from "datocms-react-ui";
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect } from "react";
 import { FaTrash, FaBackward } from "react-icons/fa";
-import ImageSelect from "./ImageSelect";
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import { useEffect } from "react";
 
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import ImageSelect from "./ImageSelect";
 export interface FormState {
   avatar: string;
   name: string;
@@ -101,10 +101,9 @@ const Edit: React.FC<{
         );
       if (error instanceof Response) {
         await ctx.alert(
-          `${
-            error.status === 500
-              ? "Internal Server Error"
-              : "Failed to perform action."
+          `${error.status === 500
+            ? "Internal Server Error"
+            : "Failed to perform action."
           } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
         );
       }

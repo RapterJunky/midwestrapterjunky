@@ -156,7 +156,7 @@ const parseForm = <T extends z.AnyZodObject>(
               appProperties: {
                 blurthumb: "",
                 alt: "",
-                sizes: "((min-width: 10em) and (max-width: 20em)) 10em, ((min-width: 30em) and (max-width: 40em)) 30em, (min-width: 40em) 40em",
+                sizes: "",
                 label: "user_upload"
               },
             },

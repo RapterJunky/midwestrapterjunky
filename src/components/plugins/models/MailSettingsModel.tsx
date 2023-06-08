@@ -18,8 +18,8 @@ import { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 
-import TagInput from "@components/TagInput";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import TagInput from "@components/TagInput";
 
 type MailSettingsForm = {
   name: string;
