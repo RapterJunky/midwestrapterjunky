@@ -10,7 +10,7 @@ type ImageSelectProps = {
   ctx: RenderModalCtx;
   name: string | undefined;
   control: Control<FormState>;
-}
+};
 
 const ImageSelect: React.FC<ImageSelectProps> = ({ ctx, name, control }) => {
   return (

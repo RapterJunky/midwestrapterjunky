@@ -27,10 +27,10 @@ export const driveConfig = {
 export const imageConfig = {
   size: 16,
   blur: 2,
-  /** 
+  /**
    * Max Size about 5MB
-  */
-  maxSize: 5 * 1024 * 1024
-} as const
+   */
+  maxSize: 5 * 1024 * 1024,
+} as const;
 
 export default googleDrive;

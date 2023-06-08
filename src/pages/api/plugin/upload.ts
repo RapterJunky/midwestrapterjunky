@@ -28,7 +28,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-      process.env.PLUGIN_TOKEN
+        process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -82,7 +82,7 @@ export default async function handle(
                 blurthumb: "",
                 alt: file.newFilename,
                 sizes: "",
-                label: "cms_upload"
+                label: "cms_upload",
               },
             },
             media: {
@@ -122,8 +122,8 @@ export default async function handle(
           ...(imageData as GoogleImage),
           appProperties: {
             ...(imageData as GoogleImage).appProperties,
-            blurthumb
-          }
+            blurthumb,
+          },
         } as GoogleImage);
       });
     });

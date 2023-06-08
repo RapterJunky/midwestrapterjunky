@@ -101,9 +101,10 @@ const Edit: React.FC<{
         );
       if (error instanceof Response) {
         await ctx.alert(
-          `${error.status === 500
-            ? "Internal Server Error"
-            : "Failed to perform action."
+          `${
+            error.status === 500
+              ? "Internal Server Error"
+              : "Failed to perform action."
           } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
         );
       }

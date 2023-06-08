@@ -25,7 +25,7 @@ const allowedRoutes = z
       "mail",
       "tac",
       "users",
-      "images"
+      "images",
     ])
   )
   .describe("Allowed api paths")

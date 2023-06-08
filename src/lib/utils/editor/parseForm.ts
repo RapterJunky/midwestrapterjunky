@@ -75,17 +75,24 @@ export type ImageData = z.infer<typeof imageDataSchema>;
 export type TopicSchema = z.infer<typeof topicSchema>;
 export type CommentSchema = z.infer<typeof commentSchema>;
 
-
-const handleDeleteImages = async (data: string[], service: ReturnType<typeof googleDrive>["files"]) => {
-  const results = await Promise.allSettled(data.map(imageId => service.delete({
-    fileId: imageId
-  })));
+const handleDeleteImages = async (
+  data: string[],
+  service: ReturnType<typeof googleDrive>["files"]
+) => {
+  const results = await Promise.allSettled(
+    data.map((imageId) =>
+      service.delete({
+        fileId: imageId,
+      })
+    )
+  );
   for (const result of results) {
-    if (result.status === "rejected") logger.error(result.reason, "Failed to delete image.");
+    if (result.status === "rejected")
+      logger.error(result.reason, "Failed to delete image.");
   }
 
   await service.emptyTrash();
-}
+};
 
 /**
  * @see https://www.labnol.org/google-api-service-account-220404
@@ -121,7 +128,11 @@ const parseForm = <T extends z.AnyZodObject>(
 
         const blur = pipeline(
           pass,
-          sharp().resize(imageConfig.size, imageConfig.size).blur(imageConfig.blur).raw().ensureAlpha(),
+          sharp()
+            .resize(imageConfig.size, imageConfig.size)
+            .blur(imageConfig.blur)
+            .raw()
+            .ensureAlpha(),
           (err) => {
             if (err) logger.error(err);
           }
@@ -157,7 +168,7 @@ const parseForm = <T extends z.AnyZodObject>(
                 blurthumb: "",
                 alt: "",
                 sizes: "",
-                label: "user_upload"
+                label: "user_upload",
               },
             },
             media: {
@@ -181,7 +192,7 @@ const parseForm = <T extends z.AnyZodObject>(
               imageId: res.data.id ?? undefined,
               file: file.newFilename,
             };
-          })
+          });
         uploads.push(fileUpload);
 
         return pass as Writable;
@@ -231,7 +242,7 @@ const parseForm = <T extends z.AnyZodObject>(
         uploadData.push(check.value);
       }
 
-      const uploadBlurData: { file: string; blur: string; }[] = [];
+      const uploadBlurData: { file: string; blur: string }[] = [];
       for (const check of rawUploadBlurData) {
         if (check.status === "rejected") {
           // we can live without a image blur
@@ -241,7 +252,11 @@ const parseForm = <T extends z.AnyZodObject>(
         uploadBlurData.push(check.value);
       }
 
-      if (req.method === "PATCH" && data.data.deletedImages) await handleDeleteImages(data.data.deletedImages as string[], driveService.files);
+      if (req.method === "PATCH" && data.data.deletedImages)
+        await handleDeleteImages(
+          data.data.deletedImages as string[],
+          driveService.files
+        );
 
       const imagesBlocks = Object.entries(
         files as Record<`image[${string}]`, File>
