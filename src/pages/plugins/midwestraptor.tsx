@@ -3,7 +3,7 @@ import type {
   RenderFieldExtensionCtx,
   RenderPageCtx,
   RenderModalCtx,
-  RenderAssetSourceCtx,
+  RenderManualFieldExtensionConfigScreenCtx
 } from "datocms-plugin-sdk";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -16,6 +16,7 @@ import "datocms-react-ui/styles.css";
 
 const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
+const FIELD_EXTENSION_GDRIVE_ID = "mrj_gdrive";
 const FIELD_EXTENSION_ID = "shopProduct";
 
 const MODEL_THEAD_ID = "thread-model";
@@ -25,7 +26,7 @@ const MODEL_STOREFRONT_ID = "storefrontModel";
 const MODEL_GDRIVE_ID = "gDriveModel";
 const MODEL_MAIL_SETTINGS_ID = "mrj_mail_settings";
 
-const FIELD_ADDON_GDRIVE_ID = "mrj_gdrive";
+
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 
 const MESSAGE_BOARD_PAGE_ID = "community";
@@ -40,8 +41,9 @@ const GDriveAddon = dynamic(
 const GDriveModel = dynamic(
   () => import("@components/plugins/models/GDriveModal")
 );
+const GDriveConfig = dynamic(() => import("@components/plugins/config/GDriveConfigSceen"));
 
-const ConfigScreen = dynamic(() => import("@components/plugins/ConfigScreen"));
+const ConfigScreen = dynamic(() => import("@components/plugins/config/ConfigScreen"));
 const ShopFieldExtension = dynamic(
   () => import("@components/plugins/extension/ShopFieldExtension")
 );
@@ -74,6 +76,7 @@ const MidwestRaptor: NextPage = () => {
   const { id, page, ctx } = useDatoCMS({
     renderConfigScreen: true,
     renderFieldExtension: true,
+    renderManualFieldExtensionConfigScreen: true,
     renderPage: true,
     renderModal: true,
     renderAssetSource: false,
@@ -168,10 +171,11 @@ const MidwestRaptor: NextPage = () => {
           fieldTypes: ["json"],
         },
         {
-          id: FIELD_ADDON_GDRIVE_ID,
+          id: FIELD_EXTENSION_GDRIVE_ID,
           type: "editor",
           fieldTypes: ["json"],
           name: "Google Drive",
+          configurable: true
         },
         {
           id: FIELD_EXTENSION_ID,
@@ -185,14 +189,17 @@ const MidwestRaptor: NextPage = () => {
       return StructuredTextFields;
     },
     validateManualFieldExtensionParameters(fieldExtensionId, parameters) {
-      if (fieldExtensionId === FIELD_EXTENSION_ID_PREVIEW) {
-        const errors: Record<string, string> = {};
-        if (!parameters.entity_path) {
-          errors.entity_path = "Please provide an entity path";
+      switch (fieldExtensionId) {
+        case FIELD_EXTENSION_ID_PREVIEW: {
+          const errors: Record<string, string> = {};
+          if (!parameters.entity_path) {
+            errors.entity_path = "Please provide an entity path";
+          }
+          return errors;
         }
-        return errors;
+        default:
+          return {};
       }
-      return {};
     },
     mainNavigationTabs() {
       return [
@@ -212,9 +219,15 @@ const MidwestRaptor: NextPage = () => {
     case "ConfigScreen": {
       return <ConfigScreen ctx={ctx as RenderConfigScreenCtx} />;
     }
+    case "ManualFieldExtensionConfigScreen": {
+      if (id === FIELD_EXTENSION_GDRIVE_ID) {
+        return (<GDriveConfig ctx={ctx as RenderManualFieldExtensionConfigScreenCtx} />);
+      }
+      return null;
+    }
     case "FieldExtension": {
       switch (id) {
-        case FIELD_ADDON_GDRIVE_ID:
+        case FIELD_EXTENSION_GDRIVE_ID:
           return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />;
         case FIELD_EXTENSION_ID: {
           return <ShopFieldExtension ctx={ctx as RenderFieldExtensionCtx} />;

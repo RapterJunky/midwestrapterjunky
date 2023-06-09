@@ -19,7 +19,7 @@ import { z } from "zod";
 import HiChevronLeft from "@components/icons/HiChevronLeft";
 import HiChevronRight from "@components/icons/HiChevronRight";
 import ShopNavbar from "@components/shop/ShopNavbar";
-import Navbar from "@/components/layout/OldNavbar";
+import Navbar from "@components/layout/OldNavbar";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
@@ -136,9 +136,8 @@ export const getStaticProps = async (
   if (!images.length) {
     images = [
       {
-        url: `https://api.dicebear.com/6.x/icons/png?seed=${
-          itemData?.name ?? "PH"
-        }`,
+        url: `https://api.dicebear.com/6.x/icons/png?seed=${itemData?.name ?? "PH"
+          }`,
         alt: "Product Image",
       },
     ];
@@ -469,8 +468,8 @@ const Product: NextPageWithProvider<Props> = ({
                 {stockLoading
                   ? "Loading..."
                   : inStock
-                  ? "Add to Cart"
-                  : "Out of Stock"}
+                    ? "Add to Cart"
+                    : "Out of Stock"}
               </button>
             </div>
           </form>
@@ -482,35 +481,35 @@ const Product: NextPageWithProvider<Props> = ({
             {!data || isLoading
               ? null
               : data.result.map((item) => (
-                  <div
-                    className="border border-gray-200 bg-gray-100"
-                    key={item.id}
+                <div
+                  className="border border-gray-200 bg-gray-100"
+                  key={item.id}
+                >
+                  <Link
+                    href={`/shop/product/${item.id}`}
+                    aria-label={item.name}
+                    className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
                   >
-                    <Link
-                      href={`/shop/product/${item.id}`}
-                      aria-label={item.name}
-                      className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
-                    >
-                      <div className="flex h-full w-full items-center justify-center overflow-hidden">
-                        <Image
-                          className="h-full w-full object-cover"
-                          src={
-                            item.image?.url ??
-                            `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
-                          }
-                          alt={item.image?.alt ?? "Product Image"}
-                          height={540}
-                          width={540}
-                          sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
-                        />
-                      </div>
-                    </Link>
-                    <div className="flex w-full justify-between">
-                      <span className="line-clamp-1">{item.name}</span>
-                      <span>{item.price}</span>
+                    <div className="flex h-full w-full items-center justify-center overflow-hidden">
+                      <Image
+                        className="h-full w-full object-cover"
+                        src={
+                          item.image?.url ??
+                          `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
+                        }
+                        alt={item.image?.alt ?? "Product Image"}
+                        height={540}
+                        width={540}
+                        sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
+                      />
                     </div>
+                  </Link>
+                  <div className="flex w-full justify-between">
+                    <span className="line-clamp-1">{item.name}</span>
+                    <span>{item.price}</span>
                   </div>
-                ))}
+                </div>
+              ))}
           </div>
         </section>
       </main>

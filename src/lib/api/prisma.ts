@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-//import { paginate } from "./prismaPagination";
 import { paginate } from "prisma-extension-pagination";
 
 type PrismaModel = {

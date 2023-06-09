@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import Button from "@/components/ui/Button";
 
-export default function StoreButtonLink(props: { value: string }) {
+const StoreButtonLink: React.FC<{ value: string }> = (props) => {
   const { data, error } = useSWR<Storefront.Product[], Response, string>(
     `/api/products?find=${btoa(props.value)}`,
     (key) =>
@@ -18,3 +18,5 @@ export default function StoreButtonLink(props: { value: string }) {
     </Button>
   );
 }
+
+export default StoreButtonLink;

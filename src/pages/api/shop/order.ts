@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, ApiError } from "square";
 import createHttpError from "http-errors";
-import { serialize } from "superjson";
 import { randomUUID } from "node:crypto";
+import { serialize } from "superjson";
 import { z } from "zod";
 
 import getPricingForVarable from "@lib/shop/getPricingForVarable";
@@ -183,8 +183,8 @@ export default async function handle(
     const billing = address.billing_as_shipping
       ? address.shipping
       : !address.billing
-      ? address.shipping
-      : address.billing;
+        ? address.shipping
+        : address.billing;
 
     const payment = await client.paymentsApi
       .createPayment({

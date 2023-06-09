@@ -17,7 +17,7 @@ interface Props extends Icon {
 /**
  * @see https://github.com/tomphill/datocms-plugin-fontawesome
  */
-const SvgIcon = ({
+const SvgIcon: React.FC<React.PropsWithoutRef<Props>> = ({
   prefix,
   iconName,
   icon,
@@ -31,7 +31,7 @@ const SvgIcon = ({
   strokeLinecap,
   strokeLinejoin,
   fill = "currentColor",
-}: React.PropsWithoutRef<Props>) => {
+}) => {
   return (
     <svg
       aria-hidden={ariaHidden}

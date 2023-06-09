@@ -5,15 +5,14 @@ import type {
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
-import ModuleContent from "@components/layout/ModuleContent";
-import ExitPreview from "@/components/ui/ExitPreview";
-import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
-import SiteTags from "@components/SiteTags";
-
 import type { FullPageProps, ModulerContent } from "types/page";
+import ModuleContent from "@components/layout/ModuleContent";
 import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
+import ExitPreview from "@components/ui/ExitPreview";
+import Navbar from "@components/layout/OldNavbar";
 import HomePageQuery from "@query/queries/home";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
 import { DatoCMS } from "@api/gql";
 
 interface HomeContent extends FullPageProps {

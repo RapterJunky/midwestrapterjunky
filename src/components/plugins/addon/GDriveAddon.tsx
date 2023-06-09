@@ -55,10 +55,41 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
       get(ctx.formValues as never as object, ctx.fieldPath, "[]")
     ) as ResponsiveImage[]
   );
+
+  const selectImages = async () => {
+    const data = (await ctx.openModal({
+      id: "gDriveModel",
+      closeDisabled: true,
+      width: "fullWidth",
+      parameters: {
+        max: ctx.parameters.maxAssets ?? Infinity,
+        current: images.length,
+        limit: ctx.parameters.limitAssets
+      }
+    })) as
+      | ResponsiveImage<{ width: number; height: number }>
+      | ResponsiveImage<{ width: number; height: number }>[]
+      | null;
+    if (!data) return;
+
+    setImages((current) => {
+      const next = [...current];
+      if (Array.isArray(data)) {
+        next.push(...data);
+      } else {
+        next.push(data);
+      }
+      ctx
+        .setFieldValue(ctx.fieldPath, JSON.stringify(next))
+        .catch((e) => console.error(e));
+      return next;
+    });
+  }
+
   return (
     <Canvas ctx={ctx}>
       <div className="flex flex-col gap-dato-m">
-        <div className="flex flex-wrap items-center gap-dato-m">
+        <div className="flex flex-wrap items-center gap-dato-m mb-4">
           {images.map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {
@@ -92,35 +123,9 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
             />
           ))}
         </div>
-        <div className="flex gap-dato-s">
+        <div className="flex gap-dato-s justify-center mb-dato-m">
           <Button
-            onClick={async () => {
-              const data = (await ctx.openModal({
-                id: "gDriveModel",
-                closeDisabled: true,
-                width: "fullWidth",
-              })) as
-                | ResponsiveImage<{ width: number; height: number }>
-                | ResponsiveImage<{ width: number; height: number }>[]
-                | null;
-              if (!data) return;
-
-              setImages((current) => {
-                const next = [...current];
-                if (Array.isArray(data)) {
-                  next.push(...data);
-                } else {
-                  next.push(data);
-                }
-
-                console.log(next);
-
-                ctx
-                  .setFieldValue(ctx.fieldPath, JSON.stringify(next))
-                  .catch((e) => console.error(e));
-                return next;
-              });
-            }}
+            onClick={selectImages}
             buttonSize="xs"
           >
             <span className="flex items-center justify-center gap-dato-s">

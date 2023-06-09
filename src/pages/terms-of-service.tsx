@@ -13,15 +13,13 @@ import type {
   NextPage,
 } from "next";
 
-import ScrollToTop from "@components/blog/ScrollToTop";
-import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
-import SiteTags from "@components/SiteTags";
-
 import terms_of_service from "@query/queries/terms_of_service";
+import ScrollToTop from "@components/blog/ScrollToTop";
+import Navbar from "@components/layout/OldNavbar";
 import type { FullPageProps } from "@type/page";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
 import { DatoCMS } from "@api/gql";
-
 interface Props extends FullPageProps {
   terms: {
     _seoMetaTags: SeoOrFaviconTag[];

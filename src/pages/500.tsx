@@ -3,11 +3,10 @@ import type { SeoOrFaviconTag } from "react-datocms/seo";
 import Link from "next/link";
 
 import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
-import SiteTags from "@components/SiteTags";
-
 import genericSeoTags from "@lib/utils/genericSeoTags";
 import type { FullPageProps } from "@type/page";
 import { fetchCachedQuery } from "@lib/cache";
+import SiteTags from "@components/SiteTags";
 import Query from "@query/queries/generic";
 
 type Props = Pick<FullPageProps, "_site"> & { seo: SeoOrFaviconTag[] };

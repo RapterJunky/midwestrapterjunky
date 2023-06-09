@@ -1,11 +1,10 @@
 import type { NextComponentType, NextPageContext } from "next";
 import { GoogleAnalytics } from "nextjs-google-analytics";
 import { SWRConfig, type SWRConfiguration } from "swr";
-import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import { Inter } from "next/font/google";
 import type { AppProps } from "next/app";
 import type { Session } from "next-auth";
-
 import Head from "next/head";
 
 import "../styles/globals.css";

@@ -3,13 +3,12 @@ import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import Link from "next/link";
 
-import Navbar from "@/components/layout/OldNavbar";
-import Footer from "@components/layout/Footer";
-import SiteTags from "@components/SiteTags";
-
 import genericSeoTags from "@lib/utils/genericSeoTags";
+import Navbar from "@components/layout/OldNavbar";
 import type { FullPageProps } from "types/page";
+import Footer from "@components/layout/Footer";
 import { fetchCachedQuery } from "@lib/cache";
+import SiteTags from "@components/SiteTags";
 import Query from "@query/queries/generic";
 
 interface Props extends FullPageProps {
@@ -66,12 +65,12 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
                   </span>
                 </p>
                 {router.query.shop_receipt &&
-                (shop_receipt_url.startsWith(
-                  "https://squareupsandbox.com/receipt"
-                ) ||
-                  shop_receipt_url.startsWith(
-                    "https://squareup.com/receipt"
-                  )) ? (
+                  (shop_receipt_url.startsWith(
+                    "https://squareupsandbox.com/receipt"
+                  ) ||
+                    shop_receipt_url.startsWith(
+                      "https://squareup.com/receipt"
+                    )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"
                     target="_blank"

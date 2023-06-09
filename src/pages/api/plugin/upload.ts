@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { type File, IncomingForm } from "formidable";
 import { rgbaToDataURL } from "thumbhash";
 import createHttpError from "http-errors";
+import { parse } from 'node:path';
 import sharp from "sharp";
 
 import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
@@ -28,7 +29,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -75,7 +76,7 @@ export default async function handle(
         imageId = driveService.files
           .create({
             requestBody: {
-              name: `${file.originalFilename}.webp`,
+              name: `${parse(file.originalFilename ?? file.newFilename).name}.webp`,
               parents: [driveConfig.uploadFolderId],
               originalFilename: file.originalFilename,
               appProperties: {

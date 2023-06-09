@@ -3,7 +3,7 @@ import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-const SignInList = () => {
+const SignInList: React.FC = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get("callbackUrl") ?? undefined;
   return (

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import createHttpError from "http-errors";
 import { buildClient } from "@datocms/cma-client-node";
+import createHttpError from "http-errors";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 

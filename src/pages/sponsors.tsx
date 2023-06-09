@@ -7,13 +7,12 @@ import type { SeoOrFaviconTag } from "react-datocms";
 import Link from "next/link";
 import Image from "next/image";
 
-import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
-import SiteTags from "@components/SiteTags";
-import ExitPreview from "@/components/ui/ExitPreview";
-
 import type { FullPageProps, ResponsiveImage } from "types/page";
+import ExitPreview from "@components/ui/ExitPreview";
 import SponsorsQuery from "@query/queries/sponsors";
+import Navbar from "@components/layout/OldNavbar";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
 import { DatoCMS } from "@api/gql";
 
 interface PageProps extends FullPageProps {

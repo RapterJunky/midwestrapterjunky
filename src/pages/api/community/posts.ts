@@ -1,6 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { handleError } from "@/lib/api/errorHandler";
 import createHttpError from "http-errors";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@lib/getSession";
 import DELETE from "@service/posts/DELETE";

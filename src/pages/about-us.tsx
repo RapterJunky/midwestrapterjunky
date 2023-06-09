@@ -10,23 +10,14 @@ import type {
 import type { SeoOrFaviconTag } from "react-datocms";
 import Image from "next/image";
 
+import { markRules, renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
+import type { FullPageProps, ModulerContent, ResponsiveImage } from "types/page";
 import ModuleContent from "@components/layout/ModuleContent";
-import ExitPreview from "@/components/ui/ExitPreview";
+import ExitPreview from "@components/ui/ExitPreview";
+import Navbar from "@components/layout/OldNavbar";
 import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
-import SiteTags from "@components/SiteTags";
-
-import {
-  markRules,
-  renderBlock,
-  renderInlineRecord,
-} from "@lib/structuredTextRules";
-import type {
-  FullPageProps,
-  ModulerContent,
-  ResponsiveImage,
-} from "types/page";
 import about_us from "@query/queries/about_us";
+import SiteTags from "@components/SiteTags";
 import { DatoCMS } from "@api/gql";
 
 interface AboutUsProps extends FullPageProps {

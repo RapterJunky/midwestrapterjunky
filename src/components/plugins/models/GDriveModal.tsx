@@ -196,7 +196,6 @@ const UploadButton: React.FC<{
                 cause: "MAX_IMAGE_SIZE",
               });
             }
-
             const formData = new FormData();
 
             formData.set("image", image, image.name);
@@ -288,6 +287,10 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       setLoading(true);
       if (!data) throw new Error("Unable to process");
 
+      if ((ctx.parameters.current as number) + selected.length > (ctx.parameters.max as number)) {
+        throw new Error("Too many assets have been selected", { cause: "MAX_ASSETS" });
+      }
+
       const images = selected.map(async (image) => {
         const imageData = data.result.at(image);
         if (!imageData) throw new Error("Failed to find image");
@@ -330,6 +333,14 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       await ctx.resolve(content);
     } catch (error) {
       console.error(error);
+
+      if (error instanceof Error && error.cause === "MAX_ASSETS") {
+        ctx
+          .alert(error.message)
+          .catch((e) => console.error(e));
+        return;
+      }
+
       ctx
         .alert("There was an error in fetch images.")
         .catch((e) => console.error(e));
@@ -387,8 +398,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                    ? "CMS Upload"
-                    : "User Upload"}
+                      ? "CMS Upload"
+                      : "User Upload"}
                 </Button>
               )}
             >
@@ -427,24 +438,26 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               <div className="my-4 flex w-full items-center justify-center">
                 <Spinner size={54} />
               </div>
-            ) : null}
-            {data?.result.map((item, i) => (
-              <ImageItem
-                onSelected={() => {
-                  setSelected((current) => {
-                    if (current.includes(i)) {
-                      return current.filter((item) => item !== i);
-                    }
-                    return update(current, { $push: [i] });
-                  });
-                }}
-                active={selected.includes(i)}
-                key={i}
-                item={item}
-                mutate={mutate}
-                ctx={ctx}
-              />
-            ))}
+            ) : data?.result.length ?
+              data?.result.map((item, i) => (
+                <ImageItem
+                  onSelected={() => {
+                    setSelected((current) => {
+                      if (current.includes(i)) {
+                        return current.filter((item) => item !== i);
+                      }
+                      return update(current, { $push: [i] });
+                    });
+                  }}
+                  active={selected.includes(i)}
+                  key={i}
+                  item={item}
+                  mutate={mutate}
+                  ctx={ctx}
+                />
+              )) : (
+                <div className="text-center w-full p-2 font-bold text-xl">No assets where found.</div>
+              )}
           </main>
           <div className="flex justify-between p-4">
             <Button
@@ -478,7 +491,11 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
         {selected.length ? (
           <div className="flex items-center justify-between bg-dato-accent p-2">
             <div className="flex gap-dato-m text-dato-light">
-              <span>Selected: {selected.length}</span>
+              {ctx.parameters.limit ?? false ? (
+                <span>Selected: {selected.length} of {(ctx.parameters.max as number) - (ctx.parameters.current as number)}</span>
+              ) : (
+                <span>Selected: {selected.length}</span>
+              )}
               <button className="underline" onClick={() => setSelected([])}>
                 Unselect all
               </button>

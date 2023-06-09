@@ -1,12 +1,13 @@
-import createHttpError from "http-errors";
-import { Client } from "square";
-import { serialize } from "superjson";
 import type { NextApiRequest, NextApiResponse } from "next";
+import createHttpError from "http-errors";
+import { serialize } from "superjson";
+import { Client } from "square";
 import { z } from "zod";
-import { handleError } from "@lib/api/errorHandler";
-import { logger } from "@lib/logger";
-import { applyRateLimit } from "@lib/api/rateLimiter";
+
 import getPricingForVarable from "@lib/shop/getPricingForVarable";
+import { handleError } from "@lib/api/errorHandler";
+import { applyRateLimit } from "@lib/api/rateLimiter";
+import { logger } from "@lib/logger";
 
 const schema = z.object({
   checkout_id: z.string().uuid(),

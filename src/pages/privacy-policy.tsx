@@ -13,14 +13,13 @@ import type {
   SeoOrFaviconTag,
 } from "react-datocms/seo";
 
-import ScrollToTop from "@components/blog/ScrollToTop";
-import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
-import SiteTags from "@components/SiteTags";
-
-import type { FullPageProps } from "@type/page";
-import { DatoCMS } from "@api/gql";
 import privcy_policy from "@query/queries/privacy_policy";
+import ScrollToTop from "@components/blog/ScrollToTop";
+import Navbar from "@components/layout/OldNavbar";
+import type { FullPageProps } from "@type/page";
+import Footer from "@components/layout/Footer";
+import SiteTags from "@components/SiteTags";
+import { DatoCMS } from "@api/gql";
 
 interface Props extends FullPageProps {
   policy: {

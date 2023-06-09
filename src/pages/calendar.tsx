@@ -5,14 +5,13 @@ import type {
 } from "next";
 import type { SeoOrFaviconTag } from "react-datocms";
 
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 import ExitPreview from "@/components/ui/ExitPreview";
-import Footer from "@components/layout/Footer";
 import Navbar from "@/components/layout/OldNavbar";
+import type { FullPageProps } from "types/page";
+import Footer from "@components/layout/Footer";
 import Calendar from "@components/Calendar";
 import SiteTags from "@components/SiteTags";
-
-import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
-import type { FullPageProps } from "types/page";
 import Query from "@query/queries/calendar";
 import { DatoCMS } from "@api/gql";
 

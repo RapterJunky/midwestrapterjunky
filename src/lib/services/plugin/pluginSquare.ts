@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, Environment } from "square";
-import { serialize } from "superjson";
 import createHttpError from "http-errors";
+import { serialize } from "superjson";
 import { z } from "zod";
 
 import { applyRateLimit } from "@lib/api/rateLimiter";
@@ -44,10 +44,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       objectTypes: ["ITEM"],
       query: search.length
         ? {
-            textQuery: {
-              keywords: search.split(" "),
-            },
-          }
+          textQuery: {
+            keywords: search.split(" "),
+          },
+        }
         : undefined,
     });
 

@@ -15,13 +15,13 @@ import Link from "next/link";
 import Head from "next/head";
 import { z } from "zod";
 
-import StoreButtonLink from "@/components/ui/StoreButtonLink";
+import StoreButtonLink from "@components/ui/StoreButtonLink";
 import HiArrowLeft from "@components/icons/HiArrowLeft";
 import ScrollToTop from "@components/blog/ScrollToTop";
-import ExitPreview from "@/components/ui/ExitPreview";
-import Footer from "@components/layout/Footer";
-import Navbar from "@/components/layout/OldNavbar";
+import ExitPreview from "@components/ui/ExitPreview";
+import Navbar from "@components/layout/OldNavbar";
 import IconLink from "@/components/ui/IconLink";
+import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
 import { markRules } from "@lib/structuredTextRules";
@@ -31,7 +31,6 @@ import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
 
 import type { ResponsiveImage, LinkWithIcon, FullPageProps } from "types/page";
-
 import { fetchCacheData } from "@lib/cache";
 
 declare const L: {
@@ -198,6 +197,8 @@ const EventPage: NextPage<EventPageProps> = ({
                         <div key={i} className="relative h-40 w-40">
                           <Image
                             fill
+                            blurDataURL={value.blurUpThumb}
+                            placeholder={value.blurUpThumb.length ? "blur" : "empty"}
                             sizes={value.responsiveImage.sizes}
                             alt={value.responsiveImage?.alt ?? ""}
                             className="block h-full w-full rounded-lg object-cover object-center"
@@ -214,8 +215,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

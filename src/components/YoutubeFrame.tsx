@@ -10,7 +10,7 @@ interface Props {
  * @see https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
  */
-export default function YoutubeFrame({ youtubeId }: Props) {
+const YoutubeFrame: React.FC<Props> = ({ youtubeId }) => {
   const [show, setShow] = useState(false);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -55,6 +55,8 @@ export default function YoutubeFrame({ youtubeId }: Props) {
     </div>
   );
 }
+
+export default YoutubeFrame;
 /*
    <iframe
             className="h-[200%] w-[200%] border-none"
