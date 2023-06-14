@@ -95,6 +95,6 @@ async function GQLFetch<T extends object>(
     return body.data;
   } catch (error) {
     logger.error(error, "GraphQL");
-    throw error;
+    throw new Error("GraphQL Error");
   }
 }
