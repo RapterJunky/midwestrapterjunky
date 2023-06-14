@@ -45,8 +45,13 @@ const ImageItem: React.FC<{
         const response = await AuthFetch(
           `/api/plugin/images?id=${item.id}&type=blurthumb`
         );
-        const data = (await response.json()) as { blurthumb: string };
-        item.appProperties.blurthumb = data.blurthumb;
+        const data = (await response.json()) as { id: string; blurthumb: string }[];
+
+        const content = data.at(0);
+
+        if (!content?.blurthumb || !content.id) throw new Error("Failed to get image blur");
+
+        item.appProperties.blurthumb = content.blurthumb;
         await mutate((current) => {
           if (!current) throw new Error("Unable to process.");
           const idx = current?.result.findIndex(
@@ -58,7 +63,7 @@ const ImageItem: React.FC<{
             result: {
               [idx]: {
                 appProperties(v) {
-                  v.blurthumb = data.blurthumb;
+                  v.blurthumb = content.blurthumb;
                   return v;
                 },
               },
@@ -128,10 +133,10 @@ const ImageItem: React.FC<{
   };
 
   return (
-    <button
+    <div
       data-headlessui-state={active ? "active" : undefined}
       onClick={onSelected}
-      className="border-dato-lighter group relative flex flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
+      className="border-dato-lighter cursor-pointer group relative flex flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
     >
       <div className="flex h-12 w-full content-center items-center gap-2 p-1">
         <FaImage className="m-2" />
@@ -167,11 +172,12 @@ const ImageItem: React.FC<{
         <Image
           className="rounded-md object-contain object-center py-2"
           fill
+          sizes={item.appProperties?.sizes ?? `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`}
           src={`https://drive.google.com/uc?id=${item.id}`}
           alt={item.name}
         />
       </div>
-    </button>
+    </div>
   );
 };
 
@@ -291,46 +297,48 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
         throw new Error("Too many assets have been selected", { cause: "MAX_ASSETS" });
       }
 
-      const images = selected.map(async (image) => {
+      const params = new URLSearchParams();
+      params.set("type", "blurthumb");
+      for (const image of selected) {
         const imageData = data.result.at(image);
         if (!imageData) throw new Error("Failed to find image");
-        if (!imageData.appProperties.blurthumb.length) {
-          await mutate(async (current) => {
-            const response = await AuthFetch(
-              `/api/plugin/images?id=${imageData.id}&type=blurthumb`
-            );
-            const data = (await response.json()) as { blurthumb: string };
-            imageData.appProperties.blurthumb = data.blurthumb;
-            return update(current, {
-              result: {
-                [image]: {
-                  appProperties(v) {
-                    v.blurthumb = data.blurthumb;
-                    return v;
-                  },
-                },
-              },
-            });
-          });
+        if (imageData.appProperties.blurthumb.length) continue;
+        params.append("id", imageData.id);
+      }
+
+      const imagesData: ResponsiveImage<{ width: number; height: number }>[] = [];
+      await mutate(async (current) => {
+        if (!current) throw new Error("Unabel to process");
+        const response = await AuthFetch(`/api/plugin/images?${params.toString()}`);
+        const data = await response.json() as { id: string; blurthumb: string }[];
+
+        const results = [...current.result];
+        for (const image of data) {
+          const index = results.findIndex(item => item.id === image.id);
+          if (index === -1) continue;
+          const item = results.at(index);
+          if (!item) continue;
+          item.appProperties.blurthumb = image.blurthumb;
+          imagesData.push({
+            blurUpThumb: item.appProperties.blurthumb,
+            responsiveImage: {
+              alt: item.appProperties.alt.length
+                ? item.appProperties.alt
+                : item.name,
+              src: `https://drive.google.com/uc?id=${item.id}`,
+              sizes: item.appProperties?.sizes?.length
+                ? item.appProperties.sizes
+                : `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`,
+              width: item.imageMediaMetadata.width,
+              height: item.imageMediaMetadata.height,
+            },
+          })
         }
 
-        return {
-          blurUpThumb: imageData.appProperties.blurthumb,
-          responsiveImage: {
-            alt: imageData.appProperties.alt.length
-              ? imageData.appProperties.alt
-              : imageData.name,
-            src: `https://drive.google.com/uc?id=${imageData.id}`,
-            sizes: imageData.appProperties?.sizes?.length
-              ? imageData.appProperties.sizes
-              : `(max-width: ${imageData.imageMediaMetadata.width}px) 100vw, ${imageData.imageMediaMetadata.width}px`,
-            width: imageData.imageMediaMetadata.width,
-            height: imageData.imageMediaMetadata.height,
-          },
-        } as ResponsiveImage;
+        return update(current, { result: { $set: results } });
       });
-      const content = await Promise.all(images);
-      await ctx.resolve(content);
+
+      await ctx.resolve(imagesData);
     } catch (error) {
       console.error(error);
 
@@ -342,7 +350,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       }
 
       ctx
-        .alert("There was an error in fetch images.")
+        .alert("There was an error in when loading images.")
         .catch((e) => console.error(e));
     } finally {
       setLoading(false);

@@ -11,12 +11,33 @@ const schema = z.object({
   sort: z.enum(["user_upload", "cms_upload"]).optional(),
   type: z.enum(["list", "blurthumb"]).default("list"),
   q: z.string().optional(),
-  id: z.string().optional(),
+  id: z.string().or(z.array(z.string())).optional(),
 });
 
 const deleteSchema = z.object({
   id: z.string(),
 });
+
+const getBlur = async (imageId: string) => {
+  const rawImage = await fetch(`https://drive.google.com/uc?id=${imageId}`);
+  const raw = await sharp(await rawImage.arrayBuffer())
+    .resize(16, 16)
+    .blur(2)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+  const pngUrl = rgbaToDataURL(raw.info.width, raw.info.height, raw.data);
+  const buf = Buffer.from(
+    pngUrl.replace("data:image/png;base64,", ""),
+    "base64"
+  );
+  const compress = await sharp(buf).toFormat("webp").toBuffer();
+
+  return {
+    id: imageId,
+    blurthumb: `data:image/webp;base64,${compress.toString("base64")}`
+  };
+}
 
 const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -44,26 +65,15 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (!id) throw createHttpError.BadRequest("Missing image id");
 
-      const rawImage = await fetch(`https://drive.google.com/uc?id=${id}`);
+      if (Array.isArray(id)) {
+        const blurs = await Promise.all(id.map(value => getBlur(value)));
+        return res.status(200).json(blurs);
+      }
 
-      const raw = await sharp(await rawImage.arrayBuffer())
-        .resize(16, 16)
-        .blur(2)
-        .raw()
-        .ensureAlpha()
-        .toBuffer({ resolveWithObject: true });
-      const pngUrl = rgbaToDataURL(raw.info.width, raw.info.height, raw.data);
-      const buf = Buffer.from(
-        pngUrl.replace("data:image/png;base64,", ""),
-        "base64"
-      );
-      const compress = await sharp(buf).toFormat("webp").toBuffer();
+      const blur = await getBlur(id);
 
-      const blur = `data:image/webp;base64,${compress.toString("base64")}`;
+      return res.status(200).json([blur]);
 
-      return res.status(200).send({
-        blurthumb: blur,
-      });
     }
     case "DELETE": {
       const { id } = deleteSchema.parse(req.query);

@@ -36,7 +36,7 @@ export const handleError = (
   }
   if (createHttpError.isHttpError(error)) {
     return res.status(error.statusCode).json({
-      message: error.name,
+      message: error.name.replace("Error", ""),
       status: error.statusCode,
       details: [
         {
