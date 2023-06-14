@@ -3,9 +3,9 @@ import Link from "next/link";
 import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
 import type { LinkWithIcon } from "@type/page";
 
-const IconLink: React.FC<LinkWithIcon & { className: string; dataCy?: string }> = (
-  props
-) => {
+const IconLink: React.FC<
+  LinkWithIcon & { className: string; dataCy?: string }
+> = (props) => {
   if (props.useIcon && props.icon) {
     const dir = props.iconPosition === "start";
     return (

@@ -64,8 +64,8 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
       parameters: {
         max: ctx.parameters.maxAssets ?? Infinity,
         current: images.length,
-        limit: ctx.parameters.limitAssets
-      }
+        limit: ctx.parameters.limitAssets,
+      },
     })) as
       | ResponsiveImage<{ width: number; height: number }>
       | ResponsiveImage<{ width: number; height: number }>[]
@@ -84,12 +84,12 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
         .catch((e) => console.error(e));
       return next;
     });
-  }
+  };
 
   return (
     <Canvas ctx={ctx}>
       <div className="flex flex-col gap-dato-m">
-        <div className="flex flex-wrap items-center gap-dato-m mb-4">
+        <div className="mb-4 flex flex-wrap items-center gap-dato-m">
           {images.map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {
@@ -123,11 +123,8 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
             />
           ))}
         </div>
-        <div className="flex gap-dato-s justify-center mb-dato-m">
-          <Button
-            onClick={selectImages}
-            buttonSize="xs"
-          >
+        <div className="mb-dato-m flex justify-center gap-dato-s">
+          <Button onClick={selectImages} buttonSize="xs">
             <span className="flex items-center justify-center gap-dato-s">
               <FaGoogleDrive />
               From Google Drive

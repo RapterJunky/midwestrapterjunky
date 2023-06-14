@@ -17,6 +17,6 @@ const StoreButtonLink: React.FC<{ value: string }> = (props) => {
       View Store Page
     </Button>
   );
-}
+};
 
 export default StoreButtonLink;

@@ -3,7 +3,7 @@ import type {
   RenderFieldExtensionCtx,
   RenderPageCtx,
   RenderModalCtx,
-  RenderManualFieldExtensionConfigScreenCtx
+  RenderManualFieldExtensionConfigScreenCtx,
 } from "datocms-plugin-sdk";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -26,7 +26,6 @@ const MODEL_STOREFRONT_ID = "storefrontModel";
 const MODEL_GDRIVE_ID = "gDriveModel";
 const MODEL_MAIL_SETTINGS_ID = "mrj_mail_settings";
 
-
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 
 const MESSAGE_BOARD_PAGE_ID = "community";
@@ -41,9 +40,13 @@ const GDriveAddon = dynamic(
 const GDriveModel = dynamic(
   () => import("@components/plugins/models/GDriveModal")
 );
-const GDriveConfig = dynamic(() => import("@components/plugins/config/GDriveConfigSceen"));
+const GDriveConfig = dynamic(
+  () => import("@components/plugins/config/GDriveConfigSceen")
+);
 
-const ConfigScreen = dynamic(() => import("@components/plugins/config/ConfigScreen"));
+const ConfigScreen = dynamic(
+  () => import("@components/plugins/config/ConfigScreen")
+);
 const ShopFieldExtension = dynamic(
   () => import("@components/plugins/extension/ShopFieldExtension")
 );
@@ -175,7 +178,7 @@ const MidwestRaptor: NextPage = () => {
           type: "editor",
           fieldTypes: ["json"],
           name: "Google Drive",
-          configurable: true
+          configurable: true,
         },
         {
           id: FIELD_EXTENSION_ID,
@@ -221,7 +224,11 @@ const MidwestRaptor: NextPage = () => {
     }
     case "ManualFieldExtensionConfigScreen": {
       if (id === FIELD_EXTENSION_GDRIVE_ID) {
-        return (<GDriveConfig ctx={ctx as RenderManualFieldExtensionConfigScreenCtx} />);
+        return (
+          <GDriveConfig
+            ctx={ctx as RenderManualFieldExtensionConfigScreenCtx}
+          />
+        );
       }
       return null;
     }

@@ -8,26 +8,23 @@ import Head from "next/head";
 const SiteTags: React.FC<{
   ignore?: string[];
   tags: SeoOrFaviconTag[][];
-}> = ({
-  tags,
-  ignore = [],
-}) => {
-    return (
-      <Head>
-        {renderMetaTags(
-          tags
-            .flat(2)
-            .filter(
-              (value) =>
-                !ignore.includes(
-                  (value?.attributes as RegularMetaAttributes)?.name ??
+}> = ({ tags, ignore = [] }) => {
+  return (
+    <Head>
+      {renderMetaTags(
+        tags
+          .flat(2)
+          .filter(
+            (value) =>
+              !ignore.includes(
+                (value?.attributes as RegularMetaAttributes)?.name ??
                   (value?.attributes as OgMetaAttributes)?.property ??
                   ""
-                )
-            )
-        )}
-      </Head>
-    );
-  }
+              )
+          )
+      )}
+    </Head>
+  );
+};
 
 export default SiteTags;

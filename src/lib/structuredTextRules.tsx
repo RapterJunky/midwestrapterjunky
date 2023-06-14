@@ -15,7 +15,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ResponsiveImage } from "@type/page";
 
-
 //https://github.com/datocms/react-datocms/blob/master/docs/structured-text.md
 export const markRules = [
   renderMarkRule(

@@ -35,9 +35,9 @@ const getBlur = async (imageId: string) => {
 
   return {
     id: imageId,
-    blurthumb: `data:image/webp;base64,${compress.toString("base64")}`
+    blurthumb: `data:image/webp;base64,${compress.toString("base64")}`,
   };
-}
+};
 
 const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -52,8 +52,11 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
           pageSize: 50,
           fields:
             "nextPageToken, files(id, name,appProperties, imageMediaMetadata(width,height) )",
-          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${sort ? ` and appProperties has { key='label' and value='${sort}' }` : ""
-            }${q ? ` and fullText contains '${q}'` : ""}`,
+          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${
+            sort
+              ? ` and appProperties has { key='label' and value='${sort}' }`
+              : ""
+          }${q ? ` and fullText contains '${q}'` : ""}`,
         });
 
         return res.status(200).json({
@@ -66,14 +69,13 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!id) throw createHttpError.BadRequest("Missing image id");
 
       if (Array.isArray(id)) {
-        const blurs = await Promise.all(id.map(value => getBlur(value)));
+        const blurs = await Promise.all(id.map((value) => getBlur(value)));
         return res.status(200).json(blurs);
       }
 
       const blur = await getBlur(id);
 
       return res.status(200).json([blur]);
-
     }
     case "DELETE": {
       const { id } = deleteSchema.parse(req.query);

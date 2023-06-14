@@ -44,10 +44,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       objectTypes: ["ITEM"],
       query: search.length
         ? {
-          textQuery: {
-            keywords: search.split(" "),
-          },
-        }
+            textQuery: {
+              keywords: search.split(" "),
+            },
+          }
         : undefined,
     });
 

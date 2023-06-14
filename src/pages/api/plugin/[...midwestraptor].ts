@@ -36,7 +36,12 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
-    if (!req.headers.authorization || req.headers.authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN) throw createHttpError.Unauthorized();
+    if (
+      !req.headers.authorization ||
+      req.headers.authorization.replace("Bearer ", "") !==
+        process.env.PLUGIN_TOKEN
+    )
+      throw createHttpError.Unauthorized();
 
     const path = allowedRoutes.safeParse(req.query.midwestraptor);
     if (!path.success) throw new createHttpError.NotFound("Invaild path");

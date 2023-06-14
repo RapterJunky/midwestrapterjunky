@@ -198,7 +198,9 @@ const EventPage: NextPage<EventPageProps> = ({
                           <Image
                             fill
                             blurDataURL={value.blurUpThumb}
-                            placeholder={value.blurUpThumb.length ? "blur" : "empty"}
+                            placeholder={
+                              value.blurUpThumb.length ? "blur" : "empty"
+                            }
                             sizes={value.responsiveImage.sizes}
                             alt={value.responsiveImage?.alt ?? ""}
                             className="block h-full w-full rounded-lg object-cover object-center"
@@ -215,8 +217,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

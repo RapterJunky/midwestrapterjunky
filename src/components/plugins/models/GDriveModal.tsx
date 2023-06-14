@@ -45,11 +45,15 @@ const ImageItem: React.FC<{
         const response = await AuthFetch(
           `/api/plugin/images?id=${item.id}&type=blurthumb`
         );
-        const data = (await response.json()) as { id: string; blurthumb: string }[];
+        const data = (await response.json()) as {
+          id: string;
+          blurthumb: string;
+        }[];
 
         const content = data.at(0);
 
-        if (!content?.blurthumb || !content.id) throw new Error("Failed to get image blur");
+        if (!content?.blurthumb || !content.id)
+          throw new Error("Failed to get image blur");
 
         item.appProperties.blurthumb = content.blurthumb;
         await mutate((current) => {
@@ -136,7 +140,7 @@ const ImageItem: React.FC<{
     <div
       data-headlessui-state={active ? "active" : undefined}
       onClick={onSelected}
-      className="border-dato-lighter cursor-pointer group relative flex flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
+      className="border-dato-lighter group relative flex cursor-pointer flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
     >
       <div className="flex h-12 w-full content-center items-center gap-2 p-1">
         <FaImage className="m-2" />
@@ -172,7 +176,10 @@ const ImageItem: React.FC<{
         <Image
           className="rounded-md object-contain object-center py-2"
           fill
-          sizes={item.appProperties?.sizes ?? `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`}
+          sizes={
+            item.appProperties?.sizes ??
+            `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`
+          }
           src={`https://drive.google.com/uc?id=${item.id}`}
           alt={item.name}
         />
@@ -293,8 +300,13 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       setLoading(true);
       if (!data) throw new Error("Unable to process");
 
-      if ((ctx.parameters.current as number) + selected.length > (ctx.parameters.max as number)) {
-        throw new Error("Too many assets have been selected", { cause: "MAX_ASSETS" });
+      if (
+        (ctx.parameters.current as number) + selected.length >
+        (ctx.parameters.max as number)
+      ) {
+        throw new Error("Too many assets have been selected", {
+          cause: "MAX_ASSETS",
+        });
       }
 
       const params = new URLSearchParams();
@@ -306,15 +318,21 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
         params.append("id", imageData.id);
       }
 
-      const imagesData: ResponsiveImage<{ width: number; height: number }>[] = [];
+      const imagesData: ResponsiveImage<{ width: number; height: number }>[] =
+        [];
       await mutate(async (current) => {
         if (!current) throw new Error("Unabel to process");
-        const response = await AuthFetch(`/api/plugin/images?${params.toString()}`);
-        const data = await response.json() as { id: string; blurthumb: string }[];
+        const response = await AuthFetch(
+          `/api/plugin/images?${params.toString()}`
+        );
+        const data = (await response.json()) as {
+          id: string;
+          blurthumb: string;
+        }[];
 
         const results = [...current.result];
         for (const image of data) {
-          const index = results.findIndex(item => item.id === image.id);
+          const index = results.findIndex((item) => item.id === image.id);
           if (index === -1) continue;
           const item = results.at(index);
           if (!item) continue;
@@ -332,7 +350,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               width: item.imageMediaMetadata.width,
               height: item.imageMediaMetadata.height,
             },
-          })
+          });
         }
 
         return update(current, { result: { $set: results } });
@@ -343,9 +361,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       console.error(error);
 
       if (error instanceof Error && error.cause === "MAX_ASSETS") {
-        ctx
-          .alert(error.message)
-          .catch((e) => console.error(e));
+        ctx.alert(error.message).catch((e) => console.error(e));
         return;
       }
 
@@ -406,8 +422,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                      ? "CMS Upload"
-                      : "User Upload"}
+                    ? "CMS Upload"
+                    : "User Upload"}
                 </Button>
               )}
             >
@@ -446,7 +462,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               <div className="my-4 flex w-full items-center justify-center">
                 <Spinner size={54} />
               </div>
-            ) : data?.result.length ?
+            ) : data?.result.length ? (
               data?.result.map((item, i) => (
                 <ImageItem
                   onSelected={() => {
@@ -463,9 +479,12 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   mutate={mutate}
                   ctx={ctx}
                 />
-              )) : (
-                <div className="text-center w-full p-2 font-bold text-xl">No assets where found.</div>
-              )}
+              ))
+            ) : (
+              <div className="w-full p-2 text-center text-xl font-bold">
+                No assets where found.
+              </div>
+            )}
           </main>
           <div className="flex justify-between p-4">
             <Button
@@ -500,7 +519,11 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           <div className="flex items-center justify-between bg-dato-accent p-2">
             <div className="flex gap-dato-m text-dato-light">
               {ctx.parameters.limit ?? false ? (
-                <span>Selected: {selected.length} of {(ctx.parameters.max as number) - (ctx.parameters.current as number)}</span>
+                <span>
+                  Selected: {selected.length} of{" "}
+                  {(ctx.parameters.max as number) -
+                    (ctx.parameters.current as number)}
+                </span>
               ) : (
                 <span>Selected: {selected.length}</span>
               )}

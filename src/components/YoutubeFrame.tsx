@@ -54,7 +54,7 @@ const YoutubeFrame: React.FC<Props> = ({ youtubeId }) => {
       )}
     </div>
   );
-}
+};
 
 export default YoutubeFrame;
 /*

@@ -10,8 +10,16 @@ import type {
 import type { SeoOrFaviconTag } from "react-datocms";
 import Image from "next/image";
 
-import { markRules, renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
-import type { FullPageProps, ModulerContent, ResponsiveImage } from "types/page";
+import {
+  markRules,
+  renderBlock,
+  renderInlineRecord,
+} from "@lib/structuredTextRules";
+import type {
+  FullPageProps,
+  ModulerContent,
+  ResponsiveImage,
+} from "types/page";
 import ModuleContent from "@components/layout/ModuleContent";
 import ExitPreview from "@components/ui/ExitPreview";
 import Navbar from "@components/layout/OldNavbar";
