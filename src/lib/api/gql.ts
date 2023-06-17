@@ -36,8 +36,9 @@ export async function DatoCMS<T extends object>(
   );
   return GQLFetch<T>(
     {
-      url: `https://graphql.datocms.com/environments/${process.env.DATOCMS_ENVIRONMENT
-        }${opts?.draft ? "/preview" : ""}`,
+      url: `https://graphql.datocms.com/environments/${
+        process.env.DATOCMS_ENVIRONMENT
+      }${opts?.draft ? "/preview" : ""}`,
       query,
       variables,
     },

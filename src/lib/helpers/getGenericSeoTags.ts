@@ -1,4 +1,8 @@
-import type { SeoOrFaviconTag, FaviconAttributes } from "react-datocms";
+import {
+  type SeoOrFaviconTag,
+  type FaviconAttributes,
+  type TitleMetaLinkTag,
+} from "react-datocms";
 import type { Metadata } from "next";
 
 type Opt = {
@@ -8,6 +12,7 @@ type Opt = {
   description?: string;
   url?: string;
   category?: string;
+  datocms?: SeoOrFaviconTag[] | TitleMetaLinkTag[];
 };
 
 const getGenericSeoTags = ({
