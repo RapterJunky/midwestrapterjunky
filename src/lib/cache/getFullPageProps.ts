@@ -1,19 +1,22 @@
-import { cache } from "react";
 import "server-only";
 
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
-import { fetchCachedQuery } from "@lib/cache";
+import { DatoCMS } from "@api/gql";
 
-const getFullPageProps = cache(async () => {
-  const data = await fetchCachedQuery<FullPageProps>(
-    "GenericPage",
-    GenericPageQuery,
+const getFullPageProps = async () => {
+  const data = await DatoCMS(
     {
-      next: { tags: ["navbar"] },
+      query: GenericPageQuery,
+    },
+    {
+      next: {
+        tags: ["navbar"],
+      },
     }
   );
-  return data;
-});
+
+  return data as FullPageProps;
+};
 
 export default getFullPageProps;

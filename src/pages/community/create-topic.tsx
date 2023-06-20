@@ -179,8 +179,13 @@ const getErrorMessage = (error: unknown): string => {
 };
 
 const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
-  const session = useSession();
   const { replace, router } = useReplace();
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      replace("/community").catch((e) => console.error(e));
+    },
+  });
   const [dialog, setDialog] = useState<DialogData>({
     open: false,
     mode: "message",
@@ -211,10 +216,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   });
 
   useEffect(() => {
-    if (
-      session.status === "unauthenticated" ||
-      (session.status === "authenticated" && !!session.data?.user.banned)
-    )
+    if (session.status === "authenticated" && !!session.data?.user.banned)
       replace("/community").catch((e) => console.error(e));
   }, [session.status, replace, session.data?.user.banned]);
 
