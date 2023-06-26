@@ -19,7 +19,14 @@ const config = {
   parserOptions: {
     project: path.join(__dirname, "tsconfig.json"),
   },
-  ignorePatterns: ["prebuild.mjs"],
+  ignorePatterns: [
+    "prebuild.mjs",
+    "cypress/**/*",
+    ".eslintrc.cjs",
+    "*.config.ts",
+    "*.config.mjs",
+    "*.config.js",
+  ],
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {

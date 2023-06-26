@@ -1,5 +1,6 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { paginate } from "prisma-extension-pagination";
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call*/
+import { type Prisma, PrismaClient } from "@prisma/client";
+import paginate from "./pagination";
 
 type PrismaModel = {
   findFirst: CallableFunction;
@@ -7,37 +8,24 @@ type PrismaModel = {
 
 //https://echobind.com/post/extending-types-for-prisma-extensions-in-nextjs
 const getExtendPrismaClient = () => {
-  return new PrismaClient()
-    .$extends(
-      Prisma.defineExtension({
-        name: "pagination",
-        model: {
-          $allModels: {
-            paginate,
-          },
+  return new PrismaClient().$extends(paginate).$extends({
+    name: "exists",
+    model: {
+      $allModels: {
+        exists: async function <T, E extends Error>(
+          this: T,
+          where: Prisma.Args<T, "findFirst">,
+          throws?: E
+        ): Promise<boolean> {
+          const result = (await (this as PrismaModel).findFirst(
+            where
+          )) as object;
+          if (throws && !result) throw throws;
+          return !!result;
         },
-      })
-    )
-    .$extends(
-      Prisma.defineExtension({
-        name: "exists",
-        model: {
-          $allModels: {
-            exists: async function <T, E extends Error>(
-              this: T,
-              where: Prisma.Args<T, "findFirst">,
-              throws?: E
-            ): Promise<boolean> {
-              const result = (await (this as PrismaModel).findFirst(
-                where
-              )) as object;
-              if (throws && !result) throw throws;
-              return !!result;
-            },
-          },
-        },
-      })
-    );
+      },
+    },
+  });
 };
 
 type ExtendPrismaClient = ReturnType<typeof getExtendPrismaClient>;
