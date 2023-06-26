@@ -17,6 +17,7 @@
 /cypress/screenshots
 /cypress/downloads
 raptorjunkies.json
+cypress.env.json
 
 # production
 /build

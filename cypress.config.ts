@@ -1,4 +1,5 @@
 import { defineConfig } from "cypress";
+import { plugin } from './cypress/plugins/index';
 
 //https://learn.cypress.io/tutorials/writing-end-to-end-tests-with-cypress
 export default defineConfig({
@@ -10,8 +11,6 @@ export default defineConfig({
     baseUrl: "http://localhost:3000",
     viewportHeight: 1000,
     viewportWidth: 1280,
-    setupNodeEvents(on, config) {
-
-    },
-  },
+    setupNodeEvents: plugin,
+  }
 });
