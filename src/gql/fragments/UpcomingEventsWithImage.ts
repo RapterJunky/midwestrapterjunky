@@ -9,7 +9,12 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         id
         slug
       }
-      bgImage {
+      bgImage
+    }
+    _modelApiKey
+}`;
+/*
+{
         responsiveImage(imgixParams: {crop: focalpoint, w: 960, h: 960 }) {
           sizes
           alt
@@ -19,7 +24,5 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         }
         blurUpThumb
       }
-    }
-    _modelApiKey
-}`;
+*/
 export default UEWIRFragment;

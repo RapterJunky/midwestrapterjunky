@@ -20,7 +20,9 @@ const deleteSchema = z.object({
 
 const getBlur = async (imageId: string) => {
   const rawImage = await fetch(`https://drive.google.com/uc?id=${imageId}`);
-  const raw = await sharp(await rawImage.arrayBuffer())
+  const buffer = await rawImage.arrayBuffer();
+
+  const raw = await sharp(buffer)
     .resize(16, 16)
     .blur(2)
     .raw()
@@ -52,11 +54,10 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
           pageSize: 50,
           fields:
             "nextPageToken, files(id, name,appProperties, imageMediaMetadata(width,height) )",
-          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${
-            sort
+          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${sort
               ? ` and appProperties has { key='label' and value='${sort}' }`
               : ""
-          }${q ? ` and fullText contains '${q}'` : ""}`,
+            }${q ? ` and fullText contains '${q}'` : ""}`,
         });
 
         return res.status(200).json({

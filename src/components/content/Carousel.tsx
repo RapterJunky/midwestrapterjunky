@@ -63,6 +63,7 @@ export default function CarouselElement(props: CarouselProps) {
           >
             <Image
               placeholder="blur"
+              loading="lazy"
               fill
               sizes={value.responsiveImage.sizes}
               blurDataURL={value.blurUpThumb}

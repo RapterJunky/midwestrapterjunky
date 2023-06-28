@@ -8,16 +8,7 @@ fragment TASFragment on TestimonialAndShareRecord {
       links
       value
     }
-    bgImage {
-      responsiveImage {
-        sizes
-        alt
-        src
-        height
-        width
-      }
-      blurUpThumb
-    }
+    bgImage
     bgColor {
       hex
     }
@@ -28,3 +19,15 @@ fragment TASFragment on TestimonialAndShareRecord {
     }
   }`;
 export default TASFragment;
+/*
+{
+      responsiveImage {
+        sizes
+        alt
+        src
+        height
+        width
+      }
+      blurUpThumb
+    }
+*/

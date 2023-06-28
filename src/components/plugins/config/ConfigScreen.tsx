@@ -1,9 +1,10 @@
-import type { RenderConfigScreenCtx } from "datocms-plugin-sdk";
 import { Button, Canvas, TextField, Form, FieldGroup } from "datocms-react-ui";
+import type { RenderConfigScreenCtx } from "datocms-plugin-sdk";
 import { useForm, Controller } from "react-hook-form";
-import { normalizeConfig, type VaildConfig } from "@/lib/utils/plugin/config";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
+
+import { normalizeConfig, type StorefrontPluginConfig, type VaildConfig } from "@/lib/utils/plugin/config";
 import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 
 const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
@@ -162,7 +163,7 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                               title: "Edit Storefront",
                               id: "storefrontModel",
                               parameters: value,
-                            });
+                            }) as StorefrontPluginConfig | undefined;
                             if (!result) return;
                             field.onChange([
                               ...field.value.filter(
@@ -222,12 +223,7 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                     const data = (await ctx.openModal({
                       id: "storefrontModel",
                       title: "Add Storefront",
-                    })) as {
-                      token: string;
-                      type: string;
-                      domain: string;
-                      label: string;
-                    } | null;
+                    })) as StorefrontPluginConfig | null;
 
                     if (!data) return;
 

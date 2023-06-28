@@ -13,7 +13,9 @@ import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 
 import "datocms-react-ui/styles.css";
+import GDriveSingleExtension from "@components/plugins/extension/Google/GDriveSingleExtension";
 
+const FIELD_EXTENSION_GDRIVE_SINGLE_ID = "mrj_gdrive_single";
 const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
 const FIELD_EXTENSION_GDRIVE_ID = "mrj_gdrive";
@@ -35,8 +37,9 @@ const MailSettingsModel = dynamic(
 );
 
 const GDriveAddon = dynamic(
-  () => import("@components/plugins/addon/GDriveAddon")
+  () => import("@components/plugins/extension/Google/GDriveMultiExtension")
 );
+const GDriveSingle = dynamic(() => import("@components/plugins/extension/Google/GDriveSingleExtension"));
 const GDriveModel = dynamic(
   () => import("@components/plugins/models/GDriveModal")
 );
@@ -177,8 +180,15 @@ const MidwestRaptor: NextPage = () => {
           id: FIELD_EXTENSION_GDRIVE_ID,
           type: "editor",
           fieldTypes: ["json"],
-          name: "Google Drive",
+          name: "Google Drive Multi",
           configurable: true,
+        },
+        {
+          id: FIELD_EXTENSION_GDRIVE_SINGLE_ID,
+          type: "editor",
+          fieldTypes: ["json"],
+          name: "Google Drive Single",
+          configurable: false
         },
         {
           id: FIELD_EXTENSION_ID,
@@ -234,6 +244,8 @@ const MidwestRaptor: NextPage = () => {
     }
     case "FieldExtension": {
       switch (id) {
+        case FIELD_EXTENSION_GDRIVE_SINGLE_ID:
+          return <GDriveSingleExtension ctx={ctx as RenderFieldExtensionCtx} />
         case FIELD_EXTENSION_GDRIVE_ID:
           return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />;
         case FIELD_EXTENSION_ID: {

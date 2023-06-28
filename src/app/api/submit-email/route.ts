@@ -82,7 +82,7 @@ export const POST = async (request: NextRequest) => {
   } catch (error) {
     if (error instanceof ZodError) {
       const status = fromZodError(error);
-      message = status.message;
+      message = status.message.replace(`at "email"`, "");
     }
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -99,8 +99,7 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${
-        ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin
     ),

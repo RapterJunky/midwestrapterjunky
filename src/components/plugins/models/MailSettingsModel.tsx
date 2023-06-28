@@ -21,29 +21,39 @@ import useSWR from "swr";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import TagInput from "@components/TagInput";
 
+type MailItemNumber = {
+  label: string;
+  value: number;
+}
+
+type MailItemStr = {
+  label: string;
+  value: string;
+}
+
 type MailSettingsForm = {
   name: string;
   categories: string[];
   send_at: string | null;
   send_to: {
-    list_ids: { label: string; value: string }[];
-    segment_ids: { label: string; value: string }[];
+    list_ids: MailItemStr[];
+    segment_ids: MailItemStr[];
     all: boolean;
   };
 };
 
 type MailConfigForm = {
-  design_id: { label: string; value: string };
-  sender_id: { label: string; value: number };
+  design_id: MailItemStr;
+  sender_id: MailItemNumber;
   editor: "design" | "code";
-  suppression_group_id: { label: string; value: number };
+  suppression_group_id: MailItemNumber;
 };
 
 type SendGridData = {
-  senders: { label: string; value: number }[];
-  lists: { label: string; value: string }[];
-  segments: { label: string; value: string }[];
-  designs: { label: string; value: string }[];
+  senders: MailItemNumber[];
+  lists: MailItemStr[];
+  segments: MailItemStr[];
+  designs: MailItemStr[];
 };
 
 type PageState = {
@@ -220,7 +230,7 @@ const MailSettings: React.FC<{
                   error={fieldState.error?.message}
                   label="Recipients"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(ev) => field.onChange(ev as MailItemStr[])}
                   name={field.name}
                   id="list_ids"
                   hint={
@@ -261,7 +271,7 @@ const MailSettings: React.FC<{
                   error={fieldState.error?.message}
                   label="Recipient Groups"
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={ev => field.onChange(ev as Array<MailItemStr>)}
                   name={field.name}
                   id="segment_ids"
                   hint={
@@ -378,7 +388,7 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={field.onChange}
+            onChange={ev => field.onChange(ev as { label: string; value: string; })}
             selectInputProps={{
               isMulti: false,
               options: data?.designs ?? [],
@@ -397,7 +407,7 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={field.onChange}
+            onChange={ev => field.onChange(ev as MailItemNumber)}
             selectInputProps={{
               isMulti: false,
               options: data?.senders ?? [],
@@ -416,7 +426,7 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={field.onChange}
+            onChange={ev => field.onChange(ev as MailItemNumber)}
             selectInputProps={{
               isMulti: false,
               options: [{ label: "Global Unsubscribe", value: -1 }],

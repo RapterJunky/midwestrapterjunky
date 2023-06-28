@@ -166,9 +166,8 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${
-      error.statusText ?? error.status
-    }`;
+    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status
+      }`;
   }
 
   if (!(error instanceof Error)) {
@@ -334,6 +333,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 Title
               </label>
               <input
+                data-cy="post-title"
                 placeholder="Enter a title..."
                 id="title"
                 type="text"
@@ -359,6 +359,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
                 Category
               </label>
               <select
+                data-cy="post-category"
                 id="category"
                 {...register("categoryId", {
                   required: "A Category is required",
@@ -436,6 +437,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             </div>
             <div className="mb-4 flex items-center gap-2">
               <input
+                data-cy="post-notification"
                 {...register("notification")}
                 id="notification"
                 type="checkbox"
@@ -466,6 +468,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
 
             <div className="flex justify-end">
               <button
+                data-cy="post-submit"
                 disabled={isSubmitting}
                 className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
                 type="submit"

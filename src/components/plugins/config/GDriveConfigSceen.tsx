@@ -3,6 +3,7 @@ import { Canvas, Form, TextField, SwitchField } from "datocms-react-ui";
 import { useState, useCallback, useMemo } from "react";
 
 type Parameters = {
+  minAssets: number;
   maxAssets: number;
   limitAssets: boolean;
 };
@@ -38,19 +39,38 @@ const GDriveConfigScreen: React.FC<{
         />
 
         {formValues?.limitAssets ?? false ? (
-          <TextField
-            error={errors.maxAssets}
-            id="maxAssets"
-            name="maxAssets"
-            label="Max Assets"
-            required
-            textInputProps={{
-              min: 1,
-              type: "number",
-            }}
-            value={formValues.maxAssets}
-            onChange={update.bind(null, "maxAssets")}
-          />
+          <>
+            <div className="mb-dato-m">
+              <TextField
+                error={errors.minAssets}
+                id="minAssets"
+                name="minAssets"
+                hint="The minimum amount of assets that are needed to be selected"
+                label="Min Assets"
+                required
+                textInputProps={{
+                  min: 1,
+                  type: "number",
+                }}
+                value={formValues.minAssets}
+                onChange={(ev) => update("minAssets", parseInt(ev))}
+              />
+            </div>
+            <TextField
+              error={errors.maxAssets}
+              id="maxAssets"
+              name="maxAssets"
+              hint="The maximum amount of assets that can be selected"
+              label="Max Assets"
+              required
+              textInputProps={{
+                min: 1,
+                type: "number",
+              }}
+              value={formValues.maxAssets}
+              onChange={(ev) => update("maxAssets", parseInt(ev))}
+            />
+          </>
         ) : null}
       </Form>
     </Canvas>

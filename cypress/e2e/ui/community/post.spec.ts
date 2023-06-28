@@ -2,50 +2,22 @@
 import { isMobile } from '../../../support/utils';
 
 describe("Posts", () => {
-    before(() => {
-        cy.visit("/")
+    beforeEach(() => {
+        cy.visit("/community");
     })
-    it("Login with Google", () => {
-        const usr = Cypress.env("GOOGLE_USER");
-        const psd = Cypress.env("GOOGLE_PW");
-        const url = Cypress.env("SITE_NAME");
-        const cookieName = Cypress.env("COOKIE_NAME");
-        const opts = {
-            username: usr,
-            password: psd,
-            loginUrl: url,
-            headless: true,
-            logs: false,
-            isPopup: true,
-            loginSelector: `a[href="${Cypress.env("SITE_NAME")}/api/auth/signin/google"]`,
-            postLoginSelector: ".unread-count"
-        }
-
-        return cy.task("GoogleSocialLogin", opts)
-            .then(({ cookies }) => {
-                cy.clearCookies();
-                const cookie = cookies
-                    .filter((cookie) => cookie.name === cookieName)
-                    .pop()
-                if (cookie) {
-                    cy.setCookie(cookie.name, cookie.value, {
-                        domain: cookie.domain,
-                        expiry: cookie.expires,
-                        httpOnly: cookie.httpOnly,
-                        path: cookie.path,
-                        secure: cookie.secure,
-                    })
-
-                    Cypress.Cookies.defaults({
-                        preserve: cookieName,
-                    })
-                }
-
-            })
-
-    });
     it("Creates a post", () => {
 
+        cy.get('[data-cy="create-post"]').click();
+        cy.location("pathname").should("have.value", "/community/create-topic");
+
+        cy.get('[data-cy="post-title"]').type("Cypress test post");
+        cy.get('[data-cy="post-category"]').select(0);
+        cy.get('[data-cy="tag-input-field"]').type("Cypress{enter}");
+        cy.get('[data-cy="post-notification"]').check();
+        cy.get('[data-cy="text-editor-field"]').type(`Some text content to test post creation with cypress`);
+        cy.get('[data-cy="post-submit"]').click();
+
+        cy.location("pathname").should("include", `/community/p/`);
     });
     it("Flags a post", () => {
 

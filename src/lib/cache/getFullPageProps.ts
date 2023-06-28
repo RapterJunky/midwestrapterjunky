@@ -1,10 +1,10 @@
 import "server-only";
-
+import { cache } from 'react';
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { DatoCMS } from "@api/gql";
 
-const getFullPageProps = async () => {
+const getFullPageProps = cache(async () => {
   const data = await DatoCMS(
     {
       query: GenericPageQuery,
@@ -17,6 +17,6 @@ const getFullPageProps = async () => {
   );
 
   return data as FullPageProps;
-};
+});
 
 export default getFullPageProps;

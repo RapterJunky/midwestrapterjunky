@@ -40,6 +40,7 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
     return (
       <button
         onClick={() => signOut()}
+        data-cy="signout-btn"
         aria-label="Account signout"
         title="Signout"
         type="button"
@@ -58,6 +59,7 @@ const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
   return (
     <div className="ml-2">
       <button
+        data-cy="signin-btn"
         onClick={() => signIn()}
         title="Signin"
         type="button"

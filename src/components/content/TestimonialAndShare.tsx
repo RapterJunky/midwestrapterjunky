@@ -24,7 +24,7 @@ export type TestimonialAndShareProps = {
   }[];
 };
 
-export default function TestimonialAndShare(props: TestimonialAndShareProps) {
+const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
   return (
     <section className="relative">
       <div className="absolute top-0 z-10 flex h-full w-full flex-col">
@@ -63,12 +63,13 @@ export default function TestimonialAndShare(props: TestimonialAndShareProps) {
       <Parallax className="h-screen">
         <Background className="relative h-screen w-screen">
           <Image
-            placeholder="blur"
+            placeholder={props.bgImage?.blurUpThumb ? "blur" : "empty"}
             blurDataURL={props.bgImage.blurUpThumb}
             sizes={props.bgImage.responsiveImage.sizes}
             src={props.bgImage.responsiveImage.src}
             alt={props.bgImage.responsiveImage?.alt ?? "parallax background"}
             className="h-full w-full object-cover object-top"
+            loading="lazy"
             fill
           />
         </Background>
@@ -76,3 +77,4 @@ export default function TestimonialAndShare(props: TestimonialAndShareProps) {
     </section>
   );
 }
+export default TestimonialAndShare;

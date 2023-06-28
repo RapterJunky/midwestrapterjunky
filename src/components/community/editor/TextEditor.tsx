@@ -113,6 +113,7 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
          * @see https://github.com/ianstormtaylor/slate/issues/5379
          */}
         <Editable
+          data-cy="text-editor-field"
           style={{ minHeight: "100px" }}
           renderElement={renderElement}
           renderLeaf={renderLeaf}

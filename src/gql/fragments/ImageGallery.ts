@@ -3,7 +3,11 @@ fragment IGFragment on ImageGalleryRecord {
     _modelApiKey
     heading
     displayHeading
-    images {
+    images
+  }`;
+export default ImageGralleryFragment;
+/*
+{
       responsiveImage {
         sizes
         alt
@@ -13,5 +17,5 @@ fragment IGFragment on ImageGalleryRecord {
       }
       blurUpThumb
     }
-  }`;
-export default ImageGralleryFragment;
+
+*/

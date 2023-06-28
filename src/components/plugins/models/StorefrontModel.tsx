@@ -92,7 +92,10 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
                   options,
                   defaultValue: options[0],
                 }}
-                onChange={(value) => field.onChange(value?.value)}
+                onChange={(value) => {
+                  if (!value) return;
+                  field.onChange(value.value);
+                }}
                 value={
                   options.find((value) => value.value === field.value) ??
                   options[0]

@@ -36,7 +36,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({ ctx, name, control }) => {
               </div>
               <button
                 className="absolute hidden h-full w-full items-center justify-center bg-slate-400 bg-opacity-40 group-hover:flex"
-                onClick={() => field.onChange(null)}
+                onClick={() => field.onChange("")}
               >
                 <FaTrash className="h-8 w-8 text-red-600" />
               </button>

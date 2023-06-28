@@ -26,6 +26,13 @@ import type { GoogleImage } from "@type/google";
 import type { CursorPaginate, ResponsiveImage } from "@type/page";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
+type Parameters = {
+  current: number;
+  minAssets: number;
+  maxAssets: number;
+  limitAssets: boolean;
+};
+
 const ImageItem: React.FC<{
   item: GoogleImage;
   ctx: RenderModalCtx;
@@ -174,6 +181,8 @@ const ImageItem: React.FC<{
           </div>
         ) : null}
         <Image
+          loader={({ src }) => src}
+          loading="lazy"
           className="rounded-md object-contain object-center py-2"
           fill
           sizes={
@@ -302,7 +311,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
 
       if (
         (ctx.parameters.current as number) + selected.length >
-        (ctx.parameters.max as number)
+        (ctx.parameters.maxAssets as number)
       ) {
         throw new Error("Too many assets have been selected", {
           cause: "MAX_ASSETS",
@@ -422,8 +431,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                    ? "CMS Upload"
-                    : "User Upload"}
+                      ? "CMS Upload"
+                      : "User Upload"}
                 </Button>
               )}
             >
@@ -518,10 +527,10 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
         {selected.length ? (
           <div className="flex items-center justify-between bg-dato-accent p-2">
             <div className="flex gap-dato-m text-dato-light">
-              {ctx.parameters.limit ?? false ? (
+              {ctx.parameters.limitAssets ?? false ? (
                 <span>
                   Selected: {selected.length} of{" "}
-                  {(ctx.parameters.max as number) -
+                  {(ctx.parameters.maxAssets as number) -
                     (ctx.parameters.current as number)}
                 </span>
               ) : (

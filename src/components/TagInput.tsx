@@ -128,6 +128,7 @@ const TagInput: React.FC<Props> = ({
       ))}
       <div className="flex">
         <input
+          data-cy="tag-input-field"
           id={id}
           enterKeyHint="enter"
           name={name}
