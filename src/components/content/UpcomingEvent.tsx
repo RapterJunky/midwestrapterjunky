@@ -34,7 +34,7 @@ export default function UpcomingEvent({
         </h1>
         <hr />
         <article
-          className="container mx-auto my-4 max-w-6xl text-center prose"
+          className="container prose mx-auto my-4 max-w-6xl text-center"
           style={{
             backgroundColor: backgroundColor?.hex,
             color: textColor?.hex,

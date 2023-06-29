@@ -28,24 +28,12 @@ query AboutUsQuery {
         }
         value
         blocks {
-          content {
-            url
-            blurUpThumb
-            alt
-            responsiveImage {
-              sizes
-            }
-          }
+          id
+          __typename
+          content
         }
       }
-      image {
-        alt
-        blurUpThumb
-        responsiveImage {
-          sizes
-        }
-        url
-      }
+      image
       footerContent {
         ...ECTAFragment
         ...CHSFragment
@@ -58,3 +46,23 @@ query AboutUsQuery {
   ${Navbar}
 `;
 export default AboutUsQuery;
+/*
+{
+            url
+            blurUpThumb
+            alt
+            responsiveImage {
+              sizes
+            }
+          }
+ */
+/*
+{
+        alt
+        blurUpThumb
+        responsiveImage {
+          sizes
+        }
+        url
+      }
+*/

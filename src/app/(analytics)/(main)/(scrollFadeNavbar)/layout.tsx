@@ -6,7 +6,6 @@ const ScrollFadeNavbarLayout: React.FC<React.PropsWithChildren> = ({
   return (
     <>
       <header>
-        {/* @ts-expect-error Async Server Component */}
         <Navbar mode="scroll-fade" />
       </header>
       <main className="flex flex-auto flex-col">{children}</main>

@@ -39,7 +39,6 @@ const MailSettingsModel = dynamic(
 const GDriveAddon = dynamic(
   () => import("@components/plugins/extension/Google/GDriveMultiExtension")
 );
-const GDriveSingle = dynamic(() => import("@components/plugins/extension/Google/GDriveSingleExtension"));
 const GDriveModel = dynamic(
   () => import("@components/plugins/models/GDriveModal")
 );
@@ -188,7 +187,7 @@ const MidwestRaptor: NextPage = () => {
           type: "editor",
           fieldTypes: ["json"],
           name: "Google Drive Single",
-          configurable: false
+          configurable: false,
         },
         {
           id: FIELD_EXTENSION_ID,
@@ -245,7 +244,7 @@ const MidwestRaptor: NextPage = () => {
     case "FieldExtension": {
       switch (id) {
         case FIELD_EXTENSION_GDRIVE_SINGLE_ID:
-          return <GDriveSingleExtension ctx={ctx as RenderFieldExtensionCtx} />
+          return <GDriveSingleExtension ctx={ctx as RenderFieldExtensionCtx} />;
         case FIELD_EXTENSION_GDRIVE_ID:
           return <GDriveAddon ctx={ctx as RenderFieldExtensionCtx} />;
         case FIELD_EXTENSION_ID: {

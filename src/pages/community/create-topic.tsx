@@ -166,8 +166,9 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status
-      }`;
+    return `Failed to process request. \n STATUS CODE: ${
+      error.statusText ?? error.status
+    }`;
   }
 
   if (!(error instanceof Error)) {

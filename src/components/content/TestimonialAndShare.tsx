@@ -76,5 +76,5 @@ const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
       </Parallax>
     </section>
   );
-}
+};
 export default TestimonialAndShare;

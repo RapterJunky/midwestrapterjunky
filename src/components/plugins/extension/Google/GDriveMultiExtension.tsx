@@ -92,7 +92,6 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
               From Google Drive
             </span>
           </Button>
-
         </div>
       </div>
     </Canvas>

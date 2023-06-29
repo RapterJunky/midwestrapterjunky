@@ -24,12 +24,12 @@ import TagInput from "@components/TagInput";
 type MailItemNumber = {
   label: string;
   value: number;
-}
+};
 
 type MailItemStr = {
   label: string;
   value: string;
-}
+};
 
 type MailSettingsForm = {
   name: string;
@@ -271,7 +271,7 @@ const MailSettings: React.FC<{
                   error={fieldState.error?.message}
                   label="Recipient Groups"
                   value={field.value}
-                  onChange={ev => field.onChange(ev as Array<MailItemStr>)}
+                  onChange={(ev) => field.onChange(ev as Array<MailItemStr>)}
                   name={field.name}
                   id="segment_ids"
                   hint={
@@ -388,7 +388,9 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={ev => field.onChange(ev as { label: string; value: string; })}
+            onChange={(ev) =>
+              field.onChange(ev as { label: string; value: string })
+            }
             selectInputProps={{
               isMulti: false,
               options: data?.designs ?? [],
@@ -407,7 +409,7 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={ev => field.onChange(ev as MailItemNumber)}
+            onChange={(ev) => field.onChange(ev as MailItemNumber)}
             selectInputProps={{
               isMulti: false,
               options: data?.senders ?? [],
@@ -426,7 +428,7 @@ const MailConfig: React.FC<{
             name={field.name}
             id={field.name}
             value={field.value}
-            onChange={ev => field.onChange(ev as MailItemNumber)}
+            onChange={(ev) => field.onChange(ev as MailItemNumber)}
             selectInputProps={{
               isMulti: false,
               options: [{ label: "Global Unsubscribe", value: -1 }],

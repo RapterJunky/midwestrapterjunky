@@ -4,7 +4,11 @@ import { useForm, Controller } from "react-hook-form";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 
-import { normalizeConfig, type StorefrontPluginConfig, type VaildConfig } from "@/lib/utils/plugin/config";
+import {
+  normalizeConfig,
+  type StorefrontPluginConfig,
+  type VaildConfig,
+} from "@/lib/utils/plugin/config";
 import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 
 const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
@@ -159,11 +163,11 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                       <td className="mr-2 flex justify-end gap-2 py-2">
                         <Button
                           onClick={async () => {
-                            const result = await ctx.openModal({
+                            const result = (await ctx.openModal({
                               title: "Edit Storefront",
                               id: "storefrontModel",
                               parameters: value,
-                            }) as StorefrontPluginConfig | undefined;
+                            })) as StorefrontPluginConfig | undefined;
                             if (!result) return;
                             field.onChange([
                               ...field.value.filter(

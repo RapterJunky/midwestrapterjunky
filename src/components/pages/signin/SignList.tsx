@@ -8,7 +8,8 @@ const SignInList: React.FC = () => {
   const callbackUrl = searchParams?.get("callbackUrl") ?? undefined;
   return (
     <>
-      <button data-cy="google-login-btn"
+      <button
+        data-cy="google-login-btn"
         type="button"
         onClick={() =>
           signIn("google", { callbackUrl }).catch((e) => console.error(e))
@@ -17,7 +18,8 @@ const SignInList: React.FC = () => {
       >
         <FaGoogle /> continue with Google
       </button>
-      <button data-cy="facebook-login-btn"
+      <button
+        data-cy="facebook-login-btn"
         type="button"
         onClick={() =>
           signIn("facebook", { callbackUrl }).catch((e) => console.error(e))

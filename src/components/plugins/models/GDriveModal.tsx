@@ -7,7 +7,7 @@ import {
   DropdownSeparator,
   Spinner,
   TextInput,
-  ButtonLink
+  ButtonLink,
 } from "datocms-react-ui";
 import {
   FaChevronDown,
@@ -385,7 +385,12 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               Choose from Google Drive
             </h1>
             <div className="flex items-center gap-4">
-              <ButtonLink target="_blank" href="https://drive.google.com/drive/u/2/folders/15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO">Open Drive</ButtonLink>
+              <ButtonLink
+                target="_blank"
+                href="https://drive.google.com/drive/u/2/folders/15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO"
+              >
+                Open Drive
+              </ButtonLink>
               <UploadButton ctx={ctx} mutate={mutate} />
               <button
                 onClick={() => ctx.resolve(null)}
@@ -426,8 +431,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                      ? "CMS Upload"
-                      : "User Upload"}
+                    ? "CMS Upload"
+                    : "User Upload"}
                 </Button>
               )}
             >
@@ -456,7 +461,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="relative flex-1 flex flex-wrap items-start gap-2 overflow-y-scroll p-4 max-h-[30lvi]">
+          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap items-start gap-2 overflow-y-scroll p-4">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.

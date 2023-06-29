@@ -1,5 +1,5 @@
 import "server-only";
-import { cache } from 'react';
+import { cache } from "react";
 import GenericPageQuery from "@query/queries/generic";
 import type { FullPageProps } from "@type/page";
 import { DatoCMS } from "@api/gql";

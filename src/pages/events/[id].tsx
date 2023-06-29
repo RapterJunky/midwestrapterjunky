@@ -24,7 +24,11 @@ import IconLink from "@/components/ui/IconLink";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
-import { markRules, renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
+import {
+  markRules,
+  renderBlock,
+  renderInlineRecord,
+} from "@lib/structuredTextRules";
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
 import { logger } from "@lib/logger";
@@ -226,8 +230,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                  !(event.location || event.extraLocationDetails) &&
-                  (!event.links || event.links.length === 0) ? (
+                !(event.location || event.extraLocationDetails) &&
+                (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

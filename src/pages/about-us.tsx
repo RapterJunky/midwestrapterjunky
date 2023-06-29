@@ -47,14 +47,7 @@ interface AboutUsProps extends FullPageProps {
       }
     >;
     footerContent: ModulerContent[];
-    image: {
-      alt: string | null;
-      blurUpThumb: string;
-      responsiveImage: {
-        sizes: string;
-      };
-      url: string;
-    };
+    image: ResponsiveImage;
   };
 }
 
@@ -114,9 +107,15 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
             <div className="relative h-80 w-full">
               <Image
                 className="object-contain object-top"
-                src={props.aboutUsModel.image.url}
-                alt={props.aboutUsModel.image.alt ?? "Article Image"}
+                src={props.aboutUsModel.image.responsiveImage.src}
+                alt={
+                  props.aboutUsModel.image.responsiveImage.alt ??
+                  "Article Image"
+                }
                 fill
+                placeholder={
+                  props.aboutUsModel.image.blurUpThumb ? "blur" : "empty"
+                }
                 sizes={props.aboutUsModel.image.responsiveImage.sizes}
                 blurDataURL={props.aboutUsModel.image.blurUpThumb}
               />
