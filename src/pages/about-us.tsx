@@ -47,7 +47,7 @@ interface AboutUsProps extends FullPageProps {
       }
     >;
     footerContent: ModulerContent[];
-    image: ResponsiveImage;
+    image: ResponsiveImage | null;
   };
 }
 
@@ -105,7 +105,7 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
           </article>
           <aside className="flex flex-col px-3 md:w-1/3">
             <div className="relative h-80 w-full">
-              <Image
+              {props.aboutUsModel.image ? (<Image
                 className="object-contain object-top"
                 src={props.aboutUsModel.image.responsiveImage.src}
                 alt={
@@ -118,7 +118,7 @@ const AboutUs: NextPage<AboutUsProps> = (props) => {
                 }
                 sizes={props.aboutUsModel.image.responsiveImage.sizes}
                 blurDataURL={props.aboutUsModel.image.blurUpThumb}
-              />
+              />) : null}
             </div>
             <div className="flex justify-center">
               <h5 className="font-bold">{props.aboutUsModel.imageTitle}</h5>
