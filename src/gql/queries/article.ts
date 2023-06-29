@@ -26,7 +26,16 @@ query ArticlePageQuery($slug: String = "") {
           blocks {
             id
             __typename
-            content
+            content {
+              responsiveImage {
+                sizes
+                src
+                alt
+                height
+                width
+              }
+              blurUpThumb
+            }
           }
           links {
             ... on ArticleRecord {

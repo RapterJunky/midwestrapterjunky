@@ -27,7 +27,16 @@ const EventPageQuery = `
             description {
                 blocks {
                     __typename
-                    content
+                    content {
+                        responsiveImage {
+                          sizes
+                          src
+                          alt
+                          height
+                          width
+                        }
+                        blurUpThumb
+                      }
                     id
                   }
                 links

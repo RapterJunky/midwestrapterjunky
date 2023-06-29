@@ -1,6 +1,15 @@
 const CarouselFragment = `
 fragment CRFragment on CarouselRecord {
-    images 
+    images {
+      responsiveImage {
+        sizes
+        src
+        alt
+        height
+        width
+      }
+      blurUpThumb
+    }
     _modelApiKey
 }`;
 export default CarouselFragment;

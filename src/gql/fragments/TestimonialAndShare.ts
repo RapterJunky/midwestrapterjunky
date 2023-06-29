@@ -4,7 +4,16 @@ fragment TASFragment on TestimonialAndShareRecord {
     buttonlink
     linkTitle
     description {
-      blocks
+      blocks {
+        responsiveImage {
+          sizes
+          src
+          alt
+          height
+          width
+        }
+        blurUpThumb
+      }
       links
       value
     }
