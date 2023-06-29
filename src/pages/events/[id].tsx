@@ -24,7 +24,7 @@ import IconLink from "@/components/ui/IconLink";
 import Footer from "@components/layout/Footer";
 import SiteTags from "@components/SiteTags";
 
-import { markRules } from "@lib/structuredTextRules";
+import { markRules, renderBlock, renderInlineRecord } from "@lib/structuredTextRules";
 import EventPageQuery from "@query/queries/event";
 import EventsQuery from "@query/queries/events";
 import { logger } from "@lib/logger";
@@ -55,7 +55,14 @@ interface EventPageProps extends FullPageProps {
     id: string;
     slug: string;
     extraLocationDetails: string | null;
-    description: StructuredTextGraphQlResponse;
+    description: StructuredTextGraphQlResponse<
+      {
+        __typename: string;
+        id: string;
+        content: ResponsiveImage<{ width: number; height: number }>;
+      },
+      { title: string; slug: string; __typename: string; id: string }
+    >;
     links: LinkWithIcon[];
     gallery: ResponsiveImage[];
     location: {
@@ -183,6 +190,8 @@ const EventPage: NextPage<EventPageProps> = ({
               <div className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0">
                 <div className="prose max-w-none pb-8 pt-10">
                   <StructuredText
+                    renderBlock={renderBlock}
+                    renderInlineRecord={renderInlineRecord}
                     data={event.description}
                     customMarkRules={markRules}
                   />
@@ -217,8 +226,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

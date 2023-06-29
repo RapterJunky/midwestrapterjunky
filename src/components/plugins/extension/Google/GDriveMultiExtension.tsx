@@ -25,7 +25,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
       parameters: {
         maxAssets: ctx.parameters.maxAssets ?? Infinity,
         minAssets: ctx.parameters.minAssets ?? Infinity,
-        current: images.length,
+        current: images ? images.length : 0,
         limitAssets: ctx.parameters.limitAssets,
       },
     })) as
@@ -35,7 +35,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
     if (!data) return;
 
     setImages((current) => {
-      const next = [...current];
+      const next = current ? [...current] : [];
       if (Array.isArray(data)) {
         next.push(...data);
       } else {
@@ -52,7 +52,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
     <Canvas ctx={ctx}>
       <div className="flex flex-col gap-dato-m">
         <div className="mb-4 flex flex-wrap items-center gap-dato-m">
-          {images.map((image, i) => (
+          {(images ?? []).map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {
                 setImages((current) => {

@@ -26,16 +26,7 @@ query ArticlePageQuery($slug: String = "") {
           blocks {
             id
             __typename
-            content {
-              responsiveImage {
-                sizes
-                src
-                alt
-                height
-                width
-              }
-              blurUpThumb
-            }
+            content
           }
           links {
             ... on ArticleRecord {
@@ -61,3 +52,15 @@ ${Navbar}
 `;
 
 export default ArticleQuery;
+/*
+{
+              responsiveImage {
+                sizes
+                src
+                alt
+                height
+                width
+              }
+              blurUpThumb
+            }
+*/

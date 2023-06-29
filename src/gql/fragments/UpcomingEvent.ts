@@ -3,7 +3,11 @@ fragment UERFragment on UpcomingeventRecord {
     event {
       title
       description {
-        blocks
+        blocks {
+          __typename
+          content
+          id
+        }
         links
         value
       }

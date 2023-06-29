@@ -25,7 +25,11 @@ const EventPageQuery = `
             slug
             extraLocationDetails
             description {
-                blocks
+                blocks {
+                    __typename
+                    content
+                    id
+                  }
                 links
                 value
             }
@@ -36,14 +40,7 @@ const EventPageQuery = `
                 icon
                 iconPosition
             }
-            gallery {
-                responsiveImage {
-                  sizes
-                  alt
-                  src
-                }
-                blurUpThumb
-            }
+            gallery
             location {
                 latitude
                 longitude
@@ -54,3 +51,13 @@ const EventPageQuery = `
 ${Navbar}
 `;
 export default EventPageQuery;
+/*
+{
+                responsiveImage {
+                  sizes
+                  alt
+                  src
+                }
+                blurUpThumb
+            }
+*/

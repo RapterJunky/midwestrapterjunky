@@ -2,13 +2,20 @@ import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import { markRules } from "@lib/structuredTextRules";
-import type { Color } from "@type/page";
+import { markRules, renderBlock } from "@lib/structuredTextRules";
+import type { Color, ResponsiveImage } from "@type/page";
 
 export type UpcomingEventProps = {
   event: {
     title: string;
-    description: StructuredTextGraphQlResponse;
+    description: StructuredTextGraphQlResponse<
+      {
+        __typename: string;
+        id: string;
+        content: ResponsiveImage<{ width: number; height: number }>;
+      },
+      { title: string; slug: string; __typename: string; id: string }
+    >;
   };
   backgroundColor?: Color;
   textColor?: Color;
@@ -27,13 +34,14 @@ export default function UpcomingEvent({
         </h1>
         <hr />
         <article
-          className="container mx-auto my-4 max-w-6xl text-center"
+          className="container mx-auto my-4 max-w-6xl text-center prose"
           style={{
             backgroundColor: backgroundColor?.hex,
             color: textColor?.hex,
           }}
         >
           <StructuredText
+            renderBlock={renderBlock}
             customMarkRules={markRules}
             data={event.description}
           />
