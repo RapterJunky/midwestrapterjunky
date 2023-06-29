@@ -175,7 +175,7 @@ const ImageItem: React.FC<{
           </div>
         ) : null}
         <Image
-          loader={({ src }) => src}
+          unoptimized
           loading="lazy"
           className="rounded-md object-contain object-center py-2"
           fill
@@ -431,8 +431,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                    ? "CMS Upload"
-                    : "User Upload"}
+                      ? "CMS Upload"
+                      : "User Upload"}
                 </Button>
               )}
             >

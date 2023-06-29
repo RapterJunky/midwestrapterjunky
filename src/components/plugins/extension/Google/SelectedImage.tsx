@@ -29,6 +29,7 @@ const SelectedImage: React.FC<{
         </button>
       </div>
       <Image
+        unoptimized
         height={100}
         width={100}
         sizes={image.responsiveImage.sizes}
