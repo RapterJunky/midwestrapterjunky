@@ -7,6 +7,7 @@ import {
   DropdownSeparator,
   Spinner,
   TextInput,
+  ButtonLink
 } from "datocms-react-ui";
 import {
   FaChevronDown,
@@ -25,13 +26,6 @@ import Image from "next/image";
 import type { GoogleImage } from "@type/google";
 import type { CursorPaginate, ResponsiveImage } from "@type/page";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
-
-type Parameters = {
-  current: number;
-  minAssets: number;
-  maxAssets: number;
-  limitAssets: boolean;
-};
 
 const ImageItem: React.FC<{
   item: GoogleImage;
@@ -391,6 +385,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               Choose from Google Drive
             </h1>
             <div className="flex items-center gap-4">
+              <ButtonLink target="_blank" href="https://drive.google.com/drive/u/2/folders/15ppwy_3jcgWo-TDQS88k1vmSV6lHb-MO">Open Drive</ButtonLink>
               <UploadButton ctx={ctx} mutate={mutate} />
               <button
                 onClick={() => ctx.resolve(null)}
@@ -461,7 +456,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="relative flex flex-wrap items-start gap-2 overflow-y-scroll p-4">
+          <main className="relative flex-1 flex flex-wrap items-start gap-2 overflow-y-scroll p-4 max-h-[30lvi]">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.
@@ -553,5 +548,42 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
     </Canvas>
   );
 };
+
+/*
+ <main className="relative flex flex-wrap items-start gap-2 overflow-y-scroll p-4 max-h-[500px]">
+            {error ? (
+              <div className="my-4 flex w-full items-center justify-center">
+                There was an error when loading the images.
+              </div>
+            ) : null}
+            {isLoading ? (
+              <div className="my-4 flex w-full items-center justify-center">
+                <Spinner size={54} />
+              </div>
+            ) : data?.result.length ? (
+              data?.result.map((item, i) => (
+                <ImageItem
+                  onSelected={() => {
+                    setSelected((current) => {
+                      if (current.includes(i)) {
+                        return current.filter((item) => item !== i);
+                      }
+                      return update(current, { $push: [i] });
+                    });
+                  }}
+                  active={selected.includes(i)}
+                  key={i}
+                  item={item}
+                  mutate={mutate}
+                  ctx={ctx}
+                />
+              ))
+            ) : (
+              <div className="w-full p-2 text-center text-xl font-bold">
+                No assets where found.
+              </div>
+            )}
+          </main>
+*/
 
 export default GDriveModel;

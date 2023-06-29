@@ -10,7 +10,6 @@ import SelectedImage from "./SelectedImage";
 
 const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
     const [image, setImage] = useState<ResponsiveImage<{ width: number; height: number }> | null>(JSON.parse(get(ctx.formValues, ctx.fieldPath, "null") as string) as ResponsiveImage<{ width: number; height: number }> | null);
-    console.log(image);
     const selectImage = async () => {
         const data = (await ctx.openModal({
             id: "gDriveModel",
