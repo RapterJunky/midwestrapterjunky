@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
 import { logger } from "@lib/logger";
+import { GOOGLE_DRIVE_IMAGE_ROOT } from "../googleConsts";
 
 const tagsSchema = z.array(z.string().min(3).max(15)).max(6);
 
@@ -298,7 +299,7 @@ const parseForm = <T extends z.AnyZodObject>(
             imageId: googleData.imageId,
             blurUpThumb: blurData?.blur ?? "",
             responsiveImage: {
-              src: `https://drive.google.com/uc?id=${googleData.imageId}`,
+              src: `${GOOGLE_DRIVE_IMAGE_ROOT}${googleData.imageId}`,
               alt: "Uploaded Image",
               height: imageData.height,
               width: imageData.width,

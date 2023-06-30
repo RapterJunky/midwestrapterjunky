@@ -14,6 +14,8 @@ import { logger } from "@lib/logger";
 import sendMail from "@api/sendMail";
 import prisma from "@api/prisma";
 
+const EMAIL_TEMPLTE_ID = "d-09d6805d0013445eb03fa020c5fabb7c";
+
 /**
  * Handle updating post/comments with new slate content.
  * handle uploading new image and ignoring old images
@@ -128,14 +130,12 @@ const handleTC = async (
             {
               to: comment.threadPost.owner.email,
               templete: {
-                id: "d-09d6805d0013445eb03fa020c5fabb7c",
+                id: EMAIL_TEMPLTE_ID,
                 data: {
                   topic_title: comment.threadPost.name,
-                  topic_link: `http${
-                    process.env.VERCEL_ENV !== "development" ? "s" : ""
-                  }://${process.env.VERCEL_URL}/community/p/${
-                    comment.threadPost.id
-                  }`,
+                  topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
+                    }://${process.env.VERCEL_URL}/community/p/${comment.threadPost.id
+                    }`,
                 },
               },
             },

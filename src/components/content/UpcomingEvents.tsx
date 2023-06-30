@@ -24,6 +24,7 @@ export default function UpcomingEvents(props: UpcomingEventsProps) {
         <div key={i} className="relative flex w-2/4 justify-center md:w-1/4">
           <div className="flex h-full max-h-[608px] w-full max-w-[608px] justify-center">
             <Image
+              referrerPolicy="no-referrer"
               loading="lazy"
               placeholder={event.bgImage?.blurUpThumb ? "blur" : "empty"}
               className="pointer-events-none object-cover object-center"

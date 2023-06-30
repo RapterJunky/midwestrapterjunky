@@ -29,6 +29,7 @@ const SelectedImage: React.FC<{
         </button>
       </div>
       <Image
+        referrerPolicy="no-referrer"
         unoptimized
         height={100}
         width={100}

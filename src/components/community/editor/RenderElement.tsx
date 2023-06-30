@@ -40,6 +40,8 @@ const SlateImage: React.FC<RenderElementProps> = ({
         className="not-prose relative flex justify-center"
       >
         <Image
+          unoptimized
+          referrerPolicy="no-referrer"
           data-headlessui-state={selected && focused ? "selected" : ""}
           className="block max-w-full rounded-sm object-center shadow ui-selected:shadow-blue-500"
           src={(element as SlateBlockImage).src}

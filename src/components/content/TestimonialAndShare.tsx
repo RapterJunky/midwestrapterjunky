@@ -63,6 +63,7 @@ const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
       <Parallax className="h-screen">
         <Background className="relative h-screen w-screen">
           <Image
+            referrerPolicy="no-referrer"
             placeholder={props.bgImage?.blurUpThumb ? "blur" : "empty"}
             blurDataURL={props.bgImage.blurUpThumb}
             sizes={props.bgImage.responsiveImage.sizes}

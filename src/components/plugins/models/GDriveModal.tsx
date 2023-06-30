@@ -25,7 +25,8 @@ import Image from "next/image";
 
 import type { GoogleImage } from "@type/google";
 import type { CursorPaginate, ResponsiveImage } from "@type/page";
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import { AuthFetch } from "@utils/plugin/auth_fetch";
+import { GOOGLE_DRIVE_IMAGE_ROOT } from "@utils/googleConsts";
 
 const ImageItem: React.FC<{
   item: GoogleImage;
@@ -90,7 +91,7 @@ const ImageItem: React.FC<{
       blurUpThumb: item.appProperties.blurthumb,
       responsiveImage: {
         alt: item.appProperties.alt.length ? item.appProperties.alt : item.name,
-        src: `https://drive.google.com/uc?id=${item.id}`,
+        src: `${GOOGLE_DRIVE_IMAGE_ROOT}${item.id}`,
         sizes: item.appProperties?.sizes?.length
           ? item.appProperties.sizes
           : `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`,
@@ -175,6 +176,7 @@ const ImageItem: React.FC<{
           </div>
         ) : null}
         <Image
+          referrerPolicy="no-referrer"
           unoptimized
           loading="lazy"
           className="rounded-md object-contain object-center py-2"
@@ -183,7 +185,7 @@ const ImageItem: React.FC<{
             item.appProperties?.sizes ??
             `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`
           }
-          src={`https://drive.google.com/uc?id=${item.id}`}
+          src={`${GOOGLE_DRIVE_IMAGE_ROOT}${item.id}`}
           alt={item.name}
         />
       </div>
@@ -346,7 +348,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               alt: item.appProperties.alt.length
                 ? item.appProperties.alt
                 : item.name,
-              src: `https://drive.google.com/uc?id=${item.id}`,
+              src: `${GOOGLE_DRIVE_IMAGE_ROOT}${item.id}`,
               sizes: item.appProperties?.sizes?.length
                 ? item.appProperties.sizes
                 : `(max-width: ${item.imageMediaMetadata.width}px) 100vw, ${item.imageMediaMetadata.width}px`,

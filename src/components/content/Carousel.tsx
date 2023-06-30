@@ -62,6 +62,7 @@ export default function CarouselElement(props: CarouselProps) {
             style={{ backfaceVisibility: "hidden" }}
           >
             <Image
+              referrerPolicy="no-referrer"
               placeholder="blur"
               loading="lazy"
               fill

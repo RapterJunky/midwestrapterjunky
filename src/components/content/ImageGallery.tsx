@@ -20,6 +20,7 @@ export default function ImageGallery(props: ImageGalleryProps) {
           <div className="relative h-full w-2/4 flex-grow md:w-1/4" key={i}>
             <div className="relative max-h-[1454px] max-w-[2048px]">
               <Image
+                referrerPolicy="no-referrer"
                 placeholder="blur"
                 loading="lazy"
                 blurDataURL={value.blurUpThumb}
