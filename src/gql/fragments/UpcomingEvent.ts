@@ -6,7 +6,16 @@ fragment UERFragment on UpcomingeventRecord {
       description {
         blocks {
           __typename
-          content
+          content {
+            responsiveImage {
+              sizes
+              alt
+              src
+              height
+              width
+            }
+            blurUpThumb
+          }
           id
         }
         links
