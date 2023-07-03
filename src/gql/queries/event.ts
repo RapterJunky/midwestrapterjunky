@@ -49,7 +49,16 @@ const EventPageQuery = `
                 icon
                 iconPosition
             }
-            gallery
+            gallery {
+                responsiveImage {
+                  sizes
+                  src
+                  alt
+                  height
+                  width
+                }
+                blurUpThumb
+              }
             location {
                 latitude
                 longitude
