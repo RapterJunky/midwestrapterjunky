@@ -8,6 +8,6 @@ fragment ECTAFragment on EmailCallToActionRecord {
     backgroundColor {
       hex
     }
-    _modelApiKey
+    __typename
 }`;
 export default EmailCallToActionFragment;

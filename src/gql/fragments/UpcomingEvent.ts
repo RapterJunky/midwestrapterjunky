@@ -1,20 +1,12 @@
 const UpcomingEventFragment = `
 fragment UERFragment on UpcomingeventRecord {
+    __typename
     event {
       title
       description {
         blocks {
           __typename
-          content {
-            responsiveImage {
-              sizes
-              src
-              alt
-              height
-              width
-            }
-            blurUpThumb
-          }
+          content
           id
         }
         links
@@ -27,6 +19,5 @@ fragment UERFragment on UpcomingeventRecord {
     backgroundColor {
       hex
     }
-    _modelApiKey
 }`;
 export default UpcomingEventFragment;

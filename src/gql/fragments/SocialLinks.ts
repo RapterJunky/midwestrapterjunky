@@ -1,6 +1,6 @@
 const SocialLinksFragment = `
 fragment SLFragment on SocialLinksBlockRecord {
-    _modelApiKey
+    __typename
     sociallinks {
       logo
       link

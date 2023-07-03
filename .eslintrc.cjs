@@ -22,6 +22,7 @@ const config = {
   ignorePatterns: [
     "prebuild.mjs",
     "cypress/**/*",
+    "datocms/**/*",
     ".eslintrc.cjs",
     "*.config.ts",
     "*.config.mjs",

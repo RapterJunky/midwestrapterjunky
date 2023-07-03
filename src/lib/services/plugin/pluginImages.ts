@@ -4,7 +4,7 @@ import { rgbaToDataURL } from "thumbhash";
 import sharp from "sharp";
 import { z } from "zod";
 
-import { GOOGLE_DRIVE_IMAGE_ROOT } from '@utils/googleConsts';
+import { GOOGLE_DRIVE_IMAGE_ROOT } from "@utils/googleConsts";
 import googleDrive from "@api/googleDrive";
 
 const schema = z.object({
@@ -55,10 +55,11 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
           pageSize: 50,
           fields:
             "nextPageToken, files(id, name,appProperties, imageMediaMetadata(width,height) )",
-          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${sort
-            ? ` and appProperties has { key='label' and value='${sort}' }`
-            : ""
-            }${q ? ` and fullText contains '${q}'` : ""}`,
+          q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${
+            sort
+              ? ` and appProperties has { key='label' and value='${sort}' }`
+              : ""
+          }${q ? ` and fullText contains '${q}'` : ""}`,
         });
 
         return res.status(200).json({

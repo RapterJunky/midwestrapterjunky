@@ -1,6 +1,6 @@
 const TASFragment = `
 fragment TASFragment on TestimonialAndShareRecord {
-    _modelApiKey
+    __typename
     buttonlink
     linkTitle
     description {
@@ -8,16 +8,7 @@ fragment TASFragment on TestimonialAndShareRecord {
       links
       value
     }
-    bgImage {
-      responsiveImage {
-        sizes
-        src
-        alt
-        height
-        width
-      }
-      blurUpThumb
-    }
+    bgImage
     bgColor {
       hex
     }

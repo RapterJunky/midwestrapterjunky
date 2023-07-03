@@ -2,6 +2,6 @@ const HtmlFragement = `
 fragment CHSFragment on CustomHtmlSectionRecord {
     id
     content
-    _modelApiKey
+    __typename
 }`;
 export default HtmlFragement;

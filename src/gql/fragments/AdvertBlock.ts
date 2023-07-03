@@ -1,6 +1,6 @@
 const AdvertBlockFragment = `
 fragment ABFragment on AdvertBlockRecord {
-    _modelApiKey
+    __typename
     bgcolor {
       hex
     }

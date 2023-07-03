@@ -1,6 +1,6 @@
 const FeaturedshopFragment = `
 fragment FSFragment on FeaturedshopRecord {
-    _modelApiKey
+    __typename
     items {
       item
       id

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,28 +32,20 @@ const navbarMode = {
 };
 
 const NavDropdown = dynamic(() => import("@/components/ui/NavDropdown"));
+const AccountDropdown = dynamic(
+  () => import("@components/layout/AccountDropdown")
+);
 
 const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({
   session,
 }) => {
   if (session.status === "authenticated")
     return (
-      <button
-        onClick={() => signOut()}
-        data-cy="signout-btn"
-        aria-label="Account signout"
-        title="Signout"
-        type="button"
-        className="ml-2"
-      >
-        <Image
-          className="rounded-full shadow-lg"
-          width={40}
-          height={40}
-          src={session.data.user.image ?? ""}
-          alt="avatar"
-        />
-      </button>
+      <AccountDropdown
+        email={session.data.user.email ?? ""}
+        name={session.data.user.name ?? ""}
+        image={session.data.user.image ?? ""}
+      />
     );
 
   return (

@@ -1,6 +1,6 @@
 const VWLFragment = `
 fragment VWLFragment on VideowithlinkRecord {
-    _modelApiKey
+    __typename
     isYoutubeVideo
     videoLink
     youtubeid

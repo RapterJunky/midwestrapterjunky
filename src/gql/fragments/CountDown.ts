@@ -9,7 +9,7 @@ fragment CountdownFragment on CountdownRecord {
       dateFrom
       slug
     }
-    _modelApiKey
+    __typename
 }`;
 
 export default CountdownFragment;

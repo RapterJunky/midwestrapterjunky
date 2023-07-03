@@ -133,9 +133,11 @@ const handleTC = async (
                 id: EMAIL_TEMPLTE_ID,
                 data: {
                   topic_title: comment.threadPost.name,
-                  topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
-                    }://${process.env.VERCEL_URL}/community/p/${comment.threadPost.id
-                    }`,
+                  topic_link: `http${
+                    process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/p/${
+                    comment.threadPost.id
+                  }`,
                 },
               },
             },

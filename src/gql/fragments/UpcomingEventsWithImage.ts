@@ -9,18 +9,9 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         id
         slug
       }
-      bgImage {
-        responsiveImage {
-          sizes
-          src
-          alt
-          height
-          width
-        }
-        blurUpThumb
-      }
+      bgImage
     }
-    _modelApiKey
+    __typename
 }`;
 /*
 {
