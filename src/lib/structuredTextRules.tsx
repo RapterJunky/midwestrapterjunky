@@ -81,6 +81,8 @@ export const renderBlock = ({
 }>) => {
   switch (record.__typename) {
     case "ImageRecord":
+      if (!record.content) return null;
+
       return (
         <div className="relative flex justify-center">
           <Image
