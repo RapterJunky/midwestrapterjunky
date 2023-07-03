@@ -8,7 +8,16 @@ fragment TASFragment on TestimonialAndShareRecord {
       links
       value
     }
-    bgImage
+    bgImage {
+      responsiveImage {
+        sizes
+        alt
+        src
+        height
+        width
+      }
+      blurUpThumb
+    }
     bgColor {
       hex
     }

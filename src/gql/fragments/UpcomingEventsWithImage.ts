@@ -9,7 +9,16 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         id
         slug
       }
-      bgImage
+      bgImage {
+        responsiveImage(imgixParams: {crop: focalpoint, w: 960, h: 960 }) {
+          sizes
+          alt
+          src
+          height
+          width
+        }
+        blurUpThumb
+      }
     }
     __typename
 }`;
