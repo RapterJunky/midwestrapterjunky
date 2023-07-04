@@ -189,6 +189,9 @@ const ImageItem: React.FC<{
           alt={item.name}
         />
       </div>
+      <div>
+
+      </div>
     </div>
   );
 };
@@ -433,8 +436,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                    ? "CMS Upload"
-                    : "User Upload"}
+                      ? "CMS Upload"
+                      : "User Upload"}
                 </Button>
               )}
             >
@@ -454,8 +457,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                 <DropdownOption onClick={() => setSort("user_upload")}>
                   <div className="font-semibold">User Uploaded</div>
                   <div className="text-sm font-light tracking-tighter">
-                    Images that have been uploaded by users. Ex. from comments
-                    and topics.
+                    Images that have been uploaded by users.
                   </div>
                 </DropdownOption>
               </DropdownMenu>
@@ -463,7 +465,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap items-start gap-2 overflow-y-scroll p-4">
+          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap gap-dato-m justify-center items-start overflow-y-scroll p-4">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.
@@ -526,71 +528,32 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             </Button>
           </div>
         </div>
-        {selected.length ? (
-          <div className="flex items-center justify-between bg-dato-accent p-2">
-            <div className="flex gap-dato-m text-dato-light">
-              {ctx.parameters.limitAssets ?? false ? (
-                <span>
-                  Selected: {selected.length} of{" "}
-                  {(ctx.parameters.maxAssets as number) -
-                    (ctx.parameters.current as number)}
-                </span>
-              ) : (
-                <span>Selected: {selected.length}</span>
-              )}
-              <button className="underline" onClick={() => setSelected([])}>
-                Unselect all
-              </button>
-            </div>
-            <Button
-              rightIcon={loading ? <Spinner size={24} /> : null}
-              disabled={loading}
-              onClick={addImageGroup}
-            >
-              Add {selected.length} Assets
-            </Button>
+        <div className="flex items-center justify-between bg-dato-accent p-2">
+          <div className="flex gap-dato-m text-dato-light">
+            {ctx.parameters.limitAssets ?? false ? (
+              <span>
+                Selected: {selected.length} of{" "}
+                {(ctx.parameters.maxAssets as number) -
+                  (ctx.parameters.current as number)}
+              </span>
+            ) : (
+              <span>Selected: {selected.length}</span>
+            )}
+            <button className="underline" onClick={() => setSelected([])}>
+              Unselect all
+            </button>
           </div>
-        ) : null}
+          <Button
+            rightIcon={loading ? <Spinner size={24} /> : null}
+            disabled={loading}
+            onClick={addImageGroup}
+          >
+            Add {selected.length} Assets
+          </Button>
+        </div>
       </div>
     </Canvas>
   );
 };
-
-/*
- <main className="relative flex flex-wrap items-start gap-2 overflow-y-scroll p-4 max-h-[500px]">
-            {error ? (
-              <div className="my-4 flex w-full items-center justify-center">
-                There was an error when loading the images.
-              </div>
-            ) : null}
-            {isLoading ? (
-              <div className="my-4 flex w-full items-center justify-center">
-                <Spinner size={54} />
-              </div>
-            ) : data?.result.length ? (
-              data?.result.map((item, i) => (
-                <ImageItem
-                  onSelected={() => {
-                    setSelected((current) => {
-                      if (current.includes(i)) {
-                        return current.filter((item) => item !== i);
-                      }
-                      return update(current, { $push: [i] });
-                    });
-                  }}
-                  active={selected.includes(i)}
-                  key={i}
-                  item={item}
-                  mutate={mutate}
-                  ctx={ctx}
-                />
-              ))
-            ) : (
-              <div className="w-full p-2 text-center text-xl font-bold">
-                No assets where found.
-              </div>
-            )}
-          </main>
-*/
 
 export default GDriveModel;

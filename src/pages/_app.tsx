@@ -32,7 +32,7 @@ const DefaultHead: React.FC = () => (
   <Head>
     <meta charSet="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style global>{`:root { --font-inter: ${inter.style.fontFamily} }`}</style>
+    <style>{`:root { --font-inter: ${inter.style.fontFamily} }`}</style>
   </Head>
 );
 
