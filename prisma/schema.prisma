@@ -70,6 +70,7 @@ model User {
   email         String?      @unique
   emailVerified DateTime?
   image         String?
+  sqaureId      String?
   banned        Int          @default(0) @db.UnsignedTinyInt // 0 = false 1 = soft 2 = hard
   accounts      Account[]
   sessions      Session[]
