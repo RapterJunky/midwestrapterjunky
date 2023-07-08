@@ -1,13 +1,14 @@
 import type { NextComponentType, NextPageContext } from "next";
-import { GoogleAnalytics } from "nextjs-google-analytics";
 import { SWRConfig, type SWRConfiguration } from "swr";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import type { AppProps } from "next/app";
 import type { Session } from "next-auth";
 import Head from "next/head";
+import GoogleAnalytics from "@components/pages/GoogleAnalytics";
 
 import "../styles/globals.css";
+
 interface CustomAppProps extends AppProps<{ session?: Session }> {
   Component: NextComponentType<NextPageContext, object, object> & {
     provider?: React.FC;
@@ -42,10 +43,7 @@ function App({ Component, pageProps, router }: CustomAppProps) {
     return (
       <SessionProvider session={pageProps?.session}>
         <DefaultHead />
-        <GoogleAnalytics
-          trackPageViews
-          debugMode={process.env.VERCEL_ENV !== "production"}
-        />
+        <GoogleAnalytics debug={process.env.VERCEL_ENV !== "production"} />
         <SWRConfig value={swrConfig}>
           <ContextProvider>
             <Component {...pageProps} />
