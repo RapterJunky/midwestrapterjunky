@@ -41,7 +41,7 @@ export default function ShopFieldExtension({
       });
 
     const store = config.storefronts.find(
-      (value) => value.domain === tenant && value.type === storefront
+      (value) => value.domain === tenant && value.type === storefront,
     );
 
     if (!store)
@@ -81,7 +81,7 @@ export default function ShopFieldExtension({
     if (product)
       await ctx.setFieldValue(
         ctx.fieldPath,
-        JSON.stringify({ value: product })
+        JSON.stringify({ value: product }),
       );
   };
 
@@ -142,7 +142,7 @@ const RenderError: React.FC<{
   const message =
     error instanceof APIError
       ? error.message
-      : "API Error! Could not fetch details for product:&nbsp;";
+      : "API Error! Could not fetch details for product!";
   const cause =
     error instanceof APIError ? `Code: ${error?.cause as string}` : product;
 

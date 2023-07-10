@@ -56,7 +56,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
   const count = items.reduce((acc, curr) => acc + curr.quantity, 0);
   const subtotal = items.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
-    0
+    0,
   );
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
           setData((current) => {
             const exists = current.find(
               (value) =>
-                value.id === item.id && value.option.id === item.option.id
+                value.id === item.id && value.option.id === item.option.id,
             );
             if (exists) {
               exists.quantity += item.quantity;
@@ -100,7 +100,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
         removeFromCart: (id: string, option_id: string) => {
           setData((current) => {
             const item = current.findIndex(
-              (value) => value.id === id && value.option.id === option_id
+              (value) => value.id === id && value.option.id === option_id,
             );
             if (item !== -1) {
               return [
@@ -114,7 +114,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
         addQuantity: (id: string, option_id: string, amount = 1) => {
           setData((current) => {
             const exists = current.find(
-              (value) => value.id === id && value.option.id === option_id
+              (value) => value.id === id && value.option.id === option_id,
             );
             if (!exists) return current;
 
@@ -131,7 +131,7 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
         removeQuantity: (id: string, option_id: string, amount = 1) => {
           setData((current) => {
             const exists = current.find(
-              (value) => value.id === id && value.option.id === option_id
+              (value) => value.id === id && value.option.id === option_id,
             );
             if (exists) {
               const value = exists.quantity - amount;

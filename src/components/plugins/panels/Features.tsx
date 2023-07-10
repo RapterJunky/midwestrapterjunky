@@ -47,13 +47,16 @@ export const Features: React.FC<{
 
       const flags = (await responcse.json()) as FeatureFlag[];
 
-      return flags.reduce((acc, curr) => {
-        acc[curr.setting.key] = {
-          value: curr.value,
-          id: curr.setting.settingId,
-        };
-        return acc;
-      }, {} as Record<string, { value: boolean; id: number }>) as FormState;
+      return flags.reduce(
+        (acc, curr) => {
+          acc[curr.setting.key] = {
+            value: curr.value,
+            id: curr.setting.settingId,
+          };
+          return acc;
+        },
+        {} as Record<string, { value: boolean; id: number }>,
+      ) as FormState;
     },
   });
 

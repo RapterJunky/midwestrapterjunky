@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 const googleDrive = () => {
   const creds = JSON.parse(
-    process.env.GOOGLE_SERVICE_KEY
+    process.env.GOOGLE_SERVICE_KEY,
   ) as NodeJS.GoogleServiceKey;
 
   const auth = new google.auth.GoogleAuth({

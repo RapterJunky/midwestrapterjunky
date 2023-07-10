@@ -35,7 +35,7 @@ interface BlogLatestProps extends FullPageProps {
 const MAX_DISPLAY = 5;
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<BlogLatestProps>> => {
   const data = await DatoCMS<BlogLatestProps>(
     {
@@ -46,7 +46,7 @@ export const getStaticProps = async (
     },
     {
       draft: ctx.draftMode || ctx.preview,
-    }
+    },
   );
 
   return {

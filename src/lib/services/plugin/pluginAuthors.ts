@@ -27,7 +27,7 @@ const querySchema = z.object({
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   switch (req.method) {
     case "POST": {

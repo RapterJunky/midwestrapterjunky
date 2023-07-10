@@ -10,7 +10,7 @@ const useInventory = (item: string | undefined) => {
   >(item, async (key) => {
     if (!key) throw new Error("No Key set");
     return fetch(`/api/shop/inventory?item=${key}`).then((value) =>
-      value.json()
+      value.json(),
     ) as Promise<InventoryCount[]>;
   });
 
@@ -18,7 +18,7 @@ const useInventory = (item: string | undefined) => {
     if (!data) return false;
     if (!data.length) return true;
     return data.some(
-      (value) => value.state === "IN_STOCK" && value.quantity !== "0"
+      (value) => value.state === "IN_STOCK" && value.quantity !== "0",
     );
   }, [data]);
 

@@ -22,7 +22,7 @@ const reportSchema = schema.extend({
 const POST = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session | null
+  session: Session | null,
 ) => {
   if (!session) throw createHttpError.Unauthorized();
   await applyRateLimit(req, res);

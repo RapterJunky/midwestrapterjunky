@@ -28,15 +28,7 @@ export default function Button({
 }: React.PropsWithChildren<ButtonProps>) {
   const className = `${
     full ? "w-full " : ""
-  } text-center inline-block px-6 py-2.5 ${
-    color?.primary
-  } text-white font-medium text-xs leading-tight uppercase rounded-sm shadow-md ${
-    color?.hover
-  } hover:shadow-lg ${
-    color?.foucs
-  } focus:shadow-lg focus:outline-none focus:ring-0 ${
-    color?.active
-  } active:shadow-lg transition duration-150 ease-in-out`;
+  } text-center inline-block px-6 py-2.5 ${color?.primary} text-white font-medium text-xs leading-tight uppercase rounded-sm shadow-md ${color?.hover} hover:shadow-lg ${color?.foucs} focus:shadow-lg focus:outline-none focus:ring-0 ${color?.active} active:shadow-lg transition duration-150 ease-in-out`;
 
   if (link) {
     if (!href)

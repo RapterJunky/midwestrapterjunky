@@ -42,7 +42,7 @@ const useCatalog = (opt: Opt) => {
       const request = await fetch(`${url}?${params.toString()}`);
       if (!request) throw request;
       return request.json() as Promise<CursorPaginate<ShopItem>>;
-    }
+    },
   );
 
   return {

@@ -51,7 +51,7 @@ const BUILD_TRIGGER_ID = "22379";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
@@ -69,7 +69,7 @@ export default async function handler(
 
     const body = req.body as WebhookRequest;
     const data = JSON.parse(
-      body.entity.attributes?.revalidate ?? "null"
+      body.entity.attributes?.revalidate ?? "null",
     ) as RevaildateSettings | null;
 
     if (!data) return res.status(200).json({ revaildate: false });
@@ -82,7 +82,7 @@ export default async function handler(
             data.slug
               .replace("[title]", "[slug]") // patch
               .replace("[slug]", body.entity.attributes?.slug ?? "")
-              .replace("[id]", body.entity.attributes.id)
+              .replace("[id]", body.entity.attributes.id),
           );
         return res.status(200).json({ revalidated: true });
       case "cache":
@@ -118,7 +118,7 @@ export default async function handler(
           await res.revalidate(
             data.slug
               .replace("[slug]", body.entity.attributes?.slug ?? "")
-              .replace("[id]", body.entity.attributes.id)
+              .replace("[id]", body.entity.attributes.id),
           );
         await prisma.cache.update({
           where: { key: data.cache },

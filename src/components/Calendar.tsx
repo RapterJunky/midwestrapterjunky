@@ -65,7 +65,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
       days_last_month: new Date(
         current.year,
         (current.month === 0 ? 11 : current.month - 1) + 1,
-        0
+        0,
       ).getDate(),
     };
   }, [current]);
@@ -78,7 +78,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
       dateFrom: string;
       dateTo: string;
     },
-    day: number
+    day: number,
   ) => {
     const start = new Date(value.dateFrom);
     const end = new Date(value.dateTo);
@@ -170,7 +170,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
             <div className="flex flex-wrap border-l border-t">
               {Array.from(
                 { length: offsets.start },
-                (_, i) => offsets.days_last_month - i
+                (_, i) => offsets.days_last_month - i,
               )
                 .reverse()
                 .map((day) => (
@@ -189,7 +189,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                 ))}
               {Array.from(
                 { length: offsets.days_in_month },
-                (_, k) => k + 1
+                (_, k) => k + 1,
               ).map((day, i) => (
                 <div
                   key={i}

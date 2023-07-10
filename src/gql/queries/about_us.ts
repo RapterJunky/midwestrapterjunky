@@ -3,6 +3,8 @@ import EmailCallToActionFragment from "../fragments/EmailCallToAction";
 import CustomHtmlSectionFragment from "../fragments/CustomHtmlSection";
 import SiteTags from "../fragments/SiteTags";
 
+import ImageHelper from "../fragments/ImageHelper";
+
 const AboutUsQuery = `
 query AboutUsQuery {
     _site {
@@ -30,28 +32,10 @@ query AboutUsQuery {
         blocks {
           id
           __typename
-          content {
-            responsiveImage {
-              sizes
-              src
-              alt
-              height
-              width
-            }
-            blurUpThumb
-          }
+          content ${ImageHelper("aboutus")}
         }
       }
-      image {
-        responsiveImage {
-          sizes
-          src
-          alt
-          height
-          width
-        }
-        blurUpThumb
-      }
+      image ${ImageHelper("aboutus")}
       footerContent {
         ...ECTAFragment
         ...CHSFragment

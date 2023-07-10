@@ -22,7 +22,7 @@ type Props = {
   netTotal: number;
   checkout: [
     CheckoutState,
-    React.Dispatch<{ type: CheckoutAction; payload: string | object }>
+    React.Dispatch<{ type: CheckoutAction; payload: string | object }>,
   ];
   active: boolean;
 };
@@ -207,7 +207,7 @@ const BillingPanel: React.FC<Props> = ({
     {
       message: "An error occured when trying to process the payment.",
       type: "service",
-    }
+    },
   );
   const router = useRouter();
   const { data } = useCart();
@@ -231,7 +231,7 @@ const BillingPanel: React.FC<Props> = ({
           ? (checkoutState.address.shipping as Address)
           : (formState.address.billing as Address),
         netTotal,
-        "USD"
+        "USD",
       );
 
       const response = await fetch("/api/shop/order", {
@@ -271,7 +271,7 @@ const BillingPanel: React.FC<Props> = ({
             errorResponses[value.code as keyof typeof errorResponses] ?? {
               message: "An error occured when trying to process.",
               type: "service",
-            }
+            },
         );
 
         for (const error of status_errors) {
@@ -285,7 +285,7 @@ const BillingPanel: React.FC<Props> = ({
 
         if (
           errors.details.some(
-            (value) => value.code === "IDEMPOTENCY_KEY_REUSED"
+            (value) => value.code === "IDEMPOTENCY_KEY_REUSED",
           )
         )
           await router.push(
@@ -296,14 +296,14 @@ const BillingPanel: React.FC<Props> = ({
               },
             },
             undefined,
-            { shallow: true }
+            { shallow: true },
           );
 
         setModalData(
           status_errors[0] ?? {
             message: "An error occured when trying to process.",
             type: "service",
-          }
+          },
         );
 
         throw response;

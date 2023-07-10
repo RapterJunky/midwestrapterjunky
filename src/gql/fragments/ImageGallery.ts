@@ -1,18 +1,10 @@
+import ImageHelper from "./ImageHelper";
 const ImageGralleryFragment = `
 fragment IGFragment on ImageGalleryRecord {
     heading
     displayHeading
     __typename
-    images {
-      responsiveImage {
-        sizes
-        alt
-        src
-        height
-        width
-      }
-      blurUpThumb
-    }
+    images ${ImageHelper("gallery")}
   }`;
 export default ImageGralleryFragment;
 /*

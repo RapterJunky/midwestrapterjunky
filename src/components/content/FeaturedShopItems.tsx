@@ -12,7 +12,7 @@ export interface FeatureShopItems {
 
 const formatter = (
   range: Storefront.Product["priceRange"],
-  locale?: string
+  locale?: string,
 ) => {
   const maxPrice = range.maxVariantPrice.amount;
   const minPrice = range.minVariantPrice.amount;
@@ -38,15 +38,16 @@ export default function FeaturedShopItems(props: FeatureShopItems) {
     string
   >(
     `/api/products?find=${btoa(
-      props.items.map((value) => value.item.value).join(",")
+      props.items.map((value) => value.item.value).join(","),
     )}`,
     (url: string) =>
-      fetch(url).then((value) => value.json()) as Promise<Storefront.Product[]>,
+      fetch(url).then(async (value) => value.json()) as Promise<
+        Storefront.Product[]
+      >,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: false,
-    }
+    },
   );
 
   if (!data && isLoading)

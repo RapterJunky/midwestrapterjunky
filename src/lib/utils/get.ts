@@ -51,17 +51,17 @@ type GetFieldType<T, P> = P extends `${infer Left}.${infer Right}`
 const get = <
   TObject extends object,
   TPath extends string = string,
-  TDefault = undefined
+  TDefault = undefined,
 >(
   obj: TObject,
   key: TPath | Array<string>,
-  defaultValue?: TDefault
+  defaultValue?: TDefault,
 ):
   | Exclude<GetFieldType<TObject, TPath>, null | undefined>
   | TDefault
   | undefined => {
   if (!Array.isArray(key)) key = key.split(".");
-
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   const item = key.reduce((obj: unknown | Record<string, unknown>, p) => {
     return typeof obj === "object" && obj
       ? (obj as Record<string, unknown>)[p]

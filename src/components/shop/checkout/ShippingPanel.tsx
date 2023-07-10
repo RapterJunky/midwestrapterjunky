@@ -12,7 +12,7 @@ type Props = {
   next: React.Dispatch<React.SetStateAction<number>>;
   checkout: [
     CheckoutState,
-    React.Dispatch<{ type: CheckoutAction; payload: string | object }>
+    React.Dispatch<{ type: CheckoutAction; payload: string | object }>,
   ];
   active: boolean;
 };

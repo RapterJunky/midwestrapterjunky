@@ -8,14 +8,14 @@ const schema = z.record(
   z.object({
     id: z.number(),
     value: z.boolean(),
-  })
+  }),
 );
 
 const CONFIG_ID = "08db4a5e-9da2-4f87-8127-177d185c01ae";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const env =
     process.env.VERCEL_ENV !== "production"
@@ -38,19 +38,19 @@ export default async function handle(
                 "Content-Type": "application/json",
                 Authorization: `Basic ${process.env.CONFIG_CAT_MANAGEMENT}`,
               },
-            }
+            },
           );
 
           if (!response.ok) throw response;
           return response;
-        })
+        }),
       );
 
       for (const result of results) {
         if (result.status === "rejected") {
           logger.error(
             result.reason as unknown,
-            (result.reason as Response).statusText
+            (result.reason as Response).statusText,
           );
         }
       }
@@ -64,7 +64,7 @@ export default async function handle(
           headers: {
             Authorization: `Basic ${process.env.CONFIG_CAT_MANAGEMENT}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {

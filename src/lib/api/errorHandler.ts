@@ -16,7 +16,7 @@ export type ApiErrorResponse = {
  */
 export const handleError = (
   error: unknown,
-  res: NextApiResponse<ApiErrorResponse>
+  res: NextApiResponse<ApiErrorResponse>,
 ) => {
   if (error instanceof ZodError) {
     const data = fromZodError(error);

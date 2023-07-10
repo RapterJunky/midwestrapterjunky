@@ -39,7 +39,7 @@ const sendMail = async ({ templete, data, to }: Props, id: string) => {
     if (!success) {
       logger.info(
         { templete: !!templete, id, sandbox, limit, remaining, reset },
-        `Rate limiting mail for (${id})`
+        `Rate limiting mail for (${id})`,
       );
       return true;
     }
@@ -85,7 +85,7 @@ const sendMail = async ({ templete, data, to }: Props, id: string) => {
         remaining,
         reset,
       },
-      "Mail sent"
+      "Mail sent",
     );
 
     return true;

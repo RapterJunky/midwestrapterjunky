@@ -5,7 +5,7 @@ import type { CheckoutAction, CheckoutState } from "@/pages/shop/checkout";
 type Props = {
   checkout: [
     CheckoutState,
-    React.Dispatch<{ type: CheckoutAction; payload: string | object }>
+    React.Dispatch<{ type: CheckoutAction; payload: string | object }>,
   ];
 };
 
@@ -22,7 +22,7 @@ const DiscountForm: React.FC<Props> = ({
       if (!discountRef.current) return;
 
       const response = await fetch(
-        `/api/shop/discount-validate?discount=${discountRef.current.value}`
+        `/api/shop/discount-validate?discount=${discountRef.current.value}`,
       );
 
       if (!response.ok) throw new Error("Invaild discount code");

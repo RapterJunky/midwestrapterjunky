@@ -12,7 +12,7 @@ const schema = z.object({
 const GET = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session | null
+  session: Session | null,
 ) => {
   const { post } = schema.parse(req.query);
 

@@ -45,7 +45,7 @@ const ImageItem: React.FC<{
       try {
         setLoading(true);
         const response = await AuthFetch(
-          `/api/plugin/images?id=${item.id}&type=blurthumb`
+          `/api/plugin/images?id=${item.id}&type=blurthumb`,
         );
         const data = (await response.json()) as {
           id: string;
@@ -61,7 +61,7 @@ const ImageItem: React.FC<{
         await mutate((current) => {
           if (!current) throw new Error("Unable to process.");
           const idx = current?.result.findIndex(
-            (value) => value.id === item.id
+            (value) => value.id === item.id,
           );
           if (idx === -1) throw new Error("Unable to find image.");
 
@@ -189,9 +189,7 @@ const ImageItem: React.FC<{
           alt={item.name}
         />
       </div>
-      <div>
-
-      </div>
+      <div></div>
     </div>
   );
 };
@@ -243,7 +241,7 @@ const UploadButton: React.FC<{
             if (error instanceof Error && error.cause === "MAX_IMAGE_SIZE") {
               ctx
                 .alert(
-                  "Can't upload image, do to size of image. Max file size is 5MB"
+                  "Can't upload image, do to size of image. Max file size is 5MB",
                 )
                 .catch((e) => console.error(e));
             } else {
@@ -299,7 +297,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
     if (pageCursor) params.set("cursor", pageCursor);
     if (sortType) params.set("sort", sortType);
     return AuthFetch(`${url}?${params.toString()}`).then((value) =>
-      value.json()
+      value.json(),
     ) as Promise<CursorPaginate<GoogleImage>>;
   });
 
@@ -331,7 +329,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       await mutate(async (current) => {
         if (!current) throw new Error("Unabel to process");
         const response = await AuthFetch(
-          `/api/plugin/images?${params.toString()}`
+          `/api/plugin/images?${params.toString()}`,
         );
         const data = (await response.json()) as {
           id: string;
@@ -436,8 +434,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                      ? "CMS Upload"
-                      : "User Upload"}
+                    ? "CMS Upload"
+                    : "User Upload"}
                 </Button>
               )}
             >

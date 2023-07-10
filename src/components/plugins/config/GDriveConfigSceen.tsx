@@ -13,7 +13,7 @@ const GDriveConfigScreen: React.FC<{
 }> = ({ ctx }) => {
   const errors = ctx.errors as Partial<Record<keyof Parameters, string>>;
   const [formValues, setFormValues] = useState<Partial<Parameters>>(
-    ctx.parameters
+    ctx.parameters,
   );
   const setParameters = useMemo(() => ctx.setParameters, [ctx.setParameters]);
 
@@ -23,7 +23,7 @@ const GDriveConfigScreen: React.FC<{
       setFormValues(newParameters);
       setParameters(newParameters).catch((e) => console.error(e));
     },
-    [formValues, setFormValues, setParameters]
+    [formValues, setFormValues, setParameters],
   );
 
   return (

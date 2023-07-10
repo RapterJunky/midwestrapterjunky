@@ -33,7 +33,7 @@ const navbarMode = {
 
 const NavDropdown = dynamic(() => import("@/components/ui/NavDropdown"));
 const AccountDropdown = dynamic(
-  () => import("@components/layout/AccountDropdown")
+  () => import("@components/layout/AccountDropdown"),
 );
 
 const Account: React.FC<{ session: ReturnType<typeof useSession> }> = ({

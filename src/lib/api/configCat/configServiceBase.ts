@@ -4,7 +4,7 @@ import { logger } from "@lib/logger";
 
 export type ConfigFetcher = {
   getConfig<
-    T extends string | boolean | number = boolean
+    T extends string | boolean | number = boolean,
   >(): Promise<ProjectConfig<T> | null>;
 };
 
@@ -13,7 +13,7 @@ export default class ConfigServiceBase {
   constructor(protected cache: Cache) {}
   protected async fetch<T extends string | boolean | number = boolean>(
     lastConfig: ProjectConfig<T> | null,
-    config?: RequestInit
+    config?: RequestInit,
   ): Promise<ProjectConfig<T> | null> {
     try {
       const clientVersion = "lazy-0.1.1";
@@ -56,10 +56,10 @@ export default class ConfigServiceBase {
         response,
         `Failed to download feature flags & settings from ConfigCat. Status: ${
           response && response.status
-        } - ${response && response.statusText}`
+        } - ${response && response.statusText}`,
       );
       logger.info(
-        "Double-check your SDK Key on https://app.configcat.com/sdkkey"
+        "Double-check your SDK Key on https://app.configcat.com/sdkkey",
       );
       return lastConfig;
     } catch (error) {
@@ -72,16 +72,16 @@ export default class ConfigServiceBase {
           : "";
       logger.error(
         error,
-        `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`
+        `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`,
       );
       logger.info(
-        "Double-check your SDK Key on https://app.configcat.com/sdkkey"
+        "Double-check your SDK Key on https://app.configcat.com/sdkkey",
       );
       return lastConfig;
     }
   }
   protected async refresh<T extends string | boolean | number = boolean>(
-    lastConfig: ProjectConfig<T> | null
+    lastConfig: ProjectConfig<T> | null,
   ): Promise<ProjectConfig<T> | null> {
     const config = await this.fetch<T>(lastConfig);
     if (!config) throw new Error("Failed to fetch config");

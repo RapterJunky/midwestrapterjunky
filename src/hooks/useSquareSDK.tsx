@@ -1,7 +1,8 @@
-import type {
-  CardClassSelectors,
-  Card,
-  Payments,
+import {
+  type CardClassSelectors,
+  type Card,
+  type Payments,
+  TokenStatus,
 } from "@square/web-payments-sdk-types";
 import { useRef, useEffect, useState, createContext, useContext } from "react";
 import Script from "next/script";
@@ -17,7 +18,7 @@ type SquareSDKContextProps = {
 };
 
 const SquareSDKContext = createContext<SquareSDKContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 const darkModeCardStyle: CardClassSelectors = {
@@ -75,8 +76,8 @@ export const SquareSDKProvider: React.FC<React.PropsWithChildren> = ({
             setPayments(
               window.Square.payments(
                 process.env.NEXT_PUBLIC_SQUARE_APPID,
-                process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID
-              )
+                process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
+              ),
             );
           } catch (e) {
             console.error(e);
@@ -143,7 +144,7 @@ const useSquareSDK = (active: boolean) => {
       email: string,
       billing: Address,
       amount: number,
-      currencyCode: string
+      currencyCode: string,
     ): Promise<{ source: string; sourceVerification: string }> => {
       ctx.setError(undefined);
 
@@ -163,7 +164,7 @@ const useSquareSDK = (active: boolean) => {
         throw e;
       });
 
-      if (result.status !== "OK" || !result.token) {
+      if (result.status !== TokenStatus.OK || !result.token) {
         let errorMessage = `Tokenization failed with status: ${result.status}`;
         if (result.errors) {
           errorMessage += ` and errors: ${JSON.stringify(result.errors)}`;
@@ -177,7 +178,7 @@ const useSquareSDK = (active: boolean) => {
           amount: (amount / 100).toFixed(2),
           billingContact: {
             addressLines: [billing.address_line1, billing.address_line2].filter(
-              Boolean
+              Boolean,
             ),
             city: billing.city,
             countryCode: billing.country,

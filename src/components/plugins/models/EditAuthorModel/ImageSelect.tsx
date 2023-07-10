@@ -60,8 +60,8 @@ const ImageSelect: React.FC<ImageSelectProps> = ({ ctx, name, control }) => {
                 onClick={() =>
                   field.onChange(
                     `https://api.dicebear.com/5.x/initials/png?seed=${encodeURIComponent(
-                      name ?? "Author"
-                    )}`
+                      name ?? "Author",
+                    )}`,
                   )
                 }
                 type="button"

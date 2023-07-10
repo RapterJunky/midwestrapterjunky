@@ -1,4 +1,5 @@
 import Navbar from "../fragments/Navbar";
+import ImageHelper from "../fragments/ImageHelper";
 const EventPageQuery = `
     query GetEvent($eq: String = "") {
         _site {
@@ -27,16 +28,7 @@ const EventPageQuery = `
             description {
                 blocks {
                     __typename
-                    content {
-                        responsiveImage {
-                          sizes
-                          src
-                          alt
-                          height
-                          width
-                        }
-                        blurUpThumb
-                      }
+                    content ${ImageHelper("event")}
                     id
                   }
                 links
@@ -49,16 +41,7 @@ const EventPageQuery = `
                 icon
                 iconPosition
             }
-            gallery {
-                responsiveImage {
-                  sizes
-                  src
-                  alt
-                  height
-                  width
-                }
-                blurUpThumb
-              }
+            gallery ${ImageHelper("event")}
             location {
                 latitude
                 longitude

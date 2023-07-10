@@ -11,7 +11,7 @@ import { APIError } from "./ShopifyClient";
 
 export const squareToShopifyProduct = (
   product: CatalogObject,
-  related?: CatalogObject[]
+  related?: CatalogObject[],
 ): Storefront.Product => {
   let productType = "";
   let image: string | undefined;
@@ -20,7 +20,7 @@ export const squareToShopifyProduct = (
 
   if (related && product.itemData?.categoryId) {
     const category = related.find(
-      (item) => item.id === product.itemData?.categoryId
+      (item) => item.id === product.itemData?.categoryId,
     );
     if (category?.type === "CATEGORY" && category.categoryData?.name) {
       productType = category.categoryData.name;
@@ -29,7 +29,7 @@ export const squareToShopifyProduct = (
 
   if (related && product.itemData?.imageIds?.length) {
     const data = related.find(
-      (item) => item.id === product.itemData?.imageIds?.at(0)
+      (item) => item.id === product.itemData?.imageIds?.at(0),
     );
     if (data?.type === "IMAGE" && data.imageData?.url) {
       image = data.imageData.url;
@@ -77,7 +77,7 @@ class SquareClient {
   constructor(
     private merchant_id: string,
     private token: string,
-    private is_dev: boolean = false
+    private is_dev: boolean = false,
   ) {}
   async productsMatching(search: string) {
     const data = await this.fetch<SearchCatalogObjectsResponse>("list", {
@@ -85,7 +85,7 @@ class SquareClient {
     });
     if (!data?.objects) return [];
     return data.objects.map((item) =>
-      squareToShopifyProduct(item, data.relatedObjects)
+      squareToShopifyProduct(item, data.relatedObjects),
     );
   }
 

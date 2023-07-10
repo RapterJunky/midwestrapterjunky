@@ -25,7 +25,7 @@ export const markRules = [
         className: props.mark,
         children: props.children,
       }) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
-    }
+    },
   ),
 ];
 
@@ -109,15 +109,15 @@ export const rules = [
       return renderNode(
         `h${node.level}`,
         { key, className: node.style },
-        children
+        children,
       ) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
-    }
+    },
   ),
   renderNodeRule(isParagraph, (props) => {
     return props.adapter.renderNode(
       "p",
       { key: props.key, className: props.node?.style },
-      props.children
+      props.children,
     ) as RenderRule<TrasformFn, TrasformFn, TrasformFn>;
   }),
 ];

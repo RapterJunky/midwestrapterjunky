@@ -14,7 +14,7 @@ const rateLimiter = new Ratelimit({
 type RatelimitResponse = Awaited<ReturnType<typeof rateLimiter.limit>>;
 
 const ratelimit = async (
-  ip: string | undefined = "anonymous"
+  ip: string | undefined = "anonymous",
 ): Promise<RatelimitResponse> => {
   if (process.env.VERCEL_ENV === "development") {
     return {

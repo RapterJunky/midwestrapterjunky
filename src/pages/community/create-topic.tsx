@@ -59,7 +59,7 @@ export const getStaticProps = async ({
 }: GetStaticPropsContext): Promise<GetStaticPropsResult<Props>> => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
 
   const categories = await prisma.thread.findMany({
@@ -89,7 +89,7 @@ export const getStaticProps = async ({
 
 // Loading Slate and all that
 const TextEditor = dynamic(
-  () => import("@components/community/editor/TextEditor")
+  () => import("@components/community/editor/TextEditor"),
 );
 
 const CreateTopicDialog: React.FC<{
@@ -182,9 +182,6 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
   const { replace, router } = useReplace();
   const session = useSession({
     required: true,
-    onUnauthenticated() {
-      replace("/community").catch((e) => console.error(e));
-    },
   });
   const [dialog, setDialog] = useState<DialogData>({
     open: false,
@@ -244,7 +241,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       if (editId) formData.append("editId", editId);
       if (state.deletedImages)
         state.deletedImages.forEach((item) =>
-          formData.append("deletedImages[]", item)
+          formData.append("deletedImages[]", item),
         );
 
       state.tags.forEach((tag) => formData.append("tags[]", tag));
@@ -254,7 +251,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
       if (images.length > 5) {
         throw new Error(
           "There can be no more then 5 images uploaded at a time.",
-          { cause: "MAX_IMAGES" }
+          { cause: "MAX_IMAGES" },
         );
       }
 
@@ -267,7 +264,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
             id: image.id,
             width: image.width,
             height: image.height,
-          })
+          }),
         );
       }
 
@@ -275,7 +272,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         formData.append(
           `image[${image.id}]`,
           image.file,
-          `${image.id}.${image.file.type.split("/")[1]}`
+          `${image.id}.${image.file.type.split("/")[1]}`,
         );
       }
 
@@ -303,7 +300,7 @@ const CreateTopic: NextPage<Props> = ({ _site, navbar, categories, seo }) => {
         mode: "message",
         title: "Error",
         message: `There was an error creating your post. ${getErrorMessage(
-          error
+          error,
         )}`,
       });
     }

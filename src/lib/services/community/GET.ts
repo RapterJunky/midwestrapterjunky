@@ -17,7 +17,7 @@ const GET = async (
   req: NextApiRequest,
   res: NextApiResponse,
   session: Session,
-  type: "post" | "comment"
+  type: "post" | "comment",
 ) => {
   const { id } = schema.parse(req.query);
 
@@ -30,7 +30,7 @@ const GET = async (
     });
     if (!comment)
       throw createHttpError.NotFound(
-        "Failed to find comment with given id and user."
+        "Failed to find comment with given id and user.",
       );
 
     if (!comment.content) throw new Error("Comment has not content.");
@@ -49,7 +49,7 @@ const GET = async (
 
   if (!post)
     throw createHttpError.NotFound(
-      "Failed to find topic with given id and user."
+      "Failed to find topic with given id and user.",
     );
 
   return res.status(200).json({

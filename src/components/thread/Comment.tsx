@@ -80,7 +80,7 @@ const Comment: React.FC<Props> = ({ comment, session }) => {
                     `/api/community/create?id=${comment.id}`,
                     {
                       headers: { "x-type-create": "comment" },
-                    }
+                    },
                   )
                 }
                 submit={async (data) => {

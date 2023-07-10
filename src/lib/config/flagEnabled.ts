@@ -3,7 +3,7 @@ import configCat from "@api/configCat";
 import type { ValueAndVariationId } from "@api/configCat/rollout";
 
 const flagEnabled = async (
-  flag: Flags
+  flag: Flags,
 ): Promise<ValueAndVariationId<boolean> | null> => {
   if (process.env.NEXT_PUBLIC_FEATURE_FLAGS.includes(flag)) {
     return {

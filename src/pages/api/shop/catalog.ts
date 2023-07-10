@@ -24,13 +24,13 @@ const schema = z.object({
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
 
     const { cursor, query, sort, category, limit, ignore } = schema.parse(
-      req.query
+      req.query,
     );
 
     const client = new Client({
@@ -85,7 +85,7 @@ export default async function handle(
       if (item.itemData?.imageIds && content?.result.relatedObjects) {
         const imageId = item.itemData.imageIds.at(0);
         const data = content.result.relatedObjects.find(
-          (value) => value.id === imageId
+          (value) => value.id === imageId,
         );
         if (data && data.type === "IMAGE" && data.imageData) {
           image = {
@@ -98,7 +98,7 @@ export default async function handle(
       let categoryName = null;
       if (item.itemData?.categoryId && content?.result.relatedObjects) {
         const category = content.result.relatedObjects.find(
-          (value) => value.id === item.itemData?.categoryId
+          (value) => value.id === item.itemData?.categoryId,
         );
         if (category && category.type === "CATEGORY") {
           categoryName = category.categoryData?.name;
@@ -112,14 +112,14 @@ export default async function handle(
         price: format.format(
           (Number(
             item.itemData?.variations?.at(0)?.itemVariationData?.priceMoney
-              ?.amount
-          ) ?? 0) / 100
+              ?.amount,
+          ) ?? 0) / 100,
         ),
         category: categoryName,
         price_int:
           Number(
             item.itemData?.variations?.at(0)?.itemVariationData?.priceMoney
-              ?.amount
+              ?.amount,
           ) ?? 0,
         // `createdAt` is missing in sqaure CatalogObject
         // @see https://github.com/square/square-nodejs-sdk/issues/121

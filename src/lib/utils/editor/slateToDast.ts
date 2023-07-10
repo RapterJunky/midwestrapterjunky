@@ -84,7 +84,7 @@ export const isInlineNode = (element: NonTextNode): element is InlineNode =>
 
 function innerSerialize(
   nodes: Node[],
-  convertBlock: (block: Block) => FieldBlockWithFullItem
+  convertBlock: (block: Block) => FieldBlockWithFullItem,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] {
   return nodes.map((node: Node) => {
@@ -151,17 +151,17 @@ function innerSerialize(
 
     if (isBlockquote(node)) {
       const childrenWithoutSource = node.children.filter(
-        (n) => !isBlockquoteSource(n)
+        (n) => !isBlockquoteSource(n),
       );
       const sourceNode = node.children.find((n) =>
-        isBlockquoteSource(n)
+        isBlockquoteSource(n),
       ) as BlockquoteSource;
 
       const blockquoteNode: FieldBlockquote = {
         type: "blockquote",
         children: innerSerialize(
           childrenWithoutSource,
-          convertBlock
+          convertBlock,
         ) as FieldParagraph[],
       };
 
@@ -207,7 +207,7 @@ function innerSerialize(
         )[curr];
         return acc;
       },
-      { type: node.type } as Paragraph | Heading | Link | List | ListItem
+      { type: node.type } as Paragraph | Heading | Link | List | ListItem,
     );
 
     /*const serializedNode = {
@@ -228,7 +228,7 @@ function innerSerialize(
 }
 
 export function slateToDast(
-  nodes: Node[] | null
+  nodes: Node[] | null,
 ): StructuredTextGraphQlResponse | null {
   if (!nodes || nodes.length === 0) {
     return null;

@@ -32,7 +32,7 @@ const getSettings = (value: unknown, slug: string): RevaildateSettings => {
 const replaceVariables = (
   entityPath: string,
   attributes: ItemAttributes,
-  locale: string | null
+  locale: string | null,
 ) => {
   // patch bug
   let path = entityPath.replace("[title]", "[slug]") ?? "";
@@ -58,7 +58,7 @@ const replaceVariables = (
 const PreviewLink: React.FC<Props> = ({ ctx }) => {
   const config = ctx.formValues[ctx.fieldPath];
   const { siteUrl, previewPath, previewSecret } = normalizeConfig(
-    ctx.plugin.attributes.parameters
+    ctx.plugin.attributes.parameters,
   );
   const multiLang = ctx.site.attributes.locales.length > 1;
   const locale = ctx.locale;

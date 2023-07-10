@@ -24,7 +24,7 @@ export const imageDataSchema = z
     }
   })
   .pipe(
-    z.object({ id: z.string().uuid(), width: z.number(), height: z.number() })
+    z.object({ id: z.string().uuid(), width: z.number(), height: z.number() }),
   );
 
 const rootSchema = z.object({
@@ -61,7 +61,7 @@ export const topicSchema = rootSchema.extend({
       z
         .string()
         .transform((val) => [val])
-        .pipe(tagsSchema)
+        .pipe(tagsSchema),
     )
     .optional()
     .default([]),
@@ -78,14 +78,14 @@ export type CommentSchema = z.infer<typeof commentSchema>;
 
 const handleDeleteImages = async (
   data: string[],
-  service: ReturnType<typeof googleDrive>["files"]
+  service: ReturnType<typeof googleDrive>["files"],
 ) => {
   const results = await Promise.allSettled(
     data.map((imageId) =>
       service.delete({
         fileId: imageId,
-      })
-    )
+      }),
+    ),
   );
   for (const result of results) {
     if (result.status === "rejected")
@@ -106,7 +106,7 @@ const handleDeleteImages = async (
 const parseForm = <T extends z.AnyZodObject>(
   req: NextApiRequest,
   method: "POST" | "PATCH",
-  schema: T
+  schema: T,
 ): Promise<{
   fields: z.infer<T>;
   files: Record<`image[${string}]`, File>;
@@ -136,7 +136,7 @@ const parseForm = <T extends z.AnyZodObject>(
             .ensureAlpha(),
           (err) => {
             if (err) logger.error(err);
-          }
+          },
         )
           .toBuffer({ resolveWithObject: true })
           .then(async (value) => {
@@ -145,11 +145,11 @@ const parseForm = <T extends z.AnyZodObject>(
             const pngUrl = rgbaToDataURL(
               value.info.width,
               value.info.height,
-              value.data
+              value.data,
             );
             const buf = Buffer.from(
               pngUrl.replace("data:image/png;base64,", ""),
-              "base64"
+              "base64",
             );
             const compress = await sharp(buf).toFormat("webp").toBuffer();
 
@@ -256,24 +256,24 @@ const parseForm = <T extends z.AnyZodObject>(
       if (req.method === "PATCH" && data.data.deletedImages)
         await handleDeleteImages(
           data.data.deletedImages as string[],
-          driveService.files
+          driveService.files,
         );
 
       const imagesBlocks = Object.entries(
-        files as Record<`image[${string}]`, File>
+        files as Record<`image[${string}]`, File>,
       ).map(([key, value]) => {
         const uuid = key.replace("image[", "").replace("]", "");
 
         //console.log(data.data.imageData, imageData);
 
         const imageData = (data.data.imageData as ImageData[]).find(
-          (item) => item.id === uuid
+          (item) => item.id === uuid,
         );
         const googleData = uploadData.find(
-          (item) => item.file === value.newFilename
+          (item) => item.file === value.newFilename,
         );
         const blurData = uploadBlurData.find(
-          (item) => item.file === value.newFilename
+          (item) => item.file === value.newFilename,
         );
 
         if (!imageData || !googleData)

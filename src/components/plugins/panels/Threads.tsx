@@ -32,7 +32,7 @@ export const Threads: React.FC<{
   >(
     `/api/plugin/category?page=${page}`,
     (url) =>
-      fetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>
+      fetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>,
   );
 
   const createModel = async () => {
@@ -63,7 +63,7 @@ export const Threads: React.FC<{
         {
           revalidate: false,
           rollbackOnError: true,
-        }
+        },
       );
       ctx
         .notice("Successfully created category.")
@@ -106,7 +106,7 @@ export const Threads: React.FC<{
         {
           revalidate: false,
           rollbackOnError: true,
-        }
+        },
       );
       ctx
         .notice("Successfully updated category.")
@@ -154,7 +154,7 @@ export const Threads: React.FC<{
         {
           revalidate: false,
           rollbackOnError: true,
-        }
+        },
       );
       ctx
         .notice("Successfully deleted category.")

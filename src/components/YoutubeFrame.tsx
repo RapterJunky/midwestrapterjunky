@@ -23,7 +23,7 @@ const YoutubeFrame: React.FC<Props> = ({ youtubeId }) => {
             setShow(entrie.isIntersecting);
           }
         },
-        { root: null, rootMargin: "100px", threshold: [0.01] }
+        { root: null, rootMargin: "100px", threshold: [0.01] },
       );
       observer.observe(wrapper.current);
     }

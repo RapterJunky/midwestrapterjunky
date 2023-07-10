@@ -1,3 +1,4 @@
+import ImageHelper from "./ImageHelper";
 const TASFragment = `
 fragment TASFragment on TestimonialAndShareRecord {
     __typename
@@ -8,16 +9,7 @@ fragment TASFragment on TestimonialAndShareRecord {
       links
       value
     }
-    bgImage {
-      responsiveImage {
-        sizes
-        alt
-        src
-        height
-        width
-      }
-      blurUpThumb
-    }
+    bgImage ${ImageHelper("testimonial")}
     bgColor {
       hex
     }

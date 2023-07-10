@@ -28,14 +28,14 @@ const schema = z.object({
           .refine((arg) => arg !== "0", {
             message: "Quantity should not be 0",
           }),
-      })
+      }),
     )
     .nonempty(),
   discounts: z.array(
     z.object({
       catalogObjectId: z.string(),
       scope: z.literal("ORDER"),
-    })
+    }),
   ),
   email: z.string().email().max(255).nonempty(),
   address: z.object({
@@ -76,7 +76,7 @@ const schema = z.object({
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
@@ -229,7 +229,7 @@ export default async function handle(
 
     if (!payment || !payment.result.payment)
       throw createHttpError.InternalServerError(
-        "Failed to get payment data: 1"
+        "Failed to get payment data: 1",
       );
     const { receiptNumber, receiptUrl, totalMoney, status } =
       payment.result.payment;

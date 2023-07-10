@@ -64,7 +64,7 @@ export default function AuthorEditorExtension({
   const data = ctx.formValues[ctx.fieldPath] as string;
   const value = useMemo<AuthorItem[]>(
     () => (JSON.parse(data) as AuthorItem[]) ?? [],
-    [data]
+    [data],
   );
 
   const setField = async (content: AuthorItem[]) =>

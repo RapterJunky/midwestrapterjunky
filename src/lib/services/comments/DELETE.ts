@@ -15,7 +15,7 @@ const schema = z.object({
 const DELETE = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session | null
+  session: Session | null,
 ) => {
   if (!session) throw createHttpError.Unauthorized();
   const { id, type } = schema.parse(req.query);
@@ -109,7 +109,7 @@ const DELETE = async (
               return driveService.files.delete({
                 fileId: image.content.imageId,
               });
-            })
+            }),
           );
 
           for (const result of results) {

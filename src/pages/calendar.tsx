@@ -31,7 +31,7 @@ interface CalendarProps extends FullPageProps {
 const MAX_FETCH = 8;
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<CalendarProps>> => {
   const currDate = new Date();
   currDate.setMonth(currDate.getMonth() - 1);
@@ -46,7 +46,7 @@ export const getStaticProps = async (
     },
     {
       draft: ctx.draftMode || ctx.preview,
-    }
+    },
   );
 
   return {

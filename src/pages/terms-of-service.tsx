@@ -34,13 +34,13 @@ interface Props extends FullPageProps {
 }
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> => {
   const props = await DatoCMS<Props>(
     { query: terms_of_service },
     {
       draft: ctx.draftMode || ctx.preview,
-    }
+    },
   );
 
   props.terms._seoMetaTags = props.terms._seoMetaTags.map((tag) => {
@@ -62,7 +62,7 @@ export const getStaticProps = async (
       tag.tag === "meta" &&
       ((tag.attributes as OgMetaAttributes)?.property === "og:description" ||
         ["twitter:description", "description"].includes(
-          (tag.attributes as RegularMetaAttributes)?.name
+          (tag.attributes as RegularMetaAttributes)?.name,
         ))
     ) {
       tag.attributes.content =

@@ -222,11 +222,11 @@ const ImageButton: React.FC = () => {
               image.addEventListener(
                 "load",
                 () => insertImage(editor, image, file),
-                false
+                false,
               );
               image.src = url as string;
             },
-            false
+            false,
           );
           reader.readAsDataURL(file);
         }}

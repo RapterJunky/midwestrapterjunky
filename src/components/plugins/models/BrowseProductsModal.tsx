@@ -27,7 +27,7 @@ const asOption = (arg: StorefrontPluginConfig) => {
 export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
   const config = normalizeConfig(ctx.plugin.attributes.parameters);
   const [shop, setShop] = useState<VaildConfig["storefronts"][0] | undefined>(
-    config.storefronts[0]
+    config.storefronts[0],
   );
   const [query, setQuery] = useState<string>("");
   const { data, isLoading, error } = useSWR<
@@ -78,14 +78,14 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                 if (!ev) return;
                 setShop(
                   config.storefronts.find(
-                    (option) => option.domain === ev.value
-                  )
+                    (option) => option.domain === ev.value,
+                  ),
                 );
               }}
               value={asOption(
                 config.storefronts.find(
-                  (option) => option.domain === shop?.domain
-                ) ?? (config.storefronts[0] as StorefrontPluginConfig)
+                  (option) => option.domain === shop?.domain,
+                ) ?? (config.storefronts[0] as StorefrontPluginConfig),
               )}
             />
             <TextInput
@@ -116,7 +116,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                     key={product.handle}
                     onClick={() =>
                       ctx.resolve(
-                        `${shop?.type}$${shop?.domain}$${product.handle}`
+                        `${shop?.type}$${shop?.domain}$${product.handle}`,
                       )
                     }
                   >

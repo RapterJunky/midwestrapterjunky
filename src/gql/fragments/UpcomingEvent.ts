@@ -1,3 +1,4 @@
+import ImageHelper from "./ImageHelper";
 const UpcomingEventFragment = `
 fragment UERFragment on UpcomingeventRecord {
     __typename
@@ -6,16 +7,7 @@ fragment UERFragment on UpcomingeventRecord {
       description {
         blocks {
           __typename
-          content {
-            responsiveImage {
-              sizes
-              alt
-              src
-              height
-              width
-            }
-            blurUpThumb
-          }
+          content ${ImageHelper("upcomingevent")}
           id
         }
         links

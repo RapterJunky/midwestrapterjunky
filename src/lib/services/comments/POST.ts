@@ -21,7 +21,7 @@ const reportSchema = likeSchema.extend({
 const POST = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session | null
+  session: Session | null,
 ) => {
   if (!session) throw createHttpError.Unauthorized();
 

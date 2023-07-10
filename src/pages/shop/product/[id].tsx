@@ -73,7 +73,7 @@ export function getStaticPaths(): GetStaticPathsResult {
 }
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> => {
   const slug = z.string().safeParse(ctx.params?.id);
   if (!slug.success) return { notFound: true };
@@ -85,7 +85,7 @@ export const getStaticProps = async (
 
   const product = await client.catalogApi.retrieveCatalogObject(
     slug.data,
-    true
+    true,
   );
 
   if ("errors" in product.result) {
@@ -100,7 +100,7 @@ export const getStaticProps = async (
 
   const props = await fetchCachedQuery<Omit<Props, "product">>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
 
   const { object, relatedObjects } = product.result;
@@ -109,7 +109,7 @@ export const getStaticProps = async (
   let category = null;
   if (itemData?.categoryId && relatedObjects) {
     const item = relatedObjects.find(
-      (value) => value.id == itemData.categoryId
+      (value) => value.id == itemData.categoryId,
     );
     if (item && item.categoryData && item.categoryData.name) {
       category = {
@@ -240,10 +240,10 @@ const Product: NextPageWithProvider<Props> = ({
   const formatPrice = useFormatPrice(variation.currency);
   const [image, setImage] = useState<number>(0);
   const [dir, setDir] = useState<"slide-in-from-left" | "slide-in-from-right">(
-    "slide-in-from-left"
+    "slide-in-from-left",
   );
   const merchent = Object.values(product.customAttributeValues ?? {}).find(
-    (value) => value.name === "Vendor" && value.type === "STRING"
+    (value) => value.name === "Vendor" && value.type === "STRING",
   );
 
   const add = (state: FormState) => {

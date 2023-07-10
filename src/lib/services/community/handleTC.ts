@@ -24,7 +24,7 @@ const handleTC = async (
   req: NextApiRequest,
   res: NextApiResponse,
   session: Session,
-  type: "post" | "comment"
+  type: "post" | "comment",
 ) => {
   const schema = type === "comment" ? commentSchema : topicSchema;
   const formData = await parseForm(req, req.method as "PATCH" | "POST", schema);
@@ -141,7 +141,7 @@ const handleTC = async (
                 },
               },
             },
-            comment.threadPost.id
+            comment.threadPost.id,
           );
       }
 

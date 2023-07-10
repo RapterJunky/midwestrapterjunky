@@ -11,7 +11,7 @@ const patchVaildation = z
     z.object({
       key: z.string().transform((value) => value.toUpperCase()),
       value: z.string(),
-    })
+    }),
   )
   .nonempty();
 

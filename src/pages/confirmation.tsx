@@ -36,7 +36,7 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
   const shop_receipt_url = decodeURIComponent(
     (Array.isArray(router.query.shop_receipt)
       ? router.query.shop_receipt[0]
-      : router.query.shop_receipt) ?? ""
+      : router.query.shop_receipt) ?? "",
   );
 
   return (
@@ -66,10 +66,10 @@ const Submited: NextPage<Props> = ({ _site, navbar, seo }) => {
                 </p>
                 {router.query.shop_receipt &&
                 (shop_receipt_url.startsWith(
-                  "https://squareupsandbox.com/receipt"
+                  "https://squareupsandbox.com/receipt",
                 ) ||
                   shop_receipt_url.startsWith(
-                    "https://squareup.com/receipt"
+                    "https://squareup.com/receipt",
                   )) ? (
                   <Link
                     className="text-primary hover:text-primary-500"

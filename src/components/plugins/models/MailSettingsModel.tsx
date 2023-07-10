@@ -312,7 +312,7 @@ const MailConfig: React.FC<{
   data: SendGridData | undefined;
   onNext: (
     data: PageState["config"],
-    draft: { id: string; link: string }
+    draft: { id: string; link: string },
   ) => void;
   onBack: () => void;
 }> = ({ ctx, pageState, onNext, onBack, data }) => {
@@ -344,10 +344,10 @@ const MailConfig: React.FC<{
           send_at: pageState.settings.send_at,
           send_to: {
             list_ids: pageState.settings.send_to.list_ids.map(
-              (value) => value.value
+              (value) => value.value,
             ),
             segment_ids: pageState.settings.send_to.segment_ids.map(
-              (value) => value.value
+              (value) => value.value,
             ),
             all: pageState.settings.send_to.all,
           },
@@ -476,7 +476,7 @@ const MailSettingsModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
   const { data } = useSWR<SendGridData, Error, string>(
     "/api/plugin/mail?type=contacts",
     (url) =>
-      AuthFetch(url).then((value) => value.json() as Promise<SendGridData>)
+      AuthFetch(url).then((value) => value.json() as Promise<SendGridData>),
   );
   const [page, setPage] = useState(0);
   return (

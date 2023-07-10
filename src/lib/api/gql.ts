@@ -18,12 +18,14 @@ type Query = {
   variables?: Record<string, unknown>;
 };
 
+const SHOPIFY_STOREFRONT_API_VERSION = "2023-07";
+
 const getQueryName = (query: string) =>
   query.match(/query\s(?<name>\w+)[\s|\(]/)?.groups?.name;
 
 export async function DatoCMS<T extends object>(
   { query, variables }: Query,
-  opts?: GraphQLClientOptions
+  opts?: GraphQLClientOptions,
 ): Promise<T> {
   logger.debug(
     {
@@ -32,7 +34,7 @@ export async function DatoCMS<T extends object>(
       preview: opts?.draft,
       environment: process.env.DATOCMS_ENVIRONMENT,
     },
-    "DATOCMS CALL"
+    "DATOCMS CALL",
   );
   return GQLFetch<T>(
     {
@@ -48,33 +50,34 @@ export async function DatoCMS<T extends object>(
         ...opts?.headers,
         Authorization: `Bearer ${process.env.DATOCMS_READONLY_TOKEN}`,
       },
-    }
+    },
   );
 }
 export async function Shopify<T extends object>(
   query: string,
   args: { SHOPIFY_STOREFRONT_ACCESS_TOKEN: string; SHOPIFY_DOMAIN: string },
-  opts?: GraphQLClientOptions
+  opts?: GraphQLClientOptions,
 ): Promise<T> {
   return GQLFetch<T>(
     {
-      url: `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/graphql`,
+      url: `https://${args.SHOPIFY_DOMAIN}.myshopify.com/api/${SHOPIFY_STOREFRONT_API_VERSION}/graphql`,
       query,
     },
     {
       ...opts,
       headers: {
         ...opts?.headers,
+        "Content-Type": "application/json",
         "X-Shopify-Storefront-Access-Token":
           args.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
       },
-    }
+    },
   );
 }
 
 async function GQLFetch<T extends object>(
   { url, query, variables = {} }: GraphQLClientQuery,
-  { method = "POST", next, headers }: GraphQLClientOptions
+  { method = "POST", next, headers }: GraphQLClientOptions,
 ): Promise<T> {
   try {
     const responce = await fetch(url, {
@@ -96,6 +99,23 @@ async function GQLFetch<T extends object>(
     return body.data;
   } catch (error) {
     logger.error(error, "GraphQL");
-    throw new Error("GraphQL Error");
+    const err: Error & {
+      query?: { message: string }[];
+      http?: { text: string; status: number; statusText: string };
+    } = new Error("GraphQL Error");
+
+    if (error instanceof Response) {
+      const body = await error.text();
+      err.http = {
+        status: error.status,
+        statusText: error.statusText,
+        text: body,
+      };
+    }
+    if (typeof error === "object" && error !== null && "errors" in error) {
+      err.query = error as { message: string }[];
+    }
+
+    throw err;
   }
 }

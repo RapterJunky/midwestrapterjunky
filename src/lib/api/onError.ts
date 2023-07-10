@@ -20,7 +20,7 @@ const onError = (error: unknown): NextResponse => {
         status: br.statusCode,
         details: data.details,
       },
-      { status: br.status, statusText: br.message }
+      { status: br.status, statusText: br.message },
     );
   }
 
@@ -40,7 +40,7 @@ const onError = (error: unknown): NextResponse => {
       {
         status: error.statusCode,
         statusText: error.name,
-      }
+      },
     );
   }
 
@@ -53,7 +53,7 @@ const onError = (error: unknown): NextResponse => {
         status: br.statusCode,
         details: [],
       },
-      { status: br.statusCode, statusText: br.message }
+      { status: br.statusCode, statusText: br.message },
     );
   }
 
@@ -65,7 +65,7 @@ const onError = (error: unknown): NextResponse => {
       status: ie.statusCode,
       details: [],
     },
-    { status: ie.statusCode, statusText: ie.message }
+    { status: ie.statusCode, statusText: ie.message },
   );
 };
 

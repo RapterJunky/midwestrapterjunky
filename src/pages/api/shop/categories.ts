@@ -8,7 +8,7 @@ import { logger } from "@lib/logger";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
@@ -23,7 +23,7 @@ export default async function handle(
     if ("errors" in request.result) {
       logger.error(request.result, "Square API request error");
       throw createHttpError.InternalServerError(
-        request.result?.errors?.at(0)?.code ?? "Internal Server Error"
+        request.result?.errors?.at(0)?.code ?? "Internal Server Error",
       );
     }
 
@@ -34,7 +34,7 @@ export default async function handle(
           .map((item) => ({
             name: item.categoryData?.name,
             id: item.id,
-          }))
+          })),
       );
     }
 

@@ -32,7 +32,7 @@ const getBlur = async (imageId: string) => {
   const pngUrl = rgbaToDataURL(raw.info.width, raw.info.height, raw.data);
   const buf = Buffer.from(
     pngUrl.replace("data:image/png;base64,", ""),
-    "base64"
+    "base64",
   );
   const compress = await sharp(buf).toFormat("webp").toBuffer();
 

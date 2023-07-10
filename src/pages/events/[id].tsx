@@ -40,11 +40,11 @@ import { fetchCacheData } from "@lib/cache";
 declare const L: {
   map: (
     el: string,
-    opt?: { center?: [number, number]; zoom?: number }
+    opt?: { center?: [number, number]; zoom?: number },
   ) => { setView: (view: [number, number], zoom: number) => void };
   tileLayer: (
     url: string,
-    opt?: { maxZoom?: number; attribution?: string }
+    opt?: { maxZoom?: number; attribution?: string },
   ) => { addTo: (map: object) => void };
   marker: (lat: [number, number]) => { addTo: (map: object) => void };
 };
@@ -98,7 +98,7 @@ const getPage = async (id = "", draft = false) => {
     },
     {
       draft,
-    }
+    },
   );
   return {
     ...data,
@@ -107,7 +107,7 @@ const getPage = async (id = "", draft = false) => {
 };
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<EventPageProps>> => {
   const check = schema.safeParse(ctx.params?.id);
   if (!check.success)
@@ -272,7 +272,7 @@ const EventPage: NextPage<EventPageProps> = ({
                               {
                                 attribution:
                                   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                              }
+                              },
                             ).addTo(map);
                             L.marker(cord).addTo(map);
                           }}

@@ -13,7 +13,7 @@ const getFullPageProps = cache(async () => {
       next: {
         tags: ["navbar"],
       },
-    }
+    },
   );
 
   return data as FullPageProps;

@@ -17,37 +17,37 @@ interface ModuleContentProps {
 }
 
 const DynamicVideoWithLinks = dynamic(
-  () => import("@components/content/VideoWithLink")
+  () => import("@components/content/VideoWithLink"),
 );
 const DynamicImageGallery = dynamic(
-  () => import("@components/content/ImageGallery")
+  () => import("@components/content/ImageGallery"),
 );
 const DynamicFeaturedShopItems = dynamic(
-  () => import("@components/content/FeaturedShopItems")
+  () => import("@components/content/FeaturedShopItems"),
 );
 const DynamicUpcomingEvents = dynamic(
-  () => import("@components/content/UpcomingEvents")
+  () => import("@components/content/UpcomingEvents"),
 );
 const DynamicCarousel = dynamic(() => import("@components/content/Carousel"), {
   loading: () => <div className="h-screen"></div>,
 });
 const DynamicUpcomingEvent = dynamic(
-  () => import("@components/content/UpcomingEvent")
+  () => import("@components/content/UpcomingEvent"),
 );
 const DynamicEmailCallToAction = dynamic(
-  () => import("@components/content/EmailCallToAction")
+  () => import("@components/content/EmailCallToAction"),
 );
 const DynamicTestimonialAndShare = dynamic(
-  () => import("@components/content/TestimonialAndShare")
+  () => import("@components/content/TestimonialAndShare"),
 );
 const DynamicSocialLinks = dynamic(
-  () => import("@components/content/SocialLinks")
+  () => import("@components/content/SocialLinks"),
 );
 const DynamicAdvertBlock = dynamic(
-  () => import("@components/content/AdvertBlock")
+  () => import("@components/content/AdvertBlock"),
 );
 const DynamicHtmlSection = dynamic(
-  () => import("@components/content/HtmlSection")
+  () => import("@components/content/HtmlSection"),
 );
 const DynamicCountDown = dynamic(
   () => import("@components/content/Countdown"),
@@ -58,7 +58,7 @@ const DynamicCountDown = dynamic(
       </div>
     ),
     ssr: false,
-  }
+  },
 );
 
 export default function ModuleContent(props: ModuleContentProps) {

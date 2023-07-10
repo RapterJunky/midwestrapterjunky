@@ -30,7 +30,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
   const submit = async (params: StorefrontPluginConfig) => {
     if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
       return ctx.alert(
-        "User does not have the permission to perform the operation."
+        "User does not have the permission to perform the operation.",
       );
     }
 
@@ -57,7 +57,7 @@ export default function StorefrontModel({ ctx }: { ctx: RenderModalCtx }) {
           const client = new SquareClient(
             params.domain,
             params.token,
-            params.test
+            params.test,
           );
           await client.productsMatching("foo");
         } catch (error) {

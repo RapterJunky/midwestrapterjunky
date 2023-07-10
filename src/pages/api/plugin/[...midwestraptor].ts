@@ -26,14 +26,14 @@ const allowedRoutes = z
       "tac",
       "users",
       "images",
-    ])
+    ]),
   )
   .describe("Allowed api paths")
   .max(1);
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (

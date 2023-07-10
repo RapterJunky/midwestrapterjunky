@@ -6,7 +6,7 @@ export type ShopifyProduct = Storefront.Product & {
           src: string;
           alt: string;
         };
-      }
+      },
     ];
   };
 };
@@ -36,7 +36,7 @@ const productFragment = `
   images(first: 1) {
     edges {
       node {
-        src: transformedSrc(crop: CENTER, maxWidth: 200, maxHeight: 200)
+        src: transformedSrc(crop: CENTER, maxWidth: 200, maxHeight: 200, preferredContentType: WEBP)
       }
     }
   }
@@ -80,43 +80,39 @@ export default class ShopifyClient {
     const response = await this.fetch<{ products: Products }>({
       query: `
           query getProducts($query: String) {
-            shop {
-              products(first: 10, query: $query) {
+            products(first: 10, query: $query) {
                 edges {
                   node {
                     ${productFragment}
                   }
                 }
-              }
             }
           }
         `,
       variables: { query: query || null },
     });
 
-    return normalizeProducts(response.shop.products);
+    return normalizeProducts(response.products);
   }
 
   async productByHandle(handle: string) {
     const response = await this.fetch<{ product: ShopifyProduct }>({
       query: `
           query getProduct($handle: String!) {
-            shop {
-              product: productByHandle(handle: $handle) {
-                ${productFragment}
-              }
+            product: productByHandle(handle: $handle) {
+              ${productFragment}
             }
           }
         `,
       variables: { handle },
     });
 
-    return normalizeProduct(response.shop.product);
+    return normalizeProduct(response.product);
   }
 
   async fetch<T extends object>(requestBody: object) {
     const res = await fetch(
-      `https://${this.shopifyDomain}.myshopify.com/api/graphql`,
+      `https://${this.shopifyDomain}.myshopify.com/api/2023-07/graphql`,
       {
         method: "POST",
         headers: {
@@ -124,7 +120,7 @@ export default class ShopifyClient {
           "X-Shopify-Storefront-Access-Token": this.storefrontAccessToken,
         },
         body: JSON.stringify(requestBody),
-      }
+      },
     );
 
     if (res.status !== 200) {
@@ -141,7 +137,14 @@ export default class ShopifyClient {
       });
     }
 
-    const body = (await res.json()) as { data: { shop: T } };
+    const body = (await res.json()) as
+      | { data: T }
+      | { errors: { message: string }[] };
+
+    if ("errors" in body) {
+      console.error(body.errors);
+      throw new APIError(body.errors[0]?.message, { cause: "QUERY_ERROR" });
+    }
 
     return body.data;
   }

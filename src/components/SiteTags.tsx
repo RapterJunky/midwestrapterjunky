@@ -19,9 +19,9 @@ const SiteTags: React.FC<{
               !ignore.includes(
                 (value?.attributes as RegularMetaAttributes)?.name ??
                   (value?.attributes as OgMetaAttributes)?.property ??
-                  ""
-              )
-          )
+                  "",
+              ),
+          ),
       )}
     </Head>
   );

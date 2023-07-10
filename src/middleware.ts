@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     if (enabled?.value) return NextResponse.next();
     return NextResponse.redirect(
       new URL("/under-construction", request.url),
-      302
+      302,
     );
   }
 

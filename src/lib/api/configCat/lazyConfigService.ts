@@ -13,13 +13,13 @@ export default class LazyConfigService
 
     if (this.cacheTimeToLiveSeconds < 1) {
       throw new Error(
-        "Invalid 'cacheTimeToLiveSeconds' value. Value must be greater than zero."
+        "Invalid 'cacheTimeToLiveSeconds' value. Value must be greater than zero.",
       );
     }
   }
 
   async getConfig<
-    T extends string | boolean | number
+    T extends string | boolean | number,
   >(): Promise<ProjectConfig<T> | null> {
     const config = await this.cache.get(process.env.CONFIG_CAT_KEY);
 

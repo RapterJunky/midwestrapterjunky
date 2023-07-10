@@ -15,8 +15,8 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
     height: number;
   }> | null>(
     JSON.parse(
-      get(ctx.formValues, ctx.fieldPath, "null") as string
-    ) as ResponsiveImage<{ width: number; height: number }> | null
+      get(ctx.formValues, ctx.fieldPath, "null") as string,
+    ) as ResponsiveImage<{ width: number; height: number }> | null,
   );
   const selectImage = async () => {
     const data = (await ctx.openModal({

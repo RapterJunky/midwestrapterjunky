@@ -19,7 +19,7 @@ export const formatTime = (from: string, to: string): string => {
 export const formatLocalDate = (
   date: Date | string | null,
   locale?: string,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ) => {
   const data = date
     ? typeof date === "string"

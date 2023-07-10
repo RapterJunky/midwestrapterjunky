@@ -1,4 +1,5 @@
 import Navbar from "../fragments/Navbar";
+import ImageHelper from "../fragments/ImageHelper";
 const SponsorsQuery = `
 query SponsorsQuery {
     _site {
@@ -21,14 +22,7 @@ query SponsorsQuery {
         link
         id
         sponsorName
-        logo {
-          responsiveImage {
-            alt
-            sizes
-            src
-          }
-          blurUpThumb
-        }
+        logo ${ImageHelper("sponsor")}
       }
     }
   }

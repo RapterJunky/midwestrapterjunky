@@ -54,7 +54,7 @@ const Edit: React.FC<{
 
       const result = await AuthFetch(
         `/api/plugin/authors?id=${(ctx.parameters as { id: string }).id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
 
       if (!result.ok) throw result;
@@ -97,7 +97,7 @@ const Edit: React.FC<{
     } catch (error) {
       if (error instanceof Error)
         await ctx.alert(
-          `${error.message} | CODE: ${error?.cause as string | undefined}`
+          `${error.message} | CODE: ${error?.cause as string | undefined}`,
         );
       if (error instanceof Response) {
         await ctx.alert(
@@ -105,7 +105,7 @@ const Edit: React.FC<{
             error.status === 500
               ? "Internal Server Error"
               : "Failed to perform action."
-          } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`
+          } | CODE: ${error.statusText.toUpperCase().replaceAll(" ", "_")}`,
         );
       }
       console.error(error);
@@ -118,8 +118,8 @@ const Edit: React.FC<{
       setValue(
         "avatar",
         `https://api.dicebear.com/5.x/initials/png?seed=${encodeURIComponent(
-          name ?? "Author"
-        )}`
+          name ?? "Author",
+        )}`,
       );
     }
   }, [name, setValue, getValues]);

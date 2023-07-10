@@ -5,7 +5,7 @@ const StoreButtonLink: React.FC<{ value: string }> = (props) => {
   const { data, error } = useSWR<Storefront.Product[], Response, string>(
     `/api/products?find=${btoa(props.value)}`,
     (key) =>
-      fetch(key).then((value) => value.json()) as Promise<Storefront.Product[]>
+      fetch(key).then((value) => value.json()) as Promise<Storefront.Product[]>,
   );
   const loading = !data && !error;
 

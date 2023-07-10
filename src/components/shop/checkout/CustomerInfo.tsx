@@ -9,7 +9,7 @@ type Props = {
   next: () => void;
   checkout: [
     CheckoutState,
-    React.Dispatch<{ type: CheckoutAction; payload: string | object }>
+    React.Dispatch<{ type: CheckoutAction; payload: string | object }>,
   ];
   active: boolean;
 };

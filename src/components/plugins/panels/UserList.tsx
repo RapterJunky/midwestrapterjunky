@@ -67,7 +67,7 @@ export const UserList: React.FC<{
   const { data, mutate, isLoading } = useSWR<Paginate<User>, Response, string>(
     `/api/plugin/users?page=${pageIndex}&limit=${pageSize}`,
     (url) => AuthFetch(url).then((e) => e.json()) as Promise<Paginate<User>>,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
 
   const columns = useMemo<ColumnDef<User>[]>(
@@ -113,7 +113,7 @@ export const UserList: React.FC<{
         ],
       },
     ],
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -162,7 +162,7 @@ export const UserList: React.FC<{
                         <div>
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {header.column.getCanFilter() ? (
                             <div className="mt-1 border-t pt-1">
@@ -210,7 +210,7 @@ export const UserList: React.FC<{
                       <td className="border p-1" key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     ))}
@@ -249,11 +249,11 @@ export const UserList: React.FC<{
                                         throw new Error("No data to update.");
 
                                       const idx = current.result.findIndex(
-                                        (item) => item.id === rowId
+                                        (item) => item.id === rowId,
                                       );
                                       if (idx === -1)
                                         throw new Error(
-                                          "Unable to find user index"
+                                          "Unable to find user index",
                                         );
 
                                       const response = await AuthFetch(
@@ -264,7 +264,7 @@ export const UserList: React.FC<{
                                             id: rowId,
                                             ban: !rowBanned ? 1 : 0,
                                           },
-                                        }
+                                        },
                                       );
 
                                       const user =
@@ -277,13 +277,13 @@ export const UserList: React.FC<{
                                     {
                                       revalidate: false,
                                       rollbackOnError: true,
-                                    }
+                                    },
                                   );
                                   ctx
                                     .notice(
                                       `Successfully ${
                                         !rowBanned ? "soft banned" : "unbanned"
-                                      } user ${rowName}`
+                                      } user ${rowName}`,
                                     )
                                     .catch((e) => console.error(e));
                                 } catch (error) {
@@ -291,7 +291,7 @@ export const UserList: React.FC<{
                                     .alert(
                                       `Failed to ${
                                         !rowBanned ? "soft banned" : "unbanned"
-                                      } user`
+                                      } user`,
                                     )
                                     .catch((e) => console.error(e));
                                 }
@@ -319,11 +319,11 @@ export const UserList: React.FC<{
                                           throw new Error("No data to update.");
 
                                         const idx = current.result.findIndex(
-                                          (item) => item.id === rowId
+                                          (item) => item.id === rowId,
                                         );
                                         if (idx === -1)
                                           throw new Error(
-                                            "Unable to find user index"
+                                            "Unable to find user index",
                                           );
 
                                         const response = await AuthFetch(
@@ -334,7 +334,7 @@ export const UserList: React.FC<{
                                               id: rowId,
                                               ban: !rowBanned ? 2 : 0,
                                             },
-                                          }
+                                          },
                                         );
 
                                         const user =
@@ -347,12 +347,12 @@ export const UserList: React.FC<{
                                       {
                                         revalidate: false,
                                         rollbackOnError: true,
-                                      }
+                                      },
                                     );
                                     ctx
                                       .notice(
                                         `Successfully hard banned
-                                } user ${rowName}`
+                                } user ${rowName}`,
                                       )
                                       .catch((e) => console.error(e));
                                   } catch (error) {
@@ -402,23 +402,23 @@ export const UserList: React.FC<{
                                       throw new Error("No data to update.");
 
                                     const user = current.result.findIndex(
-                                      (item) => item.id === rowId
+                                      (item) => item.id === rowId,
                                     );
                                     if (user !== -1)
                                       throw new Error(
-                                        "Unable to find user index."
+                                        "Unable to find user index.",
                                       );
 
                                     await AuthFetch(
                                       `/api/plugin/users?id=${rowId}`,
-                                      { method: "DELETE" }
+                                      { method: "DELETE" },
                                     );
 
                                     return update(current, {
                                       result: { $splice: [[user, 1]] },
                                     });
                                   },
-                                  { revalidate: false, rollbackOnError: true }
+                                  { revalidate: false, rollbackOnError: true },
                                 );
                               } catch (error) {
                                 ctx
@@ -466,7 +466,7 @@ export const UserList: React.FC<{
               onChange={(e) => table.setPageSize(e?.value ?? 50)}
               value={
                 pageSizes.find(
-                  (item) => item.value === table.getState().pagination.pageSize
+                  (item) => item.value === table.getState().pagination.pageSize,
                 ) ?? pageSizes[0]
               }
               options={pageSizes}

@@ -28,7 +28,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
 
             const deserialize = (
               el: HTMLElement | ChildNode,
-              markAttributes = {}
+              markAttributes = {},
             ):
               | null
               | Text
@@ -87,49 +87,49 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                   return jsx(
                     "element",
                     { type: "heading", level: 1 },
-                    children
+                    children,
                   );
                 case "H2":
                   return jsx(
                     "element",
                     { type: "heading", level: 2 },
-                    children
+                    children,
                   );
                 case "H3":
                   return jsx(
                     "element",
                     { type: "heading", level: 3 },
-                    children
+                    children,
                   );
                 case "H4":
                   return jsx(
                     "element",
                     { type: "heading", level: 4 },
-                    children
+                    children,
                   );
                 case "H5":
                   return jsx(
                     "element",
                     { type: "heading", level: 5 },
-                    children
+                    children,
                   );
                 case "H6":
                   return jsx(
                     "element",
                     { type: "heading", level: 6 },
-                    children
+                    children,
                   );
                 case "OL":
                   return jsx(
                     "element",
                     { type: "list", style: "numbered" },
-                    children
+                    children,
                   );
                 case "UL":
                   return jsx(
                     "element",
                     { type: "list", style: "bulleted" },
-                    children
+                    children,
                   );
                 case "LI":
                   return jsx(
@@ -138,7 +138,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                     children.map((value) => {
                       if ((value as NonTextNode)?.type === "list") return value;
                       return jsx("element", { type: "paragraph" }, value);
-                    })
+                    }),
                   );
                 case "BR":
                   return "\n";
@@ -153,7 +153,7 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
                       type: "link",
                       url: (el as HTMLElement).getAttribute("href"),
                     },
-                    children
+                    children,
                   );
                 default:
                   return children;
@@ -166,12 +166,12 @@ const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
               },
               {
                 styleMap: ["u => u"],
-              }
+              },
             );
 
             const document = new DOMParser().parseFromString(
               output.value,
-              "text/html"
+              "text/html",
             );
             const content = deserialize(document.body);
             await ctx.setFieldValue(ctx.fieldPath, content);

@@ -25,20 +25,20 @@ const schema = z.object({
             message: "Quantity should not be 0",
           }),
         pricingType: z.string(),
-      })
+      }),
     )
     .nonempty("Order needs at most 1 item."),
   discounts: z.array(
     z.object({
       catalogObjectId: z.string(),
       scope: z.literal("ORDER"),
-    })
+    }),
   ),
 });
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "POST") throw createHttpError.MethodNotAllowed();

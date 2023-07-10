@@ -14,7 +14,7 @@ const schema = z.object({
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();

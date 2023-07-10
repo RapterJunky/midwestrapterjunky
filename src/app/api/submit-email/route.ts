@@ -52,7 +52,7 @@ export const POST = async (request: NextRequest) => {
           "X-RateLimit-Remaining": remaining.toString(),
           "X-RateLimit-Reset": reset.toString(),
         },
-      }
+      },
     );
 
   try {
@@ -102,7 +102,7 @@ export const POST = async (request: NextRequest) => {
       `/confirmation?mode=email&status=${
         ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
-      request.nextUrl.origin
+      request.nextUrl.origin,
     ),
     {
       headers: {
@@ -111,6 +111,6 @@ export const POST = async (request: NextRequest) => {
         "X-RateLimit-Reset": reset.toString(),
       },
       status: 302,
-    }
+    },
   );
 };

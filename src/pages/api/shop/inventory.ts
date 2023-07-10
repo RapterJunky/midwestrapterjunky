@@ -9,7 +9,7 @@ import { logger } from "@lib/logger";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();

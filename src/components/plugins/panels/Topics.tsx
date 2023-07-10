@@ -76,7 +76,7 @@ const DropdownAction: React.FC<DropdownActionProps> = ({
             async (current) => {
               if (!current) throw new Error("Unable to process.");
               const idx = current.result.findIndex(
-                (item) => item.id === data.id
+                (item) => item.id === data.id,
               );
               if (idx === -1) throw new Error("Failed to find topic");
 
@@ -96,7 +96,7 @@ const DropdownAction: React.FC<DropdownActionProps> = ({
                 result: { [idx]: { $set: body } },
               });
             },
-            { revalidate: false, rollbackOnError: true }
+            { revalidate: false, rollbackOnError: true },
           );
           ctx.notice(messages.success).catch((e) => console.error(e));
         } catch (error) {
@@ -126,7 +126,7 @@ export const Topics: React.FC<{
   >(
     `/api/plugin/tac?page=${page}&search=${encodeURIComponent(search)}`,
     (url) =>
-      AuthFetch(url).then((value) => value.json()) as Promise<Paginate<Topic>>
+      AuthFetch(url).then((value) => value.json()) as Promise<Paginate<Topic>>,
   );
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -325,21 +325,21 @@ export const Topics: React.FC<{
                               if (!current)
                                 throw new Error("Unable to process.");
                               const idx = current.result.findIndex(
-                                (item) => item.id === topic.id
+                                (item) => item.id === topic.id,
                               );
                               if (idx === -1)
                                 throw new Error("Failed to find topic.");
 
                               await AuthFetch(
                                 `/api/plugin/tac?type=topic&id=${topic.id}`,
-                                { method: "DELETE" }
+                                { method: "DELETE" },
                               );
 
                               return update(current, {
                                 result: { $splice: [[idx, 1]] },
                               });
                             },
-                            { revalidate: false, rollbackOnError: true }
+                            { revalidate: false, rollbackOnError: true },
                           );
                         } catch (error) {
                           ctx

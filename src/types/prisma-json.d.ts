@@ -15,7 +15,7 @@ declare module PrismaJson {
 
   type Dast<
     B = import("react-datocms").Record,
-    L = import("react-datocms").Record
+    L = import("react-datocms").Record,
   > = import("react-datocms").StructuredTextGraphQlResponse<B, L>;
 
   type PostComment = Dast;

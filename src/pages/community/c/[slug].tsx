@@ -34,9 +34,12 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 };
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> => {
-  const result = z.coerce.number().min(1).safeParse(ctx.params?.slug);
+  const result = z.coerce
+    .number()
+    .min(1)
+    .safeParse(ctx.params?.slug);
   if (!result.success)
     return {
       notFound: true,
@@ -55,7 +58,7 @@ export const getStaticProps = async (
 
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
 
   return {

@@ -28,13 +28,13 @@ interface PageProps extends FullPageProps {
 }
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<PageProps>> => {
   const data = await DatoCMS<PageProps>(
     { query: SponsorsQuery },
     {
       draft: ctx.draftMode || ctx.preview,
-    }
+    },
   );
 
   return {

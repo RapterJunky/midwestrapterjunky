@@ -1,5 +1,8 @@
 export class RequestError extends Error {
-  constructor(public response: Response, msg?: string) {
+  constructor(
+    public response: Response,
+    msg?: string,
+  ) {
     super(msg, { cause: `FAILED_REQUEST_${response.statusText}` });
   }
 }
@@ -11,7 +14,7 @@ export class RequestError extends Error {
  */
 export const AuthFetch = async (
   input: Request | string | URL,
-  init?: (RequestInit & { json?: object; key?: string }) | undefined
+  init?: (RequestInit & { json?: object; key?: string }) | undefined,
 ): Promise<Response> => {
   const token = new URLSearchParams(window.location.search).get("token");
   if (!token)

@@ -1,15 +1,7 @@
+import ImageHelper from "./ImageHelper";
 const CarouselFragment = `
 fragment CRFragment on CarouselRecord {
-    images {
-      responsiveImage {
-        sizes
-        alt
-        src
-        height
-        width
-      }
-      blurUpThumb
-    }
+    images ${ImageHelper("carousel")}
     __typename
 }`;
 export default CarouselFragment;

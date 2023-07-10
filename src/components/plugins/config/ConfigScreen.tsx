@@ -17,7 +17,7 @@ const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
   if (storefront.type === "S") {
     keys.push(
       `${storefront.domain}_SHOPIFY_ACCESS_TOKEN`,
-      `${storefront.domain}_SHOPIFY_DOMAIN`
+      `${storefront.domain}_SHOPIFY_DOMAIN`,
     );
   }
 
@@ -34,7 +34,7 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
     try {
       if (!ctx.currentRole.meta.final_permissions.can_edit_schema) {
         return ctx.alert(
-          "User does not have the permission to perform the operation."
+          "User does not have the permission to perform the operation.",
         );
       }
       await ctx.updatePluginParameters(state);
@@ -171,7 +171,7 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                             if (!result) return;
                             field.onChange([
                               ...field.value.filter(
-                                (item) => item.domain !== value.domain
+                                (item) => item.domain !== value.domain,
                               ),
                               result,
                             ]);
@@ -207,8 +207,8 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                               });
                               field.onChange(
                                 field.value.filter(
-                                  (value) => value.domain !== value.domain
-                                )
+                                  (value) => value.domain !== value.domain,
+                                ),
                               );
                             }
                           }}
@@ -236,7 +236,7 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
                     ) {
                       ctx
                         .alert(
-                          `A storefront with domain ${data.domain} already exits.`
+                          `A storefront with domain ${data.domain} already exits.`,
                         )
                         .catch((e) => console.error(e));
                       return;

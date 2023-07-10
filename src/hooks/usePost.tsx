@@ -31,7 +31,7 @@ type PostCtx = {
   delete: (type: ItemType, id: string) => Promise<void>;
   create: (
     data: CreateCommentBody,
-    settings?: { mode: "update"; id: string }
+    settings?: { mode: "update"; id: string },
   ) => Promise<boolean>;
   setPage: (page: number) => void;
   likesIsLoading: boolean;
@@ -103,7 +103,7 @@ const ReportDialog: React.FC<{ data: DialogData; close: () => void }> = ({
                     window.dispatchEvent(
                       new CustomEvent(REPORT_EVENT_REASON, {
                         detail: content.get("reason"),
-                      })
+                      }),
                     );
                     close();
                   }}
@@ -166,7 +166,7 @@ export const PostProvider: React.FC<
     singleFetch as () => Promise<PostLikes>,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
   const { data, isLoading, error, mutate } = useSWR<
     Paginate<TComment>,
@@ -176,7 +176,7 @@ export const PostProvider: React.FC<
     singleFetch as () => Promise<Paginate<TComment>>,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
   const [dialog, setDialog] = useState<DialogData>({
     title: "",
@@ -245,7 +245,7 @@ export const PostProvider: React.FC<
                 headers: {
                   "Content-Type": "application/json",
                 },
-              }
+              },
             );
 
             if (!response.ok) throw response;
@@ -276,7 +276,7 @@ export const PostProvider: React.FC<
                     `/api/community/posts?type=like&id=${id}`,
                     {
                       method: "DELETE",
-                    }
+                    },
                   );
 
                   if (!response.ok) throw response;
@@ -293,7 +293,7 @@ export const PostProvider: React.FC<
                   },
                   revalidate: false,
                   rollbackOnError: true,
-                }
+                },
               );
 
               return;
@@ -304,7 +304,7 @@ export const PostProvider: React.FC<
                 if (!currentData) throw new Error("No data to populate.");
 
                 const idx = currentData.result.findIndex(
-                  (value) => value.id === id
+                  (value) => value.id === id,
                 );
                 if (idx === -1) throw new Error("Failed to find comment");
 
@@ -312,7 +312,7 @@ export const PostProvider: React.FC<
                   `/api/community/comments?type=like&id=${id}`,
                   {
                     method: "DELETE",
-                  }
+                  },
                 );
 
                 if (!response.ok) throw response;
@@ -329,7 +329,7 @@ export const PostProvider: React.FC<
                   if (!currentData) throw new Error("No data to populate.");
 
                   const idx = currentData.result.findIndex(
-                    (value) => value.id === id
+                    (value) => value.id === id,
                   );
                   if (idx === -1) throw new Error("Failed to find comment");
 
@@ -343,7 +343,7 @@ export const PostProvider: React.FC<
                 },
                 revalidate: false,
                 rollbackOnError: true,
-              }
+              },
             );
           } catch (error) {
             console.error(error);
@@ -380,7 +380,7 @@ export const PostProvider: React.FC<
                       likesCount: currentData?.likesCount + 1,
                     };
                   },
-                }
+                },
               );
               return;
             }
@@ -390,7 +390,7 @@ export const PostProvider: React.FC<
                 if (!currentData) throw new Error("No data to populate.");
 
                 const idx = currentData.result.findIndex(
-                  (value) => value.id === id
+                  (value) => value.id === id,
                 );
                 if (idx === -1) throw new Error("Failed to find comment");
 
@@ -419,7 +419,7 @@ export const PostProvider: React.FC<
                   if (!current) throw new Error("No data to populate.");
 
                   const idx = current.result.findIndex(
-                    (value) => value.id === id
+                    (value) => value.id === id,
                   );
                   if (idx === -1) throw new Error("Failed to find comment");
 
@@ -432,7 +432,7 @@ export const PostProvider: React.FC<
                 },
                 revalidate: false,
                 rollbackOnError: true,
-              }
+              },
             );
           } catch (error) {
             console.error(error);
@@ -445,7 +445,7 @@ export const PostProvider: React.FC<
                 `/api/community/posts?type=post&id=${id}`,
                 {
                   method: "DELETE",
-                }
+                },
               );
 
               if (!response.ok) throw response;
@@ -463,7 +463,7 @@ export const PostProvider: React.FC<
                   `/api/community/comments?type=comment&id=${id}`,
                   {
                     method: "DELETE",
-                  }
+                  },
                 );
 
                 if (!response.ok) throw response;
@@ -476,7 +476,7 @@ export const PostProvider: React.FC<
               {
                 rollbackOnError: true,
                 revalidate: false,
-              }
+              },
             );
           } catch (error) {
             console.error(error);
@@ -507,7 +507,7 @@ export const PostProvider: React.FC<
 
                 if (content.deletedImages) {
                   content.deletedImages.forEach((item) =>
-                    formData.append("deletedImages[]", item)
+                    formData.append("deletedImages[]", item),
                   );
                 }
 
@@ -515,13 +515,13 @@ export const PostProvider: React.FC<
                   formData.append("parentId", content.parentCommentId);
 
                 const images = extractSlateImages(
-                  content.message as NonTextNode[]
+                  content.message as NonTextNode[],
                 );
 
                 if (images.length > 5) {
                   throw new Error(
                     "There can be no more then 5 images uploaded at a time.",
-                    { cause: "MAX_IMAGES" }
+                    { cause: "MAX_IMAGES" },
                   );
                 }
 
@@ -534,7 +534,7 @@ export const PostProvider: React.FC<
                       id: imageData.id,
                       width: imageData.width,
                       height: imageData.height,
-                    })
+                    }),
                   );
 
                 for (const image of images)
@@ -562,7 +562,7 @@ export const PostProvider: React.FC<
                     result: [
                       comment,
                       ...current.result.filter(
-                        (value) => value.id !== settings?.id
+                        (value) => value.id !== settings?.id,
                       ),
                     ],
                   };
@@ -573,7 +573,7 @@ export const PostProvider: React.FC<
               {
                 revalidate: false,
                 rollbackOnError: true,
-              }
+              },
             );
 
             return true;

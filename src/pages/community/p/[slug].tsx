@@ -98,7 +98,7 @@ export const getStaticProps = async ({
 
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
 
   const { json } = serialize(post);

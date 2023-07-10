@@ -24,7 +24,7 @@ export const toggleMark = (editor: Editor, format: Mark) => {
 export const toggleBlock = (
   editor: Editor,
   format: FormatType,
-  style?: { level?: HeadingLevel; list?: ListStyle }
+  style?: { level?: HeadingLevel; list?: ListStyle },
 ) => {
   const isActive = isBlockActive(editor, format, style);
 
@@ -66,7 +66,7 @@ export const getActiveHeading = (editor: Editor) => {
       at: Editor.unhangRange(editor, selection),
       match: (n) =>
         !Editor.isEditor(n) && (n as NonTextNode).type === "heading",
-    })
+    }),
   );
   if (!match) return "normal";
   return (match[0] as Heading).level.toString();
@@ -76,7 +76,7 @@ export const isBlockActive = (
   editor: Editor,
   format: FormatType,
   style?: { list?: ListStyle; level?: HeadingLevel },
-  blockType: BlockType = "type"
+  blockType: BlockType = "type",
 ) => {
   const { selection } = editor;
   if (!selection) return false;
@@ -92,7 +92,7 @@ export const isBlockActive = (
           return active && (n as Heading).level === style.level;
         return active;
       },
-    })
+    }),
   );
 
   return !!match;
@@ -106,7 +106,7 @@ export const isMarkActive = (editor: Editor, format: Mark) => {
 export const insertImage = (
   editor: Editor,
   image: HTMLImageElement,
-  file: File
+  file: File,
 ) => {
   const el: NonTextNode = {
     type: "block",
@@ -141,7 +141,7 @@ export const insertLink = (editor: Editor, url: string) => {
   if (selection) {
     const [parentNode, parentPath] = Editor.parent(
       editor,
-      selection.focus?.path
+      selection.focus?.path,
     );
 
     // Remove the Link node if we're inserting a new link node inside of another
@@ -156,7 +156,7 @@ export const insertLink = (editor: Editor, url: string) => {
         {
           at: Path.next(parentPath),
           select: true,
-        }
+        },
       );
     } else if (Range.isCollapsed(selection)) {
       // Insert the new link in our last known location
@@ -187,7 +187,7 @@ export const isLinkActive = (editor: Editor) => {
 
 export const withPlugin = (
   editor: Editor,
-  openDialog: (url: string) => void
+  openDialog: (url: string) => void,
 ) => {
   const { isVoid, insertData, isInline, insertBreak, deleteBackward } = editor;
   editor.deletedImages = [];
@@ -218,11 +218,11 @@ export const withPlugin = (
               () => {
                 insertImage(editor, image, file);
               },
-              false
+              false,
             );
             image.src = url;
           },
-          false
+          false,
         );
       }
     } else {

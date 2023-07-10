@@ -8,7 +8,7 @@ declare module "tw-elements" {
       el: HTMLElement,
       props?: {
         initialValues?: { tag: string }[];
-      }
+      },
     );
   }
   export declare function initTE(init: {
@@ -48,12 +48,12 @@ declare module "body-scroll-lock" {
   /** Disables body scroll while enabling scroll on target element */
   export function disableBodyScroll(
     el: HTMLElement,
-    options?: BodyScrollOptions
+    options?: BodyScrollOptions,
   ): void;
   /** Enables body scroll and removing listeners on target element */
   export function enableBodyScroll(
     el: HTMLElement,
-    options?: BodyScrollOptions
+    options?: BodyScrollOptions,
   ): void;
   /** Clears all scroll locks */
   export function clearAllBodyScrollLocks(): void;

@@ -21,7 +21,7 @@ import RenderLeaf from "@components/community/editor/RenderLeaf";
 import { insertLink, withPlugin } from "@lib/utils/editor/textEditorUtils";
 
 const LinkDialog = dynamic(
-  () => import("@/components/dialogs/TextEditorLinkDialog")
+  () => import("@/components/dialogs/TextEditorLinkDialog"),
 );
 
 type Props = {
@@ -39,17 +39,17 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
   const editor = useMemo(
     () =>
       withPlugin(withReact(createEditor()), (url) =>
-        setLinkDialog({ open: true, title: "Edit Link", url })
+        setLinkDialog({ open: true, title: "Edit Link", url }),
       ),
-    []
+    [],
   );
   const renderElement = useCallback(
     (props: RenderElementProps) => <RenderElement {...props} />,
-    []
+    [],
   );
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => <RenderLeaf {...props} />,
-    []
+    [],
   );
   const reset = useCallback(() => {
     Transforms.delete(editor, {
@@ -71,7 +71,7 @@ const TextEditor: React.FC<Props> = ({ onChange, value, id }) => {
       }
     }
     window.dispatchEvent(
-      new CustomEvent(`${EDITOR_ISEMPTY_ID_R}${id}`, { detail: state })
+      new CustomEvent(`${EDITOR_ISEMPTY_ID_R}${id}`, { detail: state }),
     );
   }, [editor, id]);
 

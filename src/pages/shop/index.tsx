@@ -27,7 +27,7 @@ export const getStaticProps = async (): Promise<
 > => {
   const props = await fetchCachedQuery<FullPageProps>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
 
   return {
@@ -68,7 +68,7 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
     ([url]) =>
       fetch(url).then((r) => r.json()) as Promise<
         Array<{ name: string; id: string }>
-      >
+      >,
   );
   const { data, error, isLoading } = useCatalog(meta);
 

@@ -72,7 +72,7 @@ const PAGE_CACHE_KEY = "blog-pages";
 
 const getBlogPage = async (
   id: string,
-  draft: boolean
+  draft: boolean,
 ): Promise<ArticleProps> => {
   logger.info(`Blog Page (${id}) - draft(${draft}) | Genearting`);
   const data = await DatoCMS<ArticleProps>(
@@ -84,7 +84,7 @@ const getBlogPage = async (
     },
     {
       draft,
-    }
+    },
   );
 
   const extra = await DatoCMS<{
@@ -100,7 +100,7 @@ const getBlogPage = async (
     },
     {
       draft,
-    }
+    },
   );
 
   return {
@@ -126,7 +126,7 @@ export const getStaticPaths = async (): Promise<GetStaticPathsResult> => {
 };
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<ArticleProps>> => {
   const schema = z.string().safeParse(ctx.params?.id);
   if (!schema.success)

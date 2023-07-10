@@ -26,7 +26,7 @@ const decrypt = (hash: string) => {
   const decipher = createDecipheriv(
     ALGORITHM,
     process.env.APP_KEY,
-    Buffer.from(iv, "hex")
+    Buffer.from(iv, "hex"),
   );
   const decrpyted = Buffer.concat([
     decipher.update(Buffer.from(content, "hex")),
@@ -36,7 +36,7 @@ const decrypt = (hash: string) => {
 };
 
 export const getKeys = async <T extends ReadonlyArray<string>>(
-  keys: T
+  keys: T,
 ): Promise<ObjectFromList<T>> => {
   const selector = keys.map((value) => ({ key: value }));
 
@@ -50,7 +50,7 @@ export const getKeys = async <T extends ReadonlyArray<string>>(
     .map((setting) => ({ key: setting.key, value: decrypt(setting.value) }))
     .reduce(
       (pre, cur): ObjectFromList<T> => ({ ...pre, [cur.key]: cur.value }),
-      {} as ObjectFromList<T>
+      {} as ObjectFromList<T>,
     );
 };
 

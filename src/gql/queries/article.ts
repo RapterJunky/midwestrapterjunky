@@ -1,5 +1,7 @@
 import Navbar from "../fragments/Navbar";
 
+import ImageHelper from "../fragments/ImageHelper";
+
 const ArticleQuery = `
 query ArticlePageQuery($slug: String = "") {
     _site {
@@ -26,16 +28,7 @@ query ArticlePageQuery($slug: String = "") {
           blocks {
             id
             __typename
-            content {
-              responsiveImage {
-                sizes
-                src
-                alt
-                height
-                width
-              }
-              blurUpThumb
-            }
+            content ${ImageHelper("article")}
           }
           links {
             ... on ArticleRecord {

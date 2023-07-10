@@ -20,7 +20,7 @@ import Query from "@query/queries/generic";
 import { singleFetch } from "@api/fetch";
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<FullPageProps>> => {
   const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
   return {
@@ -32,7 +32,7 @@ export const getStaticProps = async (
 };
 
 const ConfirmDialog = dynamic(
-  () => import("@components/dialogs/ConfirmDialog")
+  () => import("@components/dialogs/ConfirmDialog"),
 );
 
 const deleteDialogData = {

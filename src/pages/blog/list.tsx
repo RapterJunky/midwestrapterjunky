@@ -33,7 +33,7 @@ interface Post {
 type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
 
 export const getStaticProps = async (
-  ctx: GetStaticPropsContext
+  ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> => {
   const data = await DatoCMS<FullPageProps>(
     {
@@ -41,7 +41,7 @@ export const getStaticProps = async (
     },
     {
       draft: ctx.draftMode || ctx.preview,
-    }
+    },
   );
 
   return {
@@ -61,7 +61,8 @@ const BlogList: NextPage<Props> = ({ preview, navbar, _site, seo }) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const { data, error, isLoading } = useSWR<Paginate<Post>, Response, string>(
     `/api/blog?page=${pageIndex}`,
-    (uri) => fetch(uri).then((value) => value.json() as Promise<Paginate<Post>>)
+    (uri) =>
+      fetch(uri).then((value) => value.json() as Promise<Paginate<Post>>),
   );
 
   return (

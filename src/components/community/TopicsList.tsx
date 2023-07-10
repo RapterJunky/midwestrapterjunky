@@ -54,7 +54,7 @@ const TopicsList: React.FC<Props> = ({
     singleFetch as () => Promise<Paginate<Post>>,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const items =

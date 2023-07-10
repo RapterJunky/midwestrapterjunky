@@ -18,7 +18,7 @@ export const config = {
 };
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (
@@ -53,7 +53,7 @@ export default async function handle(
           sharp().resize(16, 16).blur(2).raw().ensureAlpha(),
           (err) => {
             if (err) logger.error(err);
-          }
+          },
         )
           .toBuffer({ resolveWithObject: true })
           .then(async (value) => {
@@ -62,11 +62,11 @@ export default async function handle(
             const pngUrl = rgbaToDataURL(
               value.info.width,
               value.info.height,
-              value.data
+              value.data,
             );
             const buf = Buffer.from(
               pngUrl.replace("data:image/png;base64,", ""),
-              "base64"
+              "base64",
             );
             const compress = await sharp(buf).toFormat("webp").toBuffer();
 

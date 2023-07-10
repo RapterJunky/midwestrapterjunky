@@ -15,10 +15,10 @@ const getExtendPrismaClient = () => {
         exists: async function <T, E extends Error>(
           this: T,
           where: Prisma.Args<T, "findFirst">,
-          throws?: E
+          throws?: E,
         ): Promise<boolean> {
           const result = (await (this as PrismaModel).findFirst(
-            where
+            where,
           )) as object;
           if (throws && !result) throw throws;
           return !!result;

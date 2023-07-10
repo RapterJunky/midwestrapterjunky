@@ -13,8 +13,8 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
     ResponsiveImage<{ width: number; height: number }>[]
   >(
     JSON.parse(
-      get(ctx.formValues as never as object, ctx.fieldPath, "[]")
-    ) as ResponsiveImage[]
+      get(ctx.formValues as never as object, ctx.fieldPath, "[]"),
+    ) as ResponsiveImage[],
   );
 
   const selectImages = async () => {

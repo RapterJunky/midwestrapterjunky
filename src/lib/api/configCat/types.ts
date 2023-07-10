@@ -12,7 +12,7 @@ type ProjectItemValue<TValue extends boolean | string | number = boolean> = {
 };
 
 export type ProjectConfigJSON<
-  TValue extends boolean | string | number = boolean
+  TValue extends boolean | string | number = boolean,
 > = Record<string, ProjectItemValue<TValue>>;
 
 export type ProjectConfig<TValue extends boolean | string | number = boolean> =

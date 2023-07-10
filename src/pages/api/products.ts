@@ -23,12 +23,12 @@ interface StorefontsProducts {
 const inputValidation = z
   .string()
   .transform((value) =>
-    Buffer.from(value, "base64").toString("utf-8").split(",")
+    Buffer.from(value, "base64").toString("utf-8").split(","),
   );
 
 const keyGeneration = (
   storefront: Storefront.StorefrontType,
-  tenant: string
+  tenant: string,
 ) => {
   switch (storefront) {
     case "S":
@@ -41,13 +41,13 @@ const keyGeneration = (
 };
 
 const shopifyData = async (
-  arg: StorefontsProducts
+  arg: StorefontsProducts,
 ): Promise<Array<{ index: number; product: Storefront.Product }>> => {
   const keys = await getKeys(arg.keys);
 
   const items = Object.entries(keys);
-  const access_token = items.find((value) =>
-    value.at(0)?.endsWith("_ACCESS_TOKEN")
+  const access_token = items.find(
+    (value) => value.at(0)?.endsWith("_ACCESS_TOKEN"),
   );
   const domain = items.find((value) => value[0].endsWith("_SHOPIFY_DOMAIN"));
 
@@ -59,8 +59,8 @@ const shopifyData = async (
       (value) => `
         item_${value.idx}: productByHandle(handle: "${value.item}") {
             image: featuredImage {
-                alt: altText
-                url
+              alt: altText
+              url
             }
             title
             handle
@@ -76,7 +76,7 @@ const shopifyData = async (
                 }
             }
         }
-    `
+    `,
     )
     .join("\n");
 
@@ -96,12 +96,12 @@ const shopifyData = async (
 };
 
 const squareData = async (
-  arg: StorefontsProducts
+  arg: StorefontsProducts,
 ): Promise<Array<{ index: number; product: Storefront.Product }>> => {
   const keys = await getKeys(arg.keys);
   const items = Object.entries(keys);
-  const access_token = items.find((value) =>
-    value.at(0)?.endsWith("_ACCESS_TOKEN")
+  const access_token = items.find(
+    (value) => value.at(0)?.endsWith("_ACCESS_TOKEN"),
   );
 
   const mode = items.find((value) => value.at(0)?.endsWith("_SQAURE_MODE"));
@@ -136,7 +136,7 @@ const squareData = async (
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") throw createHttpError.MethodNotAllowed();
@@ -153,7 +153,7 @@ export default async function handle(
     // sort data into their storefronts and tenants
     for (const [idx, data] of request.entries()) {
       const [storefront, tenant, product] = data.split(
-        "$"
+        "$",
       ) as EncodeProductItem;
 
       if (!storefront || !tenant || !product) {
@@ -221,7 +221,7 @@ export default async function handle(
     return res
       .status(200)
       .json(
-        output.sort((a, b) => a.index - b.index).map((value) => value.product)
+        output.sort((a, b) => a.index - b.index).map((value) => value.product),
       );
   } catch (error) {
     return handleError(error, res);

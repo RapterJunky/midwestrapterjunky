@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "GET": {
         const { sort, page, mode, categoryId, tags, ignore } = getSchema.parse(
-          req.query
+          req.query,
         );
 
         if (mode === "suggest") {

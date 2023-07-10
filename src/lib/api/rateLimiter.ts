@@ -6,7 +6,7 @@ import slowDown from "express-slow-down";
 type MiddlewareHandler = (
   req: NextApiRequest,
   res: NextApiResponse,
-  result: (err?: unknown) => void
+  result: (err?: unknown) => void,
 ) => void;
 
 export const getRateLimitMiddlewares = ({
@@ -37,9 +37,9 @@ export const getRateLimitMiddlewares = ({
     (middleware) => (req: NextApiRequest, res: NextApiResponse) =>
       new Promise((ok, rej) => {
         middleware(req, res, (result) =>
-          result instanceof Error ? rej(result) : ok(result)
+          result instanceof Error ? rej(result) : ok(result),
         );
-      })
+      }),
   );
 
 const middlewares = getRateLimitMiddlewares();
@@ -51,7 +51,7 @@ const middlewares = getRateLimitMiddlewares();
  */
 export const applyRateLimit = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   try {
     await Promise.all(middlewares.map((middleware) => middleware(req, res)));

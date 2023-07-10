@@ -16,7 +16,7 @@ const tranformer = new Intl.RelativeTimeFormat(undefined);
 
 const startOf = (
   date: Date,
-  unit: "year" | "month" | "day" | "hour" | "minute" | "second"
+  unit: "year" | "month" | "day" | "hour" | "minute" | "second",
 ) => {
   const copy = new Date(date.getTime());
 
@@ -59,19 +59,19 @@ const useRelativeTime = () => {
     const round = Math[diff.ms > 0 ? "floor" : "ceil"];
 
     diff.months = Math.abs(
-      diff.years * 12 + (time.getMonth() - now.getMonth())
+      diff.years * 12 + (time.getMonth() - now.getMonth()),
     );
     diff.days = Math.abs(
-      round((+startOf(time, "day") - +startOf(now, "day")) / day)
+      round((+startOf(time, "day") - +startOf(now, "day")) / day),
     );
     diff.hours = Math.abs(
-      round((+startOf(time, "hour") - +startOf(now, "hour")) / hour)
+      round((+startOf(time, "hour") - +startOf(now, "hour")) / hour),
     );
     diff.minutes = Math.abs(
-      round((+startOf(time, "minute") - +startOf(now, "minute")) / minute)
+      round((+startOf(time, "minute") - +startOf(now, "minute")) / minute),
     );
     diff.seconds = Math.abs(
-      round((+startOf(time, "second") - +startOf(now, "second")) / second)
+      round((+startOf(time, "second") - +startOf(now, "second")) / second),
     );
     diff.years = Math.abs(diff.years);
 

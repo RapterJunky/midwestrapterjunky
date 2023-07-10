@@ -11,7 +11,7 @@ import GET from "@service/comments/GET";
 //https://kittygiraudel.com/2022/05/16/rate-limit-nextjs-api-routes/
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const session = await getSession(req, res, false);

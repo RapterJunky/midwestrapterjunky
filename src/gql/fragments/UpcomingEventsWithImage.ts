@@ -1,3 +1,4 @@
+import ImageHelper from "./ImageHelper";
 const UEWIRFragment = `
 fragment UEWIRFragment on UpcomingeventswithimageRecord {
     events {
@@ -9,16 +10,7 @@ fragment UEWIRFragment on UpcomingeventswithimageRecord {
         id
         slug
       }
-      bgImage {
-        responsiveImage(imgixParams: {crop: focalpoint, w: 960, h: 960 }) {
-          sizes
-          alt
-          src
-          height
-          width
-        }
-        blurUpThumb
-      }
+      bgImage ${ImageHelper("upcomingevents")}
     }
     __typename
 }`;

@@ -11,7 +11,7 @@ import { authConfig } from "@lib/config/auth";
 export const getSession = async <T extends boolean = true>(
   req: NextApiRequest,
   res: NextApiResponse,
-  error?: T
+  error?: T,
 ) => {
   const session = await getServerSession(req, res, authConfig);
   if (!session && !!error) throw Unauthorized();

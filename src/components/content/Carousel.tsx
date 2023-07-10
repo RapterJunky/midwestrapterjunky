@@ -15,7 +15,7 @@ export type CarouselProps = {
 
 const CarouselRuntime = dynamic(
   () => import("@components/content/CarouselRuntime"),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function CarouselElement(props: CarouselProps) {

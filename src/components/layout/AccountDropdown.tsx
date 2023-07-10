@@ -1,8 +1,8 @@
 import { Menu, Transition } from "@headlessui/react";
 import { signOut } from "next-auth/react";
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
 
 const AccountDropdown: React.FC<{
   image: string;
@@ -44,6 +44,7 @@ const AccountDropdown: React.FC<{
             <div>
               <Menu.Item>
                 <Link
+                  prefetch={false}
                   className="block w-full px-4 py-2 hover:bg-neutral-200"
                   href="/profile"
                 >

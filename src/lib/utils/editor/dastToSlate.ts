@@ -44,7 +44,7 @@ export interface SlateImageBlock extends Block {
 const parseNode = (
   node: DastNode,
   blocks?: Record[],
-  inline?: Record[]
+  inline?: Record[],
 ): NonTextNode | Link | ItemLink | InlineItem | Text | ListItem => {
   switch (node.type) {
     case "paragraph": {
@@ -55,7 +55,7 @@ const parseNode = (
             | Link
             | ItemLink
             | InlineItem
-            | Text
+            | Text,
         );
       }
       const el: Paragraph = {
@@ -73,7 +73,7 @@ const parseNode = (
             | Link
             | ItemLink
             | InlineItem
-            | Text
+            | Text,
         );
       }
 
@@ -112,7 +112,7 @@ const parseNode = (
       const children: (Paragraph | BlockquoteSource)[] = [];
       for (const child of node.children) {
         children.push(
-          parseNode(child, blocks, inline) as Paragraph | BlockquoteSource
+          parseNode(child, blocks, inline) as Paragraph | BlockquoteSource,
         );
       }
       const el: Blockquote = {
@@ -228,7 +228,7 @@ const parseNode = (
 };
 
 const dastToSlate = (
-  dast: StructuredTextGraphQlResponse
+  dast: StructuredTextGraphQlResponse,
 ): (NonTextNode | Text)[] => {
   const nodes: (NonTextNode | Text)[] = [];
 

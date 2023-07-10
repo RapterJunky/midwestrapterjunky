@@ -57,7 +57,7 @@ export type CheckoutState = {
 export async function getStaticProps() {
   const data = await fetchCachedQuery<Omit<FullPageProps, "preview">>(
     "GenericPage",
-    GenericPageQuery
+    GenericPageQuery,
   );
   return {
     props: {
@@ -75,7 +75,7 @@ export async function getStaticProps() {
 
 const checkoutReducer = (
   state: CheckoutState,
-  action: { type: CheckoutAction; payload: object | string }
+  action: { type: CheckoutAction; payload: object | string },
 ): CheckoutState => {
   switch (action.type) {
     case "addDiscount":
@@ -90,7 +90,7 @@ const checkoutReducer = (
       return {
         ...state,
         discounts: state.discounts.filter(
-          (value) => value.catalogObjectId !== (action.payload as string)
+          (value) => value.catalogObjectId !== (action.payload as string),
         ),
       };
     }
@@ -179,7 +179,7 @@ const Checkout: NextPageWithProvider<
       });
       if (!response.ok) throw response;
       return response.json() as Promise<Order>;
-    }
+    },
   );
 
   useEffect(() => {
@@ -293,7 +293,7 @@ const Checkout: NextPageWithProvider<
                           : error
                           ? "Failed to calculate."
                           : formatPrice(
-                              Number(order?.totalDiscountMoney?.amount)
+                              Number(order?.totalDiscountMoney?.amount),
                             )}
                       </span>
                     </li>
@@ -316,7 +316,7 @@ const Checkout: NextPageWithProvider<
                         : error
                         ? "Failed to calculate."
                         : formatPrice(
-                            Number(order?.totalServiceChargeMoney?.amount)
+                            Number(order?.totalServiceChargeMoney?.amount),
                           )}
                     </span>
                   </li>

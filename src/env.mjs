@@ -27,7 +27,7 @@ const serviceKey = z
       token_uri: z.string().url(),
       auth_provider_x509_cert_url: z.string().url(),
       client_x509_cert_url: z.string().url(),
-    })
+    }),
   );
 
 /**
@@ -39,6 +39,8 @@ const server = z.object({
   DATOCMS_READONLY_TOKEN: z.string(),
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
+
+  USE_JSON_IMAGE: z.string().nullable().optional(),
 
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
@@ -139,6 +141,8 @@ const processEnv = {
   DATOCMS_API_TOKEN: process.env.DATOCMS_API_TOKEN,
   DATOCMS_ENVIRONMENT: process.env.DATOCMS_ENVIRONMENT,
 
+  USE_JSON_IMAGE: process.env.USE_JSON_IMAGE,
+
   KV_URL: process.env.KV_URL,
   KV_REST_API_URL: process.env.KV_REST_API_URL,
   KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
@@ -237,7 +241,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   if (parsed.success === false) {
     console.error(
       "❌ Invalid environment variables:",
-      parsed.error.flatten().fieldErrors
+      parsed.error.flatten().fieldErrors,
     );
     throw new Error("Invalid environment variables");
   }
@@ -251,7 +255,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
         throw new Error(
           process.env.NODE_ENV === "production"
             ? "❌ Attempted to access a server-side environment variable on the client"
-            : `❌ Attempted to access server-side environment variable '${prop}' on the client`
+            : `❌ Attempted to access server-side environment variable '${prop}' on the client`,
         );
       return target[/** @type {keyof typeof target} */ (prop)];
     },

@@ -33,48 +33,48 @@ const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 const MESSAGE_BOARD_PAGE_ID = "community";
 
 const MailSettingsModel = dynamic(
-  () => import("@/components/plugins/models/MailSettingsModel")
+  () => import("@/components/plugins/models/MailSettingsModel"),
 );
 
 const GDriveAddon = dynamic(
-  () => import("@components/plugins/extension/Google/GDriveMultiExtension")
+  () => import("@components/plugins/extension/Google/GDriveMultiExtension"),
 );
 const GDriveModel = dynamic(
-  () => import("@components/plugins/models/GDriveModal")
+  () => import("@components/plugins/models/GDriveModal"),
 );
 const GDriveConfig = dynamic(
-  () => import("@components/plugins/config/GDriveConfigSceen")
+  () => import("@components/plugins/config/GDriveConfigSceen"),
 );
 
 const ConfigScreen = dynamic(
-  () => import("@components/plugins/config/ConfigScreen")
+  () => import("@components/plugins/config/ConfigScreen"),
 );
 const ShopFieldExtension = dynamic(
-  () => import("@components/plugins/extension/ShopFieldExtension")
+  () => import("@components/plugins/extension/ShopFieldExtension"),
 );
 const AuthorEditorExtension = dynamic(
-  () => import("@components/plugins/extension/AuthorEditorExtension")
+  () => import("@components/plugins/extension/AuthorEditorExtension"),
 );
 const EditAuthorModal = dynamic(
-  () => import("@components/plugins/models/EditAuthorModel")
+  () => import("@components/plugins/models/EditAuthorModel"),
 );
 const StorefrontModel = dynamic(
-  () => import("@components/plugins/models/StorefrontModel")
+  () => import("@components/plugins/models/StorefrontModel"),
 );
 const BrowseProductsModel = dynamic(
-  () => import("@components/plugins/models/BrowseProductsModal")
+  () => import("@components/plugins/models/BrowseProductsModal"),
 );
 const MessageBoardManagerPage = dynamic(
-  () => import("@components/plugins/page/CommunityPage")
+  () => import("@components/plugins/page/CommunityPage"),
 );
 const EditThreadModel = dynamic(
-  () => import("@components/plugins/models/EditThreadModel")
+  () => import("@components/plugins/models/EditThreadModel"),
 );
 const DocxImportFieldAddon = dynamic(
-  () => import("@components/plugins/addon/DocxImportFieldAddon")
+  () => import("@components/plugins/addon/DocxImportFieldAddon"),
 );
 const PreviewLinkExtension = dynamic(
-  () => import("@components/plugins/extension/PreviewLinkExtension")
+  () => import("@components/plugins/extension/PreviewLinkExtension"),
 );
 
 const MidwestRaptor: NextPage = () => {
@@ -99,7 +99,7 @@ const MidwestRaptor: NextPage = () => {
             if (
               field.attributes.appearance.editor !== ctx.plugin.id ||
               [FIELD_EXTENSION_ID, FIELD_EXTENSION_ID_AUTHOR].includes(
-                field.attributes.appearance.field_extension ?? ""
+                field.attributes.appearance.field_extension ?? "",
               )
             )
               return true;
@@ -124,12 +124,12 @@ const MidwestRaptor: NextPage = () => {
             }
 
             return true;
-          })
+          }),
         )
       ).some((x) => x);
 
       await ctx.updatePluginParameters(
-        normalizeConfig(ctx.plugin.attributes.parameters)
+        normalizeConfig(ctx.plugin.attributes.parameters),
       );
 
       if (someUpgraded) await ctx.notice("Plugin upgraded successfully!");
@@ -141,7 +141,7 @@ const MidwestRaptor: NextPage = () => {
       if (
         !config.autoApplyToFieldsWithApiKey ||
         !new RegExp(config.autoApplyToFieldsWithApiKey).test(
-          field.attributes.api_key
+          field.attributes.api_key,
         )
       )
         return;

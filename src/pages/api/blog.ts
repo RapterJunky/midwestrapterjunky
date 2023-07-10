@@ -27,7 +27,7 @@ const schema = z.coerce.number().gte(0).optional().default(0);
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse<Paginate<Post> | ApiErrorResponse>
+  res: NextApiResponse<Paginate<Post> | ApiErrorResponse>,
 ) {
   try {
     const page = schema.parse(req.query?.page);
@@ -44,7 +44,7 @@ export default async function handle(
       },
       {
         draft: req.draftMode || req.preview,
-      }
+      },
     );
 
     const posts = data.posts.map((item) => ({
@@ -52,7 +52,7 @@ export default async function handle(
       seo: item.seo.filter(
         (seo) =>
           seo.tag === "meta" &&
-          (seo.attributes as RegularMetaAttributes)?.name === "description"
+          (seo.attributes as RegularMetaAttributes)?.name === "description",
       ),
     }));
 

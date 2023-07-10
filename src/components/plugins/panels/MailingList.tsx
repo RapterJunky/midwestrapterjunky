@@ -28,7 +28,7 @@ export const MailingList: React.FC<{
     (url) =>
       AuthFetch(url).then((e) => e.json()) as Promise<
         Paginate<{ id: number; email: string }>
-      >
+      >,
   );
 
   return (
@@ -151,25 +151,25 @@ export const MailingList: React.FC<{
                               if (!current)
                                 throw new Error("Unable to process.");
                               const idx = current?.result.findIndex(
-                                (item) => item.id === value.id
+                                (item) => item.id === value.id,
                               );
                               if (idx === -1)
                                 throw new Error("Unable to find email.");
 
                               await AuthFetch(
                                 `/api/plugin/mail?id=${value.id}`,
-                                { method: "DELETE" }
+                                { method: "DELETE" },
                               );
 
                               return update(current, {
                                 result: { $splice: [[idx, 1]] },
                               });
                             },
-                            { revalidate: false, rollbackOnError: true }
+                            { revalidate: false, rollbackOnError: true },
                           );
                           ctx
                             .notice(
-                              `Successfully removed email "${value.email}"`
+                              `Successfully removed email "${value.email}"`,
                             )
                             .catch((e) => console.error(e));
                         } catch (error) {

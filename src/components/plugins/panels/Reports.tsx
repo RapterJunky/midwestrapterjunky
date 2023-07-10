@@ -49,7 +49,7 @@ const patchItem = async (
   type: "comment" | "topic",
   prop: string,
   value: boolean | string | number,
-  id?: string
+  id?: string,
 ) => {
   try {
     await AuthFetch(`/api/plugin/tac`, {
@@ -70,7 +70,7 @@ const patchItem = async (
 const deleteItem = async (
   ctx: RenderPageCtx,
   type: "comment" | "topic",
-  id?: string
+  id?: string,
 ) => {
   try {
     await AuthFetch(`/api/plugin/tac?type=${type}&id=${id}`, {
@@ -377,7 +377,7 @@ export const Reports: React.FC<{
 
       return reports.json() as Promise<ContentType>;
     },
-    { revalidateOnFocus: true }
+    { revalidateOnFocus: true },
   );
 
   const handleBan = async (userId?: string, name?: string | null) => {
@@ -419,7 +419,7 @@ export const Reports: React.FC<{
         {
           revalidate: false,
           rollbackOnError: true,
-        }
+        },
       );
     } catch (error) {
       console.error(error);
@@ -529,7 +529,7 @@ export const Reports: React.FC<{
                   owner={report.post?.owner ?? null}
                   reporter={report.owner}
                 />
-              )
+              ),
             )}
           </ul>
           <hr />

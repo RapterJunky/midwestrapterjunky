@@ -7,7 +7,7 @@ const useFormatPrice = (currency: string) => {
         style: "currency",
         currency,
       }).format(value / 100),
-    [currency]
+    [currency],
   );
 
   return formatPrice;

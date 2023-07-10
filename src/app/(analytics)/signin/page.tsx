@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const getIcon = async () => {
   const data = await getFullPageProps();
   const icon = data._site.faviconMetaTags.find(
-    (value) => value.tag === "link" && value.attributes.sizes === "96x96"
+    (value) => value.tag === "link" && value.attributes.sizes === "96x96",
   );
   return (icon?.attributes as FaviconAttributes)?.href;
 };

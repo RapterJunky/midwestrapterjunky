@@ -51,12 +51,12 @@ const LinkDialog: React.FC<{
                     const url = new URL(link.toString());
 
                     const el = document.getElementById(
-                      "link"
+                      "link",
                     ) as HTMLInputElement | null;
                     el?.setCustomValidity(
                       url.origin.endsWith(".zip") || url.origin.endsWith(".mov")
                         ? "Link can not be a .zip or a .mov domain."
-                        : ""
+                        : "",
                     );
                     el?.reportValidity();
 
