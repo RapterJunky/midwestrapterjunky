@@ -63,8 +63,8 @@ dependencies:
     specifier: ^3.5.0
     version: 3.5.0
   googleapis:
-    specifier: ^120.0.0
-    version: 120.0.0
+    specifier: ^121.0.0
+    version: 121.0.0
   html-react-parser:
     specifier: ^4.0.0
     version: 4.0.0(react@18.2.0)
@@ -3075,7 +3075,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.2
-      semver: 6.3.0
+      semver: 6.3.1
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -3105,7 +3105,7 @@ packages:
       minimatch: 3.1.2
       object.entries: 1.1.6
       object.fromentries: 2.0.6
-      semver: 6.3.0
+      semver: 6.3.1
     dev: true
 
   /eslint-plugin-react-hooks@5.0.0-canary-7118f5dd7-20230705(eslint@8.44.0):
@@ -3137,7 +3137,7 @@ packages:
       object.values: 1.1.6
       prop-types: 15.8.1
       resolve: 2.0.0-next.4
-      semver: 6.3.0
+      semver: 6.3.1
       string.prototype.matchall: 4.0.8
     dev: true
 
@@ -3834,8 +3834,8 @@ packages:
       - supports-color
     dev: false
 
-  /googleapis@120.0.0:
-    resolution: {integrity: sha512-Reo5PpERv0Df/L8Jx8CrPHMI3oEXmPBDHLXCY12biXUtveVgWVEoQN4Inn/85+eoNRsDiVyeEH/MjAa3hPHHrA==}
+  /googleapis@121.0.0:
+    resolution: {integrity: sha512-tL39TCmAHwee7Irw15pBHUPp39Pz7K2+yOq2YbOgzY8ZDTukL+fuQdNoAINQkyXKFTzORTE+uoi6IuyrlS1njQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
       google-auth-library: 8.9.0
@@ -6255,8 +6255,8 @@ packages:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
     dev: true
 
-  /semver@6.3.0:
-    resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
+  /semver@6.3.1:
+    resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
     dev: true
 
