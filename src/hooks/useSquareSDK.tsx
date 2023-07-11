@@ -2,7 +2,7 @@ import {
   type CardClassSelectors,
   type Card,
   type Payments,
-  TokenStatus,
+  type TokenStatus,
 } from "@square/web-payments-sdk-types";
 import { useRef, useEffect, useState, createContext, useContext } from "react";
 import Script from "next/script";
@@ -164,7 +164,7 @@ const useSquareSDK = (active: boolean) => {
         throw e;
       });
 
-      if (result.status !== TokenStatus.OK || !result.token) {
+      if (result.status !== ("OK" as TokenStatus.OK) || !result.token) {
         let errorMessage = `Tokenization failed with status: ${result.status}`;
         if (result.errors) {
           errorMessage += ` and errors: ${JSON.stringify(result.errors)}`;

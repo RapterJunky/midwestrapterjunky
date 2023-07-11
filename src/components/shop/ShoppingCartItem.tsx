@@ -60,7 +60,7 @@ const ShoppingCartItem: React.FC<{ data: CartItem; editable?: boolean }> = ({
               type="number"
               readOnly
               min={0}
-              max={100}
+              max={data?.maxQuantity ?? 99}
             />
           </label>
           <button

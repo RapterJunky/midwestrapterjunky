@@ -463,7 +463,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap gap-dato-m justify-center items-start overflow-y-scroll p-4">
+          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap items-start justify-center gap-dato-m overflow-y-scroll p-4">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.

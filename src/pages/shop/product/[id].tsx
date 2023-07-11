@@ -65,6 +65,8 @@ type FormState = {
   variation: Props["product"]["variations"][0];
 };
 
+const DEFAULT_PRODUCT_DESCRIPTION = "No product description";
+
 export function getStaticPaths(): GetStaticPathsResult {
   return {
     paths: [],
@@ -183,7 +185,7 @@ export const getStaticProps = async (
       ...props,
       seo: genericSeoTags({
         title: itemData?.name ?? "MRJ Product",
-        description: itemData?.description ?? undefined,
+        description: itemData?.description ?? DEFAULT_PRODUCT_DESCRIPTION,
         url: `https://midestraptorjunkies.com/shop/product/${id}`,
       }),
       product: {
@@ -192,8 +194,8 @@ export const getStaticProps = async (
         updatedAt,
         customAttributeValues: customAttributeValues ?? null,
         name: itemData?.name ?? "Product",
-        description: itemData?.description ?? null,
-        labelColor: itemData?.labelColor ?? "aabb33",
+        description: itemData?.description ?? DEFAULT_PRODUCT_DESCRIPTION,
+        labelColor: itemData?.labelColor ?? "ffffff",
         category,
         variations,
       },
@@ -219,6 +221,7 @@ const Product: NextPageWithProvider<Props> = ({
     handleSubmit,
     watch,
     register,
+    setValue,
     formState: { isSubmitting },
   } = useForm<FormState>({
     values: {
@@ -409,7 +412,13 @@ const Product: NextPageWithProvider<Props> = ({
                 control={control}
                 name="variation"
                 render={({ field }) => (
-                  <Listbox value={field.value} onChange={field.onChange}>
+                  <Listbox
+                    value={field.value}
+                    onChange={(e) => {
+                      setValue("quantity", 1);
+                      field.onChange(e);
+                    }}
+                  >
                     <div id="options" className="relative mt-1">
                       <Listbox.Button className="form-select relative w-full text-left">
                         <span className="block truncate">
@@ -449,13 +458,14 @@ const Product: NextPageWithProvider<Props> = ({
                 Quantity
               </label>
               <input
+                key={inventory?.catalogObjectId}
                 {...register("quantity")}
                 type="number"
                 id="quantity"
                 name="quantity"
                 min={1}
                 defaultValue={1}
-                max={inventory?.quantity ?? undefined}
+                max={inventory?.quantity ?? 99}
               />
             </div>
 
