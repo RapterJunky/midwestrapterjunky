@@ -30,10 +30,13 @@ import ArticleQuery from "@query/queries/article";
 import { fetchCacheData } from "@lib/cache";
 import { logger } from "@lib/logger";
 import { DatoCMS } from "@api/gql";
+import { getDescriptionTag } from "@/lib/utils/description";
+import Script from "next/script";
 
 interface ArticleProps extends FullPageProps {
   next: { slug: string; title: string } | null;
   prev: { slug: string; title: string } | null;
+  jsonld: string;
   post: {
     title: string;
     content: StructuredTextGraphQlResponse<
@@ -106,6 +109,16 @@ const getBlogPage = async (
   return {
     ...data,
     ...extra,
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": data.post.title,
+      "author": data.post.authors[0]?.name,
+      "keywords": data.post.tags.join(" "),
+      "datePublished": data.post.publishedAt,
+      "description": getDescriptionTag(data.post.seo),
+      "url": `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/blog/${data.post.slug}`
+    }),
     preview: draft,
   };
 };
@@ -133,8 +146,6 @@ export const getStaticProps = async (
     return {
       notFound: true,
     };
-
-  console.log("ID Fine");
 
   const id = schema.data;
 
@@ -166,6 +177,7 @@ const Article: NextPage<ArticleProps> = ({
   post,
   next,
   prev,
+  jsonld
 }) => {
   return (
     <div className="flex h-full flex-col">
@@ -184,6 +196,7 @@ const Article: NextPage<ArticleProps> = ({
           ],
         ]}
       />
+      <Script type="application/ld+json" id={`jsonld-${post.id}`}>{jsonld}</Script>
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />

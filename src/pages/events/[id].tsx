@@ -36,6 +36,7 @@ import { DatoCMS } from "@api/gql";
 
 import type { ResponsiveImage, LinkWithIcon, FullPageProps } from "types/page";
 import { fetchCacheData } from "@lib/cache";
+import { getDescriptionTag } from "@/lib/utils/description";
 
 declare const L: {
   map: (
@@ -50,6 +51,7 @@ declare const L: {
 };
 
 interface EventPageProps extends FullPageProps {
+  jsonld: string,
   event: {
     _seoMetaTags: SeoOrFaviconTag[];
     updatedAt: string;
@@ -87,7 +89,7 @@ const loadPages = async () => {
   return data.allEvents.map((value) => value.slug);
 };
 
-const getPage = async (id = "", draft = false) => {
+const getPage = async (id = "", draft = false): Promise<EventPageProps> => {
   logger.info(`Event page (${id}) - preview(${draft}) | Generating`);
   const data = await DatoCMS<EventPageProps>(
     {
@@ -102,6 +104,19 @@ const getPage = async (id = "", draft = false) => {
   );
   return {
     ...data,
+    jsonld: JSON.stringify({
+      "@context": "https://www.schema.org",
+      "location": data.event.extraLocationDetails ? {
+        "@type": "Place",
+        "name": data.event.extraLocationDetails
+      } : undefined,
+      "@type": "Event",
+      "name": data.event.title,
+      "startDate": data.event.dateFrom,
+      "endDate": data.event.dateTo,
+      "description": getDescriptionTag(data.event._seoMetaTags),
+      "url": `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/events/${data.event.slug}`
+    }),
     preview: draft,
   };
 };
@@ -155,6 +170,7 @@ const EventPage: NextPage<EventPageProps> = ({
   preview,
   event,
   navbar,
+  jsonld
 }) => {
   return (
     <div className="flex h-full flex-col">
@@ -173,6 +189,7 @@ const EventPage: NextPage<EventPageProps> = ({
           ],
         ]}
       />
+      <Script type="application/ld+json" id={`jsonld-${event.slug}`}>{jsonld}</Script>
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />
@@ -230,8 +247,8 @@ const EventPage: NextPage<EventPageProps> = ({
                   <h2 className="mb-1 text-base font-bold">Event Details</h2>
                 </div>
                 {!event?.shopItemLink &&
-                !(event.location || event.extraLocationDetails) &&
-                (!event.links || event.links.length === 0) ? (
+                  !(event.location || event.extraLocationDetails) &&
+                  (!event.links || event.links.length === 0) ? (
                   <div className="mb-3 text-center">
                     No details where provided.
                   </div>

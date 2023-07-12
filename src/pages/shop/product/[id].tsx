@@ -12,6 +12,7 @@ import type { SeoOrFaviconTag } from "react-datocms/seo";
 import { Listbox, Transition } from "@headlessui/react";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
+import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
 import { z } from "zod";
@@ -35,7 +36,9 @@ import { logger } from "@lib/logger";
 
 interface Props extends FullPageProps {
   seo: SeoOrFaviconTag[];
+  jsonld: string;
   product: {
+    merchent: string | null;
     id: string;
     updatedAt?: string;
     customAttributeValues?: Record<string, CatalogCustomAttributeValue> | null;
@@ -138,9 +141,8 @@ export const getStaticProps = async (
   if (!images.length) {
     images = [
       {
-        url: `https://api.dicebear.com/6.x/icons/png?seed=${
-          itemData?.name ?? "PH"
-        }`,
+        url: `https://api.dicebear.com/6.x/icons/png?seed=${itemData?.name ?? "PH"
+          }`,
         alt: "Product Image",
       },
     ];
@@ -180,9 +182,30 @@ export const getStaticProps = async (
     }
   }
 
+  const merchent = Object.values(customAttributeValues ?? {}).find(
+    (value) => value.name === "Vendor" && value.type === "STRING",
+  );
+
   return {
     props: {
       ...props,
+      jsonld: JSON.stringify({
+        "@context": "https://www.schema.org",
+        "@type": "product",
+        "image": images[0]?.url,
+        "category": category?.name ?? undefined,
+        "description": itemData?.description ?? undefined,
+        "name": itemData?.name ?? "Product",
+        "offers": variations[0] ? {
+          "@type": "Offer",
+          "priceCurrency": variations[0]?.currency,
+          "price": variations[0] ? ((variations[0]?.price ?? 0) / 100).toString() : undefined,
+          "seller": merchent?.stringValue ? {
+            "@type": "Organization",
+            "name": merchent.stringValue
+          } : undefined
+        } : undefined
+      }),
       seo: genericSeoTags({
         title: itemData?.name ?? "MRJ Product",
         description: itemData?.description ?? DEFAULT_PRODUCT_DESCRIPTION,
@@ -190,6 +213,7 @@ export const getStaticProps = async (
       }),
       product: {
         id,
+        merchent: merchent?.stringValue ?? null,
         images,
         updatedAt,
         customAttributeValues: customAttributeValues ?? null,
@@ -209,6 +233,7 @@ const Product: NextPageWithProvider<Props> = ({
   navbar,
   product,
   seo,
+  jsonld
 }) => {
   const { addToCart, openCart } = useCart();
   const { data, isLoading } = useCatalog({
@@ -245,10 +270,6 @@ const Product: NextPageWithProvider<Props> = ({
   const [dir, setDir] = useState<"slide-in-from-left" | "slide-in-from-right">(
     "slide-in-from-left",
   );
-  const merchent = Object.values(product.customAttributeValues ?? {}).find(
-    (value) => value.name === "Vendor" && value.type === "STRING",
-  );
-
   const add = (state: FormState) => {
     addToCart({
       labelColor: product.labelColor,
@@ -276,6 +297,7 @@ const Product: NextPageWithProvider<Props> = ({
   return (
     <div className="flex flex-col">
       <SiteTags tags={[_site.faviconMetaTags, seo]} />
+      <Script type="application/ld+json" id={product.id}>{jsonld}</Script>
       <Navbar {...navbar} mode="none" />
       <main
         className="flex w-full flex-grow flex-col"
@@ -392,9 +414,9 @@ const Product: NextPageWithProvider<Props> = ({
               <span className="text-sm text-gray-600">
                 {product.category?.name}
               </span>
-              {merchent?.stringValue ? (
+              {product.merchent ? (
                 <span className="text-sm text-gray-600">
-                  | {merchent?.stringValue}
+                  | {product.merchent}
                 </span>
               ) : null}
             </div>
@@ -479,8 +501,8 @@ const Product: NextPageWithProvider<Props> = ({
                 {stockLoading
                   ? "Loading..."
                   : inStock
-                  ? "Add to Cart"
-                  : "Out of Stock"}
+                    ? "Add to Cart"
+                    : "Out of Stock"}
               </button>
             </div>
           </form>
@@ -492,35 +514,35 @@ const Product: NextPageWithProvider<Props> = ({
             {!data || isLoading
               ? null
               : data.result.map((item) => (
-                  <div
-                    className="border border-gray-200 bg-gray-100"
-                    key={item.id}
+                <div
+                  className="border border-gray-200 bg-gray-100"
+                  key={item.id}
+                >
+                  <Link
+                    href={`/shop/product/${item.id}`}
+                    aria-label={item.name}
+                    className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
                   >
-                    <Link
-                      href={`/shop/product/${item.id}`}
-                      aria-label={item.name}
-                      className="relative box-border inline-block h-full max-h-full w-full cursor-pointer overflow-hidden bg-gray-100 transition-transform animate-in fade-in"
-                    >
-                      <div className="flex h-full w-full items-center justify-center overflow-hidden">
-                        <Image
-                          className="h-full w-full object-cover"
-                          src={
-                            item.image?.url ??
-                            `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
-                          }
-                          alt={item.image?.alt ?? "Product Image"}
-                          height={540}
-                          width={540}
-                          sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
-                        />
-                      </div>
-                    </Link>
-                    <div className="flex w-full justify-between">
-                      <span className="line-clamp-1">{item.name}</span>
-                      <span>{item.price}</span>
+                    <div className="flex h-full w-full items-center justify-center overflow-hidden">
+                      <Image
+                        className="h-full w-full object-cover"
+                        src={
+                          item.image?.url ??
+                          `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`
+                        }
+                        alt={item.image?.alt ?? "Product Image"}
+                        height={540}
+                        width={540}
+                        sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em"
+                      />
                     </div>
+                  </Link>
+                  <div className="flex w-full justify-between">
+                    <span className="line-clamp-1">{item.name}</span>
+                    <span>{item.price}</span>
                   </div>
-                ))}
+                </div>
+              ))}
           </div>
         </section>
       </main>

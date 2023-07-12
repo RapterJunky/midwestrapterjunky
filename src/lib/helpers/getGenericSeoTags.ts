@@ -24,18 +24,24 @@ const getGenericSeoTags = ({
   url = "https://midwestraptorjunkies.com",
 }: Opt): Metadata => {
   return {
+    twitter: {
+      title: `${title} - Midwest Raptor Junkies`,
+      description,
+      images: [`${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/twitter-image`],
+    },
     category,
     title: `${title} - Midwest Raptor Junkies`,
     description,
     icons: icons
       ? icons.map((icon) => ({
-          url: (icon.attributes as FaviconAttributes).href,
-          rel: (icon.attributes as FaviconAttributes).rel,
-          type: (icon.attributes as FaviconAttributes).type,
-          sizes: (icon.attributes as FaviconAttributes).sizes,
-        }))
+        url: (icon.attributes as FaviconAttributes).href,
+        rel: (icon.attributes as FaviconAttributes).rel,
+        type: (icon.attributes as FaviconAttributes).type,
+        sizes: (icon.attributes as FaviconAttributes).sizes,
+      }))
       : undefined,
     openGraph: {
+      images: [`${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/opengraph-image`],
       locale: "en-US",
       url,
       title: `${title} - Midwest Raptor Junkies`,
