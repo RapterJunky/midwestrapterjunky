@@ -112,12 +112,14 @@ const getBlogPage = async (
     jsonld: JSON.stringify({
       "@context": "https://schema.org",
       "@type": "TechArticle",
-      "headline": data.post.title,
-      "author": data.post.authors[0]?.name,
-      "keywords": data.post.tags.join(" "),
-      "datePublished": data.post.publishedAt,
-      "description": getDescriptionTag(data.post.seo),
-      "url": `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/blog/${data.post.slug}`
+      headline: data.post.title,
+      author: data.post.authors[0]?.name,
+      keywords: data.post.tags.join(" "),
+      datePublished: data.post.publishedAt,
+      description: getDescriptionTag(data.post.seo),
+      url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
+        process.env.VERCEL_URL
+      }/blog/${data.post.slug}`,
     }),
     preview: draft,
   };
@@ -177,7 +179,7 @@ const Article: NextPage<ArticleProps> = ({
   post,
   next,
   prev,
-  jsonld
+  jsonld,
 }) => {
   return (
     <div className="flex h-full flex-col">
@@ -196,7 +198,9 @@ const Article: NextPage<ArticleProps> = ({
           ],
         ]}
       />
-      <Script type="application/ld+json" id={`jsonld-${post.id}`}>{jsonld}</Script>
+      <Script type="application/ld+json" id={`jsonld-${post.id}`}>
+        {jsonld}
+      </Script>
       <Navbar {...navbar} mode="none" />
       <main className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <ScrollToTop comments={false} />
