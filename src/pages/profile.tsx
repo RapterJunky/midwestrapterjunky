@@ -161,7 +161,7 @@ const Profile: NextPage<FullPageProps> = ({ navbar, _site }) => {
             </li>
           </ul>
         </section>
-        <section className="flex w-full flex-col rounded-sm bg-slate-100 p-8 shadow-sm md:w-1/3">
+        <section className="mb-4 flex w-full flex-col rounded-sm bg-slate-100 p-8 shadow-sm md:w-1/3">
           <h1 className="text-xl font-bold">Delete account</h1>
           <div>
             <p className="my-4 text-sm">
