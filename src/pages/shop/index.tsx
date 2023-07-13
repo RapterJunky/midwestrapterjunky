@@ -35,7 +35,7 @@ export const getStaticProps = async (): Promise<
       ...props,
       seo: genericSeoTags({
         title: "Shop",
-        description: "Midwest Ratpor Junkies shop.",
+        description: "Midwest Raptor Junkies shop.",
         url: "https://midwestraptorjunkies.com/shop",
       }),
     },
@@ -132,8 +132,8 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
               {data && !error && !isLoading
                 ? data.result.map((item, i) => <ShopCard key={i} {...item} />)
                 : Array.from({ length: 15 }).map((_, i) => (
-                    <Skeleton key={i} />
-                  ))}
+                  <Skeleton key={i} />
+                ))}
             </div>
             <div className="mt-10 flex w-full justify-center">
               <ul className="list-style-none flex space-x-4">

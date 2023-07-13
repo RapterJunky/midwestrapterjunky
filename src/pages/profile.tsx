@@ -18,14 +18,24 @@ import { fetchCachedQuery } from "@lib/cache";
 import SiteTags from "@components/SiteTags";
 import Query from "@query/queries/generic";
 import { singleFetch } from "@api/fetch";
+import genericSeoTags from "@utils/genericSeoTags";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+
+type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
 
 export const getStaticProps = async (
   ctx: GetStaticPropsContext,
-): Promise<GetStaticPropsResult<FullPageProps>> => {
-  const data = await fetchCachedQuery<FullPageProps>("GenericPage", Query);
+): Promise<GetStaticPropsResult<Props>> => {
+  const data = await fetchCachedQuery<Props>("GenericPage", Query);
   return {
     props: {
       ...data,
+      seo: genericSeoTags({
+        title: 'Profile - Midwest Raptor Junkies',
+        robots: false,
+        description: "Midwest Raptor Junkies user profile page.",
+        url: "https://midwestraptorjunkies.com/profile"
+      }),
       preview: (ctx?.draftMode || ctx.preview) ?? false,
     },
   };
@@ -47,7 +57,7 @@ const deleteDialogData = {
  * @see https://tailwindui.com/components/application-ui/page-examples/settings-screens
  *
  */
-const Profile: NextPage<FullPageProps> = ({ navbar, _site }) => {
+const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState(deleteDialogData);
   const { data } = useSession({
@@ -63,7 +73,7 @@ const Profile: NextPage<FullPageProps> = ({ navbar, _site }) => {
       <SiteTags
         tags={[
           _site.faviconMetaTags,
-          [{ tag: "title", content: `Profile - Midwest Raptor Junkies` }],
+          seo,
         ]}
       />
       <header>
@@ -133,10 +143,10 @@ const Profile: NextPage<FullPageProps> = ({ navbar, _site }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                    ? "Failed to loaded provider."
-                    : user?.provider !== "facebook"
-                    ? "Not connected"
-                    : "Connected"}
+                      ? "Failed to loaded provider."
+                      : user?.provider !== "facebook"
+                        ? "Not connected"
+                        : "Connected"}
                 </span>
               </div>
               <div></div>
@@ -151,10 +161,10 @@ const Profile: NextPage<FullPageProps> = ({ navbar, _site }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                    ? "Failed to loaded provider."
-                    : user?.provider !== "google"
-                    ? "Not connected"
-                    : "Connected"}
+                      ? "Failed to loaded provider."
+                      : user?.provider !== "google"
+                        ? "Not connected"
+                        : "Connected"}
                 </span>
               </div>
               <div></div>

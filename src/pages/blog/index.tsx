@@ -54,7 +54,7 @@ export const getStaticProps = async (
       ...data,
       preview: (ctx.draftMode || ctx.preview) ?? false,
       seo: genericSeoTags({
-        title: "Blog Lastest",
+        title: "Lastest Articles",
         description: "Midwest Raptor Junkies latest published articles.",
         url: "https://midwestraptorjunkies.com/blog",
       }),
