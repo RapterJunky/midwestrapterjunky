@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 
-const root = `http${process.env.VERCEL_ENV === "development" ? "" : "s"}://${process.env.VERCEL_URL
-  }`;
+const root = `http${process.env.VERCEL_ENV === "development" ? "" : "s"}://${
+  process.env.VERCEL_URL
+}`;
 
 const routes = [
   root,
@@ -15,7 +16,7 @@ const routes = [
   `${root}/blog/list`,
   `${root}/about-us`,
   `${root}/terms-of-service`,
-  `${root}/pricacy-policy`
+  `${root}/pricacy-policy`,
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

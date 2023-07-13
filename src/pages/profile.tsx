@@ -31,10 +31,10 @@ export const getStaticProps = async (
     props: {
       ...data,
       seo: genericSeoTags({
-        title: 'Profile - Midwest Raptor Junkies',
+        title: "Profile - Midwest Raptor Junkies",
         robots: false,
         description: "Midwest Raptor Junkies user profile page.",
-        url: "https://midwestraptorjunkies.com/profile"
+        url: "https://midwestraptorjunkies.com/profile",
       }),
       preview: (ctx?.draftMode || ctx.preview) ?? false,
     },
@@ -70,12 +70,7 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
   } = useSWR<{ provider: string }, Response>("/api/profile", singleFetch);
   return (
     <div className={`flex h-full flex-col`}>
-      <SiteTags
-        tags={[
-          _site.faviconMetaTags,
-          seo,
-        ]}
-      />
+      <SiteTags tags={[_site.faviconMetaTags, seo]} />
       <header>
         <Navbar {...navbar} mode="only-scroll" />
       </header>
@@ -143,10 +138,10 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                      ? "Failed to loaded provider."
-                      : user?.provider !== "facebook"
-                        ? "Not connected"
-                        : "Connected"}
+                    ? "Failed to loaded provider."
+                    : user?.provider !== "facebook"
+                    ? "Not connected"
+                    : "Connected"}
                 </span>
               </div>
               <div></div>
@@ -161,10 +156,10 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                      ? "Failed to loaded provider."
-                      : user?.provider !== "google"
-                        ? "Not connected"
-                        : "Connected"}
+                    ? "Failed to loaded provider."
+                    : user?.provider !== "google"
+                    ? "Not connected"
+                    : "Connected"}
                 </span>
               </div>
               <div></div>
