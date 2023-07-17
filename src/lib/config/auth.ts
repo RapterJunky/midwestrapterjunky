@@ -1,14 +1,14 @@
 import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
-import type { NextAuthOptions } from "next-auth";
 import type { AdapterUser } from "next-auth/adapters";
+import type { NextAuthOptions } from "next-auth";
 
 import type { PrismaClient } from "@prisma/client";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 
-export const authConfig = {
+export const authConfig: NextAuthOptions = {
   pages: {
     signIn: "/signin",
     signOut: "/signout",
@@ -52,4 +52,4 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-} satisfies NextAuthOptions;
+};
