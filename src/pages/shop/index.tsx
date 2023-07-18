@@ -12,7 +12,11 @@ import Footer from "@components/layout/Footer";
 import Navbar from "@/components/layout/OldNavbar";
 import SiteTags from "@components/SiteTags";
 
-import type { CursorPaginate, FullPageProps, NextPageWithProvider } from "@type/page";
+import type {
+  CursorPaginate,
+  FullPageProps,
+  NextPageWithProvider,
+} from "@type/page";
 import genericSeoTags from "@lib/utils/genericSeoTags";
 import GenericPageQuery from "@/gql/queries/generic";
 import useSearchMeta from "@hook/useSearchMeta";
@@ -56,47 +60,57 @@ const filterQuery = (query: Record<string, string | string[] | undefined>) =>
     return obj;
   }, {});
 
-
-const CatalogList: React.FC<{ isLoading: boolean, error: Response | undefined, data?: CursorPaginate<ShopItem> }> = ({ error, isLoading, data }) => {
+const CatalogList: React.FC<{
+  isLoading: boolean;
+  error: Response | undefined;
+  data?: CursorPaginate<ShopItem>;
+}> = ({ error, isLoading, data }) => {
   if (error) return null;
 
   return (
     <>
-      {data && !isLoading ? data.result.map((item, i) => <ShopCard key={i} {...item} />) : Array.from({ length: 15 }).map((_, i) => (
-        <Skeleton key={i} />
-      ))}
+      {data && !isLoading
+        ? data.result.map((item, i) => <ShopCard key={i} {...item} />)
+        : Array.from({ length: 15 }).map((_, i) => <Skeleton key={i} />)}
     </>
   );
-}
+};
 
-const SearchResult: React.FC<{ query?: string; isLoading: boolean, error: Response | undefined, data?: CursorPaginate<ShopItem> }> = ({ query, isLoading, error, data }) => {
+const SearchResult: React.FC<{
+  query?: string;
+  isLoading: boolean;
+  error: Response | undefined;
+  data?: CursorPaginate<ShopItem>;
+}> = ({ query, isLoading, error, data }) => {
   if (isLoading) return null;
 
-  if (error) return (
-    <div className="my-12 transition duration-75 ease-in flex justify-center">
-      <span className="animate-in fade-in">
-        There was an issue when loading the products.
-      </span>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="my-12 flex justify-center transition duration-75 ease-in">
+        <span className="animate-in fade-in">
+          There was an issue when loading the products.
+        </span>
+      </div>
+    );
 
-  if (data && !data.result.length) return (
-    <div className="my-12 transition duration-75 ease-in flex justify-center">
-      <span className="animate-in fade-in">
-        {query ? (
-          <>
-            There are no products that match &quot;
-            <strong>{query}</strong>&quot;
-          </>
-        ) : (
-          "There are no products to display."
-        )}
-      </span>
-    </div>
-  )
+  if (data && !data.result.length)
+    return (
+      <div className="my-12 flex justify-center transition duration-75 ease-in">
+        <span className="animate-in fade-in">
+          {query ? (
+            <>
+              There are no products that match &quot;
+              <strong>{query}</strong>&quot;
+            </>
+          ) : (
+            "There are no products to display."
+          )}
+        </span>
+      </div>
+    );
 
   return null;
-}
+};
 
 const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
   const router = useRouter();
@@ -122,7 +136,8 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
       <main className="flex w-full flex-grow flex-col items-center px-4">
         <div className="mx-auto mb-10 mt-3 grid w-full max-w-7xl flex-1 grid-cols-1 gap-4 lg:grid-cols-12">
           <div className="order-1 col-span-8 lg:order-none lg:col-span-2">
-            {categoriesIsLoading ? null : !categories || categoriesError ? null : (
+            {categoriesIsLoading ? null : !categories ||
+              categoriesError ? null : (
               <ShopOption
                 name="All Categories"
                 selectedName="Category"
@@ -149,7 +164,12 @@ const ShopSearch: NextPageWithProvider<Props> = ({ _site, navbar, seo }) => {
           </div>
 
           <div className="order-3 col-span-8 lg:order-none">
-            <SearchResult data={data} isLoading={isLoading} error={error} query={router.query.query as string | undefined} />
+            <SearchResult
+              data={data}
+              isLoading={isLoading}
+              error={error}
+              query={router.query.query as string | undefined}
+            />
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <CatalogList data={data} isLoading={isLoading} error={error} />
             </div>

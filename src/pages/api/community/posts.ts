@@ -2,14 +2,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import onError from "@api/handleError";
 import createHttpError from "http-errors";
 
-import { getSession } from "@lib/getSession";
+import getAuthSession from "@api/getAuthSession";
 import DELETE from "@service/posts/DELETE";
 import POST from "@service/posts/POST";
 import GET from "@service/posts/GET";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const session = await getSession(req, res, false);
+    const session = await getAuthSession({ ctx: { req, res } });
     switch (req.method) {
       case "GET":
         return await GET(req, res, session);

@@ -49,18 +49,18 @@ export default async function handle(
       query:
         query || category
           ? {
-            exactQuery: category
-              ? {
-                attributeName: "category_id",
-                attributeValue: category,
-              }
-              : undefined,
-            textQuery: query
-              ? {
-                keywords: query.split(" "),
-              }
-              : undefined,
-          }
+              exactQuery: category
+                ? {
+                    attributeName: "category_id",
+                    attributeValue: category,
+                  }
+                : undefined,
+              textQuery: query
+                ? {
+                    keywords: query.split(" "),
+                  }
+                : undefined,
+            }
           : undefined,
     });
 

@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import { applyRateLimit } from "@api/rateLimiter";
 import onError from "@api/handleError";
 import DELETE from "@service/comments/DELETE";
-import { getSession } from "@lib/getSession";
+import getAuthSession from "@api/getAuthSession";
 import POST from "@service/comments/POST";
 import GET from "@service/comments/GET";
 
@@ -14,7 +14,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const session = await getSession(req, res, false);
+    const session = await getAuthSession({ throwOnNull: false, ctx: { req, res } });
     switch (req.method) {
       case "GET":
         return await GET(req, res, session);

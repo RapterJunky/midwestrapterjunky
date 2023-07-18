@@ -33,8 +33,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: {
               NOT: ignore
                 ? {
-                  id: ignore,
-                }
+                    id: ignore,
+                  }
                 : undefined,
               tags: {
                 array_contains: tags,
@@ -90,13 +90,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               orderBy:
                 sort === "latest"
                   ? {
-                    createdAt: "desc",
-                  }
+                      createdAt: "desc",
+                    }
                   : {
-                    likes: {
-                      _count: "desc",
+                      likes: {
+                        _count: "desc",
+                      },
                     },
-                  },
             })
             .withPages({
               includePageCount: true,
@@ -128,13 +128,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             orderBy:
               sort === "latest"
                 ? {
-                  createdAt: "desc",
-                }
+                    createdAt: "desc",
+                  }
                 : {
-                  likes: {
-                    _count: "desc",
+                    likes: {
+                      _count: "desc",
+                    },
                   },
-                },
           })
           .withPages({
             includePageCount: true,

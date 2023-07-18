@@ -92,7 +92,7 @@ const checkoutReducer = (
       return {
         ...state,
         accountId: action.payload as string,
-      }
+      };
     }
     case "removeDiscount": {
       return {
@@ -299,8 +299,8 @@ const Checkout: NextPageWithProvider<
                         {isLoading
                           ? "Calculating..."
                           : error
-                            ? "Failed to calculate."
-                            : formatPrice(
+                          ? "Failed to calculate."
+                          : formatPrice(
                               Number(order?.totalDiscountMoney?.amount),
                             )}
                       </span>
@@ -312,8 +312,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(Number(order?.totalTaxMoney?.amount))}
+                        ? "Failed to calculate."
+                        : formatPrice(Number(order?.totalTaxMoney?.amount))}
                     </span>
                   </li>
                   <li className="flex justify-between py-1">
@@ -322,8 +322,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(
+                        ? "Failed to calculate."
+                        : formatPrice(
                             Number(order?.totalServiceChargeMoney?.amount),
                           )}
                     </span>
@@ -337,8 +337,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                          ? "Failed to calculate."
-                          : formatPrice(Number(order?.netAmountDueMoney?.amount))}
+                        ? "Failed to calculate."
+                        : formatPrice(Number(order?.netAmountDueMoney?.amount))}
                     </span>
                   </span>
                 </div>

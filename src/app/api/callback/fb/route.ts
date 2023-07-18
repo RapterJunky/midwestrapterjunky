@@ -20,7 +20,9 @@ const checkSchema = z.string().uuid();
 
 export const GET = (request: NextRequest) => {
   try {
-    const id = checkSchema.parse(request.nextUrl.searchParams.get("code"));
+    const { searchParams } = new URL(request.url);
+
+    const id = checkSchema.parse(searchParams.get("code"));
     logger.info(`Facebook deletion status request ${id}`);
 
     return NextResponse.json({

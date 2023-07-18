@@ -1,11 +1,14 @@
-import type { CheckoutState, CheckoutAction, Address } from "@/pages/shop/checkout";
+import type {
+  CheckoutState,
+  CheckoutAction,
+  Address,
+} from "@/pages/shop/checkout";
 import { signIn, useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { RadioGroup } from "@headlessui/react";
-import type { Customer } from 'square';
+import type { Customer } from "square";
 
 import HiCheck from "@components/icons/HiCheck";
-
 
 type Props = {
   next: () => void;
@@ -35,42 +38,46 @@ const CustomerInfo: React.FC<Props> = ({
         const response = await fetch("/api/account/sqaure");
         if (!response.ok) throw response;
 
-        const data = await response.json() as Customer | null;
+        const data = (await response.json()) as Customer | null;
         if (data) {
           dispatch({
             type: "setAccountId",
-            payload: data.id as string
+            payload: data.id as string,
           });
-          if (data.address) dispatch({
-            type: "setAddressShipping",
-            payload: {
-              address_line1: data.address?.addressLine1,
-              address_line2: data.address?.addressLine2,
-              city: data.address?.locality,
-              country: data.address?.country,
-              postal: data.address?.postalCode,
-              state: data.address?.administrativeDistrictLevel1,
-              firstname: data.givenName,
-              lastname: data.familyName,
-              phone: data.phoneNumber,
-            } as Address
-          });
-          state.email = data.emailAddress ?? session.data?.user.email as string;
+          if (data.address)
+            dispatch({
+              type: "setAddressShipping",
+              payload: {
+                address_line1: data.address?.addressLine1,
+                address_line2: data.address?.addressLine2,
+                city: data.address?.locality,
+                country: data.address?.country,
+                postal: data.address?.postalCode,
+                state: data.address?.administrativeDistrictLevel1,
+                firstname: data.givenName,
+                lastname: data.familyName,
+                phone: data.phoneNumber,
+              } as Address,
+            });
+          state.email =
+            data.emailAddress ?? (session.data?.user.email as string);
         }
       }
 
-      dispatch({ type: "setCompleted", payload: { type: "user", value: true } });
+      dispatch({
+        type: "setCompleted",
+        payload: { type: "user", value: true },
+      });
       dispatch({ type: "setUserType", payload: state.user });
       dispatch({ type: "setUserEmail", payload: state.email as string });
     } catch (error) {
       console.error(error);
 
       if (error instanceof Response && error.status === 400) {
-
-        const data = await error.json().catch(err => {
+        const data = (await error.json().catch((err) => {
           console.error(err);
           return null;
-        }) as { message: string; } | null;
+        })) as { message: string } | null;
 
         setError("user", {
           message: data?.message ?? "An unknown error occurred",
@@ -152,7 +159,7 @@ const CustomerInfo: React.FC<Props> = ({
                 </RadioGroup.Option>
               </RadioGroup>
               {fieldState.error ? (
-                <span className="text-sm text-red-500 font-bold">
+                <span className="text-sm font-bold text-red-500">
                   {fieldState.error?.message}
                 </span>
               ) : null}
@@ -200,7 +207,9 @@ const CustomerInfo: React.FC<Props> = ({
             className="mb-2 block w-full rounded-sm bg-primary px-6 py-4 text-center text-sm font-medium uppercase leading-normal text-white shadow transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] disabled:pointer-events-none disabled:opacity-70"
             type="submit"
           >
-            {formState.isSubmitting ? "Loading account" : `Continue as ${session.data.user.name}`}
+            {formState.isSubmitting
+              ? "Loading account"
+              : `Continue as ${session.data.user.name}`}
           </button>
         ) : (
           <button

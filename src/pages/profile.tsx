@@ -27,12 +27,12 @@ type User = {
   id: string;
   name?: string;
   email?: string;
-  emailVerified: null | boolean,
+  emailVerified: null | boolean;
   image: string;
   sqaureId: string;
   banned: number;
-  accounts: { type: string; provider: string; providerAccountId: string; }[]
-}
+  accounts: { type: string; provider: string; providerAccountId: string }[];
+};
 
 export const getStaticProps = async (
   ctx: GetStaticPropsContext,
@@ -149,10 +149,12 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                      ? "Failed to loaded provider."
-                      : user?.accounts.some(value => value.provider === "facebook")
-                        ? "Connected" : "Not connected"
-                  }
+                    ? "Failed to loaded provider."
+                    : user?.accounts.some(
+                        (value) => value.provider === "facebook",
+                      )
+                    ? "Connected"
+                    : "Not connected"}
                 </span>
               </div>
               <div></div>
@@ -167,10 +169,12 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                      ? "Failed to loaded provider."
-                      : user?.accounts.some(value => value.provider === "google")
-                        ? "Connected" : "Not connected"
-                  }
+                    ? "Failed to loaded provider."
+                    : user?.accounts.some(
+                        (value) => value.provider === "google",
+                      )
+                    ? "Connected"
+                    : "Not connected"}
                 </span>
               </div>
               <div></div>

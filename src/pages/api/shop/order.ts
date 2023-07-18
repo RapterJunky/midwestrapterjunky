@@ -183,8 +183,8 @@ export default async function handle(
     const billing = address.billing_as_shipping
       ? address.shipping
       : !address.billing
-        ? address.shipping
-        : address.billing;
+      ? address.shipping
+      : address.billing;
 
     const payment = await client.paymentsApi
       .createPayment({
