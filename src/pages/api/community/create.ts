@@ -23,7 +23,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       .parse(req.headers["x-type-create"]);
 
     await applyRateLimit(req, res);
-    const session = await getAuthSession({ throwOnNull: true, ctx: { req, res } });
+    const session = await getAuthSession({
+      throwOnNull: true,
+      ctx: { req, res },
+    });
 
     switch (req.method) {
       case "PATCH":

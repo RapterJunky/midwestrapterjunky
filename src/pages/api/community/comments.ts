@@ -14,7 +14,10 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const session = await getAuthSession({ throwOnNull: false, ctx: { req, res } });
+    const session = await getAuthSession({
+      throwOnNull: false,
+      ctx: { req, res },
+    });
     switch (req.method) {
       case "GET":
         return await GET(req, res, session);

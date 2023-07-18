@@ -55,8 +55,8 @@ export const getStaticProps = async ({
     "GenericPage",
     GenericPageQuery,
     {
-      ci: process.env.CI
-    }
+      ci: process.env.CI,
+    },
   );
 
   const cat = await prisma.thread.findMany({
