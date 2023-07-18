@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import handleTC from "@service/community/handleTC";
 import { applyRateLimit } from "@api/rateLimiter";
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import { getSession } from "@lib/getSession";
 import GET from "@service/community/GET";
 
@@ -41,7 +41,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         throw createHttpError.MethodNotAllowed();
     }
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 };
 

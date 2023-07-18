@@ -2,7 +2,7 @@ import type { SeoOrFaviconTag, RegularMetaAttributes } from "react-datocms/seo";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-import { handleError, type ApiErrorResponse } from "@api/errorHandler";
+import onError, { type ApiErrorResponse } from "@api/handleError";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
 import PagedArticles from "@query/queries/pagedArticles";
 import type { Paginate } from "@type/page";
@@ -87,6 +87,6 @@ export default async function handle(
       isLastPage,
     });
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 }

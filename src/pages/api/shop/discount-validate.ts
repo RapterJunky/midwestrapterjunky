@@ -4,8 +4,8 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
-import { applyRateLimit } from "@lib/api/rateLimiter";
-import { handleError } from "@lib/api/errorHandler";
+import { applyRateLimit } from "@api/rateLimiter";
+import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 
 const schema = z.object({
@@ -58,6 +58,6 @@ export default async function handle(
       name: discountData?.name,
     });
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

@@ -15,6 +15,7 @@ const AccountDropdown: React.FC<{
         <div>
           <Menu.Button className="ml-2">
             <Image
+              unoptimized
               className="rounded-full shadow-lg"
               width={40}
               height={40}

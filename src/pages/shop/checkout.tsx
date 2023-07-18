@@ -38,12 +38,14 @@ export type CheckoutAction =
   | "setUserEmail"
   | "setAddressShipping"
   | "setUserType"
+  | "setAccountId"
   | "setCompleted";
 export type CheckoutState = {
   completed: {
     shipping: boolean;
     user: boolean;
   };
+  accountId?: string;
   user: "account" | "guest";
   email?: string;
   discounts: Array<{ name: string; catalogObjectId: string; scope: "ORDER" }>;
@@ -86,6 +88,12 @@ const checkoutReducer = (
           ...state.discounts,
         ],
       };
+    case "setAccountId": {
+      return {
+        ...state,
+        accountId: action.payload as string,
+      }
+    }
     case "removeDiscount": {
       return {
         ...state,
@@ -291,8 +299,8 @@ const Checkout: NextPageWithProvider<
                         {isLoading
                           ? "Calculating..."
                           : error
-                          ? "Failed to calculate."
-                          : formatPrice(
+                            ? "Failed to calculate."
+                            : formatPrice(
                               Number(order?.totalDiscountMoney?.amount),
                             )}
                       </span>
@@ -304,8 +312,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.totalTaxMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.totalTaxMoney?.amount))}
                     </span>
                   </li>
                   <li className="flex justify-between py-1">
@@ -314,8 +322,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(
+                          ? "Failed to calculate."
+                          : formatPrice(
                             Number(order?.totalServiceChargeMoney?.amount),
                           )}
                     </span>
@@ -329,8 +337,8 @@ const Checkout: NextPageWithProvider<
                       {isLoading
                         ? "Calculating..."
                         : error
-                        ? "Failed to calculate."
-                        : formatPrice(Number(order?.netAmountDueMoney?.amount))}
+                          ? "Failed to calculate."
+                          : formatPrice(Number(order?.netAmountDueMoney?.amount))}
                     </span>
                   </span>
                 </div>

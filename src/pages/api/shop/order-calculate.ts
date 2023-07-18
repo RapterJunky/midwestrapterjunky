@@ -5,8 +5,8 @@ import { Client } from "square";
 import { z } from "zod";
 
 import getPricingForVarable from "@lib/shop/getPricingForVarable";
-import { handleError } from "@lib/api/errorHandler";
-import { applyRateLimit } from "@lib/api/rateLimiter";
+import onError from "@api/handleError";
+import { applyRateLimit } from "@api/rateLimiter";
 import { logger } from "@lib/logger";
 
 const schema = z.object({
@@ -99,6 +99,6 @@ export default async function handle(
 
     return res.status(200).json(json);
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

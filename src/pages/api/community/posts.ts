@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { handleError } from "@/lib/api/errorHandler";
+import onError from "@api/handleError";
 import createHttpError from "http-errors";
 
 import { getSession } from "@lib/getSession";
@@ -21,7 +21,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         throw createHttpError.MethodNotAllowed();
     }
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 };
 

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 
 import { applyRateLimit } from "@api/rateLimiter";
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import DELETE from "@service/comments/DELETE";
 import { getSession } from "@lib/getSession";
 import POST from "@service/comments/POST";
@@ -30,6 +30,6 @@ export default async function handler(
         throw createHttpError.MethodNotAllowed();
     }
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

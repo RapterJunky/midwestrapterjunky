@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import { PUBLIC_CACHE_FOR_1H } from "@lib/revaildateTimings";
-import { handleError } from "@lib/api/errorHandler";
+import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 
 export default async function handler(
@@ -39,6 +39,6 @@ export default async function handler(
 
     return res.status(200).json(item.result.counts);
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

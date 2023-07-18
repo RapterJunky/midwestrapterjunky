@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import { Client } from "square";
 
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
-import { handleError } from "@lib/api/errorHandler";
+import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 
 export default async function handle(
@@ -46,6 +46,6 @@ export default async function handle(
 
     return res.status(200).json([]);
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

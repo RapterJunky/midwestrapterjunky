@@ -14,11 +14,11 @@ const withAnalyzer = withBundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withAnalyzer({
-  productionBrowserSourceMaps: true, //process.env.VERCEL_ENV !== "production",
+  productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
   reactStrictMode: true,
-  /*experimental: {
-    swcPlugins: [["next-superjson-plugin", {}]],
-  },*/
+  experimental: {
+    swcPlugins: [["next-superjson-plugin", { excluded: [] }]],
+  },
   images: {
     deviceSizes: [150, 300, 600, 900, 1200, 1500, 1800, 2100],
     domains: [

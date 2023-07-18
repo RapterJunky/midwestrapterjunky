@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import { logger } from "@lib/logger";
-import onError from "@api/onError";
+import onError from "@api/handleError";
 import prisma from "@api/prisma";
 
 interface JSONWebToken {
@@ -91,9 +91,8 @@ export const POST = async (request: NextRequest) => {
     });
 
     return NextResponse.json({
-      url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-        process.env.VERCEL_URL
-      }/api/callback/fb`,
+      url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
+        }/api/callback/fb`,
       confirmation_code: randomBytes(10).toString("hex"),
     });
   } catch (error) {

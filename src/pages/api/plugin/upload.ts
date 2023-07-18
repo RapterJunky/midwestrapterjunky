@@ -7,7 +7,7 @@ import { parse } from "node:path";
 import sharp from "sharp";
 
 import googleDrive, { driveConfig, imageConfig } from "@api/googleDrive";
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import type { GoogleImage } from "@type/google";
 import { logger } from "@lib/logger";
 
@@ -29,7 +29,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -76,9 +76,8 @@ export default async function handle(
         imageId = driveService.files
           .create({
             requestBody: {
-              name: `${
-                parse(file.originalFilename ?? file.newFilename).name
-              }.webp`,
+              name: `${parse(file.originalFilename ?? file.newFilename).name
+                }.webp`,
               parents: [driveConfig.uploadFolderId],
               originalFilename: file.originalFilename,
               appProperties: {
@@ -133,6 +132,6 @@ export default async function handle(
 
     return res.status(200).json(file);
   } catch (error) {
-    handleError(error, res);
+    onError(error, res);
   }
 }

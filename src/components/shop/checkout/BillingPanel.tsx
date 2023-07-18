@@ -194,7 +194,7 @@ const BillingPanel: React.FC<Props> = ({
     handleSubmit,
     register,
     watch,
-    formState: { errors, isSubmitting, isValidating },
+    formState,
   } = useForm<CheckoutState>({
     defaultValues: checkoutState,
   });
@@ -243,6 +243,7 @@ const BillingPanel: React.FC<Props> = ({
           source_verification: sourceVerification,
           location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
           source_id: source,
+          customer_id: checkoutState.accountId,
           checkout_id: router.query.checkoutId,
           items: data.map((item) => ({
             pricingType: item.option.pricingType,
@@ -344,12 +345,11 @@ const BillingPanel: React.FC<Props> = ({
       aria-labelledby="tab-btn-3"
       tabIndex={2}
       data-headlessui-state={active ? "selected" : undefined}
-      className={`${
-        active ? "flex" : "hidden"
-      } flex-col items-center justify-center`}
+      className={`${active ? "flex" : "hidden"
+        } flex-col items-center justify-center`}
     >
       <CheckoutModal
-        asLoading={isSubmitting}
+        asLoading={formState.isSubmitting}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         message={modalData.message}
@@ -413,7 +413,7 @@ const BillingPanel: React.FC<Props> = ({
           </div>
           {!sameShpppingAddress ? (
             <AddressForm
-              errors={errors}
+              errors={formState.errors}
               disabled={sameShpppingAddress}
               name="billing"
               register={register}
@@ -472,8 +472,8 @@ const BillingPanel: React.FC<Props> = ({
           <button
             data-cy="checkout-pay"
             disabled={
-              isSubmitting ||
-              isValidating ||
+              formState.isSubmitting ||
+              formState.isValidating ||
               loading ||
               !checkoutState.completed.shipping ||
               !checkoutState.completed.user

@@ -12,7 +12,7 @@ import handleUsers from "@service/plugin/pluginUser";
 import handleMail from "@service/plugin/pluginMail";
 import handleTAC from "@service/plugin/pluginTAC";
 
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 
 const allowedRoutes = z
   .array(
@@ -39,7 +39,7 @@ export default async function handle(
     if (
       !req.headers.authorization ||
       req.headers.authorization.replace("Bearer ", "") !==
-        process.env.PLUGIN_TOKEN
+      process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
 
@@ -70,6 +70,6 @@ export default async function handle(
         throw createHttpError.BadRequest();
     }
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 }

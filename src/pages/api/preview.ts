@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import { logger } from "@/lib/logger";
 
 const slugValidation = z.string().startsWith("/");
@@ -22,6 +22,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.redirect(308, slug);
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 }

@@ -3,7 +3,7 @@ import { draftMode } from "next/headers";
 import { z } from "zod";
 
 import { logger } from "@lib/logger";
-import onError from "@api/onError";
+import onError from "@api/handleError";
 
 const slugValidation = z.string().startsWith("/");
 

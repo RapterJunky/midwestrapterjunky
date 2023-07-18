@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import getPricingForVarable from "@lib/shop/getPricingForVarable";
 import { applyRateLimit } from "@lib/api/rateLimiter";
-import { handleError } from "@lib/api/errorHandler";
+import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 
 const schema = z.object({
@@ -183,8 +183,8 @@ export default async function handle(
     const billing = address.billing_as_shipping
       ? address.shipping
       : !address.billing
-      ? address.shipping
-      : address.billing;
+        ? address.shipping
+        : address.billing;
 
     const payment = await client.paymentsApi
       .createPayment({
@@ -249,9 +249,10 @@ export default async function handle(
       logger.error(error, "Sqaure ApiError");
       return res.status((error as ApiError).statusCode).json({
         message: (error as ApiError).message,
+        status: (error as ApiError).statusCode,
         details: (error as ApiError).errors,
       });
     }
-    handleError(error, res);
+    return onError(error, res);
   }
 }

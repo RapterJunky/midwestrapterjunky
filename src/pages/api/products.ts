@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { squareToShopifyProduct } from "@lib/plugin/SquareClient";
 import { PUBLIC_CACHE_FOR_2H } from "@lib/revaildateTimings";
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import { getKeys } from "@lib/dynamic_keys";
 import { logger } from "@lib/logger";
 import { Shopify } from "@api/gql";
@@ -224,6 +224,6 @@ export default async function handle(
         output.sort((a, b) => a.index - b.index).map((value) => value.product),
       );
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 }

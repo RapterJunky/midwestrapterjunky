@@ -10,7 +10,7 @@ export type ConfigFetcher = {
 
 export default class ConfigServiceBase {
   private route = `https://cdn.configcat.com/configuration-files/${process.env.CONFIG_CAT_KEY}/config_v4.json`;
-  constructor(protected cache: Cache) {}
+  constructor(protected cache: Cache) { }
   protected async fetch<T extends string | boolean | number = boolean>(
     lastConfig: ProjectConfig<T> | null,
     config?: RequestInit,
@@ -27,13 +27,14 @@ export default class ConfigServiceBase {
       }
 
       const response = await fetch(this.route, { ...config, headers });
-      if (![200, 304].includes(response.status)) throw response;
-
-      const data = (await response.json()) as ProjectConfigJSON<T>;
+      if (!response.ok) throw response;
 
       if (response.status === 200) {
         const etag = response.headers.get("etag");
         if (!etag) throw new Error("Failed to get etag");
+
+        const data = (await response.json()) as ProjectConfigJSON<T>;
+
         return {
           timestamp: new Date().getTime(),
           configJSON: data,
@@ -54,8 +55,7 @@ export default class ConfigServiceBase {
 
       logger.error(
         response,
-        `Failed to download feature flags & settings from ConfigCat. Status: ${
-          response && response.status
+        `Failed to download feature flags & settings from ConfigCat. Status: ${response && response.status
         } - ${response && response.statusText}`,
       );
       logger.info(
@@ -63,13 +63,12 @@ export default class ConfigServiceBase {
       );
       return lastConfig;
     } catch (error) {
-      console.error(error);
       const message =
         error instanceof Response
           ? error.statusText
           : error instanceof Error
-          ? error.message
-          : "";
+            ? error.message
+            : "";
       logger.error(
         error,
         `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`,

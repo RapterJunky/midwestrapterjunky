@@ -23,6 +23,17 @@ import type { SeoOrFaviconTag } from "react-datocms/seo";
 
 type Props = FullPageProps & { seo: SeoOrFaviconTag[] };
 
+type User = {
+  id: string;
+  name?: string;
+  email?: string;
+  emailVerified: null | boolean,
+  image: string;
+  sqaureId: string;
+  banned: number;
+  accounts: { type: string; provider: string; providerAccountId: string; }[]
+}
+
 export const getStaticProps = async (
   ctx: GetStaticPropsContext,
 ): Promise<GetStaticPropsResult<Props>> => {
@@ -67,7 +78,7 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
     data: user,
     isLoading,
     error,
-  } = useSWR<{ provider: string }, Response>("/api/profile", singleFetch);
+  } = useSWR<User, Response>("/api/account", singleFetch);
   return (
     <div className={`flex h-full flex-col`}>
       <SiteTags tags={[_site.faviconMetaTags, seo]} />
@@ -82,7 +93,7 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
           setDialogOpen(false);
           if (dialogData.title !== "Confirm Action") return;
           try {
-            await singleFetch("/api/profile", { method: "DELETE" });
+            await singleFetch("/api/account", { method: "DELETE" });
             await signOut({
               callbackUrl: "/",
             });
@@ -138,10 +149,10 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                    ? "Failed to loaded provider."
-                    : user?.provider !== "facebook"
-                    ? "Not connected"
-                    : "Connected"}
+                      ? "Failed to loaded provider."
+                      : user?.accounts.some(value => value.provider === "facebook")
+                        ? "Connected" : "Not connected"
+                  }
                 </span>
               </div>
               <div></div>
@@ -156,10 +167,10 @@ const Profile: NextPage<Props> = ({ navbar, _site, seo }) => {
                   {isLoading
                     ? "Loading..."
                     : error
-                    ? "Failed to loaded provider."
-                    : user?.provider !== "google"
-                    ? "Not connected"
-                    : "Connected"}
+                      ? "Failed to loaded provider."
+                      : user?.accounts.some(value => value.provider === "google")
+                        ? "Connected" : "Not connected"
+                  }
                 </span>
               </div>
               <div></div>

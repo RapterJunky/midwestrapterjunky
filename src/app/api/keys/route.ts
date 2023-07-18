@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import { getKeys, addKeys, dropKeys } from "@lib/dynamic_keys";
-import onError from "@api/onError";
+import onError from "@api/handleError";
 import { auth } from "@api/auth";
 
 const patchVaildation = z

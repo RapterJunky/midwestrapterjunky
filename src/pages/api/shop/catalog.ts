@@ -3,7 +3,7 @@ import { type CatalogObject, Client } from "square";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
-import { handleError } from "@lib/api/errorHandler";
+import onError from "@api/handleError";
 
 const schema = z.object({
   cursor: z.string().optional(),
@@ -49,18 +49,18 @@ export default async function handle(
       query:
         query || category
           ? {
-              exactQuery: category
-                ? {
-                    attributeName: "category_id",
-                    attributeValue: category,
-                  }
-                : undefined,
-              textQuery: query
-                ? {
-                    keywords: query.split(" "),
-                  }
-                : undefined,
-            }
+            exactQuery: category
+              ? {
+                attributeName: "category_id",
+                attributeValue: category,
+              }
+              : undefined,
+            textQuery: query
+              ? {
+                keywords: query.split(" "),
+              }
+              : undefined,
+          }
           : undefined,
     });
 
@@ -161,6 +161,6 @@ export default async function handle(
       nextCursor: content?.result.cursor ?? null,
     });
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 }

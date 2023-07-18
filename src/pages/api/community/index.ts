@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
-import { handleError } from "@api/errorHandler";
+import onError from "@api/handleError";
 import prisma from "@api/prisma";
 
 const getSchema = z.object({
@@ -33,8 +33,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: {
               NOT: ignore
                 ? {
-                    id: ignore,
-                  }
+                  id: ignore,
+                }
                 : undefined,
               tags: {
                 array_contains: tags,
@@ -90,13 +90,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               orderBy:
                 sort === "latest"
                   ? {
-                      createdAt: "desc",
-                    }
+                    createdAt: "desc",
+                  }
                   : {
-                      likes: {
-                        _count: "desc",
-                      },
+                    likes: {
+                      _count: "desc",
                     },
+                  },
             })
             .withPages({
               includePageCount: true,
@@ -128,13 +128,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             orderBy:
               sort === "latest"
                 ? {
-                    createdAt: "desc",
-                  }
+                  createdAt: "desc",
+                }
                 : {
-                    likes: {
-                      _count: "desc",
-                    },
+                  likes: {
+                    _count: "desc",
                   },
+                },
           })
           .withPages({
             includePageCount: true,
@@ -151,7 +151,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         throw createHttpError.MethodNotAllowed();
     }
   } catch (error) {
-    return handleError(error, res);
+    return onError(error, res);
   }
 };
 
