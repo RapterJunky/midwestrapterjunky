@@ -31,7 +31,8 @@ export const Threads: React.FC<{
     string
   >(
     `/api/plugin/category?page=${page}`,
-    (url) => AuthFetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>,
+    (url) =>
+      AuthFetch(url).then((value) => value.json()) as Promise<Paginate<Thread>>,
   );
 
   const createModel = async () => {
@@ -191,68 +192,68 @@ export const Threads: React.FC<{
           <ul className="mt-dato-m space-y-dato-m">
             {data
               ? data.result.map((value) => (
-                <li
-                  className="flex items-center gap-2 bg-white p-4 shadow"
-                  key={value.id}
-                >
-                  <div>
-                    <Image
-                      unoptimized
-                      className="rounded-full"
-                      src={value.image}
-                      alt="Category Image"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div className="mr-auto">
-                    <h1 className="text-xl font-bold">{value.name}</h1>
-                    <div className="flex flex-wrap gap-1">
-                      {value.tags?.map((tag, i) => (
-                        <span
-                          className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
-                          key={i}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <p>{value.description}</p>
-                  </div>
-                  <Dropdown
-                    renderTrigger={({ open, onClick }) => (
-                      <Button
-                        buttonSize="xxs"
-                        buttonType="primary"
-                        onClick={onClick}
-                      >
-                        <span className="flex items-center gap-2">
-                          Actions {open ? <FaChevronDown /> : <FaChevronUp />}
-                        </span>
-                      </Button>
-                    )}
+                  <li
+                    className="flex items-center gap-2 bg-white p-4 shadow"
+                    key={value.id}
                   >
-                    <DropdownMenu alignment="right">
-                      <DropdownOption onClick={() => editModel(value)}>
-                        <div className="flex items-center gap-1">
-                          <FaEdit className="h-4 w-4" />
-                          Edit
-                        </div>
-                      </DropdownOption>
-                      <DropdownSeparator />
-                      <DropdownOption
-                        red
-                        onClick={() => deleteModel(value.id)}
-                      >
-                        <div className="flex items-center gap-1">
-                          <FaTrash className="h-4 w-4" />
-                          Delete
-                        </div>
-                      </DropdownOption>
-                    </DropdownMenu>
-                  </Dropdown>
-                </li>
-              ))
+                    <div>
+                      <Image
+                        unoptimized
+                        className="rounded-full"
+                        src={value.image}
+                        alt="Category Image"
+                        width={40}
+                        height={40}
+                      />
+                    </div>
+                    <div className="mr-auto">
+                      <h1 className="text-xl font-bold">{value.name}</h1>
+                      <div className="flex flex-wrap gap-1">
+                        {value.tags?.map((tag, i) => (
+                          <span
+                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            key={i}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <p>{value.description}</p>
+                    </div>
+                    <Dropdown
+                      renderTrigger={({ open, onClick }) => (
+                        <Button
+                          buttonSize="xxs"
+                          buttonType="primary"
+                          onClick={onClick}
+                        >
+                          <span className="flex items-center gap-2">
+                            Actions {open ? <FaChevronDown /> : <FaChevronUp />}
+                          </span>
+                        </Button>
+                      )}
+                    >
+                      <DropdownMenu alignment="right">
+                        <DropdownOption onClick={() => editModel(value)}>
+                          <div className="flex items-center gap-1">
+                            <FaEdit className="h-4 w-4" />
+                            Edit
+                          </div>
+                        </DropdownOption>
+                        <DropdownSeparator />
+                        <DropdownOption
+                          red
+                          onClick={() => deleteModel(value.id)}
+                        >
+                          <div className="flex items-center gap-1">
+                            <FaTrash className="h-4 w-4" />
+                            Delete
+                          </div>
+                        </DropdownOption>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </li>
+                ))
               : null}
           </ul>
           <hr className="mt-dato-m" />
