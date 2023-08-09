@@ -35,7 +35,7 @@ export type CursorPaginationOptions<Result, Condition> = {
   limit: number;
   after?: string;
   before?: string;
-  getCursor?: (result: Result) => string;
+  getCursor?: (result: Result & { id: unknown }) => string;
   parseCursor?: (cursor: string) => Condition;
 };
 

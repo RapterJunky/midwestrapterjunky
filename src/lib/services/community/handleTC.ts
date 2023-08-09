@@ -13,6 +13,7 @@ import { slateToDast } from "@lib/utils/editor/slateToDast";
 import { logger } from "@lib/logger";
 import sendMail from "@api/sendMail";
 import prisma from "@api/prisma";
+import type { Prisma } from "@prisma/client";
 
 const EMAIL_TEMPLTE_ID = "d-09d6805d0013445eb03fa020c5fabb7c";
 
@@ -45,7 +46,7 @@ const handleTC = async (
             id: formData.fields.editId,
           },
           data: {
-            content: dast,
+            content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
           },
           select: {
             id: true,
@@ -75,7 +76,7 @@ const handleTC = async (
           },
           data: {
             notifyOwner: (formData.fields as TopicSchema).notification,
-            content: dast,
+            content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
             name: (formData.fields as TopicSchema).title,
             tags: (formData.fields as TopicSchema).tags,
             threadId: (formData.fields as TopicSchema).thread,
@@ -92,7 +93,7 @@ const handleTC = async (
       const comment = await prisma.comment.create({
         data: {
           ownerId: session.user.id,
-          content: dast,
+          content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue,
           parentCommentId: (formData.fields as CommentSchema).parentId,
           threadPostId: (formData.fields as CommentSchema).postId,
         },
@@ -133,11 +134,9 @@ const handleTC = async (
                 id: EMAIL_TEMPLTE_ID,
                 data: {
                   topic_title: comment.threadPost.name,
-                  topic_link: `http${
-                    process.env.VERCEL_ENV !== "development" ? "s" : ""
-                  }://${process.env.VERCEL_URL}/community/p/${
-                    comment.threadPost.id
-                  }`,
+                  topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
+                    }://${process.env.VERCEL_URL}/community/p/${comment.threadPost.id
+                    }`,
                 },
               },
             },
@@ -158,7 +157,7 @@ const handleTC = async (
         data: {
           notifyOwner: (formData.fields as TopicSchema).notification,
           ownerId: session.user.id,
-          content: dast,
+          content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
           name: (formData.fields as TopicSchema).title,
           tags: (formData.fields as TopicSchema).tags,
           threadId: (formData.fields as TopicSchema).thread,

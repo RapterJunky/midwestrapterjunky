@@ -85,9 +85,9 @@ export const paginateWithCursor = async <R, C>(
     }
   }
 
-  const startCursor = results.length ? getCursor(results[0] as R) : null;
+  const startCursor = results.length ? getCursor(results[0] as R & { id: unknown }) : null;
   const endCursor = results.length
-    ? getCursor(results[results.length - 1] as R)
+    ? getCursor(results[results.length - 1] as R & { id: unknown })
     : null;
 
   return [

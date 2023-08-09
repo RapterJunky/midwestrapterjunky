@@ -93,9 +93,9 @@ const DELETE = async (
         },
       });
 
-      if (data.content.blocks) {
+      if ((data.content as PrismaJson.PostComment).blocks) {
         const images = (
-          data.content.blocks as {
+          (data.content as PrismaJson.PostComment).blocks as {
             __typename: string;
             content: { imageId: string };
           }[]
