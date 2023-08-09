@@ -209,7 +209,7 @@ export const Threads: React.FC<{
                     <div className="mr-auto">
                       <h1 className="text-xl font-bold">{value.name}</h1>
                       <div className="flex flex-wrap gap-1">
-                        {value.tags?.map((tag, i) => (
+                        {(value.tags as string[])?.map((tag, i) => (
                           <span
                             className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
                             key={i}

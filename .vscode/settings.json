@@ -4,5 +4,6 @@
   },
   "code-runner.executorMap": {
     "typescript": "vite-node $fullFileName"
-  }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
