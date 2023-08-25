@@ -58,7 +58,7 @@ const ImageItem: React.FC<{
           throw new Error("Failed to get image blur");
 
         item.appProperties.blurthumb = content.blurthumb;
-        await mutate((current) => {
+        await mutate<CursorPaginate<GoogleImage>>((current) => {
           if (!current) throw new Error("Unable to process.");
           const idx = current?.result.findIndex(
             (value) => value.id === item.id,
@@ -121,7 +121,7 @@ const ImageItem: React.FC<{
 
       if (!confirm) return;
 
-      await mutate(async (current) => {
+      await mutate<CursorPaginate<GoogleImage>>(async (current) => {
         if (!current) throw new Error("Not Data");
         await AuthFetch(`/api/plugin/images?id=${item.id}`, {
           method: "DELETE",
@@ -219,7 +219,7 @@ const UploadButton: React.FC<{
 
             formData.set("image", image, image.name);
 
-            await mutate(async (current) => {
+            await mutate<CursorPaginate<GoogleImage>>(async (current) => {
               if (!current) throw new Error("Unable to process request.");
               const response = await AuthFetch("/api/plugin/upload", {
                 method: "POST",
@@ -326,7 +326,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
 
       const imagesData: ResponsiveImage<{ width: number; height: number }>[] =
         [];
-      await mutate(async (current) => {
+      await mutate<CursorPaginate<GoogleImage>>(async (current) => {
         if (!current) throw new Error("Unabel to process");
         const response = await AuthFetch(
           `/api/plugin/images?${params.toString()}`,
@@ -434,8 +434,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                   {!sort.length
                     ? "All"
                     : sort === "cms_upload"
-                    ? "CMS Upload"
-                    : "User Upload"}
+                      ? "CMS Upload"
+                      : "User Upload"}
                 </Button>
               )}
             >

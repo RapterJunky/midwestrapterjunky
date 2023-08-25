@@ -146,7 +146,7 @@ export const MailingList: React.FC<{
 
                           if (!sure) return;
 
-                          await mutate(
+                          await mutate<Paginate<{ id: number; email: string }>>(
                             async (current) => {
                               if (!current)
                                 throw new Error("Unable to process.");

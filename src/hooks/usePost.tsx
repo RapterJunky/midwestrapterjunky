@@ -224,9 +224,8 @@ export const PostProvider: React.FC<
               setDialog({
                 reasonInput: true,
                 title: "Reason for report",
-                message: `Please enter a reason for reporting this ${
-                  type === "comment" ? "comment" : "post"
-                }.`,
+                message: `Please enter a reason for reporting this ${type === "comment" ? "comment" : "post"
+                  }.`,
                 open: true,
               });
             });
@@ -299,7 +298,7 @@ export const PostProvider: React.FC<
               return;
             }
 
-            await mutate(
+            await mutate<Paginate<TComment>>(
               async (currentData) => {
                 if (!currentData) throw new Error("No data to populate.");
 
@@ -385,7 +384,7 @@ export const PostProvider: React.FC<
               return;
             }
 
-            await mutate(
+            await mutate<Paginate<TComment>>(
               async (currentData) => {
                 if (!currentData) throw new Error("No data to populate.");
 
@@ -455,7 +454,7 @@ export const PostProvider: React.FC<
               return;
             }
 
-            await mutate(
+            await mutate<Paginate<TComment>>(
               async (current) => {
                 if (!current) throw new Error("No data to populate.");
 
@@ -491,7 +490,7 @@ export const PostProvider: React.FC<
         },
         async create(content, settings?: { mode: "update"; id: string }) {
           try {
-            await mutate(
+            await mutate<Paginate<TComment>>(
               async (current) => {
                 if (!current || !postId)
                   throw new Error("Unable to create comment.", {

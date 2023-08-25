@@ -402,7 +402,7 @@ export const Reports: React.FC<{
 
   const handleDelete = async (id: number) => {
     try {
-      await mutate(
+      await mutate<ContentType>(
         async (current) => {
           if (!current) throw new Error("NoSourceData");
           const idx = current.result.findIndex((item) => item.id === id);
