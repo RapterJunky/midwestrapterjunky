@@ -62,7 +62,7 @@ export const getStaticProps = async ({
     GenericPageQuery,
   );
 
-  const categories = await prisma.thread.findMany({
+  const categories = (await prisma.thread.findMany({
     select: {
       id: true,
       name: true,
@@ -71,7 +71,7 @@ export const getStaticProps = async ({
     where: {
       allowUserPosts: true,
     },
-  }) as { id: number; name: string; tags: PrismaJson.Tags; }[];
+  })) as { id: number; name: string; tags: PrismaJson.Tags }[];
 
   return {
     props: {
@@ -166,8 +166,9 @@ const CreateTopicDialog: React.FC<{
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Response) {
-    return `Failed to process request. \n STATUS CODE: ${error.statusText ?? error.status
-      }`;
+    return `Failed to process request. \n STATUS CODE: ${
+      error.statusText ?? error.status
+    }`;
   }
 
   if (!(error instanceof Error)) {

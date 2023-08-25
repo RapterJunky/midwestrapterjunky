@@ -61,7 +61,9 @@ const Select = ({ ctx }: { ctx: RenderModalCtx }) => {
               </div>
               <div className="ml-1 flex flex-col">
                 <h4 className="font-sans font-bold">{value.name}</h4>
-                <span className="text-blue-600">{(value.social as PrismaJson.AuthorSocial)?.user}</span>
+                <span className="text-blue-600">
+                  {(value.social as PrismaJson.AuthorSocial)?.user}
+                </span>
               </div>
             </div>
             <button

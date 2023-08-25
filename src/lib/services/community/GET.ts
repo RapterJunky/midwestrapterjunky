@@ -36,7 +36,9 @@ const GET = async (
     if (!comment.content) throw new Error("Comment has not content.");
 
     return res.status(200).json({
-      message: comment.content ? dastToSlate(comment.content as PrismaJson.PostComment) : emptyDocument,
+      message: comment.content
+        ? dastToSlate(comment.content as PrismaJson.PostComment)
+        : emptyDocument,
     });
   }
 
@@ -57,7 +59,9 @@ const GET = async (
     notification: post.notifyOwner,
     tags: post.tags ?? [],
     categoryId: post.threadId,
-    message: post.content ? dastToSlate(post.content as PrismaJson.PostComment) : emptyDocument,
+    message: post.content
+      ? dastToSlate(post.content as PrismaJson.PostComment)
+      : emptyDocument,
   });
 };
 

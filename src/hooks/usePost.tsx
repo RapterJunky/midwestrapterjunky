@@ -224,8 +224,9 @@ export const PostProvider: React.FC<
               setDialog({
                 reasonInput: true,
                 title: "Reason for report",
-                message: `Please enter a reason for reporting this ${type === "comment" ? "comment" : "post"
-                  }.`,
+                message: `Please enter a reason for reporting this ${
+                  type === "comment" ? "comment" : "post"
+                }.`,
                 open: true,
               });
             });

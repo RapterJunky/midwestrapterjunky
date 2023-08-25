@@ -46,7 +46,10 @@ const handleTC = async (
             id: formData.fields.editId,
           },
           data: {
-            content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
+            content: dast as
+              | Prisma.JsonNullValueInput
+              | Prisma.InputJsonValue
+              | undefined,
           },
           select: {
             id: true,
@@ -76,7 +79,10 @@ const handleTC = async (
           },
           data: {
             notifyOwner: (formData.fields as TopicSchema).notification,
-            content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
+            content: dast as
+              | Prisma.JsonNullValueInput
+              | Prisma.InputJsonValue
+              | undefined,
             name: (formData.fields as TopicSchema).title,
             tags: (formData.fields as TopicSchema).tags,
             threadId: (formData.fields as TopicSchema).thread,
@@ -134,9 +140,11 @@ const handleTC = async (
                 id: EMAIL_TEMPLTE_ID,
                 data: {
                   topic_title: comment.threadPost.name,
-                  topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
-                    }://${process.env.VERCEL_URL}/community/p/${comment.threadPost.id
-                    }`,
+                  topic_link: `http${
+                    process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/p/${
+                    comment.threadPost.id
+                  }`,
                 },
               },
             },
@@ -157,7 +165,10 @@ const handleTC = async (
         data: {
           notifyOwner: (formData.fields as TopicSchema).notification,
           ownerId: session.user.id,
-          content: dast as Prisma.JsonNullValueInput | Prisma.InputJsonValue | undefined,
+          content: dast as
+            | Prisma.JsonNullValueInput
+            | Prisma.InputJsonValue
+            | undefined,
           name: (formData.fields as TopicSchema).title,
           tags: (formData.fields as TopicSchema).tags,
           threadId: (formData.fields as TopicSchema).thread,

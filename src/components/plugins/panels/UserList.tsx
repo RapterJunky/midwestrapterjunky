@@ -243,7 +243,7 @@ export const UserList: React.FC<{
                               red={!rowBanned}
                               onClick={async () => {
                                 try {
-                                  await mutate(
+                                  await mutate<Paginate<User>>(
                                     async (current) => {
                                       if (!current)
                                         throw new Error("No data to update.");
@@ -313,7 +313,7 @@ export const UserList: React.FC<{
                                 red={!rowBanned}
                                 onClick={async () => {
                                   try {
-                                    await mutate(
+                                    await mutate<Paginate<User>>(
                                       async (current) => {
                                         if (!current)
                                           throw new Error("No data to update.");
@@ -396,7 +396,7 @@ export const UserList: React.FC<{
 
                                 if (!sure) return;
 
-                                await mutate(
+                                await mutate<Paginate<User>>(
                                   async (current) => {
                                     if (!current)
                                       throw new Error("No data to update.");

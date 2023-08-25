@@ -199,13 +199,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                          <span
-                            className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
-                            key={i}
-                          >
-                            {value}
-                          </span>
-                        ))
+                            <span
+                              className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
+                              key={i}
+                            >
+                              {value}
+                            </span>
+                          ))
                         : null}
                     </div>
                   </div>
@@ -229,10 +229,12 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${topic.pinned ? "unpinned" : "pinned"
-                          } topic.`,
-                        error: `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"
-                          }`,
+                        success: `Successfully ${
+                          topic.pinned ? "unpinned" : "pinned"
+                        } topic.`,
+                        error: `Failed to ${
+                          topic.pinned ? "Unpin Topic" : "Pin Topic"
+                        }`,
                       }}
                       data={{
                         id: topic.id,
@@ -251,10 +253,12 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${topic.locked ? "unlocked" : "locked"
-                          } topic.`,
-                        error: `Failed to ${topic.locked ? "unlock" : "lock"
-                          } topic.`,
+                        success: `Successfully ${
+                          topic.locked ? "unlocked" : "locked"
+                        } topic.`,
+                        error: `Failed to ${
+                          topic.locked ? "unlock" : "lock"
+                        } topic.`,
                       }}
                       data={{
                         id: topic.id,

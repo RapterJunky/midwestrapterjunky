@@ -104,7 +104,7 @@ const Comment: React.FC<Props> = ({ comment, session }) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               {session.status === "authenticated" &&
-                session.data.user.id === comment.owner.id ? (
+              session.data.user.id === comment.owner.id ? (
                 <button
                   onClick={() => setShowEdit((curr) => !curr)}
                   type="button"
