@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-const AuthError = () => {
+const AuthError: React.FC = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-200 px-16 md:px-0">
       <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-8 shadow-2xl md:px-8 lg:px-24">

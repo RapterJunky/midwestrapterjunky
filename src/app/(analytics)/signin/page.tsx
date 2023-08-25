@@ -42,7 +42,7 @@ const BtnLoading: React.FC = () => {
   );
 };
 
-const SignIn = async () => {
+const SignIn: React.FC = async () => {
   const icon = await getIcon();
   return (
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">

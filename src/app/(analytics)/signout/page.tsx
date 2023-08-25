@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-const Page = () => {
+const Page: React.FC = () => {
   return (
     <div className="flex h-full items-center justify-center bg-neutral-200">
       <div className="block max-w-sm rounded-lg bg-white p-6 shadow-lg">

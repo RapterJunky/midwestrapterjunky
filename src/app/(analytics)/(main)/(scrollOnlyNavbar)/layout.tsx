@@ -6,7 +6,7 @@ const ScrollOnlyNavbarLayout: React.FC<React.PropsWithChildren> = ({
   return (
     <>
       <header>
-        <Navbar mode="scroll-only" />
+        <Navbar variant="scrollOnly" />
       </header>
       <main className="flex flex-auto flex-col">{children}</main>
     </>
