@@ -27,6 +27,7 @@ const config = {
     "*.config.ts",
     "*.config.mjs",
     "*.config.js",
+    "*.config.cjs"
   ],
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
