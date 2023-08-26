@@ -1,18 +1,19 @@
 import Link from "next/link";
-import HiEyeOff from "@components/icons/HiEyeOff";
+import { EyeOff } from 'lucide-react';
+import { Button } from "./button";
 
 export default function ExitPreview() {
   return (
     <div className="fixed bottom-10 left-10 z-50">
-      <div
-        className="mb-4 flex items-center gap-1 rounded-lg bg-danger-100 px-6 py-5 text-base text-danger-700"
+      <Button
+        variant="destructive"
         role="alert"
+        asChild
       >
-        <HiEyeOff />
-        <Link href="/api/exit-preview" prefetch={false} className="underline">
-          Exit draft mode.
+        <Link href="/api/disable-draft" prefetch={false}>
+          <EyeOff className="mr-2" /> Exit draft mode.
         </Link>
-      </div>
+      </Button>
     </div>
   );
 }

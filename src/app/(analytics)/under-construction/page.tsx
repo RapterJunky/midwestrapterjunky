@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
   return getGenericSeoTags({
-    icons: data._site.faviconMetaTags,
+    icons: data.site.faviconMetaTags,
     robots: false,
     description: "This page on Midest Raptor Junkies is under construstion.",
     title: "Under Construstion",

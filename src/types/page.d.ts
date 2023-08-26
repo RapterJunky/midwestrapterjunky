@@ -36,13 +36,12 @@ export type ResponsiveImage<E = never> = {
   responsiveImage: [E] extends [never] ? Image : Image & E;
 };
 
-export type ModulerContent = { __typename: string; [key: string]: unknown };
+export type ModulerContent = { __typename: string;[key: string]: unknown };
 
 export interface FullPageProps extends NavProps {
-  _site: {
+  site: {
     faviconMetaTags: SeoOrFaviconTag[];
   };
-  preview: boolean;
 }
 
 export interface Paginate<T> {

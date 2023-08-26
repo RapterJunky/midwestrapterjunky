@@ -4,7 +4,6 @@ import UpcomingEventsWithImage from "../fragments/UpcomingEventsWithImage";
 import UpcomingEvent from "../fragments/UpcomingEvent";
 import TestimonialAndShare from "../fragments/TestimonialAndShare";
 import FeaturedShop from "../fragments/FeaturedShop";
-import Navbar from "../fragments/Navbar";
 import AdvertBlock from "../fragments/AdvertBlock";
 import SocialLinks from "../fragments/SocialLinks";
 import ImageGallery from "../fragments/ImageGallery";
@@ -14,7 +13,7 @@ import CountdownFragment from "@query/fragments/CountDown";
 
 const HomePageQuery = `
     query HomePage { 
-        _site {
+        site: _site {
             faviconMetaTags {
               attributes
               content
@@ -36,14 +35,11 @@ const HomePageQuery = `
                 ...CHSFragment
                 ...CountdownFragment
             }
-            _seoMetaTags {
+            seo: _seoMetaTags {
                 attributes
                 content
                 tag
             }
-        }
-        navbar {
-            ...NavbarRecordFragment
         }
     }
 ${CarouselFragment}
@@ -57,7 +53,6 @@ ${AdvertBlock}
 ${SocialLinks}
 ${ImageGallery}
 ${VideoWithLink}
-${Navbar}
 ${CountdownFragment}
 `;
 

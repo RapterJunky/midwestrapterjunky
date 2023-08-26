@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
   return getGenericSeoTags({
-    icons: data._site.faviconMetaTags,
+    icons: data.site.faviconMetaTags,
     description: "Midwest Raptor Junkies auth error page",
     title: "Error",
     robots: false,

@@ -1,16 +1,12 @@
-import Navbar from "../fragments/Navbar";
 import ImageHelper from "../fragments/ImageHelper";
 const SponsorsQuery = `
 query SponsorsQuery {
-    _site {
+    site: _site {
         faviconMetaTags {
           attributes
           content
           tag
         }
-    }
-    navbar {
-        ...NavbarRecordFragment
     }
     sponsor {
       seo: _seoMetaTags {
@@ -26,7 +22,6 @@ query SponsorsQuery {
       }
     }
   }
-  ${Navbar}
 `;
 
 export default SponsorsQuery;

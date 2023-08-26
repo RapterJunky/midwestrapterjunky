@@ -1,4 +1,3 @@
-import Navbar from "../fragments/Navbar";
 import EmailCallToActionFragment from "../fragments/EmailCallToAction";
 import CustomHtmlSectionFragment from "../fragments/CustomHtmlSection";
 import SiteTags from "../fragments/SiteTags";
@@ -7,14 +6,11 @@ import ImageHelper from "../fragments/ImageHelper";
 
 const AboutUsQuery = `
 query AboutUsQuery {
-    _site {
+    site: _site {
       ...SiteFragment
     }
-    navbar {
-      ...NavbarRecordFragment
-    }
     aboutUsModel {
-      _seoMetaTags {
+      seo: _seoMetaTags {
         attributes
         content
         tag
@@ -45,6 +41,5 @@ query AboutUsQuery {
   ${SiteTags}
   ${EmailCallToActionFragment}
   ${CustomHtmlSectionFragment}
-  ${Navbar}
 `;
 export default AboutUsQuery;

@@ -2,7 +2,7 @@ import Navbar from "../fragments/Navbar";
 
 const GenericPageQuery = `
 query GenericPageQuery {
-    _site {
+    site: _site {
         faviconMetaTags {
             attributes
             content
