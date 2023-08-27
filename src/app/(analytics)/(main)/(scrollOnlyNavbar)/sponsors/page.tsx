@@ -19,15 +19,13 @@ interface Props extends FullPageProps {
     };
 }
 
-const getQuery = getPageQuery<Props>(SponsorsQuery);
-
 export async function generateMetadata(): Promise<Metadata> {
-    const { site, sponsor } = await getQuery();
+    const { site, sponsor } = await getPageQuery<Props>(SponsorsQuery);
     return toNextMetadata([...site.faviconMetaTags, ...sponsor.seo]);
 }
 
 const Sponsors: React.FC = async () => {
-    const { sponsor } = await getQuery();
+    const { sponsor } = await getPageQuery<Props>(SponsorsQuery);
     return (
         <div className="mb-4 flex w-full flex-grow flex-col items-center justify-center gap-6 divide-y divide-gray-300">
             <h1 className="md:leading-14 my-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-5xl">

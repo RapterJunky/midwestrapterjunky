@@ -20,10 +20,8 @@ interface Props extends FullPageProps {
     }
 }
 
-const getQuery = getPageQuery<Props>(privcy_policy);
-
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await getQuery();
+    const data = await getPageQuery<Props>(privcy_policy);
 
     const moddedTags = data.policy.seo.map((tag) => {
         if (tag.tag === "title") {
@@ -58,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const PrivacyPolicy: React.FC = async () => {
-    const data = await getQuery();
+    const data = await getPageQuery<Props>(privcy_policy);
 
     return (
         <div className="flex justify-center">

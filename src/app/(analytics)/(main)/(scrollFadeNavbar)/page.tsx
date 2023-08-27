@@ -14,15 +14,13 @@ interface HomeContent extends FullPageProps {
     };
 }
 
-const getQuery = getPageQuery<HomeContent>(HomePageQuery);
-
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await getQuery();
+    const data = await getPageQuery<HomeContent>(HomePageQuery);
     return toNextMetadata([...data.site.faviconMetaTags, ...data.home.seo]);
 }
 
 const Home: React.FC = async () => {
-    const data = await getQuery();
+    const data = await getPageQuery<HomeContent>(HomePageQuery);
 
     return (
         <ModuleContent modules={data.home.bodyContent} />
