@@ -1,16 +1,11 @@
-import Navbar from "../fragments/Navbar";
-
 const QueryBlogLatest = `
 query QueryBlogLatest($first: IntType = "5") {
-    _site {
+    site: _site {
         faviconMetaTags {
             attributes
             content
             tag
         }
-    }
-    navbar {
-        ...NavbarRecordFragment
     }
     posts: allArticles(first: $first, orderBy: _firstPublishedAt_DESC) {
         tags
@@ -24,6 +19,5 @@ query QueryBlogLatest($first: IntType = "5") {
         publishedAt: _publishedAt
     }
 }
-${Navbar}
 `;
 export default QueryBlogLatest;

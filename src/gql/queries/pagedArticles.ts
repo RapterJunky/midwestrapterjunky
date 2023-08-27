@@ -1,5 +1,5 @@
 const PagedArticles = `
-query MyQuery($first: IntType = "5", $skip: IntType = "0") {
+query PagedArticles($first: IntType = "5", $skip: IntType = "0") {
     totalArticles: _allArticlesMeta {
         count
     }

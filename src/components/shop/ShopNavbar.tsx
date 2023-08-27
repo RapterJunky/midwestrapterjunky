@@ -74,7 +74,7 @@ const ShopNavbar: React.FC<{ clear?: boolean }> = ({ clear = false }) => {
           >
             <HiShoppingBag className="h-7 w-7" />
             {count >= 1 ? (
-              <span className="absolute -bottom-2 -left-4 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-xs font-bold leading-none text-danger-700">
+              <span className="absolute -bottom-2 -left-4 ml-2 inline-block whitespace-nowrap rounded-[0.27rem] bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-xs font-bold leading-none text-red-700">
                 {count}
               </span>
             ) : null}

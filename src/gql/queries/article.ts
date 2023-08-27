@@ -1,18 +1,13 @@
-import Navbar from "../fragments/Navbar";
-
 import ImageHelper from "../fragments/ImageHelper";
 
 const ArticleQuery = `
 query ArticlePageQuery($slug: String = "") {
-    _site {
+    site: _site {
         faviconMetaTags {
             attributes
             content
             tag
         }
-    }
-    navbar {
-        ...NavbarRecordFragment
     }
     post: article(filter: {slug: {eq: $slug}}) {
         seo: _seoMetaTags {
@@ -50,7 +45,6 @@ query ArticlePageQuery($slug: String = "") {
         tags
       }
 }
-${Navbar}
 `;
 
 export default ArticleQuery;
