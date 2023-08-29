@@ -1,8 +1,9 @@
-"use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import HiChevronRight from "@components/icons/HiChevronRight";
+import HiChevronLeft from "@components/icons/HiChevronLeft";
+
 interface CalenderProps {
   data: {
     id: string;
@@ -140,7 +141,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                 type="button"
                 className="inline-flex cursor-pointer items-center rounded-lg p-1 leading-none transition duration-100 ease-in-out hover:bg-gray-200"
               >
-                <ChevronLeft className="h-6 w-6 leading-none text-gray-500" />
+                <HiChevronLeft className="inline-flex h-6 w-6 leading-none text-gray-500" />
               </button>
               <div className="inline-flex h-6 border-r"></div>
               <button
@@ -150,14 +151,14 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                 type="button"
                 className="inline-flex cursor-pointer items-center rounded-lg p-1 leading-none transition duration-100 ease-in-out hover:bg-gray-200"
               >
-                <ChevronRight className="h-6 w-6 leading-none text-gray-500" />
+                <HiChevronRight className="inline-flex h-6 w-6 leading-none text-gray-500" />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-7">
+          <div className="flex flex-wrap">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
-              <div key={i} className="px-2 py-2">
+              <div key={i} className="w-1/7 px-2 py-2">
                 <div className="text-center text-sm font-bold uppercase tracking-wide text-gray-600">
                   {day}
                 </div>
@@ -166,7 +167,7 @@ const Calendar: React.FC<CalenderProps> = (props) => {
           </div>
 
           <div className="-mx-1 -mb-1">
-            <div className="grid grid-cols-7 grid-rows-5 border-l border-t">
+            <div className="flex flex-wrap border-l border-t">
               {Array.from(
                 { length: offsets.start },
                 (_, i) => offsets.days_last_month - i,
@@ -178,8 +179,9 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                     className="relative h-30 w-1/7 border-b border-r bg-slate-100 px-4 pt-2"
                   >
                     <div
-                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(day, -1) ? "bg-gray-500 text-white" : ""
-                        }`}
+                      className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
+                        isToday(day, -1) ? "bg-gray-500 text-white" : ""
+                      }`}
                     >
                       {day}
                     </div>
@@ -194,10 +196,11 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                   className="relative h-30 w-1/7 border-b border-r px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${isToday(day)
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-700 hover:bg-blue-200"
-                      }`}
+                    className={`inline-flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full text-center leading-none transition duration-100 ease-in-out ${
+                      isToday(day)
+                        ? "bg-blue-500 text-white"
+                        : "text-gray-700 hover:bg-blue-200"
+                    }`}
                   >
                     {day}
                   </div>
@@ -230,8 +233,9 @@ const Calendar: React.FC<CalenderProps> = (props) => {
                   className="h-30 w-1/7 border-b border-r bg-slate-100 px-4 pt-2"
                 >
                   <div
-                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
-                      }`}
+                    className={`inline-flex h-6 w-6 select-none items-center justify-center rounded-full text-center leading-none text-gray-400 transition duration-100 ease-in-out ${
+                      isToday(i + 1, 1) ? "bg-gray-500 text-white" : ""
+                    }`}
                   >
                     {i + 1}
                   </div>

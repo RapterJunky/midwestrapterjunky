@@ -1,15 +1,19 @@
+import Navbar from "../fragments/Navbar";
 import ImageHelper from "../fragments/ImageHelper";
 const EventPageQuery = `
     query GetEvent($eq: String = "") {
-        site: _site {
+        _site {
             faviconMetaTags {
               attributes
               content
               tag
             }
         }
+        navbar {
+            ...NavbarRecordFragment
+        }
         event(filter: {slug: {eq: $eq}}) {
-            seo: _seoMetaTags {
+            _seoMetaTags {
                 attributes
                 content
                 tag
@@ -45,6 +49,7 @@ const EventPageQuery = `
             shopItemLink
         }
     }
+${Navbar}
 `;
 export default EventPageQuery;
 /*

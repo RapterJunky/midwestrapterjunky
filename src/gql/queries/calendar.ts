@@ -1,6 +1,7 @@
-const CalendarQuery = `
+import Navbar from "../fragments/Navbar";
+const NavbarQuery = `
     query CalendarQuery($date: DateTime, $first: IntType) {
-        site: _site {
+        _site {
             faviconMetaTags {
               attributes
               content
@@ -8,13 +9,16 @@ const CalendarQuery = `
             }
         }
         calendar {
-            seo: _seoMetaTags {
+            _seoMetaTags {
               attributes
               content
               tag
             }
           }
-        events: allEvents(filter: { dateFrom: { gt: $date } }, first: $first, orderBy: dateFrom_ASC) {
+        navbar {
+            ...NavbarRecordFragment
+        }
+        allEvents(filter: { dateFrom: { gt: $date } }, first: $first, orderBy: dateFrom_ASC) {
             id
             dateTo
             dateFrom
@@ -22,5 +26,6 @@ const CalendarQuery = `
             slug
         }
     }
+${Navbar}
 `;
-export default CalendarQuery;
+export default NavbarQuery;

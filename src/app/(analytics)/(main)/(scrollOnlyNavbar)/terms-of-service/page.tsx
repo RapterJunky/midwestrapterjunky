@@ -27,8 +27,10 @@ interface Props extends FullPageProps {
     };
 }
 
+const getQuery = getPageQuery<Props>(TermsOfServiceQuery);
+
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await getPageQuery<Props>(TermsOfServiceQuery);
+    const data = await getQuery();
 
     const moddedTags = data.terms.seo.map((tag) => {
         if (tag.tag === "title") {
@@ -63,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const TermsOfService: React.FC = async () => {
-    const data = await getPageQuery<Props>(TermsOfServiceQuery);
+    const data = await getQuery();
     return (
         <div className="flex justify-center">
             <article className="lg:prose-md prose prose-sm mx-4 my-8 md:prose-base">

@@ -32,13 +32,15 @@ interface AboutUsProps extends FullPageProps {
     };
 }
 
+const getQuery = getPageQuery<AboutUsProps>(AboutUsQuery);
+
 export async function generateMetadata(): Promise<Metadata> {
-    const data = await getPageQuery<AboutUsProps>(AboutUsQuery);
+    const data = await getQuery();
     return toNextMetadata([...data.site.faviconMetaTags, ...data.aboutUsModel.seo]);
 }
 
 const AboutUs: React.FC = async () => {
-    const { aboutUsModel } = await getPageQuery<AboutUsProps>(AboutUsQuery);
+    const { aboutUsModel } = await getQuery();
     return (
         <>
             <div className="mb-9 mt-40 flex flex-col gap-4 md:mx-40 md:flex-row">
