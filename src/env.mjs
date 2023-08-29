@@ -61,6 +61,7 @@ const server = z.object({
   FACEBOOK_CLIENT_ID: z.string().min(1),
   FACEBOOK_CLIENT_SECRET: z.string().min(1),
 
+  SQAURE_MERCHANT_ID: z.string().min(1),
   SQAURE_ACCESS_TOKEN: z.string().min(1),
   SQUARE_MODE: z.nativeEnum(Environment),
 
@@ -159,6 +160,7 @@ const processEnv = {
 
   SENDGIRD_API_KEY: process.env.SENDGIRD_API_KEY,
 
+  SQAURE_MERCHANT_ID: process.env.SQAURE_MERCHANT_ID,
   SQAURE_ACCESS_TOKEN: process.env.SQAURE_ACCESS_TOKEN,
   SQUARE_MODE: process.env.SQUARE_MODE,
 

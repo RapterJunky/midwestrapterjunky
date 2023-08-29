@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
   return getGenericSeoTags({
-    icons: data._site.faviconMetaTags,
+    icons: data.site.faviconMetaTags,
     robots: false,
     description:
       "Midwest Raptor Junkies failed to find what you where looking for.",

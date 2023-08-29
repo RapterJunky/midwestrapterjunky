@@ -31,6 +31,11 @@ type CartCtx = {
 
 const CartContext = createContext<CartCtx | undefined>(undefined);
 
+/**
+ * @deprecated
+ * @param param0 
+ * @returns 
+ */
 export const CartProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
@@ -149,6 +154,11 @@ export const CartProvider: React.FC<React.PropsWithChildren> = ({
   );
 };
 
+/**
+ * @deprecated
+ *
+ * @return {*} 
+ */
 const useCart = () => {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used with in a CartProvider");

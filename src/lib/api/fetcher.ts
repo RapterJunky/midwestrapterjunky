@@ -1,7 +1,7 @@
 /**
  * Fetch that throws on 400 errors and parses responce
  */
-export const singleFetch = <T = unknown>(url: string, init?: RequestInit) =>
+export const fetcher = <T = unknown>(url: string, init?: RequestInit) =>
   fetch(url, init)
     .then((e) => {
       if (e.ok) return e;
