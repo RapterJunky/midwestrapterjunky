@@ -1,39 +1,35 @@
-import { useRef, useState } from "react";
-import HiX from "@components/icons/HiX";
-import type { CheckoutAction, CheckoutState } from "@/pages/shop/checkout";
+"use client";
+import { X } from "lucide-react";
+import { useState } from "react";
+import useCheckout from "@/hooks/shop/useCheckout";
+import { FormLabel } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-type Props = {
-  checkout: [
-    CheckoutState,
-    React.Dispatch<{ type: CheckoutAction; payload: string | object }>,
-  ];
-};
-
-const DiscountForm: React.FC<Props> = ({
-  checkout: [checkoutState, dispatch],
-}) => {
-  const discountRef = useRef<HTMLInputElement>(null);
+const DiscountForm: React.FC = () => {
+  const { state, dispatch } = useCheckout();
+  const [discountName, setDsicountName] = useState<string>();
   const [discountError, setDiscountError] = useState<boolean>(false);
 
   const addDiscount = async () => {
     try {
       setDiscountError(false);
       // validate discount
-      if (!discountRef.current) return;
+      if (!discountName || !discountName.length) return;
 
       const response = await fetch(
-        `/api/shop/discount-validate?discount=${discountRef.current.value}`,
+        `/api/shop/discount-validate?discount=${discountName}`,
       );
 
       if (!response.ok) throw new Error("Invaild discount code");
 
-      discountRef.current.value = "";
+      setDsicountName("");
 
       const code = (await response.json()) as { id: string; name: string };
 
       dispatch({
-        type: "addDiscount",
-        payload: { scope: "ORDER", name: code.name, catalogObjectId: code.id },
+        event: "ADD_DISCOUNT",
+        payload: { scope: "ORDER", name: code.name, id: code.id },
       });
     } catch (error) {
       console.error(error);
@@ -48,56 +44,27 @@ const DiscountForm: React.FC<Props> = ({
         <hr className="w-full" />
       </div>
       <div className="mb-4">
-        <label className="text-gray-700" htmlFor="discount">
-          Discount Code
-        </label>
-        <div className="flex">
-          <input
-            data-cy="discount-input"
-            ref={discountRef}
-            placeholder="Some discount"
-            id="discount"
-            type="text"
-            className="mt-1 block w-full border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-          <button
-            data-cy="discount-input-enter"
-            onClick={addDiscount}
-            type="button"
-            className="mt-1 block rounded-r-sm bg-primary px-3 py-2 text-white shadow-sm hover:bg-primary-600"
-          >
-            Apply
-          </button>
+        <FormLabel>Discounts</FormLabel>
+        <div className="flex gap-1">
+          <Input placeholder="Enter code" value={discountName} onChange={(ev) => setDsicountName(ev.target.value)} />
+          <Button data-cy="discount-input-enter" onClick={addDiscount}>Apply</Button>
         </div>
         {discountError ? (
           <span className="mt-1 block text-red-500">Invaild code</span>
         ) : null}
       </div>
-      {!!checkoutState.discounts.length ? (
-        <div className="mb-4 ml-4">
-          <ul>
-            {checkoutState.discounts.map((discount) => (
-              <li className="flex items-center" key={discount.catalogObjectId}>
-                <button
-                  data-cy="discount-remove"
-                  onClick={() =>
-                    dispatch({
-                      type: "removeDiscount",
-                      payload: discount.catalogObjectId,
-                    })
-                  }
-                  type="button"
-                  className="hover:text-red-600"
-                  aria-label="Remove discount"
-                >
-                  <HiX className="h-6 w-6" />
-                </button>
-                <span>{discount.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      <div className="mb-4 ml-4">
+        <ul className="divide-y divide-zinc-300">
+          {state.discounts.map((value, i) => (
+            <li key={i} className="w-full flex justify-between p-2">
+              <div>Code: {value.name}</div>
+              <Button onClick={() => dispatch({ event: "REMOVE_DISCOUNT", payload: value.id })} aria-label="Remove discount" size="icon" variant="destructive">
+                <X />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 };

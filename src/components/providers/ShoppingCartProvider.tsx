@@ -4,9 +4,12 @@ import { createContext } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/api/fetcher';
 
-type CartItem = {
+export type CartItem = {
+    /**
+     * {ITEM_VARIATION_ID}
+     * @type {string}
+     */
     id: string;
-    variation: string;
     quantity: number;
 };
 
@@ -32,9 +35,8 @@ type ShoppingCartCtx = {
     cart: ExtendCartItem[] | undefined,
     error: Response | undefined,
     isLoading: boolean;
-    subtotal: number;
-    addItem: (id: string, variation: string, quantity?: number) => void;
-    removeItem: (id: string, variation: string) => void;
+    addItem: (id: string, quantity?: number) => void;
+    removeItem: (id: string) => void;
     resetCart: () => void;
     open: () => void
 }
@@ -49,10 +51,6 @@ const ShoppingCardProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const { data, error, isLoading } = useSWR<ExtendCartItem[], Response>(() => cartItems.length ? /*["/api/shop/cart", cartItems]*/ null : null, fetcher);
 
     const count = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
-    const subtotal = data?.reduce(
-        (acc, curr) => acc + curr.price * curr.quantity,
-        0,
-    ) ?? 0;
 
     return (
         <ShoppingCartContext.Provider value={{
@@ -60,24 +58,23 @@ const ShoppingCardProvider: React.FC<React.PropsWithChildren> = ({ children }) =
             cart: data,
             error,
             isLoading,
-            subtotal,
             open() {
                 window.dispatchEvent(new CustomEvent("shopping-cart:open"))
             },
-            addItem(id, variation, quantity = 1) {
+            addItem(id, quantity = 1) {
                 setCartItems(current => {
-                    const idx = current.findIndex(value => value.id === id && value.variation === variation);
+                    const idx = current.findIndex(value => value.id === id);
                     if (idx !== -1 && current[idx]) {
                         current[idx]!.quantity += quantity;
                         return [...current];
                     }
 
-                    return [...current, { id, quantity, variation }];
+                    return [...current, { id, quantity }];
                 });
             },
-            removeItem(id, variation) {
+            removeItem(id) {
                 setCartItems((current) => {
-                    const item = current.findIndex(value => value.id === id && value.variation === variation);
+                    const item = current.findIndex(value => value.id === id);
                     if (item === -1) return current;
                     current.splice(item, 1);
                     return [...current];

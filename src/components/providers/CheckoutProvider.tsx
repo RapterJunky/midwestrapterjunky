@@ -4,9 +4,15 @@ import { createContext, useState, useReducer } from "react";
 import Script from "next/script";
 import { useSearchParams } from "next/navigation";
 
+import type { Order } from "square";
+import useCart from "@/hooks/shop/useCart";
+import useSWR from "swr";
+import type { CartItem } from "@/components/providers/ShoppingCartProvider";
+
+
 export type Address = {
     address_line?: string;
-    addres_line2?: string;
+    address_line2?: string;
     city: string;
     country: string;
     familyName: string;
@@ -25,23 +31,36 @@ type PaymentResult = {
 }
 
 export type Actions = { payload: boolean, event: "SHIPPING_DONE" } |
-{ payload: boolean; event: "ACCOUNT_DONE" } |
-{ payload: string; event: "SET_EMAIL" } |
-{ payload: string; event: "SET_ACCOUNT_ID" } |
-{ payload: string; event: "ADD_DISCOUNT" } |
+{
+    event: "FINISH_ACCOUNT_TAB_AS_GUEST"
+    payload: {
+        email: string;
+    };
+} |
+{
+    event: "FINISH_ACCOUNT_TAB_AS_USER",
+    payload: {
+        email: string;
+        shipping: Partial<Address> | null;
+        accountId: string;
+    }
+} |
+{ payload: Address, event: "FINSIH_SHIPPING" } |
+{ payload: { billing: Address | undefined, billingAsShipping: boolean }; event: "FINISH_BILLING" } |
+{ payload: { name: string; id: string; scope: "ORDER" }; event: "ADD_DISCOUNT" } |
 { payload: string; event: "REMOVE_DISCOUNT" } |
-{ payload: Address; event: "SET_BILLING" } |
-{ payload: Address; event: "SET_SHIPPING" } |
-{ payload: boolean, event: "SET_SHIPPING_AS_BILLING" }
+{ payload: "account" | "shipping" | "billing", event: "SET_TAB" }
 
 export type CheckoutState = {
+    tab: "account" | "shipping" | "billing";
     email?: string;
+    userType: "guest" | "account";
     accountId?: string;
     currencyCode: string;
     discounts: { name: string; id: string; scope: "ORDER" }[];
     billingAsShipping: boolean,
-    billing: Address | null
-    shipping: Address
+    billing?: Address | undefined
+    shipping?: Address
     done: {
         shipping: boolean;
         account: boolean;
@@ -52,8 +71,12 @@ export type CheckoutCtx = {
     paymentApi: Payments | undefined;
     state: CheckoutState,
     dispatch: React.Dispatch<Actions>,
+    order: Order | undefined,
+    calError: Response | undefined,
+    calLoading: boolean,
+    cart: ReturnType<typeof useCart>
     setCard: (card: Card) => void,
-    makePayment: (amount: number, card: Card) => Promise<PaymentResult>
+    makePayment: (amount: number) => Promise<PaymentResult>,
 }
 
 const CART_LOCALSTOARGE_KEY = "cart-v2";
@@ -61,18 +84,10 @@ export const checkoutContext = createContext<CheckoutCtx | null>(null);
 
 const defaultCheckoutState: CheckoutState = {
     currencyCode: "USD",
+    tab: "account",
     billingAsShipping: true,
+    userType: "guest",
     discounts: [],
-    billing: null,
-    shipping: {
-        city: "",
-        country: "",
-        familyName: "",
-        givenName: "",
-        phone: "",
-        postalCode: "",
-        state: ""
-    },
     done: {
         shipping: false,
         account: false
@@ -83,15 +98,71 @@ const SquareWebPaymentScript = process.env.NEXT_PUBLIC_SQUARE_MODE === "sandbox"
 
 const reducer = (state: CheckoutState, action: Actions) => {
     switch (action.event) {
-        case "SHIPPING_DONE":
-        case "ACCOUNT_DONE":
-        case "SET_EMAIL":
-        case "SET_ACCOUNT_ID":
-        case "ADD_DISCOUNT":
-        case "REMOVE_DISCOUNT":
-        case "SET_BILLING":
-        case "SET_SHIPPING":
-        case "SET_SHIPPING_AS_BILLING":
+        case "FINISH_BILLING": {
+            return {
+                ...state,
+                billing: !action.payload.billingAsShipping ? action.payload.billing : undefined,
+                billingAsShipping: action.payload.billingAsShipping
+            } as CheckoutState
+        };
+        case "FINISH_ACCOUNT_TAB_AS_GUEST": {
+            return {
+                ...state,
+                email: action.payload.email,
+                tab: "shipping",
+                userType: "guest",
+                done: {
+                    ...state.done,
+                    account: true
+                }
+            } as CheckoutState
+        }
+        case "FINISH_ACCOUNT_TAB_AS_USER": {
+            return {
+                ...state,
+                done: {
+                    shipping: action.payload.shipping ? true : false,
+                    account: true
+                },
+                userType: "account",
+                tab: action.payload.shipping ? "billing" : "shipping",
+                email: action.payload.email,
+                accountId: action.payload.accountId,
+                shipping: action.payload.shipping
+            } as CheckoutState
+        }
+        case "SET_TAB":
+            return {
+                ...state,
+                tab: action.payload
+            }
+        case "FINSIH_SHIPPING": {
+            return {
+                ...state,
+                done: {
+                    ...state.done,
+                    shipping: true
+                },
+                shipping: action.payload,
+                tab: "billing"
+            } as CheckoutState
+        }
+        case "ADD_DISCOUNT": {
+            return {
+                ...state,
+                discounts: [...state.discounts, action.payload]
+            } as CheckoutState;
+        }
+        case "REMOVE_DISCOUNT": {
+            const nextState = state.discounts;
+            const idx = nextState.findIndex(value => value.id === action.payload);
+            if (idx === -1) return state;
+            nextState.splice(idx, 1);
+            return {
+                ...state,
+                discounts: [...nextState]
+            } as CheckoutState
+        }
         default:
             return state;
     }
@@ -112,27 +183,27 @@ const initPaymentsApi = (setApi: (api: Payments) => void) => {
 }
 
 const makePayment = async (amount: number, paymentApi: Payments | undefined, card: Card | undefined, checkoutState: CheckoutState, checkoutId?: string) => {
-    if (!paymentApi) throw new Error("Square WebPayments Api is does not exist", { cause: "MISSING_PAYMENT_API" });
-    if (!card) throw new Error("Card form is not vaild", { cause: "MISSING_CARD_HANDLER" });
-    if (!checkoutId) throw new Error("CheckoutId is missing.", { cause: "MISSING_CHECKOUT_ID" });
+    if (!paymentApi) throw new Error("Square WebPayments Api is does not exist", { cause: "MISSING_CHECKOUT_DATA_1" });
+    if (!card) throw new Error("Card form is not vaild", { cause: "MISSING_CHECKOUT_DATA_2" });
+
+    const data = checkoutState.billing ?? checkoutState.shipping;
+    if (!data) throw new Error("Unable to verify buyer", { cause: "MISSING_CHECKOUT_DATA_4" });
 
     const orderRaw = window.localStorage.getItem(CART_LOCALSTOARGE_KEY);
-    if (!orderRaw) throw new Error("There are not items in the cart");
+    if (!orderRaw) throw new Error("There are not items in the cart", { cause: "INVAILD_ORDER_1" });
     const order = JSON.parse(orderRaw) as { id: string; variation: string; quantity: number }[];
-    if (!order.length) throw new Error("Cart has less then 1 item in it.");
+    if (!order.length) throw new Error("Cart has less then 1 item in it.", { cause: "INVAILD_ORDER_2" });
 
     const result = await card.tokenize();
 
     if (result.status !== ("OK" as TokenStatus.OK)) {
-        throw new Error();
+        throw new Error("Failed to get token", { cause: "INVAILD_TOKEN_STATUS" });
     }
-
-    const data = checkoutState.billing ?? checkoutState.shipping;
 
     const verification = await paymentApi.verifyBuyer(result.token!, {
         amount: (amount / 100).toFixed(2),
         billingContact: {
-            addressLines: [data.address_line, data.addres_line2].filter(Boolean),
+            addressLines: [data.address_line, data.address_line2].filter(Boolean),
             city: data.city,
             countryCode: data.country,
             email: checkoutState.email,
@@ -161,34 +232,71 @@ const makePayment = async (amount: number, paymentApi: Payments | undefined, car
             checkout_id: checkoutId,
             discounts: checkoutState.discounts,
             items: order,
-            address: {
-                shipping: checkoutState.shipping,
-                billing: checkoutState.billing,
-                billing_as_shipping: checkoutState.billingAsShipping
-            }
+            shipping: checkoutState.shipping,
+            billing: checkoutState.billing,
+            billing_as_shipping: checkoutState.billingAsShipping
         })
     });
 
-    if (!request.ok) throw request;
+    const response = await request.json();
+
+    if (!request.ok) {
+
+        const error = (response as { details: { message: string; code: string; path: string[] }[] }).details[0];
+
+        throw new Error(error?.message ?? "Unknown Error", { cause: error?.code !== "custom" ? error?.code : error.path[0] })
+    }
 
     window.localStorage.removeItem(CART_LOCALSTOARGE_KEY);
 
-    return request.json() as Promise<PaymentResult>;
+    return response as PaymentResult;
 }
 
 const CheckoutProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [checkoutState, dispatch] = useReducer(reducer, defaultCheckoutState);
+    const cart = useCart();
     const [paymentApi, setPaymentApi] = useState<Payments>();
     const searchParams = useSearchParams();
 
     const [card, setCard] = useState<Card>();
 
+    const {
+        data: order,
+        isLoading: calLoading,
+        error: calError,
+    } = useSWR<
+        Order | undefined,
+        Response
+    >(
+        [checkoutState.discounts, cart.cart],
+        async ([code, items]: [CheckoutState["discounts"], CartItem[]]) => {
+            if (!items.length) return;
+            const response = await fetch("/api/shop/order-calculate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
+                    order: items,
+                    discounts: code,
+                }),
+            });
+            if (!response.ok) throw response;
+            return response.json() as Promise<Order>;
+        },
+    );
+
     return (
         <checkoutContext.Provider value={{
             dispatch,
             setCard,
+            cart,
             state: checkoutState,
             paymentApi,
+            order,
+            calError,
+            calLoading,
             makePayment: (amount: number) => makePayment(amount, paymentApi, card, checkoutState, searchParams?.get("checkoutId")?.toString())
         }}>
             {children}

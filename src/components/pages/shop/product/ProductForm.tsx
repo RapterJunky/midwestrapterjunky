@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
     Select,
     SelectContent,
@@ -29,15 +29,20 @@ const ProductForm: React.FC<{
         pricingType: string;
         currency: string;
     }[]
-}> = ({ name, category, merchent, description, variations, id }) => {
-    const { handleSubmit } = useForm<{ variation: string; quantity: number }>();
+}> = ({ name, category, merchent, description, variations }) => {
     const [selectedVariation, setSelectedVariation] = useState(0);
     const variation = variations[selectedVariation];
+    const { handleSubmit, control, register } = useForm<{ id: string; quantity: number }>({
+        defaultValues: {
+            id: variation?.id,
+        }
+    });
+
     const { inStock, stockLoading, inventory } = useInventory(variation?.id);
     const { addItem, open } = useCart();
 
-    const onSubmit = ({ variation, quantity }: { variation: string; quantity: number }) => {
-        addItem(id, variation, quantity);
+    const onSubmit = ({ quantity, id }: { id: string; quantity: number }) => {
+        addItem(id, quantity);
         open();
     }
 
@@ -72,25 +77,28 @@ const ProductForm: React.FC<{
                 <label className="mb-2 text-zinc-500" htmlFor="options">
                     Options
                 </label>
-                <Select defaultValue={variation?.id} name="variation" onValueChange={(item) => {
-                    const idx = variations.findIndex(value => value.id === item);
-                    if (idx !== -1) setSelectedVariation(idx);
-                }}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {variations.map(value => (
-                            <SelectItem key={value.id} value={value.id}>{value.name}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                <Controller rules={{ required: true }} control={control} name="id" render={({ field }) => (
+                    <Select required defaultValue={variation?.id} name="id" onValueChange={(item) => {
+                        const idx = variations.findIndex(value => value.id === item);
+                        if (idx !== -1) setSelectedVariation(idx);
+                        field.onChange(item);
+                    }}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Variation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {variations.map(value => (
+                                <SelectItem key={value.id} value={value.id}>{value.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )} />
             </div>
             <div className="mt-4 flex flex-col">
                 <label className="mb-2 text-zinc-500" htmlFor="quantity">
                     Quantity
                 </label>
-                <Input id="quantity" name="quantity" type="number" min={1} max={inventory?.quantity ?? undefined} defaultValue={1} />
+                <Input {...register("quantity", { valueAsNumber: true, min: { message: "There must be more then one item", value: 1 } })} id="quantity" name="quantity" type="number" min={1} max={inventory?.quantity ?? undefined} defaultValue={1} />
             </div>
             <div className="my-4 lg:mt-auto">
                 <Button className="w-full mb-2" aria-label="Add to Cart" type="submit" disabled={!inStock || stockLoading}>

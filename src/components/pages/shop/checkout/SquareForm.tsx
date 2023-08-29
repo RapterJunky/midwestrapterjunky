@@ -1,7 +1,8 @@
 "use client";
 import type { CardClassSelectors } from "@square/web-payments-sdk-types";
-import { useContext, useEffect } from "react";
-import { checkoutContext } from "@/components/providers/CheckoutProvider";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import useCheckout from "@/hooks/shop/useCheckout";
 
 const cardStyle: CardClassSelectors = {
     ".input-container": {
@@ -34,35 +35,42 @@ const cardStyle: CardClassSelectors = {
 };
 
 const SquareForm: React.FC = () => {
-    const ctx = useContext(checkoutContext);
-    if (!ctx) throw new Error("useCartApi needs to wrapped in a provider");
-
-    const { paymentApi, setCard } = ctx;
+    const [loading, setLoading] = useState(true);
+    const { paymentApi, setCard } = useCheckout();
 
     useEffect(() => {
         const abortController = new AbortController();
         const { signal } = abortController;
 
         const init = async (signal: AbortSignal) => {
-            const cardItem = await paymentApi?.card({ style: cardStyle }).then(res => {
-                if (!signal.aborted) {
-                    setCard(res);
-                    return res;
+            try {
+                setLoading(true);
+
+                const cardItem = await paymentApi?.card({ style: cardStyle }).then(res => {
+                    if (!signal.aborted) {
+                        setCard(res);
+                        return res;
+                    }
+                    return null;
+                });
+
+                await cardItem?.attach(`#sqaure-card-container`);
+
+                const cssId = document.getElementById("sqaure-card-container")?.children[0]?.getAttribute("id");
+
+                for (const sheet of document.head.querySelectorAll(`style[id^="sq-single-card-custom-styles-"]`)) {
+                    const id = sheet.getAttribute("id");
+                    if (id !== cssId) sheet.remove();
                 }
-                return null;
-            });
 
-            await cardItem?.attach(`#sqaure-card-container`);
-
-            const cssId = document.getElementById("sqaure-card-container")?.children[0]?.getAttribute("id");
-
-            for (const sheet of document.head.querySelectorAll(`style[id^="sq-single-card-custom-styles-"]`)) {
-                const id = sheet.getAttribute("id");
-                if (id !== cssId) sheet.remove();
-            }
-
-            if (signal.aborted) {
-                await cardItem?.destroy();
+                if (signal.aborted) {
+                    await cardItem?.destroy();
+                }
+            } catch (error) {
+                console.log(error);
+                throw new Error("Failed to load payment form");
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -74,12 +82,22 @@ const SquareForm: React.FC = () => {
     }, [paymentApi, setCard]);
 
     return (
-        <div
-            data-cy="billing-card-details"
-            data-status={true ? "loading" : "ready"}
-            className="shadow-square-input mt-1"
-            id="sqaure-card-container"
-        />
+        <>
+            <div
+                data-cy="billing-card-details"
+                data-status={loading ? "loading" : "ready"}
+                className={`shadow-square-input mt-1 ${loading ? "hidden" : ""}`}
+                id="sqaure-card-container"
+            />
+            {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 border border-zinc-300 rounded-sm w-full divide-x divide-zinc-200 divide-y">
+                    <Skeleton className="h-12 w-full col-span-2 sm:col-span-1" />
+                    <Skeleton className="w-full p-2 h-12" />
+                    <Skeleton className="w-full p-2 h-12" />
+                </div>
+            ) : null}
+
+        </>
     );
 }
 
