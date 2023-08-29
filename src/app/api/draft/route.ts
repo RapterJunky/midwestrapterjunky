@@ -1,6 +1,5 @@
 import createHttpError from "http-errors";
 import { draftMode } from "next/headers";
-import { redirect } from 'next/navigation';
 import { z } from "zod";
 
 import { logger } from "@lib/logger";
@@ -21,5 +20,5 @@ export function GET(request: Request) {
 
   draftMode().enable();
 
-  redirect(result.data);
+  return Response.redirect(`http://${process.env.VERCEL_URL}${result.data}`);
 }

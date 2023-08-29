@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 declare module "tw-elements" {
-  export declare class Carousel { }
+  export declare class Carousel {}
   export declare class ChipsInput {
     constructor(
       el: HTMLElement,
@@ -63,7 +63,7 @@ type DotEnv = typeof import("./env.mjs").env;
 
 declare module NodeJS {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface ProcessEnv extends DotEnv { }
+  interface ProcessEnv extends DotEnv {}
 
   type GoogleServiceKey = import("zod").infer<
     typeof import("./env.mjs").serviceKey

@@ -1,12 +1,13 @@
-const TermsOfService = `
+import Navbar from "../fragments/Navbar";
+const terms_of_service = `
 query TermsOfServiceQuery {
     terms: termsandprivacy {
-      seo: _seoMetaTags {
+      _seoMetaTags {
         attributes
         content
         tag
       }
-      updatedAt: _updatedAt
+      _updatedAt
       termsOfServiceSeo {
         title
         twitterCard
@@ -18,13 +19,16 @@ query TermsOfServiceQuery {
         blocks
       }
     }
-    site: _site {
+    _site {
       faviconMetaTags {
         attributes
         content
         tag
       }
     }
-  }`;
+    navbar {
+        ...NavbarRecordFragment
+    }
+  } ${Navbar}`;
 
-export default TermsOfService;
+export default terms_of_service;

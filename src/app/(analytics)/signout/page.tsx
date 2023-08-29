@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
   return getGenericSeoTags({
-    icons: data.site.faviconMetaTags,
+    icons: data._site.faviconMetaTags,
     description: "Signout page for Midwest Raptor Junkies.",
     title: "Signout",
   });

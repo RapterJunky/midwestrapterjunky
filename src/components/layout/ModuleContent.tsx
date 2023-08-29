@@ -1,53 +1,179 @@
-import TestimonialAndShare, { type TestimonialAndShareProps } from "@components/pages/home/TestimonialAndShare";
-import EmailCallToAction, { type EmailCallToActionProps } from "@components/pages/home/EmailCallToAction";
-import FeaturedShopItems, { type FeatureShopItemsProps } from "@components/pages/home/FeaturedShopItems";
-import UpcomingEvents, { type UpcomingEventsProps } from "@components/pages/home/UpcomingEvents";
-import VideoWithLinks, { type VideoWithLinksProps } from "@components/pages/home/VideoWithLink";
-import UpcomingEvent, { type UpcomingEventProps } from "@/components/pages/home/UpcomingEvent";
-import ImageGallery, { type ImageGalleryProps } from "@components/pages/home/ImageGallery";
-import CountdownSection, { type CountDownProps } from "@components/pages/home/Countdown";
-import SocialLinks, { type SocialLinksProps } from "@components/pages/home/SocialLinks";
-import AdvertBlock, { type AdvertBlockProps } from "@components/pages/home/AdvertBlock";
-import Carousel, { type CarouselProps } from "@/components/pages/home/Carousel";
-import HtmlSection from "@components/pages/home/HtmlSection";
+import dynamic from "next/dynamic";
+import type { ModulerContent } from "@type/page";
+import type { FeatureShopItems } from "@components/content/FeaturedShopItems";
+import type { UpcomingEventsProps } from "@components/content/UpcomingEvents";
+import type { CarouselProps } from "@components/content/Carousel";
+import type { EmailCallToActionProps } from "@components/content/EmailCallToAction";
+import type { TestimonialAndShareProps } from "@components/content/TestimonialAndShare";
+import type { SocialLinksProps } from "@components/content/SocialLinks";
+import type { AdvertBlockProps } from "@components/content/AdvertBlock";
+import type { CountDownProps } from "@components/content/Countdown";
+import type { VideoWithLinksProps } from "@components/content/VideoWithLink";
+import type { ImageGalleryProps } from "@components/content/ImageGallery";
+import type { UpcomingEventProps } from "@components/content/UpcomingEvent";
 
-import type { ModulerContent } from "@/types/page";
-
-const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({ modules }) => {
-    return (
-        <>
-            {modules.map((module, i) => {
-                switch (module.__typename) {
-                    case "CarouselRecord":
-                        return (<Carousel {...module as CarouselProps} key={i} />);
-                    case "UpcomingeventRecord":
-                        return (<UpcomingEvent {...module as UpcomingEventProps} />);
-                    case "UpcomingeventswithimageRecord":
-                        return (<UpcomingEvents {...module as UpcomingEventsProps} />);
-                    case "FeaturedshopRecord":
-                        return (<FeaturedShopItems {...module as FeatureShopItemsProps} />);
-                    case "ImageGalleryRecord":
-                        return (<ImageGallery {...module as ImageGalleryProps} />);
-                    case "VideowithlinkRecord":
-                        return (<VideoWithLinks {...module as VideoWithLinksProps} />);
-                    case "EmailCallToActionRecord":
-                        return (<EmailCallToAction {...module as EmailCallToActionProps} />);
-                    case "TestimonialAndShareRecord":
-                        return (<TestimonialAndShare {...module as TestimonialAndShareProps} />);
-                    case "SocialLinksBlockRecord":
-                        return (<SocialLinks {...module as SocialLinksProps} />);
-                    case "AdvertBlockRecord":
-                        return (<AdvertBlock {...module as AdvertBlockProps} />);
-                    case "CustomHtmlSectionRecord":
-                        return (<HtmlSection {...module} />);
-                    case "CountdownRecord":
-                        return (<CountdownSection {...module as CountDownProps} />);
-                    default:
-                        return null;
-                }
-            })}
-        </>
-    );
+interface ModuleContentProps {
+  data: ModulerContent[];
 }
 
-export default ModuleContent;
+const DynamicVideoWithLinks = dynamic(
+  () => import("@components/content/VideoWithLink"),
+);
+const DynamicImageGallery = dynamic(
+  () => import("@components/content/ImageGallery"),
+);
+const DynamicFeaturedShopItems = dynamic(
+  () => import("@components/content/FeaturedShopItems"),
+);
+const DynamicUpcomingEvents = dynamic(
+  () => import("@components/content/UpcomingEvents"),
+);
+const DynamicCarousel = dynamic(() => import("@components/content/Carousel"), {
+  loading: () => <div className="h-screen"></div>,
+});
+const DynamicUpcomingEvent = dynamic(
+  () => import("@components/content/UpcomingEvent"),
+);
+const DynamicEmailCallToAction = dynamic(
+  () => import("@components/content/EmailCallToAction"),
+);
+const DynamicTestimonialAndShare = dynamic(
+  () => import("@components/content/TestimonialAndShare"),
+);
+const DynamicSocialLinks = dynamic(
+  () => import("@components/content/SocialLinks"),
+);
+const DynamicAdvertBlock = dynamic(
+  () => import("@components/content/AdvertBlock"),
+);
+const DynamicHtmlSection = dynamic(
+  () => import("@components/content/HtmlSection"),
+);
+const DynamicCountDown = dynamic(
+  () => import("@components/content/Countdown"),
+  {
+    loading: () => (
+      <div className="flex h-80 justify-center">
+        <span className="animate-pulse">Loading...</span>
+      </div>
+    ),
+    ssr: false,
+  },
+);
+
+export default function ModuleContent(props: ModuleContentProps) {
+  return (
+    <>
+      {props.data.map((value, i) => {
+        switch (value.__typename) {
+          case "VideowithlinkRecord": {
+            return (
+              <DynamicVideoWithLinks
+                key={i}
+                {...(value as never as VideoWithLinksProps)}
+              />
+            );
+          }
+          case "ImageGalleryRecord": {
+            return (
+              <DynamicImageGallery
+                key={i}
+                {...(value as never as ImageGalleryProps)}
+              />
+            );
+          }
+          case "FeaturedshopRecord": {
+            return (
+              <DynamicFeaturedShopItems
+                key={i}
+                items={
+                  (value?.items ?? []) as never as FeatureShopItems["items"]
+                }
+              />
+            );
+          }
+          case "UpcomingeventswithimageRecord": {
+            return (
+              <DynamicUpcomingEvents
+                key={i}
+                events={(value?.events ?? []) as UpcomingEventsProps["events"]}
+              />
+            );
+          }
+          case "CarouselRecord": {
+            return (
+              <DynamicCarousel
+                key={i}
+                images={(value?.images ?? []) as CarouselProps["images"]}
+              />
+            );
+          }
+          case "UpcomingeventRecord": {
+            return (
+              <DynamicUpcomingEvent
+                key={i}
+                {...(value as never as UpcomingEventProps)}
+              />
+            );
+          }
+          case "EmailCallToActionRecord": {
+            return (
+              <DynamicEmailCallToAction
+                background_color={
+                  value?.backgroundColor as EmailCallToActionProps["background_color"]
+                }
+                data={
+                  (value?.callToActionMessage ??
+                    {}) as EmailCallToActionProps["data"]
+                }
+                key={i}
+              />
+            );
+          }
+          case "TestimonialAndShareRecord": {
+            return (
+              <DynamicTestimonialAndShare
+                {...(value as never as TestimonialAndShareProps)}
+                key={i}
+              />
+            );
+          }
+          case "SocialLinksBlockRecord": {
+            return (
+              <DynamicSocialLinks
+                key={i}
+                {...(value as never as SocialLinksProps)}
+              />
+            );
+          }
+          case "AdvertBlockRecord": {
+            return (
+              <DynamicAdvertBlock
+                key={i}
+                {...(value as never as AdvertBlockProps)}
+              />
+            );
+          }
+          case "CustomHtmlSectionRecord": {
+            return (
+              <DynamicHtmlSection
+                key={i}
+                {...(value as never as { content: string })}
+              />
+            );
+          }
+          case "CountdownRecord": {
+            return (
+              <DynamicCountDown
+                key={i}
+                {...(value as never as CountDownProps)}
+              />
+            );
+          }
+          default:
+            return null;
+        }
+      })}
+    </>
+  );
+}

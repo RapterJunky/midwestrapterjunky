@@ -2,27 +2,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Image from "next/image";
 import Link from "next/link";
 
-import Provider from "@/components/providers/SessionProvider";
 import getFullPageProps from "@lib/cache/getFullPageProps";
 import IconLink from "@components/ui/IconLink";
-import AccountIcon from "./AccountIcon";
-import { cn } from '@/lib/utils';
-import Sidenav from "./Sidenav";
-import LinksDropdown from "./LinksDropdown";
-import ScrollRuntime from "./ScrollRuntime";
+import { cn } from '@/lib/cn';
 
-const navbarVariants = cva("group top-0 z-40 flex w-full content-center bg-white px-6 py-2", {
+const navbarVariants = cva("group top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row", {
   variants: {
     variant: {
       default: "text-black bg-opacity-100",
       scrollOnly: "fixed bg-opacity-100 text-black shadow",
-      scrollFade: "fixed text-white bg-opacity-0 hover:text-black hover:bg-opacity-100 transition-colors duration-700 ease-in-out"
+      scrollFade: "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out"
     }
   },
   defaultVariants: {
     variant: "default"
   }
-});
+})
 
 const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({ variant }) => {
   const {
@@ -30,13 +25,10 @@ const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({ variant }
   } = await getFullPageProps();
 
   return (
-    <nav id="navbar"
+    <nav
       className={cn(navbarVariants({ variant }))}
     >
-      {variant === "scrollFade" ? <ScrollRuntime /> : null}
-      <div className="flex items-center mr-auto lg:hidden lg:mr-0">
-        <Sidenav />
-      </div>
+      <div className="flex items-center lg:hidden"></div>
       <Link
         href="/"
         aria-label="Logo"
@@ -52,21 +44,16 @@ const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({ variant }
           className="object-cover object-center"
         />
       </Link>
-      <div className="hidden content-center items-center lg:flex ml-auto">
+      <div className="flex lg:hidden"></div>
+      <div className="hidden content-center items-center justify-between lg:flex">
         {pageLinks.slice(0, 7).map((value, i) => (
           <IconLink
             dataCy="desktop-nav-link"
-            className="uppercase font-bold px-2 text-inherit transition-colors duration-700 ease-in-out"
+            className="flex items-center gap-1 px-2 text-sm font-bold uppercase not-italic hover:opacity-60"
             key={i}
             {...value}
           />
         ))}
-        {pageLinks.length > 7 ? (<LinksDropdown links={pageLinks} />) : null}
-      </div>
-      <div className="flex items-center ml-auto lg:ml-1">
-        <Provider>
-          <AccountIcon />
-        </Provider>
       </div>
     </nav>
   );

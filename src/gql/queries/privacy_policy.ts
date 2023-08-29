@@ -1,12 +1,13 @@
-const PrivcyPolicy = `
+import Navbar from "../fragments/Navbar";
+const privcy_policy = `
 query PrivcyPolicyQuery {
     policy: termsandprivacy {
-      seo: _seoMetaTags {
+      _seoMetaTags {
         attributes
         content
         tag
       }
-      updatedAt: _updatedAt
+      _updatedAt
       privacyPolicy {
         blocks
         links
@@ -18,14 +19,18 @@ query PrivcyPolicyQuery {
         twitterCard
       }
     }
-    site: _site {
+    _site {
       faviconMetaTags {
         attributes
         content
         tag
       }
     }
+    navbar {
+        ...NavbarRecordFragment
+    }
   }
+  ${Navbar}
 `;
 
-export default PrivcyPolicy;
+export default privcy_policy;

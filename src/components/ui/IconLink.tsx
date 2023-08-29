@@ -1,31 +1,29 @@
 import Link from "next/link";
 
-import { buttonVariants } from "./button";
 import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
 import type { LinkWithIcon } from "@type/page";
-import { cn } from "@/lib/utils";
 
 const IconLink: React.FC<
   LinkWithIcon & { className: string; dataCy?: string }
-> = ({ useIcon, icon, iconPosition, className, link, dataCy, title }) => {
-  if (useIcon && icon) {
-    const dir = iconPosition === "start";
+> = (props) => {
+  if (props.useIcon && props.icon) {
+    const dir = props.iconPosition === "start";
     return (
       <Link
-        data-cy={dataCy}
-        href={link}
-        className={cn(buttonVariants({ variant: "link", size: "sm", className }))}
+        data-cy={props.dataCy}
+        href={props.link}
+        className={props.className}
       >
-        {dir ? <FontAwesomeIcon className="mr-1" {...icon} /> : null}
-        {title}
-        {!dir ? <FontAwesomeIcon {...icon} /> : null}
+        {dir ? <FontAwesomeIcon {...props.icon} /> : null}
+        {props.title}
+        {!dir ? <FontAwesomeIcon {...props.icon} /> : null}
       </Link>
     );
   }
 
   return (
-    <Link data-cy={dataCy} href={link} className={cn(buttonVariants({ variant: "link", size: "sm", className }))}>
-      {title}
+    <Link data-cy={props.dataCy} href={props.link} className={props.className}>
+      {props.title}
     </Link>
   );
 };
