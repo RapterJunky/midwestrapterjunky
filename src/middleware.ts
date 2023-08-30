@@ -30,7 +30,8 @@ export async function middleware(request: NextRequest) {
     const token = request.nextUrl.searchParams.get("token");
 
     logger.info({
-      search: request.nextUrl.searchParams.keys(),
+      search: Object.fromEntries(request.nextUrl.searchParams.entries()),
+      token: process.env.PLUGIN_TOKEN,
       matches: process.env.PLUGIN_TOKEN === token
     }, "Search params");
 
