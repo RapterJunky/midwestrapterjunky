@@ -4,16 +4,24 @@
 /node_modules
 /.pnp
 .pnp.js
-
+.env
 # testing
 /coverage
 
+/.vscode/
 # next.js
 /.next/
 /out/
 
+/cypress/videos
+/cypress/screenshots
+/cypress/downloads
+raptorjunkies.json
+cypress.env.json
+
 # production
 /build
+
 
 # misc
 .DS_Store

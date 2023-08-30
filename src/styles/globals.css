@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply m-0 h-full p-0;
+    font-style: normal;
+  }
+  #__next {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  .shadow-square-input > div > div.sq-card-iframe-container {
+    @apply shadow-sm;
+  }
+}
+
+.backdrop-blur-08 {
+  --tw-backdrop-blur: 0.8px;
+}
+
+.scrolling-touch {
+  -webkit-overflow-scrolling: touch !important;
+}

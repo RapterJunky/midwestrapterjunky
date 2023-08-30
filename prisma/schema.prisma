@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+//generator json {
+//  provider = "prisma-json-types-generator"
+//}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Authors {
+  avatar String
+  name   String
+  /// [AuthorSocial]
+  social Json?
+  id     String @unique
+}
+
+model Cache {
+  id      Int     @id @default(autoincrement())
+  key     String  @unique
+  data    Json
+  isDirty Boolean
+}
+
+model Settings {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  sqaureId      String?
+  banned        Int          @default(0) @db.UnsignedTinyInt // 0 = false 1 = soft 2 = hard
+  accounts      Account[]
+  sessions      Session[]
+  theadPosts    ThreadPost[]
+  comments      Comment[]
+  reports       Report[]
+  likes         Like[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Comment {
+  id           String     @id @default(uuid())
+  /// [Dast]
+  content      Json
+  created      DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  ownerId      String
+  owner        User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  threadPost   ThreadPost @relation(fields: [threadPostId], references: [id], onDelete: Cascade) // If thread post is deleted remove comment
+  threadPostId String
+  reports      Report[]
+  likes        Like[]
+
+  parentCommentId String?
+  // Can not set ondelete to Cascade due to relationMode = "prisma"
+  parent          Comment?  @relation(name: "ParentChild", fields: [parentCommentId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  children        Comment[] @relation(name: "ParentChild")
+
+  @@index([parentCommentId])
+  @@index([ownerId])
+  @@index([threadPostId])
+}
+
+model ThreadPost {
+  id          String    @id @default(uuid())
+  name        String
+  ownerId     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  pinned      Boolean   @default(false)
+  locked      Boolean   @default(false)
+  notifyOwner Boolean   @default(false)
+  /// [Tags]
+  tags        Json?
+  /// [Dast]
+  content     Json?
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  thread      Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
+  threadId    Int
+  comments    Comment[]
+  reports     Report[]
+  likes       Like[]
+
+  @@index([threadId])
+  @@index([ownerId])
+}
+
+model Thread {
+  allowUserPosts Boolean      @default(true)
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  description    String
+  image          String
+  /// [Tags]
+  tags           Json?
+  posts          ThreadPost[]
+}
+
+model Report {
+  id        Int         @id @default(autoincrement())
+  created   DateTime    @default(now())
+  type      ReportType
+  ownerId   String?
+  commentId String?
+  postId    String?
+  reason    String
+  comment   Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post      ThreadPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  owner     User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([commentId])
+  @@index([ownerId])
+  @@index([postId])
+}
+
+model Like {
+  id           String      @id
+  type         ReportType
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment      Comment?    @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post         ThreadPost? @relation(fields: [threadPostId], references: [id], onDelete: Cascade)
+  userId       String
+  commentId    String?
+  threadPostId String?
+
+  @@index([userId])
+  @@index([commentId])
+  @@index([threadPostId])
+}
+
+enum ReportType {
+  Comment
+  Post
+}
