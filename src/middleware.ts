@@ -26,14 +26,16 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith("/plugins")) {
-
     const token = request.nextUrl.searchParams.get("token");
 
-    logger.info({
-      search: Object.fromEntries(request.nextUrl.searchParams.entries()),
-      token: process.env.PLUGIN_TOKEN,
-      matches: process.env.PLUGIN_TOKEN === token
-    }, "Search params");
+    logger.info(
+      {
+        search: Object.fromEntries(request.nextUrl.searchParams.entries()),
+        token: process.env.PLUGIN_TOKEN,
+        matches: process.env.PLUGIN_TOKEN === token,
+      },
+      "Search params",
+    );
 
     if (token !== process.env.PLUGIN_TOKEN)
       return NextResponse.redirect(new URL("/not-found", request.url), 301);
