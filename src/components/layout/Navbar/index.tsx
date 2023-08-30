@@ -4,30 +4,32 @@ import Link from "next/link";
 
 import getFullPageProps from "@lib/cache/getFullPageProps";
 import IconLink from "@components/ui/IconLink";
-import { cn } from '@/lib/cn';
+///import { cn } from '@/lib/cn';
 
-const navbarVariants = cva("group top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row", {
-  variants: {
-    variant: {
-      default: "text-black bg-opacity-100",
-      scrollOnly: "fixed bg-opacity-100 text-black shadow",
-      scrollFade: "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out"
-    }
+const navbarVariants = cva(
+  "group top-0 z-40 flex w-full flex-row-reverse content-center justify-between bg-white px-6 py-2 md:flex-row",
+  {
+    variants: {
+      variant: {
+        default: "text-black bg-opacity-100",
+        scrollOnly: "fixed bg-opacity-100 text-black shadow",
+        scrollFade:
+          "fixed text-white hover:text-black bg-opacity-0 hover:bg-opacity-100 transition-all duration-700 ease-in-out",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
   },
-  defaultVariants: {
-    variant: "default"
-  }
-})
+);
 
-const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({ variant }) => {
+const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({}) => {
   const {
     navbar: { logo, pageLinks },
   } = await getFullPageProps();
 
   return (
-    <nav
-      className={cn(navbarVariants({ variant }))}
-    >
+    <nav className={/*cn(navbarVariants({ variant }))*/ ""}>
       <div className="flex items-center lg:hidden"></div>
       <Link
         href="/"

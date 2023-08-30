@@ -260,15 +260,15 @@ const parseForm = <T extends z.AnyZodObject>(
         );
 
       const imagesBlocks = Object.entries(
-        files as Record<`image[${string}]`, File>,
+        files as never as Record<`image[${string}]`, File>,
       ).map(([key, value]) => {
         const uuid = key.replace("image[", "").replace("]", "");
 
         //console.log(data.data.imageData, imageData);
 
-        const imageData = (data.data.imageData as ImageData[]).find(
-          (item) => item.id === uuid,
-        );
+        const imageData: ImageData | undefined = (
+          data.data.imageData as ImageData[]
+        ).find((item) => item.id === uuid);
         const googleData = uploadData.find(
           (item) => item.file === value.newFilename,
         );
@@ -311,7 +311,7 @@ const parseForm = <T extends z.AnyZodObject>(
       resolve({
         imagesBlocks,
         fields: data.data,
-        files: files as Record<`image[${string}]`, File>,
+        files: files as never as Record<`image[${string}]`, File>,
       });
     });
   });
