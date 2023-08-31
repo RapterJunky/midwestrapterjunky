@@ -14,12 +14,13 @@ import { useRouter } from 'next/navigation';
 import ShopLoadingDialog from './ShopLoadingDialog';
 import ErrorDialog from './ErrorDialog';
 import { useState } from 'react';
+import Spinner from "@components/ui/Spinner";
 
 const BillingTab: React.FC = () => {
     const [error, setError] = useState<{ message: string; code: string; }>();
     const [errorDialog, setErrorDialog] = useState(false);
     const router = useRouter();
-    const { state, dispatch, makePayment } = useCheckout();
+    const { state, dispatch, makePayment, order } = useCheckout();
     const form = useForm<CheckoutState>({
         defaultValues: state
     });
@@ -38,14 +39,14 @@ const BillingTab: React.FC = () => {
         });
 
         try {
-            const result = await makePayment(0);
+            const result = await makePayment();
 
             const query = new URLSearchParams();
 
             query.set("mode", "shop");
             query.set("status", "ok");
-            query.set("message", encodeURIComponent("Order made successfully")),
-                query.set("shop_receipt_id", result.receiptNumber);
+            query.set("message", encodeURIComponent("Order made successfully"));
+            query.set("shop_receipt_id", result.receiptNumber);
             query.set("shop_receipt", encodeURIComponent(result.receiptUrl));
 
             router.replace(`/confirmation?${query.toString()}`);
@@ -129,12 +130,27 @@ const BillingTab: React.FC = () => {
                         disabled={
                             form.formState.isSubmitting ||
                             form.formState.isValidating ||
+                            order.isLoading ||
                             !state.done.shipping ||
                             !state.done.account
                         }
                         type="submit"
                     >
-                        Pay $0
+                        {
+                            form.formState.isSubmitting || form.formState.isValidating || order.isLoading ? (
+                                <>
+                                    <Spinner className="mr-2" />
+                                    {order.isLoading ? "Loading Order" : "Processing Order"}
+                                </>
+                            ) : (
+                                <>
+                                    Pay {(Number(order.data?.netAmountDueMoney?.amount) / 100).toLocaleString(undefined, {
+                                        style: "currency",
+                                        currency: state.currencyCode
+                                    })}
+                                </>
+                            )
+                        }
                     </Button>
                 </div>
             </form>

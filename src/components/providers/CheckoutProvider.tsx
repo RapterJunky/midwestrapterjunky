@@ -1,14 +1,13 @@
 "use client";
 import type { Card, Payments, TokenStatus } from "@square/web-payments-sdk-types";
 import { createContext, useState, useReducer } from "react";
-import Script from "next/script";
-import { useSearchParams } from "next/navigation";
-
+import useSWR, { type SWRResponse } from "swr";
 import type { Order } from "square";
-import useCart from "@/hooks/shop/useCart";
-import useSWR from "swr";
-import type { CartItem } from "@/components/providers/ShoppingCartProvider";
+import Script from "next/script";
 
+import type { CartItem } from "@/components/providers/ShoppingCartProvider";
+import useThrottle from "@/hooks/useThrottle";
+import useCart from "@/hooks/shop/useCart";
 
 export type Address = {
     address_line?: string;
@@ -30,6 +29,8 @@ type PaymentResult = {
     status: string;
 }
 
+type Discount = { name: string; id: string; scope: "ORDER" };
+
 export type Actions = { payload: boolean, event: "SHIPPING_DONE" } |
 {
     event: "FINISH_ACCOUNT_TAB_AS_GUEST"
@@ -47,7 +48,7 @@ export type Actions = { payload: boolean, event: "SHIPPING_DONE" } |
 } |
 { payload: Address, event: "FINSIH_SHIPPING" } |
 { payload: { billing: Address | undefined, billingAsShipping: boolean }; event: "FINISH_BILLING" } |
-{ payload: { name: string; id: string; scope: "ORDER" }; event: "ADD_DISCOUNT" } |
+{ payload: Discount; event: "ADD_DISCOUNT" } |
 { payload: string; event: "REMOVE_DISCOUNT" } |
 { payload: "account" | "shipping" | "billing", event: "SET_TAB" }
 
@@ -57,7 +58,7 @@ export type CheckoutState = {
     userType: "guest" | "account";
     accountId?: string;
     currencyCode: string;
-    discounts: { name: string; id: string; scope: "ORDER" }[];
+    discounts: Discount[];
     billingAsShipping: boolean,
     billing?: Address | undefined
     shipping?: Address
@@ -71,12 +72,10 @@ export type CheckoutCtx = {
     paymentApi: Payments | undefined;
     state: CheckoutState,
     dispatch: React.Dispatch<Actions>,
-    order: Order | undefined,
-    calError: Response | undefined,
-    calLoading: boolean,
+    order: SWRResponse<Order | undefined, Response, unknown>
     cart: ReturnType<typeof useCart>
     setCard: (card: Card) => void,
-    makePayment: (amount: number) => Promise<PaymentResult>,
+    makePayment: () => Promise<PaymentResult>,
 }
 
 const CART_LOCALSTOARGE_KEY = "cart-v2";
@@ -182,9 +181,10 @@ const initPaymentsApi = (setApi: (api: Payments) => void) => {
     }
 }
 
-const makePayment = async (amount: number, paymentApi: Payments | undefined, card: Card | undefined, checkoutState: CheckoutState, checkoutId?: string) => {
+const makePayment = async (amount: string | undefined | null, paymentApi: Payments | undefined, card: Card | undefined, checkoutState: CheckoutState, checkoutId?: string) => {
     if (!paymentApi) throw new Error("Square WebPayments Api is does not exist", { cause: "MISSING_CHECKOUT_DATA_1" });
     if (!card) throw new Error("Card form is not vaild", { cause: "MISSING_CHECKOUT_DATA_2" });
+    if (!amount || Number.isNaN(amount)) throw new Error("Failed to get charge amount", { cause: "MISSING_CHECKOUT_DATA_3" });
 
     const data = checkoutState.billing ?? checkoutState.shipping;
     if (!data) throw new Error("Unable to verify buyer", { cause: "MISSING_CHECKOUT_DATA_4" });
@@ -201,7 +201,7 @@ const makePayment = async (amount: number, paymentApi: Payments | undefined, car
     }
 
     const verification = await paymentApi.verifyBuyer(result.token!, {
-        amount: (amount / 100).toFixed(2),
+        amount: (Number(amount) / 100).toFixed(2),
         billingContact: {
             addressLines: [data.address_line, data.address_line2].filter(Boolean),
             city: data.city,
@@ -252,52 +252,48 @@ const makePayment = async (amount: number, paymentApi: Payments | undefined, car
     return response as PaymentResult;
 }
 
+const getCalculation = async ([url, discounts, items]: [string, Discount[], CartItem[]]) => {
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
+            order: items,
+            discounts
+        }),
+    });
+    if (!response.ok) throw response;
+    return response.json() as Promise<Order>;
+}
+
 const CheckoutProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const [checkoutState, dispatch] = useReducer(reducer, defaultCheckoutState);
+    const [state, dispatch] = useReducer(reducer, defaultCheckoutState);
     const cart = useCart();
     const [paymentApi, setPaymentApi] = useState<Payments>();
-    const searchParams = useSearchParams();
 
     const [card, setCard] = useState<Card>();
 
-    const {
-        data: order,
-        isLoading: calLoading,
-        error: calError,
-    } = useSWR<
+    const throttledCartItems = useThrottle(cart.items, 1000);
+
+    const order = useSWR<
         Order | undefined,
         Response
     >(
-        [checkoutState.discounts, cart.cart],
-        async ([code, items]: [CheckoutState["discounts"], CartItem[]]) => {
-            if (!items.length) return;
-            const response = await fetch("/api/shop/order-calculate", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    location_id: process.env.NEXT_PUBLIC_SQAURE_LOCATION_ID,
-                    order: items,
-                    discounts: code,
-                }),
-            });
-            if (!response.ok) throw response;
-            return response.json() as Promise<Order>;
-        },
-    );
+        throttledCartItems.length ? ["/api/shop/order-calculate", state.discounts, throttledCartItems] : null, getCalculation, {
+        revalidateOnFocus: false
+    });
 
     return (
         <checkoutContext.Provider value={{
             dispatch,
             setCard,
             cart,
-            state: checkoutState,
+            state,
             paymentApi,
             order,
-            calError,
-            calLoading,
-            makePayment: (amount: number) => makePayment(amount, paymentApi, card, checkoutState, searchParams?.get("checkoutId")?.toString())
+            makePayment: () => makePayment(order.data?.netAmountDueMoney?.amount as string | null | undefined, paymentApi, card, state)
         }}>
             {children}
 

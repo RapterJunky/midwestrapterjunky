@@ -13,31 +13,34 @@ export type CartItem = {
     quantity: number;
 };
 
-type ExtendCartItem = {
+export type ExtendCartItem = {
     name: string;
-    labelColor: string;
-    option: {
-        id: string;
-        name: string;
-        pricingType: string;
-    };
+    id: string;
+    parentId: string;
+    variation: string;
     image: {
         url: string;
-        alt: string;
+        name: string;
     };
-    price: number;
-    currency: string;
-    maxQuantity?: number;
+    price: {
+        amount: number;
+        currency: string;
+    };
+    labelColor: string;
+    maxQuantity: number | null;
 } & CartItem;
 
 type ShoppingCartCtx = {
     count: number;
+    items: CartItem[],
     cart: ExtendCartItem[] | undefined,
     error: Response | undefined,
     isLoading: boolean;
     addItem: (id: string, quantity?: number) => void;
     removeItem: (id: string) => void;
     resetCart: () => void;
+    decQuantity: (id: string) => void,
+    incQuantity: (id: string) => void,
     open: () => void
 }
 
@@ -48,16 +51,37 @@ const ShoppingCardProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const [cartItems, setCartItems, { removeItem }] = useLocalStorageState<CartItem[]>(CART_STOARGE_KEY, {
         defaultValue: []
     });
-    const { data, error, isLoading } = useSWR<ExtendCartItem[], Response>(() => cartItems.length ? /*["/api/shop/cart", cartItems]*/ null : null, fetcher);
+    const { data, error, isLoading } = useSWR<ExtendCartItem[], Response, [string, string] | null>(cartItems.length ? ["/api/shop/cart", cartItems.map(value => value.id).join(",")] : null, ([url, items]) => fetcher(`${url}?cart=${items}`));
 
     const count = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
 
     return (
         <ShoppingCartContext.Provider value={{
             count,
+            items: cartItems,
             cart: data,
             error,
             isLoading,
+            incQuantity(id) {
+                setCartItems((current) => {
+                    const idx = current.findIndex(value => value.id === id);
+                    const item = current[idx];
+                    if (idx === -1 || !item) return current;
+                    item.quantity += 1;
+                    return [...current]
+
+                });
+            },
+            decQuantity(id) {
+                setCartItems((current) => {
+                    const idx = current.findIndex(value => value.id === id);
+                    const item = current[idx];
+                    if (idx === -1 || !item) return current;
+                    item.quantity -= 1;
+                    return [...current]
+
+                });
+            },
             open() {
                 window.dispatchEvent(new CustomEvent("shopping-cart:open"))
             },
