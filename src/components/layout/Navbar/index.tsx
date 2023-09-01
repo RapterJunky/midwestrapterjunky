@@ -35,7 +35,7 @@ const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({ variant }
     >
       {variant === "scrollFade" ? <ScrollRuntime /> : null}
       <div className="flex items-center mr-auto lg:hidden lg:mr-0">
-        <Sidenav />
+        <Sidenav links={pageLinks} logo={logo} />
       </div>
       <Link
         href="/"

@@ -5,7 +5,7 @@ import { useRef } from "react";
 import TopicTable from "@components/community/TopicTable";
 import TopicCard from "@components/community/TopicCard";
 import type { Paginate } from "@type/page";
-import { singleFetch } from "@api/fetch";
+import { fetcher } from "@api/fetcher";
 import TopicCardSkeletion from "./TopicCardSkeletion";
 
 type Props = {
@@ -41,17 +41,15 @@ const TopicsList: React.FC<Props> = ({
   >(
     (index: number, previousData: Paginate<Post>) => {
       if (previousData?.isLastPage) return null;
-      return `/api/community?page=${index + 1}&sort=${sort}${
-        ignore ? `&ignore=${ignore}` : ""
-      }${
-        mode === "suggest"
+      return `/api/community?page=${index + 1}&sort=${sort}${ignore ? `&ignore=${ignore}` : ""
+        }${mode === "suggest"
           ? `&mode=suggest&tags=${tags
-              .map((item) => encodeURIComponent(item))
-              .join("&tags=")}`
+            .map((item) => encodeURIComponent(item))
+            .join("&tags=")}`
           : ""
-      }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
+        }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
     },
-    singleFetch as () => Promise<Paginate<Post>>,
+    fetcher as () => Promise<Paginate<Post>>,
     {
       revalidateOnFocus: false,
     },

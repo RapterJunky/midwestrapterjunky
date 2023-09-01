@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ModulerContent } from "@/types/page";
+import getFeaturedItems from "@/lib/shop/getFeaturedItems";
 
 export interface FeatureShopItemsProps extends ModulerContent {
   items: { item: { value: string } }[];
@@ -31,12 +32,10 @@ const formatter = (
 };
 
 const FeaturedShopItems: React.FC<FeatureShopItemsProps> = async (props) => {
-  const request = await fetch(`${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL}/api/products?find=${btoa(
-    props.items.map((value) => value.item.value).join(","),
-  )}`, { next: { tags: ["featured-shop-items"] } });
-  const data = await request.json() as Storefront.Product[];
 
-  if ("message" in data || !data.length) return null;
+  const data = await getFeaturedItems(props.items.map(value => value.item.value));
+
+  if (!data.length) return null;
 
   return (
     <section className="flex max-h-max flex-col bg-zinc-100">

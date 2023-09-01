@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/sheet";
 import ShoppingBagItemCount from "./ShoppingBagItemCount";
 import ShopSearch from "./ShopSearch";
+import ShoppingCart from "./ShoppingCart";
 
 const ShopNavbar: React.FC = () => {
     return (
@@ -17,8 +18,8 @@ const ShopNavbar: React.FC = () => {
                         <ShoppingBag className="h-7 w-7" />
                         <ShoppingBagItemCount />
                     </SheetTrigger>
-                    <SheetContent>
-
+                    <SheetContent className="w-full md:w-screen md:max-w-md">
+                        <ShoppingCart />
                     </SheetContent>
                 </Sheet>
             </div>

@@ -1,9 +1,8 @@
 import Link from "next/link";
+import { Pin, Lock } from "lucide-react";
 
-import HiLockClosed from "@components/icons/HiLockClosed";
-import FaThumbtack from "@components/icons/FaThumbtack";
-import TagList from "@components/community/TagList";
-import useRelativeTime from "@hook/useRelativeTime";
+import { Badge } from "../ui/badge";
+import toRelativeTime from "@/lib/utils/toRelativeTime";
 
 type Props = {
   title: string;
@@ -11,7 +10,7 @@ type Props = {
   tags: string[];
   description: string;
   replies: number;
-  activity: string | undefined;
+  activity: Date | undefined;
   pinned: boolean;
   locked: boolean;
 };
@@ -26,27 +25,30 @@ const TopicCard: React.FC<Props> = ({
   description,
   replies,
 }) => {
-  const format = useRelativeTime();
   return (
     <tr>
       <td>
         <div className="p-2">
           <Link href={slug}>
-            <h3 className="mb-2 flex items-center gap-1 text-base font-bold md:text-lg">
-              {locked ? <HiLockClosed className="text-neutral-400" /> : null}
-              {pinned ? <FaThumbtack className="text-neutral-400" /> : null}
-              <span>{title}</span>
+            <h3 className="mb-2 flex items-center gap-1 scroll-m-20 text-2xl font-semibold tracking-tight">
+              {locked ? <Lock className="text-zinc-400" /> : null}
+              {pinned ? <Pin className="text-zinc-400" /> : null}
+              <span className="underline text-blue-500 hover:text-blue-400">{title}</span>
             </h3>
           </Link>
-          <TagList tags={tags} />
-          <p className="line-clamp-4 overflow-hidden text-base text-neutral-500">
+          <div className="mb-2 flex flex-wrap gap-2">
+            {tags.map((tag, i) => (
+              <Badge key={i}>{tag}</Badge>
+            ))}
+          </div>
+          <p className="line-clamp-4 overflow-hidden text-base text-zinc-500">
             {description}
           </p>
         </div>
       </td>
       <td className="text-center">{replies}</td>
       <td className="text-center">
-        {activity ? format(activity) : "No Activity"}
+        {activity ? toRelativeTime(activity) : "No Activity"}
       </td>
     </tr>
   );

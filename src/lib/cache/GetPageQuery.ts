@@ -30,7 +30,7 @@ const dedupedFetch = cache(async (requestData: string) => {
     return responseBody;
 });
 
-const getPageQuery = cache(async <T>(query: string, opts?: QueryOptions): Promise<T> => {
+const getPageQuery = async <T>(query: string, opts?: QueryOptions): Promise<T> => {
     const { isEnabled } = draftMode();
 
     logger.debug({
@@ -54,6 +54,6 @@ const getPageQuery = cache(async <T>(query: string, opts?: QueryOptions): Promis
     }));
 
     return data as T;
-});
+};
 
 export default getPageQuery;
