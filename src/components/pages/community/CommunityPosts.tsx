@@ -17,7 +17,7 @@ const CommunityPosts: React.FC<{ type: "latest" | "top" }> = async ({ type }) =>
                             key={i}
                             activity={item.comments.at(0)?.updatedAt}
                             title={item.name}
-                            slug={`/community/p/${item.id}`}
+                            slug={`/community/post/${item.id}`}
                             tags={item.tags as string[]}
                             description=""
                             replies={item.comments.length}

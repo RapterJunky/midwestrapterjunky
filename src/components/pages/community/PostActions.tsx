@@ -139,9 +139,9 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
         <div className="flex justify-end gap-1 p-0.5 text-zinc-600">
             <Button size="icon" variant="ghost" type="button" title="like this post">
                 {(data?.likesCount ?? 0) > 0 ? (
-                    <span className="mr-1">{data?.likesCount ?? 0}</span>
+                    <span className="mx-2">{data?.likesCount ?? 0}</span>
                 ) : null}
-                <Heart />
+                <Heart className="[&:not(first-child)]:mr-2" />
             </Button>
         </div>
     );
@@ -158,11 +158,11 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
                     </Link>
                 </Button>
             ) : null}
-            <Button className='ui-active:text-red-400 ui-active:hover:text-red-500' type="button" title="like this post" data-headlessui-state={data?.likedByMe ? "active" : ""} size="icon" variant="ghost" onClick={() => data?.likedByMe ? unlike(postId, mutate) : like(postId, mutate)}>
+            <Button className='ui-active:text-red-400 ui-active:hover:text-red-500 min-w-min' type="button" title="like this post" data-headlessui-state={data?.likedByMe ? "active" : ""} size="icon" variant="ghost" onClick={() => data?.likedByMe ? unlike(postId, mutate) : like(postId, mutate)}>
                 {(data?.likesCount ?? 0) > 0 ? (
-                    <span className="mr-1">{data?.likesCount ?? 0}</span>
+                    <span className="mr-2 ml-2">{data?.likesCount ?? 0}</span>
                 ) : null}
-                <Heart className="h-6 w-6" />
+                <Heart className="h-6 w-6 [&:not(first-child)]:mr-2" />
             </Button>
             <Dialog open={reportDialog} onOpenChange={setReportDialog}>
                 <DialogTrigger asChild>

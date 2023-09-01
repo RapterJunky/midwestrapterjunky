@@ -30,7 +30,7 @@ const PaginateCategoryPosts: React.FC<{ category: number, page: number }> = asyn
             </TopicTable>
             {!result.length ? (
                 <div className="flex justify-center border-t-2">
-                    <span className="mt-4 p-2 text-neutral-600">
+                    <span className="mt-4 p-2 text-zinc-600">
                         Does not look like theres anything there yet.
                     </span>
                 </div>

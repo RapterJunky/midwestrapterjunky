@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
 import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
 import SessionProvider from "@/components/providers/SessionProvider";
-import PostComments from "@/components/pages/community/PostComments";
+import PostComments from "@/components/pages/community/comments/PostComments";
 import PostActions from "@/components/pages/community/PostActions";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import getPost from "@/lib/services/community/getPost";

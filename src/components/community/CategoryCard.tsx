@@ -78,7 +78,7 @@ const CategoryCard: React.FC<Props> = ({
               <li key={i} className="p-1">
                 <Link
                   className="flex items-center gap-1 text-zinc-500"
-                  href={`/community/p/${topic.id}`}
+                  href={`/community/post/${topic.id}`}
                 >
                   {topic.locked ? <Lock className="h-4 w-4" /> : null}
                   {topic.pinned ? <Pin className="h-4 w-4" /> : null}
