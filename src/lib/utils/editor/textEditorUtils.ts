@@ -13,7 +13,7 @@ export type Mark = keyof Omit<Text, "text">;
 type BlockType = keyof NonTextNode;
 export type FormatType = NonTextNode["type"];
 export type ListStyle = "bulleted" | "numbered";
-export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+export type HeadingLevel = 1 | 2 | 3;
 
 export const toggleMark = (editor: Editor, format: Mark) => {
   const isActive = isMarkActive(editor, format);
@@ -57,21 +57,6 @@ export const toggleBlock = (
   }
 };
 
-export const getActiveHeading = (editor: Editor) => {
-  const { selection } = editor;
-  if (!selection) return "normal";
-
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) =>
-        !Editor.isEditor(n) && (n as NonTextNode).type === "heading",
-    }),
-  );
-  if (!match) return "normal";
-  return (match[0] as Heading).level.toString();
-};
-
 export const isBlockActive = (
   editor: Editor,
   format: FormatType,
@@ -103,24 +88,6 @@ export const isMarkActive = (editor: Editor, format: Mark) => {
   return marks ? marks[format] === true : false;
 };
 
-export const insertImage = (
-  editor: Editor,
-  image: HTMLImageElement,
-  file: File,
-) => {
-  const el: NonTextNode = {
-    type: "block",
-    blockModelId: "ImageRecord",
-    id: crypto.randomUUID(),
-    width: image.width,
-    height: image.height,
-    file,
-    src: image.src,
-    children: [{ text: "" }],
-  };
-  Transforms.insertNodes(editor, el);
-};
-
 export const removeLink = (editor: Editor) => {
   Transforms.unwrapNodes(editor, {
     match: (n) =>
@@ -129,7 +96,47 @@ export const removeLink = (editor: Editor) => {
 };
 
 export const insertLink = (editor: Editor, url: string) => {
+  if (!url) return;
+
   const { selection } = editor;
+  const link: Link = {
+    type: "link",
+    url,
+    children: [{ text: url }]
+  }
+
+  ReactEditor.focus(editor);
+
+  if (!!selection) {
+    const [parentNode, parentPath] = Editor.parent(editor, selection.focus.path);
+
+    if ((parentNode as NonTextNode).type === "link") {
+      removeLink(editor);
+    }
+
+    if (editor.isVoid(parentNode as NonTextNode)) {
+      Transforms.insertNodes(editor, {
+        type: "paragraph",
+        children: [link]
+      } as Paragraph, {
+        at: Path.next(parentPath),
+        select: true
+      });
+    } else if (Range.isCollapsed(selection)) {
+      Transforms.insertNodes(editor, link, { select: true });
+    } else {
+      Transforms.wrapNodes(editor, link, { split: true });
+      Transforms.collapse(editor, { edge: "end" });
+    }
+  } else {
+    Transforms.insertNodes(editor, {
+      type: "paragraph",
+      children: [link]
+    } as NonTextNode)
+  }
+
+
+  /*const { selection } = editor;
   const link: Link = {
     type: "link",
     url,
@@ -174,7 +181,7 @@ export const insertLink = (editor: Editor, url: string) => {
   Transforms.insertNodes(editor, {
     type: "paragraph",
     children: [link],
-  } as Paragraph);
+  } as Paragraph);*/
 };
 
 export const isLinkActive = (editor: Editor) => {
@@ -187,48 +194,14 @@ export const isLinkActive = (editor: Editor) => {
 
 export const withPlugin = (
   editor: Editor,
-  openDialog: (url: string) => void,
 ) => {
-  const { isVoid, insertData, isInline, insertBreak, deleteBackward } = editor;
+  const { isVoid, isInline, insertBreak, deleteBackward } = editor;
   editor.deletedImages = [];
-  editor.editLink = openDialog;
 
   editor.isInline = (el) =>
     ["link", "itemLink", "inlineItem"].includes(el.type) || isInline(el);
   editor.isVoid = (el) =>
     ["block", "inlineItem", "thematicBreak"].includes(el.type) || isVoid(el);
-
-  editor.insertData = (data) => {
-    const { files } = data;
-
-    // allow for copy paste
-    if (files && files.length > 0) {
-      for (const file of files) {
-        const reader = new FileReader();
-        const [mine] = file.type.split("/");
-        if (mine !== "image") continue;
-
-        reader.addEventListener(
-          "load",
-          () => {
-            const url = reader.result as string;
-            const image = new Image();
-            image.addEventListener(
-              "load",
-              () => {
-                insertImage(editor, image, file);
-              },
-              false,
-            );
-            image.src = url;
-          },
-          false,
-        );
-      }
-    } else {
-      insertData(data);
-    }
-  };
 
   //https://stackoverflow.com/questions/61997167/how-to-add-paragraph-after-image-within-a-slate-text-editor
   editor.insertBreak = () => {

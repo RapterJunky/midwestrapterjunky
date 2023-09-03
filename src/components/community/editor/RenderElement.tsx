@@ -13,6 +13,8 @@ import Image from "next/image";
 import HiTrash from "@components/icons/HiTrash";
 import HiLink from "@components/icons/HiLink";
 import { removeLink } from "@/lib/utils/editor/textEditorUtils";
+import { Button } from "@/components/ui/button";
+import { Link, Trash2 } from "lucide-react";
 
 type SlateBlockImage = Block & {
   imageId?: string;
@@ -49,19 +51,14 @@ const SlateImage: React.FC<RenderElementProps> = ({
           width={(element as SlateBlockImage).width}
           height={(element as SlateBlockImage).height}
         />
-        <button
-          type="button"
-          onMouseDown={(e) => e.preventDefault()}
-          data-headlessui-state={selected && focused ? "selected" : ""}
+        <Button title="Remove Image" variant="destructive" size="icon" className="absolute left-2 top-2 ui-selected:flex hidden" type="button" onMouseDown={(e) => e.preventDefault()} data-headlessui-state={selected && focused ? "selected" : ""}
           onClick={() => {
             const imageId = (element as SlateBlockImage)?.imageId;
             if (imageId) editor.deletedImages.push(imageId);
             Transforms.removeNodes(editor, { at: path });
-          }}
-          className="focus absolute  left-2 top-2 hidden rounded-sm bg-red-400 p-1 text-white shadow-lg ui-selected:inline"
-        >
-          <HiTrash className="h-6 w-6" />
-        </button>
+          }}>
+          <Trash2 />
+        </Button>
       </div>
     </div>
   );
@@ -79,28 +76,29 @@ const SlateLink: React.FC<RenderElementProps> = ({
   if (element.type !== "link") return null;
 
   return (
-    <span className="relative inline-flex items-center gap-1" {...attributes}>
-      <HiLink />
+    <span className="relative inline-flex justify-start items-center gap-1" {...attributes}>
+      <Link className="h-4 w-4" />
       <span className="underline">{children}</span>
       {selected && focused ? (
         <div
           contentEditable={false}
-          className="absolute -bottom-8 z-10 flex bg-white px-1.5 py-1 shadow"
+          className="absolute -bottom-8 z-10 flex bg-white px-1.5 py-1 shadow gap-1"
         >
-          <button
+          <Button
             onClick={() => editor.editLink(element.url)}
             type="button"
-            className="group mr-2 border-r border-neutral-600 pr-2 hover:text-neutral-500"
+            className="h-6"
           >
             Edit
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="text-red-500 hover:text-red-600"
+            variant="destructive"
+            className="h-6"
             onClick={() => removeLink(editor)}
           >
-            <HiTrash />
-          </button>
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       ) : null}
     </span>
@@ -129,12 +127,6 @@ const RenderElement: React.FC<RenderElementProps> = ({
           return <h2 {...attributes}>{children}</h2>;
         case 3:
           return <h3 {...attributes}>{children}</h3>;
-        case 4:
-          return <h4 {...attributes}>{children}</h4>;
-        case 5:
-          return <h5 {...attributes}>{children}</h5>;
-        default:
-          return <h6 {...attributes}>{children}</h6>;
       }
     }
     case "list": {
