@@ -16,6 +16,7 @@ export type TComment = Omit<Comment, "ownerId" | "threadPostId"> & {
 type CommentContext = {
     comments: SWRResponse<Paginate<TComment>, Response, unknown>,
     session: ReturnType<typeof useSession>,
+    postId: string;
     like: (commentId: string) => Promise<void>,
     unlike: (commentId: string) => Promise<void>,
     report: (commentId: string, reason: string) => Promise<void>
@@ -227,6 +228,7 @@ const CommentProvider: React.FC<React.PropsWithChildren<{ postId: string; }>> = 
         <commentContext.Provider value={{
             comments,
             session,
+            postId,
             deleteComment: (commentId) => deleteComment(commentId, comments.mutate),
             report: (commentId, reason) => report(commentId, reason),
             like: (commentId) => like(commentId, comments.mutate),

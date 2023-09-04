@@ -6,7 +6,7 @@ import useComments from "@/hooks/community/useComments";
 import { signIn, useSession } from "next-auth/react";
 import PostComment from "./PostComment";
 
-const CommentBox = dynamic(() => import("@components/pages/community/comments/CommentBox"), {
+const RichTextEditor = dynamic(() => import("@components/pages/community/comments/editor/RichTextEditor"), {
     loading() {
         return (
             <div></div>
@@ -16,13 +16,13 @@ const CommentBox = dynamic(() => import("@components/pages/community/comments/Co
 
 const PostComments: React.FC = () => {
     const { data: session, status } = useSession();
-    const { comments, nextPage, prevPage, createComment } = useComments();
+    const { comments, nextPage, prevPage, createComment, postId } = useComments();
 
     return (
         <>
             {status === "authenticated" && session.user.banned === 0 ? (
                 <div>
-                    <CommentBox onSubmit={createComment} />
+                    <RichTextEditor postId={postId} onSubmit={createComment} />
                 </div>
             ) : (
                 <div className="mt-6 flex flex-col w-full items-center justify-center gap-4">

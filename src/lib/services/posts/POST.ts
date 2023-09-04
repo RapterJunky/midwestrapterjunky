@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import type { Session } from "next-auth";
 import { z } from "zod";
 
-import { applyRateLimit } from "@api/rateLimiter";
+//import { applyRateLimit } from "@api/rateLimiter";
 import prisma from "@api/prisma";
 
 const schema = z.object({
@@ -25,7 +25,7 @@ const POST = async (
   session: Session | null,
 ) => {
   if (!session) throw createHttpError.Unauthorized();
-  await applyRateLimit(req, res);
+  //await applyRateLimit(req, res);
 
   const { type } = schema.parse(req.body);
 

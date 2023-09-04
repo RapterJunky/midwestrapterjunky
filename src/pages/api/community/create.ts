@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import { z } from "zod";
 
 import handleTC from "@service/community/handleTC";
-import { applyRateLimit } from "@api/rateLimiter";
+//import { applyRateLimit } from "@api/rateLimiter";
 import onError from "@api/handleError";
 import getAuthSession from "@api/getAuthSession";
 import GET from "@service/community/GET";
@@ -22,7 +22,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       .enum(["post", "comment"])
       .parse(req.headers["x-type-create"]);
 
-    await applyRateLimit(req, res);
+    //await applyRateLimit(req, res);
     const session = await getAuthSession({
       throwOnNull: true,
       ctx: { req, res },

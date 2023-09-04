@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import createHttpError from "http-errors";
 
-import { applyRateLimit } from "@api/rateLimiter";
+
 import onError from "@api/handleError";
 import DELETE from "@service/comments/DELETE";
 import getAuthSession from "@api/getAuthSession";
@@ -22,11 +22,11 @@ export default async function handler(
       case "GET":
         return await GET(req, res, session);
       case "POST": {
-        await applyRateLimit(req, res);
+
         return await POST(req, res, session);
       }
       case "DELETE": {
-        await applyRateLimit(req, res);
+
         return await DELETE(req, res, session);
       }
       default:
