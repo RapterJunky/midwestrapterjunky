@@ -137,11 +137,11 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
 
     if (status !== "authenticated") return (
         <div className="flex justify-end gap-1 p-0.5 text-zinc-600">
-            <Button size="icon" variant="ghost" type="button" title="like this post">
+            <Button className="h-8" variant="ghost" type="button" title="like this post">
                 {(data?.likesCount ?? 0) > 0 ? (
                     <span className="mx-2">{data?.likesCount ?? 0}</span>
                 ) : null}
-                <Heart className="[&:not(first-child)]:mr-2" />
+                <Heart className="h-5 w-5" />
             </Button>
         </div>
     );
@@ -149,25 +149,25 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
     return (
         <div className="flex justify-end gap-1 p-0.5 text-zinc-600">
             {session.user.id === ownerId ? (
-                <Button asChild variant="ghost" size="icon" title="Edit Post" className="mr-auto">
+                <Button asChild variant="ghost" size="icon" title="Edit Post" className="mr-auto h-8">
                     <Link href={{
                         pathname: "/community/create-topic",
                         query: { edit: postId },
                     }}>
-                        <Pencil className="h-6 w-6" />
+                        <Pencil className="h-5 w-5" />
                     </Link>
                 </Button>
             ) : null}
-            <Button className='ui-active:text-red-400 ui-active:hover:text-red-500 min-w-min' type="button" title="like this post" data-headlessui-state={data?.likedByMe ? "active" : ""} size="icon" variant="ghost" onClick={() => data?.likedByMe ? unlike(postId, mutate) : like(postId, mutate)}>
+            <Button className='ui-active:text-red-400 ui-active:hover:text-red-500 h-8 min-w-min' type="button" title="like this post" data-headlessui-state={data?.likedByMe ? "active" : ""} variant="ghost" onClick={() => data?.likedByMe ? unlike(postId, mutate) : like(postId, mutate)}>
                 {(data?.likesCount ?? 0) > 0 ? (
-                    <span className="mr-2 ml-2">{data?.likesCount ?? 0}</span>
+                    <span className="mx-2">{data?.likesCount ?? 0}</span>
                 ) : null}
-                <Heart className="h-6 w-6 [&:not(first-child)]:mr-2" />
+                <Heart className="h-5 w-5" />
             </Button>
             <Dialog open={reportDialog} onOpenChange={setReportDialog}>
                 <DialogTrigger asChild>
-                    <Button disabled={!!session.user.banned} title="Privately flag this post for attention" variant="ghost" size="icon">
-                        <Flag className="h-6 w-6" />
+                    <Button className="h-8 w-8" disabled={!!session.user.banned} title="Privately flag this post for attention" variant="ghost" size="icon">
+                        <Flag className="h-5 w-5" />
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -202,8 +202,8 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
             {session.user.id === ownerId ? (
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button title="Delete your post" variant="ghost" size="icon">
-                            <Trash2 className="h-6 w-6" />
+                        <Button className="h-8 w-8" title="Delete your post" variant="ghost" size="icon">
+                            <Trash2 className="h-5 w-5" />
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>

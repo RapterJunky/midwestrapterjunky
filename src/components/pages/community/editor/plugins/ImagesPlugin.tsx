@@ -1,10 +1,12 @@
-import { type LexicalCommand, createCommand, $insertNodes, $isRootOrShadowRoot, $createParagraphNode, COMMAND_PRIORITY_EDITOR } from "lexical";
+import { createCommand, $insertNodes, $isRootOrShadowRoot, $createParagraphNode, COMMAND_PRIORITY_EDITOR, type LexicalEditor, type LexicalCommand, } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import { useEffect } from "react";
 import { $createImageNode, ImageNode, type ImagePayload } from "../nodes/ImageNode";
 
 export type InsertImagePayload = Readonly<ImagePayload>;
+
+export type ExtendLexicalEditor = LexicalEditor & { getDeletedImages: () => Set<string>, _deletedImages: Set<string>; addDeletedImage: (id: string) => void };
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> = createCommand("INSERT_IMAGE_COMMAND");
 
@@ -15,6 +17,11 @@ const ImagesPlugin: React.FC = () => {
         if (!editor.hasNodes([ImageNode])) {
             throw new Error("ImagesPlugin: ImageNode not registerd on editor");
         }
+
+        (editor as ExtendLexicalEditor)._deletedImages = new Set<string>();
+
+        (editor as ExtendLexicalEditor).addDeletedImage = (id: string) => (editor as ExtendLexicalEditor)._deletedImages.add(id);
+        (editor as ExtendLexicalEditor).getDeletedImages = () => (editor as ExtendLexicalEditor)._deletedImages;
 
         return mergeRegister(
             editor.registerCommand<InsertImagePayload>(INSERT_IMAGE_COMMAND, (payload) => {

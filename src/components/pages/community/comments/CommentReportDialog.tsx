@@ -22,8 +22,8 @@ const CommentReportDialog: React.FC<{ id: string; disabled: boolean, report: (id
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Report Comment" disabled={disabled} title="Privately flag this comment for attention.">
-                    <Flag />
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Report Comment" disabled={disabled} title="Privately flag this comment for attention.">
+                    <Flag className="w-5 h-5" />
                 </Button>
             </DialogTrigger>
             <DialogContent>

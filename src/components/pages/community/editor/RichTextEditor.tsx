@@ -1,39 +1,40 @@
 "use client";
-import Spinner from "@/components/ui/Spinner";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { LexicalComposer, type InitialConfigType } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
+import { EditorRefPlugin } from '@lexical/react/LexicalEditorRefPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+
+import { CLEAR_EDITOR_COMMAND, type LexicalEditor } from "lexical";
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { LinkNode } from "@lexical/link"
-import { ListNode, ListItemNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { $generateHtmlFromNodes } from '@lexical/html';
 import { useForm } from "react-hook-form";
+import { useRef } from "react";
+
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import ImagesPlugin, { type ExtendLexicalEditor } from "./plugins/ImagesPlugin";
+import { $getNewImages, ImageNode } from "./nodes/ImageNode";
 import RichTextToolBar from "./RichTextToolBar";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import ImagesPlugin from "./plugins/ImagesPlugin";
-import { ImageNode } from "./nodes/ImageNode";
+import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/Spinner";
 
 export type FormState = {
     message: unknown[];
     deletedImages: string[];
 };
 
-const urlRegExp = new RegExp(
-    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/,
-);
-const validateUrl = (url: string): boolean => {
-    return url === 'https://' || urlRegExp.test(url);
-}
-
 const editorConfig = {
     namespace: "usercomment",
     onError(error) {
+        console.error(error);
         throw error;
     },
-    nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
+    nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode, AutoLinkNode],
     theme: {
         text: {
             strikethrough: "line-through",
@@ -48,26 +49,51 @@ const RichtextEditor: React.FC<{
     commentId?: string;
     postId: string;
     onSubmit: (formData: FormData) => Promise<void>
-}> = ({ onSubmit }) => {
-
+}> = ({ onSubmit, postId }) => {
+    const editorRef = useRef<LexicalEditor>(null);
     const form = useForm<FormState>({
         defaultValues: {
             deletedImages: [],
-            message: [{ type: "paragraph", children: [{ text: "" }] }]
         },
     });
 
-    const formSubmit = async (state: FormState) => {
+    const formSubmit = async () => {
         try {
+            if (!editorRef.current) return;
+            const state = editorRef.current.getEditorState();
+            if (state.isEmpty()) throw new Error("Editor is empty!");
+
             const formData = new FormData();
 
-            if (state.deletedImages) {
-                state.deletedImages.forEach((item) => {
-                    formData.append("deletedImages[]", item);
+            formData.set("postId", postId);
+
+            await new Promise<void>((ok, rej) => {
+                state.read(() => {
+                    const html = $generateHtmlFromNodes(editorRef.current as LexicalEditor, null);
+                    formData.set("content", html);
+
+                    const deletedIds = (editorRef.current as ExtendLexicalEditor).getDeletedImages();
+
+                    const images = $getNewImages();
+
+                    if (images.length > 5) return rej(new Error("Can not upload more then 5 images at once."));
+
+                    deletedIds.forEach((id) => {
+                        formData.append("deletedId", id);
+                    });
+
+                    images.forEach(image => {
+                        if (image.file) formData.append("image", image.file, image.id);
+                    });
+
+                    ok()
                 });
-            }
+            });
+
+            editorRef.current.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
 
             await onSubmit(formData);
+
         } catch (error) {
             form.setError("message", {
                 message: (error as Error)?.message ?? "An Error happened.",
@@ -79,7 +105,7 @@ const RichtextEditor: React.FC<{
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(formSubmit)}>
-                <FormField control={form.control} name="message" render={({ }) => (
+                <FormField control={form.control} name="message" render={() => (
                     <FormItem className="my-4">
                         <FormControl>
                             <LexicalComposer initialConfig={editorConfig}>
@@ -98,8 +124,10 @@ const RichtextEditor: React.FC<{
                                     />
                                 </div>
                                 <ListPlugin />
-                                <LinkPlugin validateUrl={validateUrl} />
+                                <LinkPlugin />
                                 <ImagesPlugin />
+                                <ClearEditorPlugin />
+                                <EditorRefPlugin editorRef={editorRef} />
                             </LexicalComposer>
                         </FormControl>
                         <FormMessage />
@@ -107,7 +135,7 @@ const RichtextEditor: React.FC<{
                 )} />
 
                 <div className="flex w-full justify-end">
-                    <Button form="comment-form" disabled={form.formState.isSubmitting}>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting ? <Spinner className="mr-2 h-6 w-6" /> : null}
                         Submit
                     </Button>

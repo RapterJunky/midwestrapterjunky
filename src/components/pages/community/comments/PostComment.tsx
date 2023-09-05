@@ -1,12 +1,6 @@
-import type { TComment } from "@/components/providers/CommentProvider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import useComments from "@/hooks/community/useComments";
-import { renderBlock } from "@/lib/structuredTextRules";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
+import { StructuredText } from "react-datocms/structured-text";
 import { Heart, Pencil, Trash2, User2 } from "lucide-react";
 import Image from "next/image";
-import { StructuredText } from "react-datocms/structured-text";
 
 import {
     AlertDialog,
@@ -19,8 +13,13 @@ import {
     AlertDialogTrigger,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { TComment } from "@/components/providers/CommentProvider";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 import CommentReportDialog from "./CommentReportDialog";
-
+import useComments from "@/hooks/community/useComments";
+import { renderBlock } from "@/lib/structuredTextRules";
+import { Button } from "@/components/ui/button";
 
 const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
     const {
@@ -70,20 +69,20 @@ const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
                             "Missing comment content!"
                         )}
                     </article>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-zinc-500">
                         <div className="flex items-center gap-2">
                             {status === "authenticated" && session?.user.id === data.owner.id ? (
-                                <Button variant="ghost" size="icon" aria-label="Edit comment" title="Edit comment">
-                                    <Pencil />
+                                <Button className="hover:text-black h-8 w-8" variant="ghost" size="icon" aria-label="Edit comment" title="Edit comment">
+                                    <Pencil className="h-5 w-5" />
                                 </Button>
                             ) : null}
                         </div>
                         <div className="flex items-center justify-end gap-1 text-zinc-500">
-                            <Button onClick={() => data.likedByMe ? unlike(data.id) : like(data.id)} variant="ghost" size="icon" className="ui-active:text-red-400 min-w-min" data-headlessui-state={data.likedByMe ? "active" : ""} title="Like this comment" disabled={status !== "authenticated"} aria-label={data.likedByMe ? "Unlike comment" : "Like Comment"}>
+                            <Button onClick={() => data.likedByMe ? unlike(data.id) : like(data.id)} variant="ghost" className="ui-active:text-red-400 h-8" data-headlessui-state={data.likedByMe ? "active" : ""} title="Like this comment" disabled={status !== "authenticated"} aria-label={data.likedByMe ? "Unlike comment" : "Like Comment"}>
                                 {data.likeCount > 0 ? (
                                     <span className="mx-2">{data.likeCount}</span>
                                 ) : null}
-                                <Heart className="[&:not(first-child)]:mr-2" />
+                                <Heart className="h-5 w-5" />
                             </Button>
                             {status === "authenticated" ? (
                                 <>
@@ -91,8 +90,8 @@ const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
                                     {session?.user.id === data.owner.id ? (
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon" aria-label="Delete your comment" title="Delete your comment">
-                                                    <Trash2 />
+                                                <Button className="h-8 w-8" variant="ghost" size="icon" aria-label="Delete your comment" title="Delete your comment">
+                                                    <Trash2 className="h-5 w-5" />
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>

@@ -1,44 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Button } from '@/components/ui/button';
-import {
-    $isListNode,
-    ListNode,
-    INSERT_ORDERED_LIST_COMMAND,
-    INSERT_UNORDERED_LIST_COMMAND
-} from "@lexical/list";
-import {
-    $getNearestNodeOfType,
-    mergeRegister
-} from "@lexical/utils";
-import {
-    $getSelection,
-    $isRangeSelection,
-    $createParagraphNode,
-    FORMAT_TEXT_COMMAND,
-    SELECTION_CHANGE_COMMAND,
-    COMMAND_PRIORITY_CRITICAL,
-    type RangeSelection,
-} from "lexical";
-import {
-    $setBlocksType,
-    $isAtNodeEnd
-} from "@lexical/selection";
-import {
-    $createHeadingNode,
-    $createQuoteNode,
-    $isHeadingNode
-} from "@lexical/rich-text";
-import {
-    useLexicalComposerContext
-} from '@lexical/react/LexicalComposerContext';
-
+import { $getSelection, $isRangeSelection, $createParagraphNode, FORMAT_TEXT_COMMAND, SELECTION_CHANGE_COMMAND, COMMAND_PRIORITY_CRITICAL, type RangeSelection, } from "lexical";
 import { Bold, Heading1, Heading2, Heading3, ImageIcon, Italic, LinkIcon, List, ListOrdered, Paintbrush, Quote, Strikethrough, Underline } from "lucide-react";
+import { $isListNode, ListNode, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
+import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from "@lexical/rich-text";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
-import { INSERT_IMAGE_COMMAND } from './plugins/ImagesPlugin';
+import { $setBlocksType, $isAtNodeEnd } from "@lexical/selection";
+import { $isLinkNode, $isAutoLinkNode } from '@lexical/link';
+import { Button } from '@/components/ui/button';
+import ImageDialog from './ImageDialog';
+import LinkDialog from './LinkDialog';
 
 const defaultEditorState = {
     isBold: false,
@@ -103,14 +74,6 @@ const RichTextToolBar: React.FC = () => {
         });
     }
 
-    const insertLink = useCallback(() => {
-        if (!state.isLink) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
-        } else {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-        }
-    }, [editor, state.isLink]);
-
     const $updateToolBar = useCallback(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -119,7 +82,6 @@ const RichTextToolBar: React.FC = () => {
             const elementKey = element.getKey();
             const elementDOM = activeEditor.getElementByKey(elementKey);
             if (elementDOM !== null) {
-                // setState
                 if ($isListNode(element)) {
 
                     const parentList = $getNearestNodeOfType(anchorNode, ListNode);
@@ -141,7 +103,7 @@ const RichTextToolBar: React.FC = () => {
             const node = getSelectedNode(selection);
             const parent = node.getParent();
 
-            dispatch({ ev: "isLink", payload: $isLinkNode(parent) || $isLinkNode(node) });
+            dispatch({ ev: "isLink", payload: $isLinkNode(parent) || $isAutoLinkNode(node) });
         }
     }, [activeEditor]);
 
@@ -206,19 +168,16 @@ const RichTextToolBar: React.FC = () => {
             }}>
                 <Quote className="h-4 w-4" />
             </Button>
-            <Button data-headlessui-state={state.isLink ? "active" : ""} className="h-8 w-8 ui-active:text-blue-500" type="button" variant="ghost" size="icon" onClick={insertLink}>
-                <LinkIcon className="h-4 w-4" />
-            </Button>
-            <Button data-headlessui-state={state.blockType === "image" ? "active" : ""} className="h-8 w-8 ui-active:text-blue-500" type="button" variant="ghost" size="icon" onClick={() => {
-                activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                    src: "https://images.unsplash.com/photo-1693467855454-b12ce0cc0be9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2128&q=80",
-                    alt: "Takashi Miyazaki",
-                    width: 1330,
-                    height: 2128
-                });
-            }}>
-                <ImageIcon className="h-4 w-4" />
-            </Button>
+            <LinkDialog activeEditor={activeEditor}>
+                <Button data-headlessui-state={state.isLink ? "active" : ""} className="h-8 w-8 ui-active:text-blue-500" type="button" variant="ghost" size="icon">
+                    <LinkIcon className="h-4 w-4" />
+                </Button>
+            </LinkDialog>
+            <ImageDialog activeEditor={activeEditor}>
+                <Button data-headlessui-state={state.blockType === "image" ? "active" : ""} className="h-8 w-8 ui-active:text-blue-500" type="button" variant="ghost" size="icon">
+                    <ImageIcon className="h-4 w-4" />
+                </Button>
+            </ImageDialog>
         </div>
     );
 }
