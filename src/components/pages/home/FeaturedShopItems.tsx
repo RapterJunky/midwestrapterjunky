@@ -32,8 +32,9 @@ const formatter = (
 };
 
 const FeaturedShopItems: React.FC<FeatureShopItemsProps> = async (props) => {
-
-  const data = await getFeaturedItems(props.items.map(value => value.item.value));
+  const data = await getFeaturedItems(
+    props.items.map((value) => value.item.value),
+  );
 
   if (!data.length) return null;
 
@@ -69,6 +70,6 @@ const FeaturedShopItems: React.FC<FeatureShopItemsProps> = async (props) => {
       </div>
     </section>
   );
-}
+};
 
 export default FeaturedShopItems;

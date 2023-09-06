@@ -14,7 +14,9 @@ const IconLink: React.FC<
       <Link
         data-cy={dataCy}
         href={link}
-        className={cn(buttonVariants({ variant: "link", size: "sm", className }))}
+        className={cn(
+          buttonVariants({ variant: "link", size: "sm", className }),
+        )}
       >
         {dir ? <FontAwesomeIcon className="mr-1" {...icon} /> : null}
         {title}
@@ -24,7 +26,11 @@ const IconLink: React.FC<
   }
 
   return (
-    <Link data-cy={dataCy} href={link} className={cn(buttonVariants({ variant: "link", size: "sm", className }))}>
+    <Link
+      data-cy={dataCy}
+      href={link}
+      className={cn(buttonVariants({ variant: "link", size: "sm", className }))}
+    >
       {title}
     </Link>
   );

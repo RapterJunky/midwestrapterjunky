@@ -98,7 +98,7 @@ export const MailingList: React.FC<{
                 key={value.id}
               >
                 <a
-                  className="ml-2 text-primary underline"
+                  className="text-primary ml-2 underline"
                   href={`mailto:${value.email}`}
                 >
                   {value.email}

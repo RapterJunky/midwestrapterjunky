@@ -53,14 +53,15 @@ export const imageConfig = {
   maxSize: 5 * 1024 * 1024,
 } as const;
 
-
 export const deleteImages = async (ids: string[]) => {
   const drive = googleDrive();
 
   const result = await Promise.allSettled(
-    ids.map(id => drive.files.delete({
-      fileId: id
-    }))
+    ids.map((id) =>
+      drive.files.delete({
+        fileId: id,
+      }),
+    ),
   );
 
   for (const item of result) {
@@ -68,19 +69,21 @@ export const deleteImages = async (ids: string[]) => {
       logger.error(item, "Failed to delete image");
     }
   }
-
-}
+};
 
 export const uploadFiles = async (files: File[]) => {
   const drive = googleDrive();
 
-  const results = await Promise.allSettled(files.map(file => uploadFile(file, drive)));
+  const results = await Promise.allSettled(
+    files.map((file) => uploadFile(file, drive)),
+  );
 
-  return results.map(value => {
-    return value.status === "fulfilled" ? value.value : null
-  }).filter(Boolean);
-}
-
+  return results
+    .map((value) => {
+      return value.status === "fulfilled" ? value.value : null;
+    })
+    .filter(Boolean);
+};
 
 export const extractImgTags = (value: string) => {
   const imgTag = /<img(\w|\s|-|=|\")+\/>/g;
@@ -103,57 +106,68 @@ export const extractImgTags = (value: string) => {
   }
 
   return ids;
-}
+};
 
-export const generateImageBlur = (arraybuffer: ArrayBuffer) => new Promise<string>(async (ok, rej) => {
-  try {
-    const { info, data } = await sharp(arraybuffer)
-      .resize(imageConfig.size, imageConfig.size)
-      .blur(imageConfig.blur)
-      .raw()
-      .ensureAlpha().toBuffer({ resolveWithObject: true });
-    const png = rgbaToDataURL(info.width, info.height, data);
+export const generateImageBlur = (arraybuffer: ArrayBuffer) =>
+  new Promise<string>(async (ok, rej) => {
+    try {
+      const { info, data } = await sharp(arraybuffer)
+        .resize(imageConfig.size, imageConfig.size)
+        .blur(imageConfig.blur)
+        .raw()
+        .ensureAlpha()
+        .toBuffer({ resolveWithObject: true });
+      const png = rgbaToDataURL(info.width, info.height, data);
 
-    const buffer = Buffer.from(png.replace("data:image/png;base64,", ""), "base64");
+      const buffer = Buffer.from(
+        png.replace("data:image/png;base64,", ""),
+        "base64",
+      );
 
-    const compress = await sharp(buffer).toFormat("webp").toBuffer();
+      const compress = await sharp(buffer).toFormat("webp").toBuffer();
 
-    ok(`data:image/webp;base64,${compress.toString("base64")}`);
-  } catch (error) {
-    rej(error);
-  }
-});
+      ok(`data:image/webp;base64,${compress.toString("base64")}`);
+    } catch (error) {
+      rej(error);
+    }
+  });
 
-export const uploadFile = async (file: File, drive: ReturnType<typeof googleDrive>) => {
-
+export const uploadFile = async (
+  file: File,
+  drive: ReturnType<typeof googleDrive>,
+) => {
   const arraybuffer = await file.arrayBuffer();
 
   const [uploadResult, blurResult] = await Promise.allSettled([
     new Promise<string>(async (ok, rej) => {
       try {
-        const compressedImage = await sharp(arraybuffer).withMetadata().toFormat("webp").webp().toBuffer();
+        const compressedImage = await sharp(arraybuffer)
+          .withMetadata()
+          .toFormat("webp")
+          .webp()
+          .toBuffer();
 
         const { data } = await drive.files.create({
           requestBody: {
             name: `${file.name.replace("{", "").replace("}", "")}`,
             parents: [driveConfig.uploadFolderId],
             appProperties: {
-              label: "user_upload"
+              label: "user_upload",
             },
           },
           media: {
             mimeType: "image/webp",
-            body: compressedImage
+            body: compressedImage,
           },
-          fields: "id"
+          fields: "id",
         });
 
         await drive.permissions.create({
           fileId: data.id!,
           requestBody: {
             role: "reader",
-            type: "anyone"
-          }
+            type: "anyone",
+          },
         });
 
         ok(data.id!);
@@ -161,21 +175,24 @@ export const uploadFile = async (file: File, drive: ReturnType<typeof googleDriv
         rej(error);
       }
     }),
-    generateImageBlur(arraybuffer)
+    generateImageBlur(arraybuffer),
   ]);
 
-  const image: { blur: string; src: string; id: string; replaceId: string; } = {
+  const image: { blur: string; src: string; id: string; replaceId: string } = {
     blur: "",
     src: "https://api.dicebear.com/6.x/initials/png?seed=%3F",
     id: "",
-    replaceId: file.name
+    replaceId: file.name,
   };
 
   if (uploadResult.status === "fulfilled" && uploadResult.value) {
     image.src = `${GOOGLE_DRIVE_IMAGE_ROOT}${uploadResult.value}`;
     image.id = uploadResult.value;
   } else {
-    logger.error((uploadResult as PromiseRejectedResult)?.reason ?? "Invaild id", "Failed to upload image");
+    logger.error(
+      (uploadResult as PromiseRejectedResult)?.reason ?? "Invaild id",
+      "Failed to upload image",
+    );
   }
 
   if (blurResult.status === "fulfilled") {
@@ -185,7 +202,7 @@ export const uploadFile = async (file: File, drive: ReturnType<typeof googleDriv
   }
 
   return image;
-}
+};
 
 export const uploadFileCMS = async (file: File, alt: string) => {
   const drive = googleDrive();
@@ -197,7 +214,11 @@ export const uploadFileCMS = async (file: File, alt: string) => {
   const [upload, blur] = await Promise.allSettled([
     new Promise<GoogleImage>(async (ok, rej) => {
       try {
-        const compressedImage = await sharp(arraybuffer).withMetadata().toFormat("webp").webp().toBuffer();
+        const compressedImage = await sharp(arraybuffer)
+          .withMetadata()
+          .toFormat("webp")
+          .webp()
+          .toBuffer();
 
         const { data } = await drive.files.create({
           requestBody: {
@@ -212,7 +233,7 @@ export const uploadFileCMS = async (file: File, alt: string) => {
           },
           media: {
             mimeType: "image/webp",
-            body: compressedImage
+            body: compressedImage,
           },
           fields: "name,id,appProperties,imageMediaMetadata(width,height)",
         });
@@ -230,7 +251,7 @@ export const uploadFileCMS = async (file: File, alt: string) => {
         rej(error);
       }
     }),
-    generateImageBlur(arraybuffer)
+    generateImageBlur(arraybuffer),
   ]);
 
   if (upload.status === "rejected") throw new Error("Image failed to upload");
@@ -239,9 +260,9 @@ export const uploadFileCMS = async (file: File, alt: string) => {
     ...upload.value,
     appProperties: {
       ...upload.value.appProperties,
-      blurthumb: blur.status === "fulfilled" ? blur.value : ""
-    }
+      blurthumb: blur.status === "fulfilled" ? blur.value : "",
+    },
   } as GoogleImage;
-}
+};
 
 export default googleDrive;

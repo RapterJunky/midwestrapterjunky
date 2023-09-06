@@ -31,7 +31,7 @@ export const Panel: React.FC<
           <SidebarLeftArrowIcon />
         </ToolbarButton>
       </Toolbar>
-      <div className="h-full overflow-y-scroll bg-dato-light">{children}</div>
+      <div className="bg-dato-light h-full overflow-y-scroll">{children}</div>
     </Tab.Panel>
   );
 };

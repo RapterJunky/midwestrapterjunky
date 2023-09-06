@@ -23,10 +23,10 @@ import { useRef, useState } from "react";
 import { HiX } from "react-icons/hi";
 import Image from "next/image";
 
-import type { GoogleImage } from "@type/google";
 import type { CursorPaginate, ResponsiveImage } from "@type/page";
-import { AuthFetch } from "@utils/plugin/auth_fetch";
 import { GOOGLE_DRIVE_IMAGE_ROOT } from "@utils/googleConsts";
+import type { GoogleImage } from "@/lib/api/googleDrive";
+import { AuthFetch } from "@utils/plugin/auth_fetch";
 
 const ImageItem: React.FC<{
   item: GoogleImage;
@@ -142,7 +142,7 @@ const ImageItem: React.FC<{
     <div
       data-headlessui-state={active ? "active" : undefined}
       onClick={onSelected}
-      className="border-dato-lighter group relative flex cursor-pointer flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
+      className="border-dato-lighter hover:border-dato-darker ui-active:border-dato-accent group relative flex cursor-pointer flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow"
     >
       <div className="flex h-12 w-full content-center items-center gap-2 p-1">
         <FaImage className="m-2" />
@@ -152,7 +152,7 @@ const ImageItem: React.FC<{
         <Dropdown
           renderTrigger={({ onClick }) => (
             <button
-              className="flex items-center justify-center rounded-full p-1 hover:bg-neutral-400 hover:bg-opacity-75 hover:text-dato-dark"
+              className="hover:text-dato-dark flex items-center justify-center rounded-full p-1 hover:bg-neutral-400 hover:bg-opacity-75"
               onClick={onClick}
             >
               <FaEllipsisV />
@@ -383,7 +383,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
     <Canvas ctx={ctx}>
       <div className="relative flex flex-1 flex-col">
         <nav className="shadow">
-          <div className="mb-2 flex items-center justify-between border-b-2 border-dato-light">
+          <div className="border-dato-light mb-2 flex items-center justify-between border-b-2">
             <h1 className="ml-4 p-2 text-2xl font-bold">
               Choose from Google Drive
             </h1>
@@ -397,7 +397,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               <UploadButton ctx={ctx} mutate={mutate} />
               <button
                 onClick={() => ctx.resolve(null)}
-                className="flex h-14 w-14 items-center justify-center rounded-tr-lg border-l-2 border-dato-light text-2xl hover:bg-neutral-100"
+                className="border-dato-light flex h-14 w-14 items-center justify-center rounded-tr-lg border-l-2 text-2xl hover:bg-neutral-100"
               >
                 <HiX />
               </button>
@@ -463,7 +463,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap items-start justify-center gap-dato-m overflow-y-scroll p-4">
+          <main className="gap-dato-m relative flex max-h-[30lvi] flex-1 flex-wrap items-start justify-center overflow-y-scroll p-4">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.
@@ -526,8 +526,8 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center justify-between bg-dato-accent p-2">
-          <div className="flex gap-dato-m text-dato-light">
+        <div className="bg-dato-accent flex items-center justify-between p-2">
+          <div className="gap-dato-m text-dato-light flex">
             {ctx.parameters.limitAssets ?? false ? (
               <span>
                 Selected: {selected.length} of{" "}

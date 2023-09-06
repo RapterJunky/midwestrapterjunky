@@ -9,8 +9,8 @@ const Runtime: React.FC<{ enable: boolean }> = ({ enable }) => {
     const init = async () => {
       const { initTE, Carousel } = await import("tw-elements");
       initTE({ Carousel });
-    }
-    if (enable) init().catch(err => console.error(err));
+    };
+    if (enable) init().catch((err) => console.error(err));
   }, [enable]);
   return null;
 };

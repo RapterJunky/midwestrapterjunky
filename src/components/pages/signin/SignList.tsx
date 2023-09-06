@@ -1,5 +1,5 @@
 "use client";
-import { Facebook, Chrome } from 'lucide-react';
+import { Facebook, Chrome } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 

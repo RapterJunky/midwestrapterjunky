@@ -200,7 +200,7 @@ export const Topics: React.FC<{
                       {topic.tags
                         ? topic.tags.map((value, i) => (
                             <span
-                              className="rounded-sm bg-green-500 px-1 text-dato-xs text-white"
+                              className="text-dato-xs rounded-sm bg-green-500 px-1 text-white"
                               key={i}
                             >
                               {value}

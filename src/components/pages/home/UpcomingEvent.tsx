@@ -19,7 +19,7 @@ export interface UpcomingEventProps extends ModulerContent {
   };
   backgroundColor?: Color;
   textColor?: Color;
-};
+}
 
 export default function UpcomingEvent({
   event,

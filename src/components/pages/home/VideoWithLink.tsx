@@ -15,7 +15,7 @@ export interface VideoWithLinksProps extends ModulerContent {
   content: StructuredTextGraphQlResponse;
   color: Color;
   youtubeid: string;
-};
+}
 
 export default function VideoWithLinks(props: VideoWithLinksProps) {
   return (
@@ -25,9 +25,7 @@ export default function VideoWithLinks(props: VideoWithLinksProps) {
           <StructuredText customMarkRules={markRules} data={props.content} />
         </div>
         <Button asChild>
-          <Link href="/calendar">
-            SEE ALL EVENTS
-          </Link>
+          <Link href="/calendar">SEE ALL EVENTS</Link>
         </Button>
       </div>
       <div className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden">

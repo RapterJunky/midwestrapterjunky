@@ -9,7 +9,9 @@ const schema = z.object({
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { page, limit } = schema.parse(Object.fromEntries(searchParams.entries()));
+  const { page, limit } = schema.parse(
+    Object.fromEntries(searchParams.entries()),
+  );
 
   const [user, meta] = await prisma.user
     .paginate({
@@ -58,7 +60,9 @@ async function PATCH(request: Request) {
 
 async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { id } = z.object({ id: z.string().cuid() }).parse(Object.fromEntries(searchParams.entries()));
+  const { id } = z
+    .object({ id: z.string().cuid() })
+    .parse(Object.fromEntries(searchParams.entries()));
 
   await prisma.user.delete({
     where: {
@@ -72,7 +76,7 @@ async function DELETE(request: Request) {
 const handlers = {
   GET,
   PATCH,
-  DELETE
-}
+  DELETE,
+};
 
 export default handlers;

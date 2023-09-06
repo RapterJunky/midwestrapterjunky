@@ -21,7 +21,7 @@ export interface TestimonialAndShareProps extends ModulerContent {
     rating: number;
     author: string;
   }[];
-};
+}
 
 const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
   return (
@@ -55,9 +55,7 @@ const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
             data={props.description}
           />
           <Button asChild>
-            <Link href={props.buttonlink}>
-              {props.linkTitle}
-            </Link>
+            <Link href={props.buttonlink}>{props.linkTitle}</Link>
           </Button>
         </div>
       </div>

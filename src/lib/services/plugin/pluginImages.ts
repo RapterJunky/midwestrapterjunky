@@ -32,7 +32,9 @@ const getBlur = async (imageId: string) => {
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const { q, cursor, type, sort, id } = schema.parse(Object.fromEntries(searchParams.entries()));
+  const { q, cursor, type, sort, id } = schema.parse(
+    Object.fromEntries(searchParams.entries()),
+  );
 
   const drive = googleDrive();
 
@@ -42,10 +44,9 @@ async function GET(request: Request) {
       pageSize: 50,
       fields:
         "nextPageToken, files(id, name,appProperties, imageMediaMetadata(width,height) )",
-      q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${sort
-        ? ` and appProperties has { key='label' and value='${sort}' }`
-        : ""
-        }${q ? ` and fullText contains '${q}'` : ""}`,
+      q: `trashed = false and mimeType != \'application/vnd.google-apps.folder\' and visibility = 'anyoneWithLink'${
+        sort ? ` and appProperties has { key='label' and value='${sort}' }` : ""
+      }${q ? ` and fullText contains '${q}'` : ""}`,
     });
 
     return NextResponse.json({
@@ -89,7 +90,7 @@ async function DELETE(request: Request) {
 
 const handlers = {
   DELETE,
-  GET
+  GET,
 };
 
 export default handlers;

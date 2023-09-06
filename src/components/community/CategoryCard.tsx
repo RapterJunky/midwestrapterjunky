@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, Pin } from 'lucide-react';
+import { Lock, Pin } from "lucide-react";
 
 import { Badge } from "../ui/badge";
 
@@ -37,7 +37,9 @@ const CategoryCard: React.FC<Props> = ({
       <td className="px-2 py-3">
         <h3>
           <Link href={slug}>
-            <div className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">{title}</div>
+            <div className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
+              {title}
+            </div>
             <div className="float-none mb-8 mr-8 mt-1 flex justify-center sm:float-left sm:aspect-square">
               <Image
                 className="rounded-full object-cover object-center"
@@ -49,7 +51,7 @@ const CategoryCard: React.FC<Props> = ({
             </div>
           </Link>
         </h3>
-        <p className="leading-7 mt-2 line-clamp-5 flex-shrink overflow-hidden text-zinc-600">
+        <p className="mt-2 line-clamp-5 flex-shrink overflow-hidden leading-7 text-zinc-600">
           {desciption}
         </p>
         {tags ? (
@@ -82,7 +84,7 @@ const CategoryCard: React.FC<Props> = ({
                 >
                   {topic.locked ? <Lock className="h-4 w-4" /> : null}
                   {topic.pinned ? <Pin className="h-4 w-4" /> : null}
-                  <span className="line-clamp-1 overflow-hidden text-blue-500 underline text-sm font-medium">
+                  <span className="line-clamp-1 overflow-hidden text-sm font-medium text-blue-500 underline">
                     {topic.name}
                   </span>
                   <span className="text-sm text-zinc-400">

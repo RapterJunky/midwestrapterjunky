@@ -119,7 +119,8 @@ async function GET(request: Request) {
 async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  if (searchParams.get("type") !== "draft") throw new createHttpError.BadRequest();
+  if (searchParams.get("type") !== "draft")
+    throw new createHttpError.BadRequest();
   const body = await request.json();
 
   const draft = draftSchema.parse(body);
@@ -134,15 +135,20 @@ async function POST(request: Request) {
 
   const data = response[1] as { id: string };
 
-  return NextResponse.json({
-    id: data.id,
-    link: `https://mc.sendgrid.com/single-sends/${data.id}/editor`,
-  }, { status: 202 });
+  return NextResponse.json(
+    {
+      id: data.id,
+      link: `https://mc.sendgrid.com/single-sends/${data.id}/editor`,
+    },
+    { status: 202 },
+  );
 }
 
 async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { id } = z.object({ id: z.string().uuid() }).parse(Object.fromEntries(searchParams.entries()));
+  const { id } = z
+    .object({ id: z.string().uuid() })
+    .parse(Object.fromEntries(searchParams.entries()));
 
   client.setApiKey(process.env.SENDGIRD_API_KEY);
 
@@ -160,7 +166,7 @@ async function DELETE(request: Request) {
 const handler = {
   GET,
   POST,
-  DELETE
-}
+  DELETE,
+};
 
 export default handler;

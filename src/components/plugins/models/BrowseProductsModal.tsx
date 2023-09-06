@@ -105,14 +105,14 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               Search
             </Button>
           </form>
-          <div className="relative mt-dato-l">
+          <div className="mt-dato-l relative">
             {!isLoading && !error && data?.length ? (
               <div
-                className={`grid grid-cols-5 gap-dato-m opacity-100 duration-700 ease-in-out`}
+                className={`gap-dato-m grid grid-cols-5 opacity-100 duration-700 ease-in-out`}
               >
                 {data.map((product) => (
                   <div
-                    className="border-var-border cursor-pointer appearance-none overflow-hidden rounded border bg-transparent p-1 pb-0 text-center hover:border-dato-accent"
+                    className="border-var-border hover:border-dato-accent cursor-pointer appearance-none overflow-hidden rounded border bg-transparent p-1 pb-0 text-center"
                     key={product.handle}
                     onClick={() =>
                       ctx.resolve(
@@ -121,7 +121,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                     }
                   >
                     <div
-                      className="block bg-dato-light bg-cover pt-[100%]"
+                      className="bg-dato-light block bg-cover pt-[100%]"
                       style={{
                         backgroundImage: `url(${product.image.url})`,
                       }}
@@ -150,7 +150,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && !error && !data?.length ? (
               <div
-                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
+                className="bg-dato-light text-dato-light-body flex h-52 items-center justify-center text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}
@@ -160,7 +160,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && error ? (
               <div
-                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
+                className="bg-dato-light text-dato-light-body flex h-52 items-center justify-center text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useId } from "react";
@@ -10,12 +10,11 @@ export interface CarouselProps extends ModulerContent {
     alt: string | null;
     title: string | null;
   }>[];
-};
+}
 
-const CarouselRuntime = dynamic(
-  () => import("./CarouselRuntime"),
-  { ssr: false },
-);
+const CarouselRuntime = dynamic(() => import("./CarouselRuntime"), {
+  ssr: false,
+});
 
 export default function CarouselElement(props: CarouselProps) {
   const id = useId();
@@ -37,7 +36,7 @@ export default function CarouselElement(props: CarouselProps) {
       >
         {props.images.map((_, i) => (
           <button
-            className="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-500 ease-carousel-in-out motion-reduce:transition-none"
+            className="ease-carousel-in-out mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-500 motion-reduce:transition-none"
             key={i}
             type="button"
             data-te-target={targetId}
@@ -83,7 +82,7 @@ export default function CarouselElement(props: CarouselProps) {
         ))}
       </div>
       <button
-        className="absolute bottom-0 left-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-carousel-in-out hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-carousel-in-out absolute bottom-0 left-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
         data-te-target={targetId}
         data-te-slide="prev"
@@ -96,7 +95,7 @@ export default function CarouselElement(props: CarouselProps) {
         </span>
       </button>
       <button
-        className="absolute bottom-0 right-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-carousel-in-out hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-carousel-in-out absolute bottom-0 right-0 top-0 z-[1] flex w-[8%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
         data-te-target={targetId}
         data-te-slide="next"

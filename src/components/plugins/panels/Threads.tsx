@@ -211,7 +211,7 @@ export const Threads: React.FC<{
                       <div className="flex flex-wrap gap-1">
                         {(value.tags as string[])?.map((tag, i) => (
                           <span
-                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            className="bg-dato-accent text-dato-light rounded-md px-1 py-0.5"
                             key={i}
                           >
                             {tag}

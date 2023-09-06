@@ -1,39 +1,42 @@
 export type SearchQueryResult = {
   catalogItems: {
     pageInfo: {
-      nextCursor: null | string
-    },
+      nextCursor: null | string;
+    };
     nodes: {
       id: string;
       name: string;
       updatedAt: string;
-      images: { url: string; caption: string | null; name: string; }[] | null;
+      images: { url: string; caption: string | null; name: string }[] | null;
       category: {
         name: string;
-      } | null
-      variations: ({
-        priceMoney: {
-          amount: number;
-          currency: string;
-        }
-        pricingType: "FIXED_PRICING"
-      } | {
-        priceMoney: null,
-        pricingType: "VARIABLE_PRICING"
-      })[]
-    }[]
-  }
-}
+      } | null;
+      variations: (
+        | {
+            priceMoney: {
+              amount: number;
+              currency: string;
+            };
+            pricingType: "FIXED_PRICING";
+          }
+        | {
+            priceMoney: null;
+            pricingType: "VARIABLE_PRICING";
+          }
+      )[];
+    }[];
+  };
+};
 
-/** 
+/**
  * @example
  *  Varables
  *  Required
  *      $merchantId: ID!
  *  optional
- *      $limit: Int, 
+ *      $limit: Int,
  *      $cursor: Cursor,
- *      $sort: [CatalogSort!], 
+ *      $sort: [CatalogSort!],
  *      $vendor: [CatalogCustomAttributeFilter],
  *      $category: [ID!]
  */

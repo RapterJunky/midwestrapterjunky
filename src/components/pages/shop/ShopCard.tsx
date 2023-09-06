@@ -2,22 +2,25 @@ import Link from "next/link";
 import Image from "next/image";
 import type { SearchQueryResult } from "@/gql/sqaure/searchQuery";
 
-const ShopCard: React.FC<{ item: SearchQueryResult["catalogItems"]["nodes"][0] }> = ({ item }) => {
-
+const ShopCard: React.FC<{
+  item: SearchQueryResult["catalogItems"]["nodes"][0];
+}> = ({ item }) => {
   const image = item.images?.at(0) ?? {
     name: item.name,
     url: `https://api.dicebear.com/6.x/icons/png?seed=${item.name}`,
-    caption: null
-  }
+    caption: null,
+  };
 
-  const variation = item.variations.find(value => value.pricingType === "FIXED_PRICING");
+  const variation = item.variations.find(
+    (value) => value.pricingType === "FIXED_PRICING",
+  );
 
   let price = "$??.??";
 
   if (variation && variation.priceMoney) {
     price = (variation.priceMoney.amount / 100).toLocaleString(undefined, {
       style: "currency",
-      currency: variation.priceMoney.currency
+      currency: variation.priceMoney.currency,
     });
   }
 

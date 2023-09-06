@@ -72,13 +72,16 @@ export const renderInlineRecord = ({
   }
 };
 
-export const renderBlock = ({
-  record,
-}: RenderBlockContext<{
-  __typename: string;
-  id: string;
-  content: ResponsiveImage<{ width: number; height: number }>;
-}>, opts?: { unoptimized: boolean }) => {
+export const renderBlock = (
+  {
+    record,
+  }: RenderBlockContext<{
+    __typename: string;
+    id: string;
+    content: ResponsiveImage<{ width: number; height: number }>;
+  }>,
+  opts?: { unoptimized: boolean },
+) => {
   switch (record.__typename) {
     case "ImageRecord":
       if (!record.content) return null;

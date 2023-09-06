@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from 'next/link';
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@utils/timeFormat";
 import type { ModulerContent, ResponsiveImage } from "@type/page";
@@ -16,7 +16,7 @@ export interface UpcomingEventsProps extends ModulerContent {
     };
     bgImage: ResponsiveImage<{ width: number; height: number }>;
   }[];
-};
+}
 
 export default function UpcomingEvents(props: UpcomingEventsProps) {
   return (

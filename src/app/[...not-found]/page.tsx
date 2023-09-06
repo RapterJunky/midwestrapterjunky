@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -37,15 +37,11 @@ const NotFoundCatchAll = () => {
           Sorry, the page you are looking for could not be found.
         </p>
         <Button asChild>
-          <Link
-            href="/"
-            title="Return Home"
-          >
+          <Link href="/" title="Return Home">
             <ArrowLeft className="mr-1" />
             Return Home
           </Link>
         </Button>
-
       </div>
     </div>
   );

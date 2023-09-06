@@ -1,4 +1,3 @@
-
 import { Client, Environment } from "square";
 import { NextResponse } from "next/server";
 import { serialize } from "superjson";
@@ -43,10 +42,10 @@ async function POST(request: Request) {
       objectTypes: ["ITEM"],
       query: search.length
         ? {
-          textQuery: {
-            keywords: search.split(" "),
-          },
-        }
+            textQuery: {
+              keywords: search.split(" "),
+            },
+          }
         : undefined,
     });
 
@@ -65,7 +64,7 @@ async function POST(request: Request) {
 }
 
 const handlers = {
-  POST
-}
+  POST,
+};
 
 export default handlers;

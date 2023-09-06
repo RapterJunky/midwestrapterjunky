@@ -4,7 +4,7 @@ import type { Color, Icon, ModulerContent } from "@type/page";
 
 export interface SocialLinksProps extends ModulerContent {
   sociallinks: { iconColor: Color | null; logo: Icon; link: string }[];
-};
+}
 
 export default function SocialLinks(props: SocialLinksProps) {
   return (

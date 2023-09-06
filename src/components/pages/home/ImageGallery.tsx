@@ -5,7 +5,7 @@ export interface ImageGalleryProps extends ModulerContent {
   displayHeading: boolean;
   heading: string;
   images: ResponsiveImage<{ height: number; width: number }>[];
-};
+}
 
 export default function ImageGallery(props: ImageGalleryProps) {
   return (

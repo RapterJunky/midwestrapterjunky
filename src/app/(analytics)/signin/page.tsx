@@ -10,8 +10,10 @@ import getFullPageProps from "@lib/services/getFullPageProps";
 import SignInList from "@components/pages/signin/SignList";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
-
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const icons = (await parent).icons;
 
   return getGenericSeoTags({
@@ -33,7 +35,7 @@ const getIcon = async () => {
 const SignIn: React.FC = async () => {
   const icon = await getIcon();
   return (
-    <div className="lg:grid lg:min-h-screen lg:grid-cols-12 dark:bg-zinc-900 dark:text-zinc-50">
+    <div className="dark:bg-zinc-900 dark:text-zinc-50 lg:grid lg:min-h-screen lg:grid-cols-12">
       <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
         <Image
           src="https://www.datocms-assets.com/77949/1676234561-220865184_6246667838678383_7191752647666209634_n.webp"
@@ -41,12 +43,12 @@ const SignIn: React.FC = async () => {
           fill
           className="inset-0 h-full w-full object-cover opacity-80"
         />
-        <div className="hidden lg:relative lg:flex flex-col lg:p-12 h-full">
+        <div className="hidden h-full flex-col lg:relative lg:flex lg:p-12">
           <Link className="block text-white" href="/">
             <span className="sr-only">Home</span>
             <Image src={icon} height={100} width={100} alt="logo" />
           </Link>
-          <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl mt-auto">
+          <h2 className="mt-auto text-2xl font-bold text-white sm:text-3xl md:text-4xl">
             Welcome to Midwest Raptor Junkies
           </h2>
           <p className="mt-4 leading-relaxed text-white/90">
@@ -60,9 +62,13 @@ const SignIn: React.FC = async () => {
       >
         <div className="max-w-xl lg:max-w-3xl">
           <div className="relative -mt-16 block lg:hidden">
-            <Avatar asChild className="h-16 w-16 sm:h-20 sm:w-20 bg-white">
+            <Avatar asChild className="h-16 w-16 bg-white sm:h-20 sm:w-20">
               <Link href="/">
-                <AvatarImage className="h-16 w-16 sm:h-20 sm:w-20 bg-white" asChild src={icon}>
+                <AvatarImage
+                  className="h-16 w-16 bg-white sm:h-20 sm:w-20"
+                  asChild
+                  src={icon}
+                >
                   <Image src={icon} height={100} width={100} alt="logo" />
                 </AvatarImage>
                 <AvatarFallback>RJ</AvatarFallback>
@@ -77,12 +83,14 @@ const SignIn: React.FC = async () => {
           </div>
           <div className="mt-8 grid grid-cols-6 gap-6">
             <div className="col-span-6">
-              <Suspense fallback={(
-                <div className="flex flex-col gap-4">
-                  <Skeleton className="h-10 px-4 py-2" />
-                  <Skeleton className="h-10 px-4 py-2" />
-                </div>
-              )}>
+              <Suspense
+                fallback={
+                  <div className="flex flex-col gap-4">
+                    <Skeleton className="h-10 px-4 py-2" />
+                    <Skeleton className="h-10 px-4 py-2" />
+                  </div>
+                }
+              >
                 <SignInList />
               </Suspense>
             </div>

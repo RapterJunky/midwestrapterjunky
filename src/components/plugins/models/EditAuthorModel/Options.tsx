@@ -9,7 +9,7 @@ const Options = ({ setEdit, setSelect }: OptionsProps) => {
   return (
     <div className="flex w-full justify-center gap-4 ">
       <button
-        className="w-30 mx-4 flex h-30 flex-col items-center justify-center rounded-sm px-4 shadow-xl hover:bg-gray-50"
+        className="w-30 h-30 mx-4 flex flex-col items-center justify-center rounded-sm px-4 shadow-xl hover:bg-gray-50"
         onClick={() => setEdit(true)}
       >
         <FaUserPlus className="h-10 w-10" />
@@ -17,7 +17,7 @@ const Options = ({ setEdit, setSelect }: OptionsProps) => {
       </button>
 
       <button
-        className="w-30 mx-4 flex h-30 flex-col items-center justify-center rounded-sm px-4 shadow-xl hover:bg-gray-50"
+        className="w-30 h-30 mx-4 flex flex-col items-center justify-center rounded-sm px-4 shadow-xl hover:bg-gray-50"
         onClick={() => setSelect(true)}
       >
         <FaUserTag className="h-10 w-10" />

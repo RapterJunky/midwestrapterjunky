@@ -3,8 +3,10 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
-
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const icons = (await parent).icons;
 
   return getGenericSeoTags({

@@ -30,10 +30,12 @@ const TopicCard: React.FC<Props> = ({
       <td>
         <div className="p-2">
           <Link href={slug}>
-            <h3 className="mb-2 flex items-center gap-1 scroll-m-20 text-2xl font-semibold tracking-tight">
+            <h3 className="mb-2 flex scroll-m-20 items-center gap-1 text-2xl font-semibold tracking-tight">
               {locked ? <Lock className="text-zinc-400" /> : null}
               {pinned ? <Pin className="text-zinc-400" /> : null}
-              <span className="underline text-blue-500 hover:text-blue-400">{title}</span>
+              <span className="text-blue-500 underline hover:text-blue-400">
+                {title}
+              </span>
             </h3>
           </Link>
           <div className="mb-2 flex flex-wrap gap-2">

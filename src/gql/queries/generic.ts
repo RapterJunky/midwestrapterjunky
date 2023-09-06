@@ -3,14 +3,14 @@ import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
 import Navbar from "../fragments/Navbar";
 
 export type GenericPageResult = {
-    site: {
-        faviconMetaTags: SeoOrFaviconTag[];
-    };
-    navbar: {
-        pageLinks: LinkWithIcon[];
-        logo: ResponsiveImage
-    }
-}
+  site: {
+    faviconMetaTags: SeoOrFaviconTag[];
+  };
+  navbar: {
+    pageLinks: LinkWithIcon[];
+    logo: ResponsiveImage;
+  };
+};
 
 const GenericPageQuery = `
 query GenericPageQuery {

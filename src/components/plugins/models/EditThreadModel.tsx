@@ -110,7 +110,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${
+            className={`placeholder:text-dato-placeholder w-full border ${
               errors.description
                 ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
                 : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"
@@ -196,7 +196,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             render={({ field }) => (
               <div
                 id="image"
-                className="flex flex-col justify-center gap-dato-l"
+                className="gap-dato-l flex flex-col justify-center"
               >
                 <div className="flex justify-center">
                   <Image
@@ -208,7 +208,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                     width={120}
                   />
                 </div>
-                <div className="flex justify-center gap-dato-s">
+                <div className="gap-dato-s flex justify-center">
                   <Button
                     buttonSize="xxs"
                     buttonType="primary"

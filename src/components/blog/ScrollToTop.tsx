@@ -1,5 +1,5 @@
 "use client";
-import { MessagesSquare, ArrowUp } from 'lucide-react';
+import { MessagesSquare, ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -26,8 +26,9 @@ const ScrollToTop = ({ comments = false }: Props) => {
 
   return (
     <div
-      className={`fixed bottom-8 right-8 hidden flex-col gap-3 ${show ? "md:flex" : "md:hidden"
-        }`}
+      className={`fixed bottom-8 right-8 hidden flex-col gap-3 ${
+        show ? "md:flex" : "md:hidden"
+      }`}
     >
       {comments ? (
         <button

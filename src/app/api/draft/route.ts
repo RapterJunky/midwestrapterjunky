@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import { draftMode } from "next/headers";
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { logger } from "@lib/logger";

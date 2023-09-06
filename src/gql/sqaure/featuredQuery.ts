@@ -3,19 +3,23 @@ export type FeaturedQueryResult = {
     nodes: {
       id: string;
       title: string;
-      images: { url: string; alt: string; }[] | null;
-      variations: Array<{
-        priceMoney: {
-          amount: number,
-          currency: string
-        }, pricingType: "FIXED_PRICING"
-      } | {
-        priceMoney: null,
-        pricingType: "VARIABLE_PRICING"
-      }>
-    }[]
-  }
-}
+      images: { url: string; alt: string }[] | null;
+      variations: Array<
+        | {
+            priceMoney: {
+              amount: number;
+              currency: string;
+            };
+            pricingType: "FIXED_PRICING";
+          }
+        | {
+            priceMoney: null;
+            pricingType: "VARIABLE_PRICING";
+          }
+      >;
+    }[];
+  };
+};
 
 const FeaturedQuery = `
 query MerchantsQuery($merchantId: ID!, $items: [ID!]) {

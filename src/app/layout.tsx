@@ -10,13 +10,14 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.VERCEL_URL
+    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${
+      process.env.VERCEL_URL
     }`,
   ),
   title: {
     template: "%s - Midwest Raptor Junkies",
-    default: "Midwest Raptor Junkies"
-  }
+    default: "Midwest Raptor Junkies",
+  },
 };
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {

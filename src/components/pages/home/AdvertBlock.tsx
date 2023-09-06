@@ -8,7 +8,7 @@ export interface AdvertBlockProps extends ModulerContent {
   headingright: string;
   textright: string;
   bgcolor: Color;
-};
+}
 
 export default function AdvertBlock(props: AdvertBlockProps) {
   return (

@@ -10,7 +10,10 @@ const schema = z.record(
 );
 
 const CONFIG_ID = "08db4a5e-9da2-4f87-8127-177d185c01ae";
-const env = process.env.VERCEL_ENV !== "production" ? "08db4a5e-9d88-41a5-8db1-d00b50df6630" : "08db4a5e-9d97-4083-8220-ec3b0deecce8";
+const env =
+  process.env.VERCEL_ENV !== "production"
+    ? "08db4a5e-9d88-41a5-8db1-d00b50df6630"
+    : "08db4a5e-9d97-4083-8220-ec3b0deecce8";
 
 async function GET() {
   const response = await fetch(
@@ -69,7 +72,7 @@ async function PUT(request: Request) {
 
 const handlers = {
   PUT,
-  GET
-}
+  GET,
+};
 
 export default handlers;

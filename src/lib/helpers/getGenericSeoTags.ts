@@ -29,7 +29,8 @@ const getGenericSeoTags = ({
       title: `${title} - Midwest Raptor Junkies`,
       description,
       images: [
-        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
+        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
+          process.env.VERCEL_URL
         }/twitter-image`,
       ],
     },
@@ -38,15 +39,16 @@ const getGenericSeoTags = ({
     description,
     icons: Array.isArray(icons)
       ? icons.map((icon) => ({
-        url: (icon.attributes as FaviconAttributes).href,
-        rel: (icon.attributes as FaviconAttributes).rel,
-        type: (icon.attributes as FaviconAttributes).type,
-        sizes: (icon.attributes as FaviconAttributes).sizes,
-      }))
+          url: (icon.attributes as FaviconAttributes).href,
+          rel: (icon.attributes as FaviconAttributes).rel,
+          type: (icon.attributes as FaviconAttributes).type,
+          sizes: (icon.attributes as FaviconAttributes).sizes,
+        }))
       : icons,
     openGraph: {
       images: [
-        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
+        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
+          process.env.VERCEL_URL
         }/opengraph-image`,
       ],
       locale: "en-US",

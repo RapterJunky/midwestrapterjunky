@@ -50,8 +50,8 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
 
   return (
     <Canvas ctx={ctx}>
-      <div className="flex flex-col gap-dato-m">
-        <div className="mb-4 flex flex-wrap items-center gap-dato-m">
+      <div className="gap-dato-m flex flex-col">
+        <div className="gap-dato-m mb-4 flex flex-wrap items-center">
           {(images ?? []).map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {
@@ -85,9 +85,9 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
             />
           ))}
         </div>
-        <div className="mb-dato-m flex justify-center gap-dato-s">
+        <div className="mb-dato-m gap-dato-s flex justify-center">
           <Button onClick={selectImages} buttonSize="xs">
-            <span className="flex items-center justify-center gap-dato-s">
+            <span className="gap-dato-s flex items-center justify-center">
               <FaGoogleDrive />
               From Google Drive
             </span>

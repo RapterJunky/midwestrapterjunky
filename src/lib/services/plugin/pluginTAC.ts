@@ -19,7 +19,9 @@ const schemaPatch = z.object({
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { page, search } = schema.parse(Object.fromEntries(searchParams.entries()));
+  const { page, search } = schema.parse(
+    Object.fromEntries(searchParams.entries()),
+  );
 
   const [topics, meta] = await prisma.threadPost
     .paginate({
@@ -98,7 +100,7 @@ async function PATCH(request: Request) {
 
 const handlers = {
   GET,
-  PATCH
-}
+  PATCH,
+};
 
 export default handlers;

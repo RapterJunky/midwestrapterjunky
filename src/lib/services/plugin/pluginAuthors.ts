@@ -25,7 +25,9 @@ const querySchema = z.object({
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { page } = querySchema.parse(Object.fromEntries(searchParams.entries()));
+  const { page } = querySchema.parse(
+    Object.fromEntries(searchParams.entries()),
+  );
 
   const [authors, meta] = await prisma.authors.paginate().withPages({
     page,
@@ -46,7 +48,6 @@ async function POST(request: Request) {
   });
 
   return NextResponse.json(result, { status: 201 });
-
 }
 
 async function PATCH(request: Request) {
@@ -65,7 +66,9 @@ async function PATCH(request: Request) {
 
 async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
-  const query = z.object({ id: z.string() }).parse(Object.fromEntries(searchParams.entries()));
+  const query = z
+    .object({ id: z.string() })
+    .parse(Object.fromEntries(searchParams.entries()));
   await prisma.authors.delete({
     where: {
       id: query.id,
@@ -79,7 +82,7 @@ const handlers = {
   GET,
   DELETE,
   PATCH,
-  POST
+  POST,
 };
 
 export default handlers;

@@ -6,8 +6,10 @@ import Link from "next/link";
 import ErrorMessage from "@/components/pages/auth/error/ErrorMessage";
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
-
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const icons = (await parent).icons;
 
   return getGenericSeoTags({

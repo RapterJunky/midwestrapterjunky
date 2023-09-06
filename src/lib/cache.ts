@@ -1,6 +1,5 @@
 import prisma from "@api/prisma";
 
-
 export const fetchCacheData = async <R = unknown>(
   key: string,
   fetch: () => Promise<object>,

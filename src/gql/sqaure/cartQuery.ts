@@ -1,42 +1,45 @@
-type PriceType = {
-  pricingType: "VARIABLE_PRICING",
-  priceMoney: null
-} | {
-  priceMoney: {
-    amount: number;
-    currency: string;
-  }
-  pricingType: "FIXED_PRICING"
-}
-
+type PriceType =
+  | {
+      pricingType: "VARIABLE_PRICING";
+      priceMoney: null;
+    }
+  | {
+      priceMoney: {
+        amount: number;
+        currency: string;
+      };
+      pricingType: "FIXED_PRICING";
+    };
 
 export type CartQueryResult = {
   catalog: {
-    nodes: Array<{
-      id: string;
-      item: {
+    nodes: Array<
+      {
         id: string;
-        labelColor: string;
+        item: {
+          id: string;
+          labelColor: string;
+          name: string;
+          variations: PriceType[];
+          images: { url: string; name: string }[] | null;
+        };
         name: string;
-        variations: PriceType[];
-        images: { url: string; name: string; }[] | null;
-      }
-      name: string;
-    } & PriceType>
-  }
+      } & PriceType
+    >;
+  };
   inventoryCounts: {
     nodes: {
       catalog: {
         id: string;
-      }
+      };
       state: string;
       quantity: string;
-    }[]
-  }
+    }[];
+  };
 };
 /**
  * Varables
- * @example 
+ * @example
  * $items: [ID!]
  * $merchantId: ID!
  */

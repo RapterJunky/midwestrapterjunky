@@ -4,7 +4,7 @@ import { Canvas, ButtonLink } from "datocms-react-ui";
 import { useMemo } from "react";
 import { normalizeConfig } from "@/lib/utils/plugin/config";
 
-import type { RevaildateSettings } from "@/pages/api/revalidate";
+import type { RevaildateSettings } from "@/app/api/revalidate/route";
 import { capitlize } from "@/lib/utils/capitlize";
 
 interface Props {
@@ -68,8 +68,7 @@ const PreviewLink: React.FC<Props> = ({ ctx }) => {
     const settings = getSettings(config, ctx.itemType.attributes.api_key);
 
     switch (settings.type) {
-      case "page":
-      case "page-cache": {
+      case "page": {
         const path = replaceVariables(settings.slug, attributes, locale);
         const noSlashInstanceUrl = siteUrl.replace(/\/$/, "");
         const href = [
@@ -132,7 +131,7 @@ const PreviewLink: React.FC<Props> = ({ ctx }) => {
           View Preview
         </ButtonLink>
       ) : (
-        <div className="flex flex-col gap-dato-s">
+        <div className="gap-dato-s flex flex-col">
           {previewHref.data.map((item, i) => (
             <ButtonLink
               key={i}

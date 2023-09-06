@@ -3,8 +3,10 @@ import { Suspense } from "react";
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 import SignoutBtn from "@components/pages/signout/SignoutBtn";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
-
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const icons = (await parent).icons;
 
   return getGenericSeoTags({

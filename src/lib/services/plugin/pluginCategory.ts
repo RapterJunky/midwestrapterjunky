@@ -22,7 +22,7 @@ const patchSchema = createCategory.extend({
 const revaildate = () => {
   revalidatePath("/community");
   revalidatePath("/community/topic");
-}
+};
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -53,7 +53,7 @@ async function POST(request: Request) {
     },
   });
 
-  revaildate()
+  revaildate();
 
   return NextResponse.json(data, { status: 201 });
 }
@@ -104,7 +104,7 @@ const handlers = {
   GET,
   POST,
   DELETE,
-  PATCH
-}
+  PATCH,
+};
 
 export default handlers;

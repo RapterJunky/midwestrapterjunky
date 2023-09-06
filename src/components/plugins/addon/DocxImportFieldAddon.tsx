@@ -1,9 +1,7 @@
-import type { NonTextNode } from "datocms-structured-text-slate-utils";
+import type { NonTextNode, Text } from "datocms-structured-text-slate-utils";
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas, Button } from "datocms-react-ui";
 import { useRef, useState } from "react";
-import type { Text } from "slate";
-
 type NewLine = "\n";
 
 const DocxImportFieldAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({

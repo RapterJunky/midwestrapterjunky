@@ -7,7 +7,7 @@ import getFullPageProps from "@/lib/services/getFullPageProps";
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
-  return toNextMetadata(data.site.faviconMetaTags)
+  return toNextMetadata(data.site.faviconMetaTags);
 }
 
 const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {

@@ -18,7 +18,9 @@ const deleteSchema = z.object({
 
 async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const { search, order, page, type } = getSchema.parse(Object.fromEntries(searchParams));
+  const { search, order, page, type } = getSchema.parse(
+    Object.fromEntries(searchParams),
+  );
 
   const [reports, meta] = await prisma.report
     .paginate({
@@ -55,8 +57,7 @@ async function DELETE(request: Request) {
   const { id, type } = deleteSchema.parse(Object.fromEntries(searchParams));
   switch (type) {
     case "comment": {
-      if (typeof id !== "string")
-        throw createHttpError.BadRequest("Bad Id");
+      if (typeof id !== "string") throw createHttpError.BadRequest("Bad Id");
       await prisma.$transaction([
         prisma.comment.deleteMany({
           where: {
@@ -68,14 +69,12 @@ async function DELETE(request: Request) {
       return NextResponse.json({ message: "ok" });
     }
     case "report": {
-      if (typeof id !== "number")
-        throw createHttpError.BadRequest("Bad Id");
+      if (typeof id !== "number") throw createHttpError.BadRequest("Bad Id");
       await prisma.report.delete({ where: { id } });
       return NextResponse.json({ message: "ok" });
     }
     case "topic": {
-      if (typeof id !== "string")
-        throw createHttpError.BadRequest("Bad Id");
+      if (typeof id !== "string") throw createHttpError.BadRequest("Bad Id");
       await prisma.threadPost.delete({ where: { id } });
       return NextResponse.json({ message: "ok" });
     }
@@ -84,7 +83,7 @@ async function DELETE(request: Request) {
 
 const handlers = {
   GET,
-  DELETE
-}
+  DELETE,
+};
 
 export default handlers;

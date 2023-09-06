@@ -10,7 +10,7 @@ export interface CountDownProps extends ModulerContent {
     dateFrom: string;
     slug: string;
   };
-};
+}
 
 const renderer: CountdownRendererFn = ({ formatted }) => {
   return (

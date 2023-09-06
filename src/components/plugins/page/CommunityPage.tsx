@@ -26,7 +26,7 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
     return (
       <Canvas ctx={ctx}>
         <div className="absolute flex h-full w-full items-center justify-center">
-          <div className="flex flex-col items-center gap-dato-xl">
+          <div className="gap-dato-xl flex flex-col items-center">
             <FaRegTimesCircle className="h-24 w-24" />
             <h1 className="text-lg">You are not allow to view this page!</h1>
           </div>
@@ -44,7 +44,7 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
         className="absolute flex h-full w-full flex-1"
       >
         <Tab.List
-          className={`flex flex-col border-r bg-dato-dark text-dato-light transition ${
+          className={`bg-dato-dark text-dato-light flex flex-col border-r transition ${
             mini ? "w-12" : "w-52"
           }`}
         >
