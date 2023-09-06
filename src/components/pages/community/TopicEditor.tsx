@@ -10,20 +10,25 @@ import { useForm } from "react-hook-form";
 import { LinkNode } from "@lexical/link";
 import { useRef } from "react";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import type { ExtendLexicalEditor } from "./editor/plugins/ImagesPlugin";
 import { $getNewImages, ImageNode } from "./editor/nodes/ImageNode";
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/Spinner";
 import { Input } from "@/components/ui/input";
 import RootEditor from "./editor/RootEditor";
-import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+import TagInput from "./editor/TagInput";
 
 type FormState = {
     content: string,
     title: string;
-    category?: string;
+    category: string;
+    tags: string[];
+    notification: boolean;
 }
 
 const editorConfig = {
@@ -44,7 +49,7 @@ const editorConfig = {
 } as InitialConfigType;
 
 
-const TopicEditor: React.FC<React.PropsWithChildren> = ({ children }) => {
+const TopicEditor: React.FC<React.PropsWithChildren<{ defaultCategory: string }>> = ({ children, defaultCategory }) => {
     const searchParams = useSearchParams();
     const editMode = searchParams?.get("editId") !== null;
     const { status } = useSession({
@@ -80,12 +85,14 @@ const TopicEditor: React.FC<React.PropsWithChildren> = ({ children }) => {
             return {
                 content: "",
                 title: "",
-                category: undefined
+                notification: true,
+                category: defaultCategory,
+                tags: []
             }
         },
     });
 
-    const onSubmit = async () => {
+    const onSubmit = async (formState: FormState) => {
         try {
             if (!editorRef.current) return;
             const state = editorRef.current.getEditorState();
@@ -116,6 +123,14 @@ const TopicEditor: React.FC<React.PropsWithChildren> = ({ children }) => {
                 });
             });
 
+            formState.tags.forEach(tag => {
+                formData.append("tag", tag);
+            });
+
+            formData.set("category", formState.category);
+            formData.set("notification", formState.notification ? "true" : "false");
+            formData.set("title", formState.title);
+
             if (editMode) {
                 const id = searchParams?.get("editId");
                 if (!id) throw new Error("Unable to update, missing post id");
@@ -142,65 +157,143 @@ const TopicEditor: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     return (
         <Form {...form}>
+            <Dialog open={form.formState.isSubmitting}>
+                <DialogContent closeable={false}>
+                    <Spinner className="h-14 w-14" />
+                </DialogContent>
+            </Dialog>
             <form className="grid h-full grid-cols-1 items-stretch gap-6 md:grid-cols-[1fr_200px]" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className={cn("hidden md:order-1", { "block": form.formState.isLoading || status === "loading" })}>
-                    <div className="flex h-full flex-col space-y-4">
-                        <Skeleton className="min-h-[400px] flex-1 md:min-h-[700px]" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Skeleton className="h-10 w-14" />
-                    </div>
-                </div>
-                <div className={cn("hidden flex-col space-y-4 order-first md:order-2", { "block sm:flex": form.formState.isLoading || status === "loading" })}>
-                    <div className="space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                    <div className="space-y-2">
-                        <Skeleton className="h-4 w-1/4" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                </div>
-                <div className={cn("md:order-1", { "hidden": form.formState.isLoading || status === "loading" })}>
-                    <div className="flex h-full flex-col space-y-4">
-                        <FormField control={form.control} name="content" render={() => (
-                            <FormItem>
-                                <FormControl>
-                                    <RootEditor height="min-h-[400px] flex-1 md:min-h-[700px]" editorConfig={editorConfig} ref={editorRef} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <div className="flex items-center space-x-2">
-                            <Button disabled={form.formState.isSubmitting} type="submit">Submit</Button>
+                {form.formState.isLoading || status === "loading" ? (
+                    <>
+                        <div className="md:order-1">
+                            <div className="flex h-full flex-col space-y-4">
+                                <Skeleton className="min-h-[400px] flex-1 md:min-h-[700px]" />
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Skeleton className="h-10 w-14" />
+                            </div>
+                        </div>
+                        <div className="block sm:flex flex-col space-y-4 order-first md:order-2">
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-1/4" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-1/4" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-1/4" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-1/4" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                        </div>
+
+                    </>
+                ) : (<>
+                    <div className="md:order-1">
+                        <div className="flex h-full flex-col space-y-4">
+                            <FormField control={form.control} name="content" render={() => (
+                                <FormItem>
+                                    <FormControl>
+                                        <RootEditor height="min-h-[400px] flex-1 md:min-h-[700px]" editorConfig={editorConfig} ref={editorRef} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                            <div className="flex items-center space-x-2">
+                                <Button data-cy="post-submit" disabled={form.formState.isSubmitting} type="submit">Submit</Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className={cn("flex-col space-y-4 sm:flex order-first md:order-2", { "hidden": form.formState.isLoading || status === "loading" })}>
-                    <FormField rules={{ required: { message: "A title is required.", value: true } }} control={form.control} name="title" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Title</FormLabel>
-                            <FormControl>
-                                <Input required {...field} placeholder="title" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )} />
-                    <FormField rules={{ required: { message: "A category is required.", value: true } }} control={form.control} name="category" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Category</FormLabel>
-                            <FormControl>
-                                <Select value={field.value} onValueChange={field.onChange}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Theme" />
-                                    </SelectTrigger>
-                                    {children}
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )} />
-                </div>
+                    <div className="flex-col space-y-4 sm:flex order-first md:order-2">
+                        <FormField rules={{
+                            maxLength: { message: "Title is too long", value: 255 },
+                            minLength: { message: "Title is too short", value: 3 },
+                            required: { message: "A title is required.", value: true }
+                        }}
+                            control={form.control} name="title" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Title</FormLabel>
+                                    <FormControl>
+                                        <Input minLength={3} maxLength={255} required {...field} placeholder="title" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        <FormField rules={{ required: { message: "A category is required.", value: true } }} control={form.control} name="category" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category</FormLabel>
+                                <FormControl>
+                                    <Select disabled={editMode} value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Category" />
+                                        </SelectTrigger>
+                                        {children}
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                                <FormDescription>The category to which this post will be added to.</FormDescription>
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="tags" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tags</FormLabel>
+                                <FormControl>
+                                    <TagInput onBlur={field.onBlur} value={field.value ?? []} onChange={field.onChange} vailidate={(tag, tags) => {
+                                        if (!tag.length || tag.length < 3) {
+                                            form.setError("tags", {
+                                                message: "The minium length for a tag is 3.",
+                                                type: "minLength",
+                                            });
+                                            return false;
+                                        }
+                                        if (tag.length > 12) {
+                                            form.setError("tags", {
+                                                message: "The maxium length for a tag is 12.",
+                                                type: "maxLength",
+                                            });
+                                            return false;
+                                        }
+
+                                        if (tags.includes(tag)) {
+                                            form.setError("tags", {
+                                                message: `The tag "${tag}" is already in the list.`,
+                                                type: "pattern",
+                                            });
+                                            return false;
+                                        }
+
+                                        form.clearErrors("tags");
+
+                                        return true;
+                                    }} />
+                                </FormControl>
+                                <FormMessage />
+                                <FormDescription>Short 1-2 words desciption of the posts content.</FormDescription>
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="notification" render={({ field: { value, onChange, ...field } }) => (
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormControl>
+                                        <Checkbox checked={value} onCheckedChange={onChange} {...field} />
+                                    </FormControl>
+                                    <FormLabel>Notifications</FormLabel>
+                                </div>
+
+                                <FormMessage />
+                                <FormDescription>
+                                    Allow sending notifications to you by email about events on your post.
+                                </FormDescription>
+                            </FormItem>
+                        )} />
+                    </div>
+
+                </>)}
             </form>
         </Form>
     );

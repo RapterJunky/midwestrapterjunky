@@ -1,7 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-
 import prisma from "@api/prisma";
 
 const schema = z.object({
@@ -9,66 +7,72 @@ const schema = z.object({
   limit: z.coerce.number().gte(10).lte(50).optional().default(50),
 });
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case "GET": {
-      const { page, limit } = schema.parse(req.query);
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { page, limit } = schema.parse(Object.fromEntries(searchParams.entries()));
 
-      const [user, meta] = await prisma.user
-        .paginate({
-          select: {
-            email: true,
-            name: true,
-            id: true,
-            banned: true,
-          },
-        })
-        .withPages({
-          includePageCount: true,
-          page: page + 1,
-          limit,
-        });
+  const [user, meta] = await prisma.user
+    .paginate({
+      select: {
+        email: true,
+        name: true,
+        id: true,
+        banned: true,
+      },
+    })
+    .withPages({
+      includePageCount: true,
+      page: page + 1,
+      limit,
+    });
 
-      return res.status(200).json({
-        ...meta,
-        result: user,
-      });
-    }
-    case "PATCH": {
-      const { id, ban } = z
-        .object({ id: z.string().cuid(), ban: z.number().min(0).max(2) })
-        .parse(req.body);
+  return NextResponse.json({
+    ...meta,
+    result: user,
+  });
+}
 
-      const data = await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          banned: ban,
-        },
-      });
+async function PATCH(request: Request) {
+  const body = await request.json();
 
-      return res.status(200).json({
-        email: data.email,
-        name: data.name,
-        id: data.id,
-        banned: data.banned,
-      });
-    }
-    case "DELETE": {
-      const { id } = z.object({ id: z.string().cuid() }).parse(req.query);
+  const { id, ban } = z
+    .object({ id: z.string().cuid(), ban: z.number().min(0).max(2) })
+    .parse(body);
 
-      await prisma.user.delete({
-        where: {
-          id,
-        },
-      });
+  const data = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      banned: ban,
+    },
+  });
 
-      return res.status(200).json({ ok: true, now: new Date().getTime() });
-    }
-    default:
-      throw createHttpError.MethodNotAllowed();
-  }
-};
+  return NextResponse.json({
+    email: data.email,
+    name: data.name,
+    id: data.id,
+    banned: data.banned,
+  });
+}
 
-export default handle;
+async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { id } = z.object({ id: z.string().cuid() }).parse(Object.fromEntries(searchParams.entries()));
+
+  await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json({ ok: true, now: new Date().getTime() });
+}
+
+const handlers = {
+  GET,
+  PATCH,
+  DELETE
+}
+
+export default handlers;

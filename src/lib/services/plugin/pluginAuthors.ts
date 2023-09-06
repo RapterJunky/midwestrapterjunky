@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-
 import prisma from "@api/prisma";
 
 const authorSchema = z.object({
@@ -25,55 +23,63 @@ const querySchema = z.object({
   page: z.coerce.number().positive().min(1).optional().default(1),
 });
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  switch (req.method) {
-    case "POST": {
-      const data = authorSchema.parse(req.body);
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { page } = querySchema.parse(Object.fromEntries(searchParams.entries()));
 
-      const result = await prisma.authors.create({
-        data,
-      });
+  const [authors, meta] = await prisma.authors.paginate().withPages({
+    page,
+    limit: 10,
+    includePageCount: true,
+  });
 
-      return res.status(201).json(result);
-    }
-    case "PATCH": {
-      const data = authorSchema.parse(req.body);
-
-      const result = await prisma.authors.update({
-        data: data,
-        where: {
-          id: data.id,
-        },
-      });
-
-      return res.status(202).json(result);
-    }
-    case "GET": {
-      const { page } = querySchema.parse(req.query);
-
-      const [authors, meta] = await prisma.authors.paginate().withPages({
-        page,
-        limit: 10,
-        includePageCount: true,
-      });
-
-      return res.status(200).json({ result: authors, ...meta });
-    }
-    case "DELETE": {
-      const query = z.object({ id: z.string() }).parse(req.query);
-
-      await prisma.authors.delete({
-        where: {
-          id: query.id,
-        },
-      });
-
-      return res.status(201).json({ ok: true });
-    }
-    default:
-      throw createHttpError.BadRequest();
-  }
+  return NextResponse.json({ result: authors, ...meta }, { status: 200 });
 }
+
+async function POST(request: Request) {
+  const body = await request.json();
+
+  const data = authorSchema.parse(body);
+
+  const result = await prisma.authors.create({
+    data,
+  });
+
+  return NextResponse.json(result, { status: 201 });
+
+}
+
+async function PATCH(request: Request) {
+  const body = await request.json();
+  const data = authorSchema.parse(body);
+
+  const result = await prisma.authors.update({
+    data: data,
+    where: {
+      id: data.id,
+    },
+  });
+
+  return NextResponse.json(result, { status: 202 });
+}
+
+async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const query = z.object({ id: z.string() }).parse(Object.fromEntries(searchParams.entries()));
+  await prisma.authors.delete({
+    where: {
+      id: query.id,
+    },
+  });
+
+  return NextResponse.json({ ok: true }, { status: 201 });
+}
+
+const handlers = {
+  GET,
+  DELETE,
+  PATCH,
+  POST
+};
+
+export default handlers;

@@ -1,7 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-
 import prisma from "@api/prisma";
 
 const schema = z.object({
@@ -19,85 +17,88 @@ const schemaPatch = z.object({
   value: z.boolean(),
 });
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case "GET": {
-      const { page, search } = schema.parse(req.query);
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { page, search } = schema.parse(Object.fromEntries(searchParams.entries()));
 
-      const [topics, meta] = await prisma.threadPost
-        .paginate({
+  const [topics, meta] = await prisma.threadPost
+    .paginate({
+      select: {
+        name: true,
+        locked: true,
+        pinned: true,
+        id: true,
+        tags: true,
+        notifyOwner: true,
+        thread: {
           select: {
             name: true,
-            locked: true,
-            pinned: true,
-            id: true,
-            tags: true,
-            notifyOwner: true,
-            thread: {
-              select: {
-                name: true,
-              },
-            },
-            owner: {
-              select: {
-                name: true,
-                image: true,
-              },
-            },
           },
-          where: {
-            name: {
-              contains: search,
-            },
+        },
+        owner: {
+          select: {
+            name: true,
+            image: true,
           },
-        })
-        .withPages({
-          includePageCount: true,
-          page,
-          limit: 15,
-        });
-
-      return res.status(200).json({
-        ...meta,
-        result: topics,
-      });
-    }
-    case "PATCH": {
-      const { id, prop, value } = schemaPatch.parse(req.body);
-
-      const post = await prisma.threadPost.update({
-        where: {
-          id,
         },
-        data: {
-          [prop]: value,
+      },
+      where: {
+        name: {
+          contains: search,
         },
+      },
+    })
+    .withPages({
+      includePageCount: true,
+      page,
+      limit: 15,
+    });
+
+  return NextResponse.json({
+    ...meta,
+    result: topics,
+  });
+}
+
+async function PATCH(request: Request) {
+  const body = await request.json();
+
+  const { id, prop, value } = schemaPatch.parse(body);
+
+  const post = await prisma.threadPost.update({
+    where: {
+      id,
+    },
+    data: {
+      [prop]: value,
+    },
+    select: {
+      name: true,
+      locked: true,
+      pinned: true,
+      id: true,
+      tags: true,
+      notifyOwner: true,
+      thread: {
         select: {
           name: true,
-          locked: true,
-          pinned: true,
-          id: true,
-          tags: true,
-          notifyOwner: true,
-          thread: {
-            select: {
-              name: true,
-            },
-          },
-          owner: {
-            select: {
-              name: true,
-              image: true,
-            },
-          },
         },
-      });
+      },
+      owner: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
 
-      return res.status(200).json(post);
-    }
-    default:
-      throw createHttpError.MethodNotAllowed();
-  }
-};
+  return NextResponse.json(post);
+}
 
-export default handle;
+const handlers = {
+  GET,
+  PATCH
+}
+
+export default handlers;

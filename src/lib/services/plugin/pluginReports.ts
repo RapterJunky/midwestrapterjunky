@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
@@ -16,73 +16,75 @@ const deleteSchema = z.object({
   type: z.enum(["comment", "report", "topic"]),
 });
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case "GET": {
-      const { search, order, page, type } = getSchema.parse(req.query);
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { search, order, page, type } = getSchema.parse(Object.fromEntries(searchParams));
 
-      const [reports, meta] = await prisma.report
-        .paginate({
-          where: {
-            reason: {
-              contains: search,
-            },
-            type,
-          },
+  const [reports, meta] = await prisma.report
+    .paginate({
+      where: {
+        reason: {
+          contains: search,
+        },
+        type,
+      },
+      include: {
+        comment: {
           include: {
-            comment: {
-              include: {
-                owner: true,
-              },
-            },
             owner: true,
-            post: {
-              include: {
-                owner: true,
-              },
-            },
           },
-          orderBy: {
-            created: order,
+        },
+        owner: true,
+        post: {
+          include: {
+            owner: true,
           },
-        })
-        .withPages({ page, limit: 20, includePageCount: true });
+        },
+      },
+      orderBy: {
+        created: order,
+      },
+    })
+    .withPages({ page, limit: 20, includePageCount: true });
 
-      return res.status(200).json({ ...meta, result: reports });
+  return NextResponse.json({ ...meta, result: reports });
+}
+
+async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { id, type } = deleteSchema.parse(Object.fromEntries(searchParams));
+  switch (type) {
+    case "comment": {
+      if (typeof id !== "string")
+        throw createHttpError.BadRequest("Bad Id");
+      await prisma.$transaction([
+        prisma.comment.deleteMany({
+          where: {
+            parentCommentId: id,
+          },
+        }),
+        prisma.comment.delete({ where: { id } }),
+      ]);
+      return NextResponse.json({ message: "ok" });
     }
-    case "DELETE": {
-      const { id, type } = deleteSchema.parse(req.query);
-      switch (type) {
-        case "comment": {
-          if (typeof id !== "string")
-            throw createHttpError.BadRequest("Bad Id");
-          await prisma.$transaction([
-            prisma.comment.deleteMany({
-              where: {
-                parentCommentId: id,
-              },
-            }),
-            prisma.comment.delete({ where: { id } }),
-          ]);
-          return res.status(200).json({ message: "ok" });
-        }
-        case "report": {
-          if (typeof id !== "number")
-            throw createHttpError.BadRequest("Bad Id");
-          await prisma.report.delete({ where: { id } });
-          return res.status(200).json({ message: "ok" });
-        }
-        case "topic": {
-          if (typeof id !== "string")
-            throw createHttpError.BadRequest("Bad Id");
-          await prisma.threadPost.delete({ where: { id } });
-          return res.status(200).json({ message: "ok" });
-        }
-      }
+    case "report": {
+      if (typeof id !== "number")
+        throw createHttpError.BadRequest("Bad Id");
+      await prisma.report.delete({ where: { id } });
+      return NextResponse.json({ message: "ok" });
     }
-    default:
-      throw createHttpError.MethodNotAllowed();
+    case "topic": {
+      if (typeof id !== "string")
+        throw createHttpError.BadRequest("Bad Id");
+      await prisma.threadPost.delete({ where: { id } });
+      return NextResponse.json({ message: "ok" });
+    }
   }
-};
+}
 
-export default handle;
+const handlers = {
+  GET,
+  DELETE
+}
+
+export default handlers;

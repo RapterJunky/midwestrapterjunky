@@ -29,13 +29,14 @@ type CommentContext = {
 
 async function like(commentId: string, mutate: KeyedMutator<Paginate<TComment>>) {
     await mutate<Paginate<TComment>>(async (currentData) => {
-        const request = await fetch(`/api/community/comments`, {
+        const request = await fetch(`/api/community`, {
             method: "POST",
             body: JSON.stringify({
                 type: "like",
                 id: commentId,
             }),
             headers: {
+                "x-content-type": "like-comment",
                 "Content-Type": "application/json",
             },
         });
@@ -76,9 +77,12 @@ async function unlike(commnetId: string, mutate: KeyedMutator<Paginate<TComment>
         if (idx === -1) throw new Error("Failed to find comment");
 
         const request = await fetch(
-            `/api/community/comments?type=like&id=${commnetId}`,
+            `/api/community/comments?id=${commnetId}`,
             {
                 method: "DELETE",
+                headers: {
+                    "x-content-type": "like-comment",
+                }
             },
         );
 
@@ -120,12 +124,12 @@ async function report(commentId: string, reason: string) {
         {
             method: "POST",
             body: JSON.stringify({
-                type: "report",
                 id: commentId,
                 reason,
             }),
             headers: {
                 "Content-Type": "application/json",
+                "x-content-type": "report-comment",
             },
         },
     );
@@ -136,7 +140,7 @@ async function report(commentId: string, reason: string) {
 async function deleteComment(commentId: string, mutate: KeyedMutator<Paginate<TComment>>) {
     await mutate<Paginate<TComment>>(async (currentData) => {
         const request = await fetch(
-            `/api/community/comments?type=comment&id=${commentId}`,
+            `/api/community/comment?id=${commentId}`,
             {
                 method: "DELETE",
             },
@@ -164,12 +168,9 @@ async function deleteComment(commentId: string, mutate: KeyedMutator<Paginate<TC
 }
 
 async function createComment(formData: FormData, mutate: KeyedMutator<Paginate<TComment>>) {
-    const request = await fetch("/api/community/create", {
+    const request = await fetch("/api/community/comment", {
         method: "POST",
         body: formData,
-        headers: {
-            "X-Type": "comment",
-        },
     });
     if (!request.ok) throw request;
 
@@ -185,12 +186,9 @@ async function createComment(formData: FormData, mutate: KeyedMutator<Paginate<T
 }
 
 async function updateComment(formData: FormData, mutate: KeyedMutator<Paginate<TComment>>) {
-    const request = await fetch("/api/community/create", {
-        method: "PATCH",
+    const request = await fetch("/api/community/comment", {
+        method: "PUT",
         body: formData,
-        headers: {
-            "X-Type": "comment",
-        },
     });
 
     if (!request.ok) throw request;

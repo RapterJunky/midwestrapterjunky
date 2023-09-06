@@ -10,7 +10,7 @@ type Props = {
   tags: string[];
   description: string;
   replies: number;
-  activity: Date | undefined;
+  activity: Date | undefined | string;
   pinned: boolean;
   locked: boolean;
 };

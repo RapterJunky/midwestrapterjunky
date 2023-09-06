@@ -2,8 +2,12 @@ import TopicEditor from "@/components/pages/community/TopicEditor";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { SelectContent, SelectItem } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
 
-const TopicPage: React.FC = () => {
+const TopicPage: React.FC = async () => {
+
+    const ids = await getCategoriesIds();
+
     return (
         <>
             <Separator />
@@ -14,11 +18,11 @@ const TopicPage: React.FC = () => {
                 <div className="flex-1">
                     <div className="container h-full py-6">
                         <SessionProvider>
-                            <TopicEditor>
+                            <TopicEditor defaultCategory={ids.at(0)?.id.toString() ?? "1"}>
                                 <SelectContent>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
-                                    <SelectItem value="system">System</SelectItem>
+                                    {ids.map((value, i) => (
+                                        <SelectItem key={i} value={value.id.toString()}>{value.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </TopicEditor>
                         </SessionProvider>

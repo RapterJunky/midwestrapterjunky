@@ -22,7 +22,7 @@ type PostActionsProps = {
 async function like(id: string, mutate: KeyedMutator<PostLikes>) {
     try {
         await mutate(async () => {
-            const request = await fetch("/api/community/posts", {
+            const request = await fetch("/api/community", {
                 method: "POST",
                 body: JSON.stringify({
                     id,
@@ -30,6 +30,7 @@ async function like(id: string, mutate: KeyedMutator<PostLikes>) {
                 }),
                 headers: {
                     "Content-Type": "application/json",
+                    "x-content-type": "like-topic"
                 },
             });
 
@@ -57,9 +58,12 @@ async function unlike(id: string, mutate: KeyedMutator<PostLikes>) {
     try {
         await mutate(async () => {
             const request = await fetch(
-                `/api/community/posts?type=like&id=${id}`,
+                `/api/community?id=${id}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        "x-content-type": "like-topic"
+                    }
                 },
             );
 
@@ -86,15 +90,15 @@ async function unlike(id: string, mutate: KeyedMutator<PostLikes>) {
 async function report(id: string, reason: string) {
     try {
         const response = await fetch(
-            "/api/community/posts",
+            "/api/community",
             {
                 method: "POST",
                 body: JSON.stringify({
-                    type: "report",
                     id,
                     reason,
                 }),
                 headers: {
+                    "x-content-type": "report-topic",
                     "Content-Type": "application/json",
                 },
             },
@@ -108,7 +112,7 @@ async function report(id: string, reason: string) {
 async function deletePost(id: string) {
     try {
         const response = await fetch(
-            `/api/community/posts?type=post&id=${id}`,
+            `/api/community/topic?id=${id}`,
             {
                 method: "DELETE",
             },
@@ -125,7 +129,7 @@ const PostActions: React.FC<PostActionsProps> = ({ postId, ownerId, likesCount }
     const [reportDialog, setReportDialog] = useState(false);
     const { data: session, status } = useSession();
     const { data, mutate } = useSWR<PostLikes, Response, [string, string] | null>(
-        postId ? ["/api/community/posts", postId] : null, ([url, id]) => fetcher(`${url}?post=${id}`),
+        postId ? ["/api/community/topic", postId] : null, ([url, id]) => fetcher(`${url}?post=${id}`),
         {
             fallback: {
                 likesCount,
