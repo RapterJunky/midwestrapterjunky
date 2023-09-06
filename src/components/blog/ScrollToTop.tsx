@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
 import { MessagesSquare, ArrowUp } from 'lucide-react';
+import { useEffect, useState } from "react";
 
 interface Props {
   comments: boolean;

@@ -1,15 +1,14 @@
-import { HiArrowLeft } from "react-icons/hi";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import getFullPageProps from "@lib/cache/getFullPageProps";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getFullPageProps();
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+  const icons = (await parent).icons;
 
   return getGenericSeoTags({
-    icons: data.site.faviconMetaTags,
+    icons,
     robots: false,
     description: "This page on Midest Raptor Junkies is under construstion.",
     title: "Under Construstion",
@@ -34,7 +33,7 @@ const Page: React.FC = () => {
           className="mt-6 flex items-center space-x-2 rounded bg-blue-600 px-4 py-2 text-gray-100 transition duration-150 hover:bg-blue-700"
           title="Return Home"
         >
-          <HiArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5" />
           <span>Return Home</span>
         </Link>
       </div>

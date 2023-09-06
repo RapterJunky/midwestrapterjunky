@@ -1,13 +1,14 @@
 import UserProfile from "@/components/pages/profile/UserProfile";
-import Provider from "@/components/providers/SessionProvider";
-import getFullPageProps from "@/lib/cache/getFullPageProps";
 import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
-import type { Metadata } from "next";
+import Provider from "@/components/providers/SessionProvider";
+import type { Metadata, ResolvingMetadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-    const data = await getFullPageProps();
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
     return getGenericSeoTags({
-        icons: data.site.faviconMetaTags,
+        icons,
         title: "Profile - Midwest Raptor Junkies",
         robots: false,
         description: "Midwest Raptor Junkies user profile page.",

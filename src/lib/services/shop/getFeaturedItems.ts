@@ -1,12 +1,12 @@
 import "server-only";
 
 import FeaturedQuery, { type FeaturedQueryResult } from "@/gql/sqaure/featuredQuery";
-import getPlaceholderImage from "../utils/getPlaceholderImage";
-import { REVAILDATE_IN_2H } from "../revaildateTimings";
-import getShopifyQuery from "../cache/getShopifyQuery";
-import getSquareQuery from "../cache/GetSquareQuery";
-import { getKeys } from "../dynamic_keys";
-import { logger } from "../logger";
+import getShopifyQuery from "@/lib/services/store/getShopifyQuery";
+import getSquareQuery from "@/lib/services/store/GetSquareQuery";
+import getPlaceholderImage from "@utils/getPlaceholderImage";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
+import { getKeys } from "@lib/dynamic_keys";
+import { logger } from "@lib/logger";
 import { cache } from "react";
 
 type Products = {

@@ -1,9 +1,25 @@
+import type { Metadata, ResolvingMetadata } from "next";
+
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CheckoutTabs from "@/components/pages/shop/checkout/CheckoutTabs";
+import ShippingTab from "@/components/pages/shop/checkout/ShippingTab";
 import AccountTab from "@/components/pages/shop/checkout/AccountTab";
 import BillingTab from "@/components/pages/shop/checkout/BillingTab";
 import Calculation from "@/components/pages/shop/checkout/Calculate";
-import CheckoutTabs from "@/components/pages/shop/checkout/CheckoutTabs";
-import ShippingTab from "@/components/pages/shop/checkout/ShippingTab";
-import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        robots: false,
+        description: "Checkout page for Midest Raptor Junkies.",
+        title: "Checkout",
+    });
+}
+
 
 const Checkout: React.FC = () => {
 

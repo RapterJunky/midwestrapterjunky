@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Provider from "@/components/providers/SessionProvider";
-import getFullPageProps from "@lib/cache/getFullPageProps";
+import getFullPageProps from "@lib/services/getFullPageProps";
 import IconLink from "@components/ui/IconLink";
+import LinksDropdown from "./LinksDropdown";
+import ScrollRuntime from "./ScrollRuntime";
 import AccountIcon from "./AccountIcon";
 import { cn } from '@/lib/utils';
 import Sidenav from "./Sidenav";
-import LinksDropdown from "./LinksDropdown";
-import ScrollRuntime from "./ScrollRuntime";
 
 const navbarVariants = cva("group top-0 z-40 flex w-full content-center bg-white px-6 py-2", {
   variants: {

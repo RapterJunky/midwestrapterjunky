@@ -2,7 +2,7 @@ import "server-only";
 import { draftMode } from 'next/headers';
 import { cache } from "react";
 
-import { logger } from "../logger";
+import { logger } from "@lib/logger";
 
 type QueryOptions = {
     variables?: Record<string, unknown>,

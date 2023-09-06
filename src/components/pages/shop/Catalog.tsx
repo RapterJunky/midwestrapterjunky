@@ -1,4 +1,4 @@
-import getCatalogSearch from "@/lib/shop/getCatalogSearch";
+import getCatalogSearch from "@/lib/services/shop/getCatalogSearch";
 import ShopCard from "@/components/pages/shop/ShopCard";
 import CatalogPagination from "./CatalogPagination";
 

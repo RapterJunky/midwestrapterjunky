@@ -1,8 +1,24 @@
-import TopicEditor from "@/components/pages/community/TopicEditor";
-import SessionProvider from "@/components/providers/SessionProvider";
-import { SelectContent, SelectItem } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+import type { Metadata, ResolvingMetadata } from "next";
+
 import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
+import SessionProvider from "@/components/providers/SessionProvider";
+import TopicEditor from "@/components/pages/community/TopicEditor";
+import { SelectContent, SelectItem } from "@/components/ui/select";
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+import { Separator } from "@/components/ui/separator";
+
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        title: "Topic Editor - Midwest Raptor Junkies",
+        robots: false,
+        description: "Midwest Raptor Junkies community topic editor",
+        url: "https://midwestraptorjunkies.com/community/topic",
+    })
+}
 
 const TopicPage: React.FC = async () => {
 

@@ -1,5 +1,5 @@
 import SearchQuery, { type SearchQueryResult } from "@/gql/sqaure/searchQuery";
-import getSquareQuery from "../cache/GetSquareQuery";
+import getSquareQuery from "@/lib/services/store/GetSquareQuery";
 
 type QueryParams = {
     query?: string;

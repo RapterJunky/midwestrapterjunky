@@ -4,9 +4,10 @@ import {
   type TitleMetaLinkTag,
 } from "react-datocms";
 import type { Metadata } from "next";
+import type { ResolvedIcons } from "next/dist/lib/metadata/types/metadata-types";
 
 type Opt = {
-  icons?: SeoOrFaviconTag[];
+  icons?: SeoOrFaviconTag[] | ResolvedIcons | null;
   title: string;
   robots?: boolean;
   description?: string;
@@ -28,26 +29,24 @@ const getGenericSeoTags = ({
       title: `${title} - Midwest Raptor Junkies`,
       description,
       images: [
-        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-          process.env.VERCEL_URL
+        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
         }/twitter-image`,
       ],
     },
     category,
     title: `${title} - Midwest Raptor Junkies`,
     description,
-    icons: icons
+    icons: Array.isArray(icons)
       ? icons.map((icon) => ({
-          url: (icon.attributes as FaviconAttributes).href,
-          rel: (icon.attributes as FaviconAttributes).rel,
-          type: (icon.attributes as FaviconAttributes).type,
-          sizes: (icon.attributes as FaviconAttributes).sizes,
-        }))
-      : undefined,
+        url: (icon.attributes as FaviconAttributes).href,
+        rel: (icon.attributes as FaviconAttributes).rel,
+        type: (icon.attributes as FaviconAttributes).type,
+        sizes: (icon.attributes as FaviconAttributes).sizes,
+      }))
+      : icons,
     openGraph: {
       images: [
-        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-          process.env.VERCEL_URL
+        `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
         }/opengraph-image`,
       ],
       locale: "en-US",

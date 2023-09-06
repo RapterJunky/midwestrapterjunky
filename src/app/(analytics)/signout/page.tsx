@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
-
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import getFullPageProps from "@lib/cache/getFullPageProps";
 import SignoutBtn from "@components/pages/signout/SignoutBtn";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getFullPageProps();
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+  const icons = (await parent).icons;
 
   return getGenericSeoTags({
-    icons: data.site.faviconMetaTags,
+    icons,
     description: "Signout page for Midwest Raptor Junkies.",
     title: "Signout",
   });

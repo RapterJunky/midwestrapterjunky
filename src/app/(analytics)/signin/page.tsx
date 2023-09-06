@@ -1,20 +1,21 @@
 import type { FaviconAttributes } from "react-datocms/seo";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
+import { Skeleton } from "@/components/ui/skeleton";
 import SignInList from "@components/pages/signin/SignList";
 import getFullPageProps from "@lib/cache/getFullPageProps";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getFullPageProps();
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+  const icons = (await parent).icons;
 
   return getGenericSeoTags({
-    icons: data.site.faviconMetaTags,
+    icons,
     description: "Login page for Midwest Raptor Junkies.",
     title: "SignIn",
     url: "https://midwestraptorjunkies.com/signin",

@@ -1,10 +1,11 @@
+import { toNextMetadata, type SeoOrFaviconTag } from "react-datocms/seo";
 import type { Metadata } from "next";
 import Image from 'next/image';
-import SponsorsQuery from "@/gql/queries/sponsors";
-import getPageQuery from "@/lib/cache/GetPageQuery";
-import type { FullPageProps, ResponsiveImage } from "@/types/page";
-import { toNextMetadata, type SeoOrFaviconTag } from "react-datocms/seo";
 import Link from "next/link";
+
+import type { FullPageProps, ResponsiveImage } from "@/types/page";
+import getPageQuery from "@/lib/cache/GetPageQuery";
+import SponsorsQuery from "@/gql/queries/sponsors";
 import { Button } from "@/components/ui/button";
 
 interface Props extends FullPageProps {

@@ -11,7 +11,7 @@ import ProductForm from "@/components/pages/shop/product/ProductForm";
 import getGenericSeoTags from '@/lib/helpers/getGenericSeoTags';
 import getFullPageProps from '@/lib/cache/getFullPageProps';
 import { Separator } from "@/components/ui/separator";
-import getProduct from "@/lib/shop/getProduct";
+import getProduct from "@/lib/services/shop/getProduct";
 
 type PageParams = {
     params: { id: string }

@@ -1,4 +1,4 @@
-import getCategories from "@/lib/shop/getCategories";
+import getCategories from "@/lib/services/shop/getCategories";
 import SearchSettingsList from "./SearchSettingsList";
 
 const Categories: React.FC = async () => {

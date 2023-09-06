@@ -1,12 +1,3 @@
-import type { SeoOrFaviconTag } from "react-datocms";
-import type { NextPage } from "next";
-
-import type { NavProps } from "@components/layout/OldNavbar";
-
-export type NextPageWithProvider<P = object, I = object> = NextPage<P, I> & {
-  provider?: React.FC;
-};
-
 export type Color = {
   hex: string;
 };
@@ -38,11 +29,6 @@ export type ResponsiveImage<E = never> = {
 
 export type ModulerContent = { __typename: string;[key: string]: unknown };
 
-export interface FullPageProps extends NavProps {
-  site: {
-    faviconMetaTags: SeoOrFaviconTag[];
-  };
-}
 
 export interface Paginate<T> {
   currentPage: number;

@@ -1,13 +1,11 @@
 import { cache } from "react";
 import "server-only";
 
-import { REVAILDATE_IN_2H } from "../revaildateTimings";
-
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 
 export const revalidate = REVAILDATE_IN_2H;
 
-// eslint-disable-next-line @typescript-eslint/require-await
-const getVenders = cache(async () => {
+const getVenders = cache(() => {
 
     return [{
         name: "Midwest",
