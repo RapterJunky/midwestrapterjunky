@@ -2,12 +2,12 @@ import { type OgMetaAttributes, type RegularMetaAttributes, type SeoOrFaviconTag
 import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import type { Metadata } from "next";
 
+import type { GenericPageResult } from "@/gql/queries/generic";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import privcy_policy from "@/gql/queries/privacy_policy";
-import getPageQuery from "@/lib/cache/GetPageQuery";
-import type { FullPageProps } from "@/types/page";
+import getPageQuery from "@/lib/services/GetPageQuery";
 
-interface Props extends FullPageProps {
+interface Props extends GenericPageResult {
     policy: {
         seo: SeoOrFaviconTag[]
         updatedAt: string;

@@ -2,25 +2,26 @@ import { StructuredText, type StructuredTextGraphQlResponse } from "react-datocm
 import { type SeoOrFaviconTag, toNextMetadata } from "react-datocms/seo";
 import { ArrowLeft } from 'lucide-react';
 import type { Metadata } from "next";
+import Script from "next/script";
 import Image from 'next/image';
 import Link from "next/link";
 
 import { markRules, renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
-import type { FullPageProps, LinkWithIcon, ResponsiveImage } from "@/types/page";
 import StoreButtonLink from "@/components/pages/events/StoreButtonLink";
+import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
+import type { GenericPageResult } from "@/gql/queries/generic";
+import { getDescriptionTag } from "@/lib/utils/description";
 import LeafMaps from "@/components/pages/events/LeafMaps";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import { Separator } from "@/components/ui/separator";
-import getPageQuery from "@/lib/cache/GetPageQuery";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import EventPageQuery from "@/gql/queries/event";
 import IconLink from "@/components/ui/IconLink";
 import { Button } from "@/components/ui/button";
-import Script from "next/script";
-import { getDescriptionTag } from "@/lib/utils/description";
 
 type PageParams = { params: { id: string; } };
 
-interface Props extends FullPageProps {
+interface Props extends GenericPageResult {
     event: {
         seo: SeoOrFaviconTag[];
         updatedAt: string;

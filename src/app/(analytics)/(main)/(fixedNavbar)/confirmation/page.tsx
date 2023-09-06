@@ -1,12 +1,13 @@
-import ConfirmationMessage from "@/components/pages/confirmation/ConfirmationMessage";
-import getFullPageProps from "@/lib/cache/getFullPageProps";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-    const data = await getFullPageProps();
+import ConfirmationMessage from "@/components/pages/confirmation/ConfirmationMessage";
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+    const icons = (await parent).icons;
+
     return getGenericSeoTags({
-        icons: data.site.faviconMetaTags,
+        icons,
         title: "Confirmation",
         robots: false,
         description: "Confirmation page",

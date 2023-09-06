@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Product } from 'schema-dts';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Script from 'next/script';
 import { Suspense } from 'react';
 
@@ -9,20 +9,20 @@ import RelatedProducts from "@/components/pages/shop/product/RelatedProducts";
 import ProductImages from "@/components/pages/shop/product/ProductImages";
 import ProductForm from "@/components/pages/shop/product/ProductForm";
 import getGenericSeoTags from '@/lib/helpers/getGenericSeoTags';
-import getFullPageProps from '@/lib/cache/getFullPageProps';
-import { Separator } from "@/components/ui/separator";
 import getProduct from "@/lib/services/shop/getProduct";
+import { Separator } from "@/components/ui/separator";
 
 type PageParams = {
     params: { id: string }
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({ params }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
     const product = await getProduct(params.id);
-    const props = await getFullPageProps();
+
+    const icons = (await parent).icons;
 
     return getGenericSeoTags({
-        icons: props.site.faviconMetaTags,
+        icons,
         title: product?.name ?? "MRJ Product",
         description: product?.description ?? "No product description",
         url: `https://midestraptorjunkies.com/shop/product/${params.id}`,

@@ -1,11 +1,10 @@
 import { toNextMetadata, type Metadata, type SeoOrFaviconTag } from "react-datocms/seo";
-import getPageQuery from "@/lib/cache/GetPageQuery";
-import type { FullPageProps } from "@/types/page";
-import CalendarQuery from '@query/queries/calendar';
+import type { GenericPageResult } from "@/gql/queries/generic";
 import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import CalendarQuery from '@query/queries/calendar';
 import Calendar from "@/components/Calendar";
-
-interface Props extends FullPageProps {
+interface Props extends GenericPageResult {
     events: {
         id: string;
         slug: string;
@@ -19,7 +18,6 @@ interface Props extends FullPageProps {
 }
 
 const MAX_FETCH = 8;
-
 
 export async function generateMetadata(): Promise<Metadata> {
     const { calendar, site } = await getPageQuery<Props>(CalendarQuery, {

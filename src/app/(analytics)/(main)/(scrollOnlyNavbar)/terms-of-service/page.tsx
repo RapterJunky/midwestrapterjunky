@@ -10,11 +10,11 @@ import {
 } from "react-datocms/seo";
 import type { Metadata } from "next";
 import TermsOfServiceQuery from "@query/queries/terms_of_service";
+import type { GenericPageResult } from "@/gql/queries/generic";
 import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/cache/GetPageQuery";
-import type { FullPageProps } from "@type/page";
+import getPageQuery from "@/lib/services/GetPageQuery";
 
-interface Props extends FullPageProps {
+interface Props extends GenericPageResult {
     terms: {
         seo: SeoOrFaviconTag[];
         updatedAt: string | null;

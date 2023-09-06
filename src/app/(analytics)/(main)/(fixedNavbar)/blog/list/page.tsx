@@ -1,13 +1,15 @@
 import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 
 import ListPagination from "@/components/pages/blog/ListPagination";
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import { getDescriptionTag } from "@/lib/utils/description";
 import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import PagedArticles from "@/gql/queries/pagedArticles";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import { Separator } from "@/components/ui/separator";
-import getPageQuery from "@/lib/cache/GetPageQuery";
 import { Badge } from "@/components/ui/badge";
 
 type PageParams = {
@@ -28,6 +30,19 @@ type DataResponse = {
         count: number;
     };
     posts: Post[];
+}
+
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        title: "Articles List - Midwest Raptor Junkies",
+        robots: true,
+        description: "Midwest Raptor Junkies articles list page",
+        url: `https://midwestraptorjunkies.com/blog/list`,
+    })
 }
 
 const MAX_ITEMS = 5;

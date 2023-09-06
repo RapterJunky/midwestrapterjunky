@@ -4,17 +4,16 @@ import type { Metadata } from 'next';
 import Link from "next/link";
 
 import getGenericSeoTags from '@/lib/helpers/getGenericSeoTags';
+import type { GenericPageResult } from '@/gql/queries/generic';
 import { getDescriptionTag } from '@/lib/utils/description';
 import { REVAILDATE_IN_2H } from '@/lib/revaildateTimings';
 import { formatLocalDate } from '@/lib/utils/timeFormat';
 import QueryBlogLatest from '@/gql/queries/blogLatest';
+import getPageQuery from '@/lib/services/GetPageQuery';
 import { Separator } from '@/components/ui/separator';
-import getPageQuery from '@/lib/cache/GetPageQuery';
-import type { FullPageProps } from '@/types/page';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
-interface PageProps extends FullPageProps {
+interface PageProps extends GenericPageResult {
     seo: SeoOrFaviconTag[];
     posts: {
         slug: string;

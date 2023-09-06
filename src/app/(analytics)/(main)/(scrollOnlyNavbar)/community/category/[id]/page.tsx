@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Plus } from "lucide-react";
 import Image from 'next/image';
@@ -5,12 +6,26 @@ import Link from 'next/link';
 import { z } from 'zod';
 
 import PaginateCategoryPosts from '@/components/pages/community/PaginateCategoryPosts';
+import getGenericSeoTags from '@/lib/helpers/getGenericSeoTags';
 import getCategory from '@/lib/services/community/getCategory';
 import { Button } from '@/components/ui/button';
 
 type PageParams = {
     searchParams: { [key: string]: string | string[] | undefined }
     params: { id: string; }
+}
+
+export async function generateMetadata({ params }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        title: "Category - Midwest Raptor Junkies",
+        robots: true,
+        description: "Midwest Raptor Junkies community page",
+        url: `https://midwestraptorjunkies.com/community/category/${params.id}`,
+    })
 }
 
 const pageSchema = z.coerce.number().min(1).default(1);

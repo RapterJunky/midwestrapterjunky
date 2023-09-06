@@ -6,9 +6,9 @@ import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import { Skeleton } from "@/components/ui/skeleton";
+import getFullPageProps from "@lib/services/getFullPageProps";
 import SignInList from "@components/pages/signin/SignList";
-import getFullPageProps from "@lib/cache/getFullPageProps";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
 

@@ -1,8 +1,8 @@
-import getFullPageProps from "@/lib/cache/getFullPageProps";
-import GoogleAnalytics from "@components/pages/GoogleAnalytics";
-import type { Metadata } from "next";
 import { toNextMetadata } from "react-datocms/seo";
+import type { Metadata } from "next";
 
+import GoogleAnalytics from "@components/pages/GoogleAnalytics";
+import getFullPageProps from "@/lib/services/getFullPageProps";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();

@@ -1,14 +1,29 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
 
-import FallBackOptions from "@/components/pages/shop/searchOptions/OptionsFallback";
 import SearchSettingsList from "@/components/pages/shop/searchOptions/SearchSettingsList";
+import FallBackOptions from "@/components/pages/shop/searchOptions/OptionsFallback";
 import Categories from "@/components/pages/shop/searchOptions/Categories";
-import Vendors from "@/components/pages/shop/searchOptions/Vendors";
-import Catalog from "@/components/pages/shop/Catalog";
 import CatalogFallback from "@/components/pages/shop/CatalogFallback";
+import Vendors from "@/components/pages/shop/searchOptions/Vendors";
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+import Catalog from "@/components/pages/shop/Catalog";
 
 type PageParams = {
     searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        title: "Shop - Midwest Raptor Junkies",
+        robots: true,
+        description: "Midwest Raptor Junkies shop home page",
+        url: `https://midwestraptorjunkies.com/shop`,
+    })
 }
 
 const ShopHome: React.FC<PageParams> = ({ searchParams }) => {

@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import Image from 'next/image';
 import Link from "next/link";
 
-import type { FullPageProps, ResponsiveImage } from "@/types/page";
-import getPageQuery from "@/lib/cache/GetPageQuery";
+import type { GenericPageResult } from "@/gql/queries/generic";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import type { ResponsiveImage } from "@/types/page";
 import SponsorsQuery from "@/gql/queries/sponsors";
 import { Button } from "@/components/ui/button";
 
-interface Props extends FullPageProps {
+interface Props extends GenericPageResult {
     sponsor: {
         seo: SeoOrFaviconTag[];
         sponsors: {

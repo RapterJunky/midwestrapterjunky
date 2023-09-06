@@ -4,12 +4,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { markRules, renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
-import type { FullPageProps, ModulerContent, ResponsiveImage } from "@/types/page";
+import type { ModulerContent, ResponsiveImage } from "@/types/page";
+import type { GenericPageResult } from "@/gql/queries/generic";
 import ModuleContent from "@/components/layout/ModuleContent";
-import getPageQuery from "@/lib/cache/GetPageQuery";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import AboutUsQuery from "@/gql/queries/about_us";
 
-interface AboutUsProps extends FullPageProps {
+interface AboutUsProps extends GenericPageResult {
     aboutUsModel: {
         seo: SeoOrFaviconTag[];
         imageTitle: string;

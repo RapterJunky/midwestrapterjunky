@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
-import getFullPageProps from "@lib/cache/getFullPageProps";
+import getFullPageProps from "@lib/services/getFullPageProps";
 import { Button } from "@/components/ui/button";
 
 export async function generateMetadata(): Promise<Metadata> {

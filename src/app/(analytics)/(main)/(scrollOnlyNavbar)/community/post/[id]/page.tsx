@@ -1,22 +1,37 @@
 import { StructuredText } from "react-datocms/structured-text";
+import type { Metadata, ResolvingMetadata } from "next";
 import { Lock, Pin, User2 } from 'lucide-react';
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { z } from "zod";
 
+import PostComments from "@/components/pages/community/comments/PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
 import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
 import SessionProvider from "@/components/providers/SessionProvider";
-import PostComments from "@/components/pages/community/comments/PostComments";
+import CommentProvider from "@/components/providers/CommentProvider";
 import PostActions from "@/components/pages/community/PostActions";
+import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import getPost from "@/lib/services/community/getPost";
 import { Badge } from "@/components/ui/badge";
-import CommentProvider from "@/components/providers/CommentProvider";
 
 type PageParams = {
     params: { id: string; }
+}
+
+export async function generateMetadata({ params }: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+
+    const icons = (await parent).icons;
+
+    return getGenericSeoTags({
+        icons,
+        title: "post - Midwest Raptor Junkies",
+        robots: true,
+        description: "Midwest Raptor Junkies community page",
+        url: `https://midwestraptorjunkies.com/community/post/${params.id}`,
+    })
 }
 
 const idSchema = z.string().uuid().nonempty();

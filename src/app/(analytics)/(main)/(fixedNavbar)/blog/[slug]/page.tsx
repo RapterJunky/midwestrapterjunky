@@ -9,22 +9,23 @@ import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
-import type { FullPageProps, ResponsiveImage } from "@/types/page";
+import type { GenericPageResult } from "@/gql/queries/generic";
 import { getDescriptionTag } from "@/lib/utils/description";
 import GetNextArticles from "@/gql/queries/next_articles";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/cache/GetPageQuery";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import { Separator } from "@/components/ui/separator";
+import type { ResponsiveImage } from "@/types/page";
 import ArticleQuery from "@/gql/queries/article";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 type PageParams = {
     params: { slug: string; }
 }
 
-interface ArticleProps extends FullPageProps {
+interface ArticleProps extends GenericPageResult {
     post: {
         title: string;
         content: StructuredTextGraphQlResponse<
