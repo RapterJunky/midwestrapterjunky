@@ -5,9 +5,10 @@ import type { User, Comment } from "@prisma/client";
 import type { Paginate } from "@/types/page";
 import { fetcher } from "@/lib/api/fetcher";
 import { useSession } from "next-auth/react";
+import type { Session } from "next-auth";
 
 export type TComment = Omit<Comment, "ownerId" | "threadPostId"> & {
-  owner: Omit<User, "email" | "emailVerified">;
+  owner: Pick<User, "image" | "id" | "name">;
   likedByMe: boolean;
   likeCount: number;
   children: number;
@@ -186,24 +187,58 @@ async function deleteComment(
 
 async function createComment(
   formData: FormData,
-  mutate: KeyedMutator<Paginate<TComment>>,
+  mutate: KeyedMutator<Paginate<TComment>>, session: Session | null
 ) {
-  const request = await fetch("/api/community/comment", {
-    method: "POST",
-    body: formData,
-  });
-  if (!request.ok) throw request;
-
-  const comment = (await request.json()) as TComment;
-
+  if (!session) throw new Error("Failed to vailate user");
   await mutate<Paginate<TComment>>(
-    (currentData) => {
+    async (currentData) => {
       if (!currentData) throw new Error("Failed to create");
-      return { ...currentData, result: [comment, ...currentData.result] };
+
+      const request = await fetch("/api/community/comment", {
+        method: "POST",
+        body: formData,
+      });
+      if (!request.ok) throw request;
+
+      const comment = await request.json() as TComment;
+
+      return {
+        ...currentData,
+        result: [
+          comment,
+          ...currentData.result
+        ]
+      };
     },
     {
+      rollbackOnError: true,
       revalidate: false,
-      populateCache: false,
+      populateCache: true,
+      optimisticData(currentData) {
+        if (!currentData) throw new Error("Unable to update optimic data");
+
+        return {
+          ...currentData,
+          result: [
+            {
+              parentCommentId: null,
+              content: formData.get("content")?.toString() ?? "<p>Failed to load message</p>",
+              owner: {
+                image: session.user.image as string | null,
+                id: session.user.id,
+                name: session.user.name as string | null,
+              },
+              likeCount: 0,
+              likedByMe: false,
+              children: 0,
+              created: new Date().toISOString() as never as Date,
+              updatedAt: new Date().toISOString() as never as Date,
+              id: "NEW_TEMP_ID"
+            },
+            ...currentData.result
+          ]
+        }
+      },
     },
   );
 }
@@ -212,23 +247,39 @@ async function updateComment(
   formData: FormData,
   mutate: KeyedMutator<Paginate<TComment>>,
 ) {
-  const request = await fetch("/api/community/comment", {
-    method: "PUT",
-    body: formData,
-  });
-
-  if (!request.ok) throw request;
-
-  const comment = (await request.json()) as TComment;
-
   await mutate<Paginate<TComment>>(
-    (currentData) => {
+    async (currentData) => {
       if (!currentData) throw new Error("Failed to update");
+
+      const request = await fetch("/api/community/comment", {
+        method: "PUT",
+        body: formData,
+      });
+
+      if (!request.ok) throw request;
+
+      const comment = await request.json() as TComment;
+
+      const id = formData.get("id")?.toString();
+      const idx = currentData.result.findIndex(i => i.id === id)
+      const comments = currentData.result;
+
+      if (idx === -1 || !id) {
+        return {
+          ...currentData,
+          result: [
+            comment,
+            ...currentData?.result.filter((value) => value.id !== comment.id),
+          ],
+        };
+      }
+
+      comments[idx] = comment;
+
       return {
         ...currentData,
         result: [
-          comment,
-          ...currentData?.result.filter((value) => value.id !== comment.id),
+          ...comments
         ],
       };
     },
@@ -236,6 +287,27 @@ async function updateComment(
       rollbackOnError: true,
       revalidate: false,
       populateCache: true,
+      optimisticData(currentData) {
+        if (!currentData) throw new Error("Failed to update optimistic");
+
+        const commentId = formData.get("commentId")?.toString();
+        const content = formData.get("content")?.toString();
+
+        if (!commentId || !content) return currentData;
+
+        const comments = currentData.result;
+
+        const idx = comments.findIndex(comment => comment.id === commentId);
+        const comment = comments.at(idx);
+        if (idx === -1 || !comment) return currentData;
+
+        comment.content = content;
+
+        return {
+          ...currentData,
+          result: [...comments]
+        }
+      },
     },
   );
 }
@@ -269,7 +341,7 @@ const CommentProvider: React.FC<
         report: (commentId, reason) => report(commentId, reason),
         like: (commentId) => like(commentId, comments.mutate),
         unlike: (commentId) => unlike(commentId, comments.mutate),
-        createComment: (formData) => createComment(formData, comments.mutate),
+        createComment: (formData) => createComment(formData, comments.mutate, session.data),
         updateComment: (formData) => updateComment(formData, comments.mutate),
         nextPage: () => setPage((current) => current + 1),
         prevPage: () => setPage((current) => current - 1),

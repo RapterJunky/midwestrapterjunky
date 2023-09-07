@@ -1,10 +1,10 @@
-import { google } from "googleapis";
-import { logger } from "../logger";
-import sharp from "sharp";
 import { rgbaToDataURL } from "thumbhash";
+import { Readable } from "node:stream";
+import { google } from "googleapis";
+import { parse } from "node:path";
+import sharp from "sharp";
 import { GOOGLE_DRIVE_IMAGE_ROOT } from "../utils/googleConsts";
-import { parse } from "path";
-
+import { logger } from "../logger";
 export type GoogleImage = {
   id: string;
   name: string;
@@ -57,7 +57,7 @@ export const deleteImages = async (ids: string[]) => {
   const drive = googleDrive();
 
   const result = await Promise.allSettled(
-    ids.map((id) =>
+    ids.filter(value => !(value.startsWith("{") && value.endsWith("}"))).map((id) =>
       drive.files.delete({
         fileId: id,
       }),
@@ -147,6 +147,13 @@ export const uploadFile = async (
           .webp()
           .toBuffer();
 
+        const readableStream = new Readable({
+          read() {
+            this.push(compressedImage);
+            this.push(null);
+          }
+        });
+
         const { data } = await drive.files.create({
           requestBody: {
             name: `${file.name.replace("{", "").replace("}", "")}`,
@@ -157,7 +164,7 @@ export const uploadFile = async (
           },
           media: {
             mimeType: "image/webp",
-            body: compressedImage,
+            body: readableStream,
           },
           fields: "id",
         });
@@ -220,6 +227,13 @@ export const uploadFileCMS = async (file: File, alt: string) => {
           .webp()
           .toBuffer();
 
+        const readableStream = new Readable({
+          read() {
+            this.push(compressedImage);
+            this.push(null);
+          }
+        });
+
         const { data } = await drive.files.create({
           requestBody: {
             name: `${Date.now()}_${parse(file.name).name}`,
@@ -233,7 +247,7 @@ export const uploadFileCMS = async (file: File, alt: string) => {
           },
           media: {
             mimeType: "image/webp",
-            body: compressedImage,
+            body: readableStream,
           },
           fields: "name,id,appProperties,imageMediaMetadata(width,height)",
         });

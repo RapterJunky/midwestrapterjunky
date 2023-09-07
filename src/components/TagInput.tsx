@@ -1,6 +1,5 @@
 import { useState } from "react";
-import HiPlus from "./icons/HiPlus";
-import HiX from "./icons/HiX";
+import { Plus, X } from "lucide-react";
 
 type Props = {
   id?: string;
@@ -42,7 +41,7 @@ const Tag: React.FC<TagProps> = ({ name, onDelete, idx, onDrop }) => {
         type="button"
         aria-label={`Remove tag ${name}`}
       >
-        <HiX />
+        <X />
       </button>
     </span>
   );
@@ -154,7 +153,7 @@ const TagInput: React.FC<Props> = ({
           title="Add tag to list"
           aria-label="Add item to tag list"
         >
-          <HiPlus />
+          <Plus />
         </button>
       </div>
     </div>

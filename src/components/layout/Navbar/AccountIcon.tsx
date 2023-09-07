@@ -22,13 +22,13 @@ const AccountIcon: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-10 w-10 text-black">
             <AvatarFallback>
               <User2 />
             </AvatarFallback>
             <AvatarImage
               asChild
-              src={session?.user.image as string | undefined}
+              src={session?.user.image as string | undefined ?? ""}
             >
               <Image
                 width={40}

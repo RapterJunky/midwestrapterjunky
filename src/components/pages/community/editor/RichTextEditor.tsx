@@ -1,12 +1,12 @@
 "use client";
-import { type InitialConfigType } from "@lexical/react/LexicalComposer";
-import { CLEAR_EDITOR_COMMAND, type LexicalEditor } from "lexical";
+import { $getRoot, $insertNodes, CLEAR_EDITOR_COMMAND, type LexicalEditor } from "lexical";
+import type { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListNode, ListItemNode } from "@lexical/list";
-import { $generateHtmlFromNodes } from "@lexical/html";
 import { useForm } from "react-hook-form";
 import { LinkNode } from "@lexical/link";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import {
   Form,
@@ -25,28 +25,11 @@ export type FormState = {
   message: unknown[];
 };
 
-const editorConfig = {
-  namespace: "usercomment",
-  onError(error) {
-    console.error(error);
-    throw error;
-  },
-  nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
-  theme: {
-    text: {
-      strikethrough: "line-through",
-      underline: "underline",
-      underlineStrikethrough: "underline line-through",
-    },
-    root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[150px] outline-none",
-  },
-} as InitialConfigType;
-
 const RichtextEditor: React.FC<{
-  commentId?: string;
-  postId: string;
+  content?: string;
+  id: string;
   onSubmit: (formData: FormData) => Promise<void>;
-}> = ({ onSubmit, postId }) => {
+}> = ({ onSubmit, id, content }) => {
   const editorRef = useRef<LexicalEditor>(null);
   const form = useForm<FormState>();
 
@@ -58,14 +41,11 @@ const RichtextEditor: React.FC<{
 
       const formData = new FormData();
 
-      formData.set("postId", postId);
+      formData.set("id", id);
 
       await new Promise<void>((ok, rej) => {
         state.read(() => {
-          const html = $generateHtmlFromNodes(
-            editorRef.current as LexicalEditor,
-            null,
-          );
+          const html = $generateHtmlFromNodes(editorRef.current as LexicalEditor);
           formData.set("content", html);
 
           const deletedIds = (
@@ -99,6 +79,35 @@ const RichtextEditor: React.FC<{
       });
     }
   };
+
+  const editorConfig = useMemo<InitialConfigType>(() => (
+    {
+      namespace: "usercomment",
+      onError(error) {
+        console.error(error);
+        throw error;
+      },
+      nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
+      editorState(editor) {
+        if (content?.length) editor.update(() => {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(content, "text/html");
+          const nodes = $generateNodesFromDOM(editor, dom);
+          $getRoot().select();
+          $insertNodes(nodes);
+        });
+      },
+      theme: {
+        text: {
+          strikethrough: "line-through",
+          underline: "underline",
+          underlineStrikethrough: "underline line-through",
+        },
+        root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[150px] outline-none",
+      },
+    }
+  ), [content]);
+
 
   return (
     <Form {...form}>

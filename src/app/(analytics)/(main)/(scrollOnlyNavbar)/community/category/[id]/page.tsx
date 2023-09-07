@@ -49,7 +49,7 @@ const CategoryPage: React.FC<PageParams> = async ({ searchParams, params }) => {
         <div className="mb-4 flex justify-between border-b pb-2">
           <h1 className="text-4xl font-bold">{category.name}</h1>
           <Button asChild>
-            <Link href="/community/create-topic">
+            <Link href={`/community/topic?category=${params.id}`}>
               <Plus className="mr-2 h-4 w-4" />
               New Topic
             </Link>

@@ -47,7 +47,7 @@ const PaginateCategoryPosts: React.FC<{
             <Link href={{ search: `page=${currentPage - 1}` }}>Prev</Link>
           </Button>
           <div>
-            {currentPage} of {pageCount}
+            {currentPage} of {pageCount <= 0 ? 1 : pageCount}
           </div>
           <Button
             asChild

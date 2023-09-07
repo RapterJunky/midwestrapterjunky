@@ -2,12 +2,12 @@ import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
+import { Star } from "lucide-react";
 import Link from "next/link";
 
 import type { Color, ModulerContent, ResponsiveImage } from "@type/page";
 import { markRules } from "@lib/structuredTextRules";
 import { Button } from "@/components/ui/button";
-import HiStar from "@components/icons/HiStar";
 import Parallax from "./Parallax";
 
 export interface TestimonialAndShareProps extends ModulerContent {
@@ -40,7 +40,7 @@ const TestimonialAndShare: React.FC<TestimonialAndShareProps> = (props) => {
               >
                 <div className="flex gap-1 text-xl">
                   {Array.from({ length: value.rating }, (_, key) => (
-                    <HiStar key={key} />
+                    <Star key={key} />
                   ))}
                 </div>
                 <q className="font-serif font-normal">{value.qoute}</q>

@@ -45,11 +45,10 @@ async function like(id: string, mutate: KeyedMutator<PostLikes>) {
           method: "POST",
           body: JSON.stringify({
             id,
-            type: "like",
           }),
           headers: {
             "Content-Type": "application/json",
-            "x-content-type": "like-topic",
+            "x-content-type": "like-post",
           },
         });
 
@@ -60,7 +59,7 @@ async function like(id: string, mutate: KeyedMutator<PostLikes>) {
       },
       {
         rollbackOnError: true,
-        revalidate: true,
+        revalidate: false,
         populateCache: true,
         optimisticData(currentData) {
           if (!currentData) throw new Error("Failed to update ui");
@@ -82,7 +81,7 @@ async function unlike(id: string, mutate: KeyedMutator<PostLikes>) {
         const request = await fetch(`/api/community?id=${id}`, {
           method: "DELETE",
           headers: {
-            "x-content-type": "like-topic",
+            "x-content-type": "like-post",
           },
         });
 
@@ -117,7 +116,7 @@ async function report(id: string, reason: string) {
         reason,
       }),
       headers: {
-        "x-content-type": "report-topic",
+        "x-content-type": "report-post",
         "Content-Type": "application/json",
       },
     });
@@ -148,7 +147,7 @@ const PostActions: React.FC<PostActionsProps> = ({
   const [reportDialog, setReportDialog] = useState(false);
   const { data: session, status } = useSession();
   const { data, mutate } = useSWR<PostLikes, Response, [string, string] | null>(
-    postId ? ["/api/community/topic", postId] : null,
+    postId ? ["/api/community", postId] : null,
     ([url, id]) => fetcher(`${url}?post=${id}`),
     {
       fallback: {
@@ -163,13 +162,13 @@ const PostActions: React.FC<PostActionsProps> = ({
     return (
       <div className="flex justify-end gap-1 p-0.5 text-zinc-600">
         <Button
-          className="h-8"
+          className="h-8 gap-2"
           variant="ghost"
           type="button"
           title="like this post"
         >
           {(data?.likesCount ?? 0) > 0 ? (
-            <span className="mx-2">{data?.likesCount ?? 0}</span>
+            <span>{data?.likesCount ?? 0}</span>
           ) : null}
           <Heart className="h-5 w-5" />
         </Button>
@@ -188,7 +187,7 @@ const PostActions: React.FC<PostActionsProps> = ({
         >
           <Link
             href={{
-              pathname: "/community/create-topic",
+              pathname: "/community/topic",
               query: { edit: postId },
             }}
           >
@@ -197,9 +196,9 @@ const PostActions: React.FC<PostActionsProps> = ({
         </Button>
       ) : null}
       <Button
-        className="h-8 min-w-min ui-active:text-red-400 ui-active:hover:text-red-500"
+        className="h-8 min-w-min ui-active:text-red-400 ui-active:hover:text-red-500 gap-2"
         type="button"
-        title="like this post"
+        title={data?.likedByMe ? "Unlike this post" : "Like this post"}
         data-headlessui-state={data?.likedByMe ? "active" : ""}
         variant="ghost"
         onClick={() =>
@@ -207,7 +206,7 @@ const PostActions: React.FC<PostActionsProps> = ({
         }
       >
         {(data?.likesCount ?? 0) > 0 ? (
-          <span className="mx-2">{data?.likesCount ?? 0}</span>
+          <span>{data?.likesCount ?? 0}</span>
         ) : null}
         <Heart className="h-5 w-5" />
       </Button>
@@ -263,7 +262,7 @@ const PostActions: React.FC<PostActionsProps> = ({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
-              className="h-8 w-8"
+              className="h-8 w-8 text-red-500 hover:text-red-500/90 dark:text-red-900 dark:hover:text-red-900/90"
               title="Delete your post"
               variant="ghost"
               size="icon"

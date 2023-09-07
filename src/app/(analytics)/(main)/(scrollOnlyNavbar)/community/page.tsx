@@ -6,7 +6,7 @@ import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import CategoryCard from "@/components/community/CategoryCard";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const icons = (await parent).icons;

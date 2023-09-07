@@ -1,4 +1,3 @@
-import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Lock, Pin, User2 } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -7,7 +6,6 @@ import { z } from "zod";
 
 import PostComments from "@/components/pages/community/comments/PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
 import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
 import SessionProvider from "@/components/providers/SessionProvider";
 import CommentProvider from "@/components/providers/CommentProvider";
@@ -15,6 +13,7 @@ import PostActions from "@/components/pages/community/PostActions";
 import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import getPost from "@/lib/services/community/getPost";
+import HtmlArticle from "@/components/HtmlArticle";
 import { Badge } from "@/components/ui/badge";
 
 type PageParams = {
@@ -98,12 +97,8 @@ const Post: React.FC<PageParams> = async ({ params }) => {
                   </div>
                 </div>
               </div>
-              <article className="prose mb-4 max-w-none py-2">
-                <StructuredText
-                  renderBlock={(ctx) => renderBlock(ctx, { unoptimized: true })}
-                  renderInlineRecord={renderInlineRecord}
-                  data={post.content as PrismaJson.Dast}
-                />
+              <article className="prose mb-4 max-w-none py-2 prose-headings:my-0 prose-p:my-0 prose-a:cursor-pointer prose-a:text-blue-500">
+                <HtmlArticle content={post.content} />
               </article>
               <PostActions
                 postId={post.id}

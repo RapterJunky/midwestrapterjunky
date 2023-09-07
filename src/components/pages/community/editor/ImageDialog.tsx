@@ -43,7 +43,7 @@ const ImageDialog: React.FC<
   });
 
   const usingUrl = form.watch("url");
-  const usingFile = form.watch("file.file");
+  const hasFile = form.watch("file.file");
 
   const reset = () => {
     form.resetField("file", { keepDirty: false, keepError: false });
@@ -59,32 +59,32 @@ const ImageDialog: React.FC<
 
       const { file, alt, url } = form.getValues();
 
-      const imageUrl = file.file
+      const imageUrl = file?.file
         ? await new Promise<string>((ok, rej) => {
-            if (!file.file)
-              return rej(new Error("Failed to load file", { cause: "file" }));
+          if (!file.file)
+            return rej(new Error("Failed to load file", { cause: "file" }));
 
-            if (file.file.size > 5_000_000) {
-              return rej(
-                new Error("Image is larger than 5MB.", { cause: "file" }),
-              );
-            }
-
-            const reader = new FileReader();
-
-            reader.addEventListener("load", () => {
-              ok(reader.result as string);
-            });
-            reader.addEventListener("error", () =>
-              rej(
-                new Error("There was an error in loading the file.", {
-                  cause: "file",
-                }),
-              ),
+          if (file.file.size > 5_000_000) {
+            return rej(
+              new Error("Image is larger than 5MB.", { cause: "file" }),
             );
+          }
 
-            reader.readAsDataURL(file.file);
-          })
+          const reader = new FileReader();
+
+          reader.addEventListener("load", () => {
+            ok(reader.result as string);
+          });
+          reader.addEventListener("error", () =>
+            rej(
+              new Error("There was an error in loading the file.", {
+                cause: "file",
+              }),
+            ),
+          );
+
+          reader.readAsDataURL(file.file);
+        })
         : url;
 
       const load = await new Promise<{
@@ -104,7 +104,7 @@ const ImageDialog: React.FC<
         loadImage.addEventListener("error", () =>
           rej(
             new Error("Failed to load image", {
-              cause: file.file ? "file" : "url",
+              cause: file?.file ? "file" : "url",
             }),
           ),
         );
@@ -116,9 +116,9 @@ const ImageDialog: React.FC<
         src: load.src,
         alt: alt.trim(),
         width: load.width,
-        imageType: file.file ? "google" : "external",
+        imageType: file?.file ? "google" : "external",
         height: load.height,
-        file: file.file ?? undefined,
+        file: file?.file ?? undefined,
       });
 
       reset();
@@ -143,20 +143,20 @@ const ImageDialog: React.FC<
               rules={{
                 required: {
                   message: "Enter a image url or upload a image",
-                  value: !usingFile,
+                  value: !hasFile,
                 },
               }}
               control={form.control}
               name="url"
+              disabled={!!hasFile}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Image Url</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={!!usingFile}
                       accept="image/*"
+                      required={!hasFile}
                       {...field}
-                      required={!!usingUrl}
                       placeholder="https://example.com/image.png"
                       type="url"
                     />
@@ -181,9 +181,10 @@ const ImageDialog: React.FC<
               }}
               control={form.control}
               name="file"
+              disabled={!!usingUrl}
               render={({ field: { value, onChange, ref, ...field } }) => (
                 <FormItem>
-                  <FormLabel>Uploaded Image</FormLabel>
+                  <FormLabel>Uploaded Image {hasFile ? "is set" : "not set"}</FormLabel>
                   <FormControl>
                     <Input
                       ref={(e) => {
@@ -191,8 +192,7 @@ const ImageDialog: React.FC<
                         fileInputRef.current = e;
                       }}
                       accept="image/*"
-                      required={!!usingFile}
-                      disabled={!!usingUrl}
+                      required={!usingUrl}
                       {...field}
                       type="file"
                       value={value?.fileName}
@@ -227,7 +227,7 @@ const ImageDialog: React.FC<
               name="alt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image alt text</FormLabel>
+                  <FormLabel>Alt text</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="example"

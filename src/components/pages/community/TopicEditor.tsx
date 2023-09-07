@@ -9,11 +9,11 @@ import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { LinkNode } from "@lexical/link";
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import {
   Form,
@@ -44,66 +44,43 @@ type FormState = {
   notification: boolean;
 };
 
-const editorConfig = {
-  namespace: "topic-editor",
-  onError(error) {
-    console.error(error);
-    throw error;
-  },
-  nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
-  theme: {
-    text: {
-      strikethrough: "line-through",
-      underline: "underline",
-      underlineStrikethrough: "underline line-through",
-    },
-    root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[400px] flex-1 md:min-h-[700px] outline-none",
-  },
-} as InitialConfigType;
-
 const TopicEditor: React.FC<
   React.PropsWithChildren<{ defaultCategory: string }>
 > = ({ children, defaultCategory }) => {
+  const router = useRouter();
+  const [postData, setPostData] = useState<string>();
   const searchParams = useSearchParams();
-  const editMode = searchParams?.get("editId") !== null;
+
+  const hasEdit = searchParams?.get("edit");
+
   const { status } = useSession({
     required: true,
   });
   const editorRef = useRef<LexicalEditor>(null);
   const form = useForm<FormState>({
     defaultValues: async () => {
-      const id = searchParams?.get("editId");
-      if (id) {
-        if (!editorRef.current) throw new Error("Unable to update editor");
-
-        const request = await fetch(`/api/community/topic?post=${id}`);
+      if (hasEdit) {
+        const request = await fetch(`/api/community/topic?post=${hasEdit}`);
 
         if (!request.ok) throw new Error("Failed to load post");
 
         const content = (await request.json()) as FormState;
 
-        await new Promise<void>((ok) => {
-          editorRef.current?.update(() => {
-            const parser = new DOMParser();
-            const dom = parser.parseFromString(content.content, "text/html");
-            const nodes = $generateNodesFromDOM(
-              editorRef.current as LexicalEditor,
-              dom,
-            );
-            $getRoot().select();
-            $insertNodes(nodes);
-            ok();
-          });
-        });
+        setPostData(content.content);
 
-        return content;
+        return {
+          ...content,
+          category: content.category.toString()
+        }
       }
+
+      const startingCategory = searchParams.get("category")?.toString();
 
       return {
         content: "",
         title: "",
         notification: true,
-        category: defaultCategory,
+        category: !Number.isNaN(startingCategory) && startingCategory !== "0" ? startingCategory ?? defaultCategory : defaultCategory,
         tags: [],
       };
     },
@@ -159,14 +136,14 @@ const TopicEditor: React.FC<
       formData.set("notification", formState.notification ? "true" : "false");
       formData.set("title", formState.title);
 
-      if (editMode) {
-        const id = searchParams?.get("editId");
+      if (hasEdit) {
+        const id = searchParams?.get("edit");
         if (!id) throw new Error("Unable to update, missing post id");
         formData.set("postId", id);
       }
 
       const request = await fetch("/api/community/topic", {
-        method: editMode ? "PUT" : "POST",
+        method: hasEdit ? "PUT" : "POST",
         body: formData,
       });
 
@@ -174,7 +151,11 @@ const TopicEditor: React.FC<
         throw new Error("Failed to update/create post");
       }
 
+      const body = await request.json() as { id: string; };
+
       editorRef.current.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
+
+      router.replace(`/community/post/${body.id}`);
     } catch (error) {
       form.setError(
         ((error as Error)?.cause as
@@ -190,11 +171,41 @@ const TopicEditor: React.FC<
     }
   };
 
+  const editorConfig = useMemo<InitialConfigType>(() => ({
+    namespace: "topic-editor",
+    onError(error) {
+      console.error(error);
+      throw error;
+    },
+    editorState(editor) {
+      if (postData) editor.update(() => {
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(postData, "text/html");
+        const nodes = $generateNodesFromDOM(editor, dom);
+        $getRoot().select();
+        $insertNodes(nodes);
+      });
+    },
+    nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
+    theme: {
+      text: {
+        strikethrough: "line-through",
+        underline: "underline",
+        underlineStrikethrough: "underline line-through",
+      },
+      root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[400px] flex-1 md:min-h-[700px] outline-none",
+    },
+  }), [postData]);
+
+
   return (
     <Form {...form}>
       <Dialog open={form.formState.isSubmitting}>
         <DialogContent closeable={false}>
-          <Spinner className="h-14 w-14" />
+          <div className="flex flex-col justify-center items-center min-h-[400px] w-full">
+            <Spinner className="h-14 w-14" />
+            <span className="my-4">Processing...</span>
+          </div>
         </DialogContent>
       </Dialog>
       <form
@@ -297,7 +308,7 @@ const TopicEditor: React.FC<
                     <FormLabel>Category</FormLabel>
                     <FormControl>
                       <Select
-                        disabled={editMode}
+                        disabled={!!hasEdit}
                         value={field.value}
                         onValueChange={field.onChange}
                       >

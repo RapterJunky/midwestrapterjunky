@@ -16,6 +16,48 @@ const reportSchema = schema.extend({
   reason: z.string(),
 });
 
+export async function GET(request: Request) {
+  try {
+    const session = await getServerSession(authConfig);
+    const { searchParams } = new URL(request.url);
+
+    const id = z.string().uuid().parse(searchParams.get("post"));
+
+    const data = await prisma.threadPost.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
+    });
+
+    if (!data) throw createHttpError.NotFound();
+
+    let likedByMe = false;
+
+    if (session) {
+      const result = await prisma.like.count({
+        where: {
+          id: `${session.user.id}${id}`,
+        },
+      });
+      likedByMe = result > 0;
+    }
+
+    return NextResponse.json({
+      likedByMe,
+      likesCount: data._count.likes,
+    });
+  } catch (error) {
+    return onError(error);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authConfig);
@@ -214,7 +256,7 @@ export async function DELETE(request: Request) {
 
         return NextResponse.json({
           likedByMe: false,
-          likesCount: data.post?._count.likes ?? 0,
+          likesCount: (data.post?._count.likes ?? 1) - 1,
         });
       }
     }

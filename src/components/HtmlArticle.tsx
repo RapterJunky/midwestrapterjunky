@@ -1,19 +1,23 @@
-import HTMLReactParser from 'html-react-parser';
+import HTMLReactParser, { Element } from 'html-react-parser';
 import Image from 'next/image';
 
 const HtmlArticle: React.FC<{ content: string }> = ({ content }) => {
 
     const el = HTMLReactParser(content, {
         replace(domNode) {
-            if (domNode instanceof HTMLImageElement) {
-                const { width, id, height, src, alt } = domNode;
-
-                const blur = domNode.getAttribute("data-blur-url") ?? undefined;
+            if (domNode instanceof Element && domNode.name === "img") {
 
                 return (
-                    <Image src={src} id={id} width={width} height={height} alt={alt} placeholder={blur ? "blur" : "empty"} blurDataURL={blur} />
+                    <Image
+                        src={domNode.attribs.src as string}
+                        id={domNode.attribs?.id}
+                        width={domNode.attribs.width as `${number}`}
+                        height={domNode.attribs.height as `${number}`}
+                        alt={domNode.attribs.alt as string}
+                        unoptimized
+                        data-image-type={domNode.attribs["data-image-type"]}
+                        placeholder={domNode.attribs["data-blur-url"] ? "blur" : "empty"} blurDataURL={domNode.attribs["data-blur-url"]} />
                 );
-
             }
         },
     })

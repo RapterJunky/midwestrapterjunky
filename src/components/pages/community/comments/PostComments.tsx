@@ -14,7 +14,7 @@ const PostComments: React.FC = () => {
   return (
     <>
       {status === "authenticated" && session.user.banned === 0 ? (
-        <RichTextEditor postId={postId} onSubmit={createComment} />
+        <RichTextEditor id={postId} onSubmit={createComment} />
       ) : (
         <div className="mt-6 flex w-full flex-col items-center justify-center gap-4">
           <span>Login to comment</span>

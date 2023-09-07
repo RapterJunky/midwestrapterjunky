@@ -16,15 +16,9 @@ import sendMail from "@/lib/api/sendMail";
 
 const schema = z.object({
   content: z.string(),
+  deletedId: z.array(z.string()).optional(),
   images: z.array(z.object({}).passthrough()).max(5).optional(),
-});
-const putSchema = schema.extend({
-  deletedId: z.array(z.string()).optional(),
-  commentId: z.string().uuid(),
-});
-const postSchema = schema.extend({
-  deletedId: z.array(z.string()).optional(),
-  postId: z.string().uuid(),
+  id: z.string().uuid()
 });
 
 export async function DELETE(request: Request) {
@@ -86,7 +80,12 @@ export async function POST(request: Request) {
 
     const data = await request.formData();
 
-    const { postId, content, images } = postSchema.parse(data);
+    const { id, content, images } = schema.parse({
+      content: data.get("content"),
+      id: data.get("id"),
+      deletedId: data.getAll("deletedId"),
+      images: data.getAll("images")
+    })
 
     let fullContent = content;
     if (images?.length) {
@@ -108,7 +107,7 @@ export async function POST(request: Request) {
     const comment = await prisma.comment.create({
       data: {
         ownerId: session.user.id,
-        threadPostId: postId,
+        threadPostId: id,
         content: fullContent,
       },
       select: {
@@ -148,11 +147,9 @@ export async function POST(request: Request) {
               id: EMAIL_TEMPLTE_ID,
               data: {
                 topic_title: comment.threadPost.name,
-                topic_link: `http${
-                  process.env.VERCEL_ENV !== "development" ? "s" : ""
-                }://${process.env.VERCEL_URL}/community/p/${
-                  comment.threadPost.id
-                }`,
+                topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/post/${comment.threadPost.id
+                  }`,
               },
             },
           },
@@ -183,8 +180,12 @@ export async function PUT(request: Request) {
 
     const data = await request.formData();
 
-    const { deletedId, content, images, commentId } = putSchema.parse(data);
-    if (!commentId) throw createHttpError.BadRequest("Missing commentId");
+    const { deletedId, content, images, id } = schema.parse({
+      content: data.get("content"),
+      deletedId: data.getAll("deletedId"),
+      images: data.getAll("images"),
+      id: data.get("id")
+    });
 
     if (deletedId?.length) {
       await deleteImages(deletedId);
@@ -209,7 +210,7 @@ export async function PUT(request: Request) {
 
     const comment = await prisma.comment.update({
       where: {
-        id: commentId,
+        id,
         AND: {
           ownerId: session.user.id,
         },
@@ -217,9 +218,44 @@ export async function PUT(request: Request) {
       data: {
         content: fullContent,
       },
+      select: {
+        id: true,
+        content: true,
+        created: true,
+        parentCommentId: true,
+        _count: {
+          select: {
+            likes: true,
+            // children: !parent
+          },
+        },
+        owner: {
+          select: {
+            image: true,
+            id: true,
+            name: true,
+          },
+        },
+      }
     });
 
-    return NextResponse.json(comment);
+    const likes = session
+      ? await prisma.like.findMany({
+        where: {
+          userId: session.user.id,
+          commentId: { in: [comment.id] },
+        },
+      })
+      : [];
+
+    const { _count, ...commentFields } = comment;
+
+    return NextResponse.json({
+      ...commentFields,
+      likedByMe: !!likes.find((like) => like.commentId === comment.id),
+      likeCount: _count.likes,
+    });
+
   } catch (error) {
     return onError(error);
   }

@@ -37,7 +37,7 @@ const CategoryCard: React.FC<Props> = ({
       <td className="px-2 py-3">
         <h3>
           <Link href={slug}>
-            <div className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
+            <div className="mb-4 scroll-m-20 text-2xl font-bold tracking-tight">
               {title}
             </div>
             <div className="float-none mb-8 mr-8 mt-1 flex justify-center sm:float-left sm:aspect-square">

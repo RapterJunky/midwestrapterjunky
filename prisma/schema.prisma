@@ -2,9 +2,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//generator json {
-//  provider = "prisma-json-types-generator"
-//}
+generator json {
+  provider = "prisma-json-types-generator"
+}
 
 datasource db {
   provider     = "mysql"
@@ -90,7 +90,7 @@ model VerificationToken {
 model Comment {
   id           String     @id @default(uuid())
   /// [Dast]
-  content      String
+  content      String     @db.LongText
   created      DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
   ownerId      String
@@ -122,7 +122,7 @@ model ThreadPost {
   /// [Tags]
   tags        Json?
   /// [Dast]
-  content     String
+  content     String    @db.LongText
   owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   thread      Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post
   threadId    Int
