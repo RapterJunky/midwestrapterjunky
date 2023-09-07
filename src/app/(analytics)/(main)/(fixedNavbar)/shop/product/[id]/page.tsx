@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
-import { Product } from "schema-dts";
 import type { Metadata, ResolvingMetadata } from "next";
+import { notFound } from "next/navigation";
+import type { Product } from "schema-dts";
 import Script from "next/script";
 import { Suspense } from "react";
 
@@ -8,9 +8,9 @@ import RelatedProductsFallback from "@/components/pages/shop/product/RelatedProd
 import RelatedProducts from "@/components/pages/shop/product/RelatedProducts";
 import ProductImages from "@/components/pages/shop/product/ProductImages";
 import ProductForm from "@/components/pages/shop/product/ProductForm";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import getProduct from "@/lib/services/shop/getProduct";
 import { Separator } from "@/components/ui/separator";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 type PageParams = {
   params: { id: string };
@@ -22,17 +22,17 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const product = await getProduct(params.id);
 
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: product?.name ?? "MRJ Product",
-    description: product?.description ?? "No product description",
-    url: `https://midestraptorjunkies.com/shop/product/${params.id}`,
+  return getSeoTags({
+    parent,
+    seo: {
+      title: product?.name ?? "MRJ Product",
+      description: product?.description ?? "No product description",
+      slug: `/shop/product/${params.id}`,
+    }
   });
 }
 
-const Product: React.FC<PageParams> = async ({ params }) => {
+const ProductPage: React.FC<PageParams> = async ({ params }) => {
   const product = await getProduct(params.id);
   if (!product) notFound();
 
@@ -44,16 +44,16 @@ const Product: React.FC<PageParams> = async ({ params }) => {
     name: product.name,
     offers: product.variations.length
       ? {
-          "@type": "Offer",
-          priceCurrency: product.variations.at(0)?.currency,
-          price: ((product.variations.at(0)?.price ?? 0) / 100).toString(),
-          seller: product.merchent
-            ? {
-                "@type": "Organization",
-                name: product.merchent,
-              }
-            : undefined,
-        }
+        "@type": "Offer",
+        priceCurrency: product.variations.at(0)?.currency,
+        price: ((product.variations.at(0)?.price ?? 0) / 100).toString(),
+        seller: product.merchent
+          ? {
+            "@type": "Organization",
+            name: product.merchent,
+          }
+          : undefined,
+      }
       : undefined,
   };
 
@@ -94,4 +94,4 @@ const Product: React.FC<PageParams> = async ({ params }) => {
   );
 };
 
-export default Product;
+export default ProductPage;

@@ -1,3 +1,19 @@
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+
+export type PrivcyPolicyQueryResult = {
+  policy: {
+    seo: SeoOrFaviconTag[];
+    updatedAt: string;
+    privacyPolicy: StructuredTextGraphQlResponse;
+    privacyPolicySeo: {
+      description: string | null;
+      title: string | null;
+      twitterCard: string | null;
+    };
+  };
+}
+
 const PrivcyPolicy = `
 query PrivcyPolicyQuery {
     policy: termsandprivacy {
@@ -16,13 +32,6 @@ query PrivcyPolicyQuery {
         description
         title
         twitterCard
-      }
-    }
-    site: _site {
-      faviconMetaTags {
-        attributes
-        content
-        tag
       }
     }
   }

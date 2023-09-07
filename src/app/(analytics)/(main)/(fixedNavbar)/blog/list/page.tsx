@@ -1,49 +1,32 @@
-import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 
+import PagedArticles, { type PagedArticlesQueryResult } from "@/gql/queries/pagedArticles";
 import ListPagination from "@/components/pages/blog/ListPagination";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import { getDescriptionTag } from "@/lib/utils/description";
 import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
-import PagedArticles from "@/gql/queries/pagedArticles";
 import getPageQuery from "@/lib/services/GetPageQuery";
 import { Separator } from "@/components/ui/separator";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Badge } from "@/components/ui/badge";
 
 type PageParams = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-type Post = {
-  slug: string;
-  title: string;
-  id: string;
-  publishedAt: string;
-  tags: string[];
-  seo: SeoOrFaviconTag[];
-};
-
-type DataResponse = {
-  totalArticles: {
-    count: number;
-  };
-  posts: Post[];
-};
-
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: "Articles List - Midwest Raptor Junkies",
-    robots: true,
-    description: "Midwest Raptor Junkies articles list page",
-    url: `https://midwestraptorjunkies.com/blog/list`,
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Articles List",
+      robots: true,
+      description: "Midwest Raptor Junkies articles list page",
+      slug: `/blog/list`,
+    }
   });
 }
 
@@ -54,14 +37,16 @@ const BlogList: React.FC<PageParams> = async ({ searchParams }) => {
 
   const skip = (page - 1) * MAX_ITEMS;
 
-  const { totalArticles, posts } = await getPageQuery<DataResponse>(
+  const { totalArticles, posts } = await getPageQuery<PagedArticlesQueryResult>(
     PagedArticles,
     {
       variables: {
         first: MAX_ITEMS,
         skip,
       },
-      revalidate: REVAILDATE_IN_2H,
+      revalidate: {
+        revalidate: REVAILDATE_IN_2H
+      },
     },
   );
 

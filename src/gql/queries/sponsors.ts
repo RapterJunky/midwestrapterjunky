@@ -1,13 +1,21 @@
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { ResponsiveImage } from "@/types/page";
 import ImageHelper from "../fragments/ImageHelper";
+
+export type SponsorsQueryResult = {
+  sponsor: {
+    seo: SeoOrFaviconTag[];
+    sponsors: {
+      link: string | null;
+      sponsorName: string;
+      id: string;
+      logo: ResponsiveImage;
+    }[];
+  };
+}
+
 const SponsorsQuery = `
 query SponsorsQuery {
-    site: _site {
-        faviconMetaTags {
-          attributes
-          content
-          tag
-        }
-    }
     sponsor {
       seo: _seoMetaTags {
         attributes

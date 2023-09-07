@@ -1,27 +1,21 @@
 "use client";
-import { ChevronLeft } from "lucide-react";
-import SquareForm from "@/components/pages/shop/checkout/SquareForm";
-import type { CheckoutState } from "@/components/providers/CheckoutProvider";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import useCheckout from "@/hooks/shop/useCheckout";
-import { useForm } from "react-hook-form";
-import AddressForm from "./AddressForm";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
-import DiscountForm from "@/components/shop/checkout/DiscountForm";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import ShopLoadingDialog from "./ShopLoadingDialog";
-import ErrorDialog from "./ErrorDialog";
+import { ChevronLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import type { CheckoutState } from "@/components/providers/CheckoutProvider";
+import DiscountForm from "@/components/pages/shop/checkout/DiscountForm";
+import SquareForm from "@/components/pages/shop/checkout/SquareForm";
+import { Separator } from "@/components/ui/separator";
+import ShopLoadingDialog from "./ShopLoadingDialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import useCheckout from "@/hooks/shop/useCheckout";
+import { Button } from "@/components/ui/button";
 import Spinner from "@components/ui/Spinner";
+import AddressForm from "./AddressForm";
+import ErrorDialog from "./ErrorDialog";
 
 const BillingTab: React.FC = () => {
   const [error, setError] = useState<{ message: string; code: string }>();
@@ -168,8 +162,8 @@ const BillingTab: React.FC = () => {
             type="submit"
           >
             {form.formState.isSubmitting ||
-            form.formState.isValidating ||
-            order.isLoading ? (
+              form.formState.isValidating ||
+              order.isLoading ? (
               <>
                 <Spinner className="mr-2" />
                 {order.isLoading ? "Loading Order" : "Processing Order"}
@@ -177,12 +171,12 @@ const BillingTab: React.FC = () => {
             ) : (
               <>
                 Pay{" "}
-                {(
+                {order.data?.netAmountDueMoney?.amount ? (
                   Number(order.data?.netAmountDueMoney?.amount) / 100
                 ).toLocaleString(undefined, {
                   style: "currency",
                   currency: state.currencyCode,
-                })}
+                }) : "No Items in cart"}
               </>
             )}
           </Button>

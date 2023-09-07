@@ -1,19 +1,19 @@
 import type { Metadata, ResolvingMetadata } from "next";
-
 import ConfirmationMessage from "@/components/pages/confirmation/ConfirmationMessage";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: "Confirmation",
-    robots: false,
-    description: "Confirmation page",
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Confirmation",
+      robots: false,
+      description: "Confirmation page",
+      slug: "/confirmation"
+    }
   });
 }
 

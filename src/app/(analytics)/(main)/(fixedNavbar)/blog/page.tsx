@@ -1,43 +1,38 @@
-import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
-import type { GenericPageResult } from "@/gql/queries/generic";
+import QueryBlogLatest, { type BlogLatestQueryResult } from "@/gql/queries/blogLatest";
 import { getDescriptionTag } from "@/lib/utils/description";
 import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
-import QueryBlogLatest from "@/gql/queries/blogLatest";
 import getPageQuery from "@/lib/services/GetPageQuery";
 import { Separator } from "@/components/ui/separator";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-interface PageProps extends GenericPageResult {
-  seo: SeoOrFaviconTag[];
-  posts: {
-    slug: string;
-    publishedAt: string | null;
-    title: string;
-    seo: SeoOrFaviconTag[];
-    tags: string[];
-  }[];
-}
 
-export const metadata: Metadata = getGenericSeoTags({
-  title: "Lastest Articles",
-  description: "Midwest Raptor Junkies latest published articles.",
-  url: "https://midwestraptorjunkies.com/blog",
-});
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Lastest Articles",
+      description: "Midwest Raptor Junkies latest published articles.",
+      slug: "/blog"
+    }
+  })
+}
 
 const MAX_DISPLAY = 5;
 
 const Blog: React.FC = async () => {
-  const { posts } = await getPageQuery<PageProps>(QueryBlogLatest, {
+  const { posts } = await getPageQuery<BlogLatestQueryResult>(QueryBlogLatest, {
     variables: {
       first: MAX_DISPLAY,
     },
-    revalidate: REVAILDATE_IN_2H,
+    revalidate: {
+      revalidate: REVAILDATE_IN_2H
+    },
   });
 
   return (

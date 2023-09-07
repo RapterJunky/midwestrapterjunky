@@ -1,10 +1,7 @@
-import {
-  StructuredText,
-  type StructuredTextGraphQlResponse,
-} from "react-datocms/structured-text";
-import { type SeoOrFaviconTag, toNextMetadata } from "react-datocms/seo";
+import { StructuredText } from "react-datocms/structured-text";
+import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import type { Event } from 'schema-dts';
 import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,78 +11,60 @@ import {
   renderBlock,
   renderInlineRecord,
 } from "@/lib/structuredTextRules";
+import EventPageQuery, { type EventPageQueryResult } from "@/gql/queries/event";
 import StoreButtonLink from "@/components/pages/events/StoreButtonLink";
-import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
-import type { GenericPageResult } from "@/gql/queries/generic";
 import { getDescriptionTag } from "@/lib/utils/description";
 import LeafMaps from "@/components/pages/events/LeafMaps";
 import ScrollToTop from "@/components/blog/ScrollToTop";
-import { Separator } from "@/components/ui/separator";
 import getPageQuery from "@/lib/services/GetPageQuery";
-import EventPageQuery from "@/gql/queries/event";
+import { Separator } from "@/components/ui/separator";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import IconLink from "@/components/ui/IconLink";
 import { Button } from "@/components/ui/button";
 
 type PageParams = { params: { id: string } };
 
-interface Props extends GenericPageResult {
-  event: {
-    seo: SeoOrFaviconTag[];
-    updatedAt: string;
-    dateTo: string;
-    dateFrom: string;
-    title: string;
-    id: string;
-    slug: string;
-    extraLocationDetails: string | null;
-    description: StructuredTextGraphQlResponse<
-      {
-        __typename: string;
-        id: string;
-        content: ResponsiveImage<{ width: number; height: number }>;
-      },
-      { title: string; slug: string; __typename: string; id: string }
-    >;
-    links: LinkWithIcon[];
-    gallery: ResponsiveImage[];
-    location: {
-      latitude: number;
-      longitude: number;
-    } | null;
-    shopItemLink: null | { value: string };
-  };
-}
-
 export async function generateMetadata({
   params,
-}: PageParams): Promise<Metadata> {
-  const { site, event } = await getPageQuery<Props>(EventPageQuery, {
+}: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+  const { event } = await getPageQuery<EventPageQueryResult>(EventPageQuery, {
     variables: {
       eq: params.id,
     },
   });
 
-  return toNextMetadata([
-    ...site.faviconMetaTags,
-    ...event.seo,
-    {
-      tag: "meta",
-      attributes: {
-        property: "og:url",
-        content: `https://midwestraptorjunkies.com/events/${params.id}`,
-      },
-    },
-  ]);
+  return getSeoTags({
+    parent,
+    datocms: event.seo,
+    metadata: {
+      openGraph: {
+        url: `https://midwestraptorjunkies.com/events/${params.id}`
+      }
+    }
+  });
 }
 
 const EventPage: React.FC<PageParams> = async ({ params }) => {
-  const { event } = await getPageQuery<Props>(EventPageQuery, {
+  const { event } = await getPageQuery<EventPageQueryResult>(EventPageQuery, {
     variables: { eq: params.id },
   });
+
+  const jsonld: Event = {
+    "@type": "Event",
+    endDate: event.dateTo,
+    startDate: event.dateFrom,
+    eventAttendanceMode: "OfflineEventAttendanceMode",
+    description: getDescriptionTag(event.seo),
+    location: event.extraLocationDetails ?? undefined,
+    image: event.gallery.at(0)?.responsiveImage.src
+  }
 
   return (
     <article className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
       <ScrollToTop comments={false} />
+      <Script type="application/ld+json" id={`jsonld-${event.id}`}>
+        {JSON.stringify(jsonld)}
+      </Script>
       <div className="xl:divide-y xl:divide-gray-200">
         <header className="pt-6 xl:pb-6">
           <div className="space-y-1 text-center">
@@ -139,8 +118,8 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
               <h2 className="mb-1 text-base font-bold">Event Details</h2>
             </div>
             {!event?.shopItemLink &&
-            !(event.location || event.extraLocationDetails) &&
-            (!event.links || event.links.length === 0) ? (
+              !(event.location || event.extraLocationDetails) &&
+              (!event.links || event.links.length === 0) ? (
               <div className="mb-3 text-center">No details where provided.</div>
             ) : null}
 
@@ -191,18 +170,17 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
           "@context": "https://www.schema.org",
           location: event.extraLocationDetails
             ? {
-                "@type": "Place",
-                name: event.extraLocationDetails,
-              }
+              "@type": "Place",
+              name: event.extraLocationDetails,
+            }
             : undefined,
           "@type": "Event",
           name: event.title,
           startDate: event.dateFrom,
           endDate: event.dateTo,
           description: getDescriptionTag(event.seo),
-          url: `${
-            process.env.VERCEL_ENV === "development" ? "http" : "https"
-          }://${process.env.VERCEL_URL}/events/${event.slug}`,
+          url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
+            }://${process.env.VERCEL_URL}/events/${event.slug}`,
         })}
       </Script>
     </article>

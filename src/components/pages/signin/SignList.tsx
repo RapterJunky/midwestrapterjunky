@@ -1,9 +1,10 @@
 "use client";
-import { Facebook, Chrome } from "lucide-react";
+import { Facebook } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
+import { Google } from "@/components/ui/icons";
 
 const SignInList: React.FC = () => {
   const searchParams = useSearchParams();
@@ -16,7 +17,7 @@ const SignInList: React.FC = () => {
           signIn("google", { callbackUrl }).catch((e) => console.error(e))
         }
       >
-        <Chrome className="mr-1" /> Continue with Google
+        <Google className="mr-2" /> Continue with Google
       </Button>
       <Button
         data-cy="facebook-login-btn"
@@ -24,7 +25,7 @@ const SignInList: React.FC = () => {
           signIn("facebook", { callbackUrl }).catch((e) => console.error(e))
         }
       >
-        <Facebook /> Continue with Facebook
+        <Facebook className="mr-1" /> Continue with Facebook
       </Button>
     </div>
   );

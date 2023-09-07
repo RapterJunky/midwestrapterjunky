@@ -1,33 +1,22 @@
-import { toNextMetadata, type SeoOrFaviconTag } from "react-datocms/seo";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { GenericPageResult } from "@/gql/queries/generic";
 import getPageQuery from "@/lib/services/GetPageQuery";
-import type { ResponsiveImage } from "@/types/page";
-import SponsorsQuery from "@/gql/queries/sponsors";
+import SponsorsQuery, { type SponsorsQueryResult } from "@/gql/queries/sponsors";
 import { Button } from "@/components/ui/button";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
-interface Props extends GenericPageResult {
-  sponsor: {
-    seo: SeoOrFaviconTag[];
-    sponsors: {
-      link: string | null;
-      sponsorName: string;
-      id: string;
-      logo: ResponsiveImage;
-    }[];
-  };
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const { site, sponsor } = await getPageQuery<Props>(SponsorsQuery);
-  return toNextMetadata([...site.faviconMetaTags, ...sponsor.seo]);
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
+  return getSeoTags({
+    parent,
+    datocms: sponsor.seo
+  })
 }
 
 const Sponsors: React.FC = async () => {
-  const { sponsor } = await getPageQuery<Props>(SponsorsQuery);
+  const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
   return (
     <div className="mb-4 flex w-full flex-grow flex-col items-center justify-center gap-6 divide-y divide-gray-300">
       <h1 className="md:leading-14 my-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-5xl">

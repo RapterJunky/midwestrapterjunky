@@ -1,27 +1,21 @@
-import { type SeoOrFaviconTag } from "react-datocms/seo";
-import { toNextMetadata } from "react-datocms";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
-import type { GenericPageResult } from "@/gql/queries/generic";
 import ModuleContent from "@/components/layout/ModuleContent";
 import getPageQuery from "@/lib/services/GetPageQuery";
-import type { ModulerContent } from "@type/page";
-import HomePageQuery from "@/gql/queries/home";
+import HomePageQuery, { type HomePageQueryResult } from "@/gql/queries/home";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
-interface HomeContent extends GenericPageResult {
-  home: {
-    seo: SeoOrFaviconTag[];
-    bodyContent: ModulerContent[];
-  };
-}
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  const { home } = await getPageQuery<HomePageQueryResult>(HomePageQuery);
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getPageQuery<HomeContent>(HomePageQuery);
-  return toNextMetadata([...data.site.faviconMetaTags, ...data.home.seo]);
+  return getSeoTags({
+    datocms: home.seo,
+    parent
+  })
 }
 
 const Home: React.FC = async () => {
-  const data = await getPageQuery<HomeContent>(HomePageQuery);
+  const data = await getPageQuery<HomePageQueryResult>(HomePageQuery);
 
   return <ModuleContent modules={data.home.bodyContent} />;
 };

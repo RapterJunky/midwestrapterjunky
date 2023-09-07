@@ -1,26 +1,23 @@
 import {
   StructuredText,
-  type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import { toNextMetadata, type SeoOrFaviconTag } from "react-datocms/seo";
+import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft, User2 } from "lucide-react";
 import type { TechArticle } from "schema-dts";
-import type { Metadata } from "next";
 import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
-import type { GenericPageResult } from "@/gql/queries/generic";
+import ArticleQuery, { type ArticleQueryResult } from "@/gql/queries/article";
 import { getDescriptionTag } from "@/lib/utils/description";
 import GetNextArticles from "@/gql/queries/next_articles";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import getPageQuery from "@/lib/services/GetPageQuery";
 import { Separator } from "@/components/ui/separator";
-import type { ResponsiveImage } from "@/types/page";
-import ArticleQuery from "@/gql/queries/article";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -28,45 +25,25 @@ type PageParams = {
   params: { slug: string };
 };
 
-interface ArticleProps extends GenericPageResult {
-  post: {
-    title: string;
-    content: StructuredTextGraphQlResponse<
-      {
-        __typename: string;
-        id: string;
-        content: ResponsiveImage<{ width: number; height: number }>;
-      },
-      { title: string; slug: string; __typename: string; id: string }
-    >;
-    publishedAt: string;
-    authors: {
-      avatar: string | null;
-      name: string;
-      social: {
-        user: string;
-        link: string;
-      } | null;
-    }[];
-    seo: SeoOrFaviconTag[];
-    slug: string;
-    tags: string[];
-    id: string;
-  };
-}
-
 export async function generateMetadata({
   params,
-}: PageParams): Promise<Metadata> {
-  const { post, site } = await getPageQuery<ArticleProps>(ArticleQuery, {
+}: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+  const { post } = await getPageQuery<ArticleQueryResult>(ArticleQuery, {
     variables: { slug: params.slug },
   });
 
-  return toNextMetadata([...post.seo, ...site.faviconMetaTags]);
+  return getSeoTags({
+    parent,
+    datocms: post.seo,
+    metadata: {
+      keywords: post.tags,
+      authors: post.authors.map(value => ({ name: value.name }))
+    }
+  })
 }
 
 const Article: React.FC<PageParams> = async ({ params }) => {
-  const { post } = await getPageQuery<ArticleProps>(ArticleQuery, {
+  const { post } = await getPageQuery<ArticleQueryResult>(ArticleQuery, {
     variables: { slug: params.slug },
   });
   const { next, prev } = await getPageQuery<{
@@ -86,9 +63,8 @@ const Article: React.FC<PageParams> = async ({ params }) => {
     keywords: post.tags.join(" "),
     datePublished: post.publishedAt,
     description: getDescriptionTag(post.seo),
-    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-      process.env.VERCEL_URL
-    }/blog/${post.slug}`,
+    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
+      }/blog/${post.slug}`,
   };
 
   return (

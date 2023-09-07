@@ -11,11 +11,10 @@ const RenderMoney: React.FC<{
   isLoading: boolean;
   error: Response | undefined;
 }> = ({ code, value, isLoading, error }) => {
-  if (error) return <>Failed to calculate.</>;
-
-  if (isLoading) return <>Calculating...</>;
-
-  if (Number.isNaN(value)) return <></>;
+  if (!value) return "Nothing to calculate."
+  if (error) return "Failed to calculate.";
+  if (isLoading) return "Calculating...";
+  if (Number.isNaN(value)) return "Unable to calculate.";
 
   const valueFormated = (Number(value) / 100).toLocaleString(undefined, {
     style: "currency",
@@ -59,12 +58,12 @@ const Calculation: React.FC = () => {
           {isLoading
             ? cart.items.map((_, i) => <ShoppingCartItemSkeleton key={i} />)
             : cart.cart?.map((value, i) => (
-                <ShoppingCartItem
-                  key={i}
-                  item={value}
-                  quantity={cart.items[i]?.quantity ?? 0}
-                />
-              ))}
+              <ShoppingCartItem
+                key={i}
+                item={value}
+                quantity={cart.items[i]?.quantity ?? 0}
+              />
+            ))}
         </ul>
         <Separator />
         <ul className="pb-2">

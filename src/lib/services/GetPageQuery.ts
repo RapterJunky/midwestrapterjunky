@@ -9,14 +9,21 @@ type QueryOptions = {
   includeDrafts?: boolean;
   excludeInvalid?: boolean;
   visualEditingBaseUrl?: string;
-  revalidate?: number | boolean;
+  revalidate?: NextFetchRequestConfig | undefined
 };
 const getQueryName = (query: string) =>
   query.match(/query\s(?<name>\w+)[\s|\(]/)?.groups?.name;
 
 const dedupedFetch = cache(async (requestData: string) => {
   const request = JSON.parse(requestData) as RequestInit;
-
+  logger.debug(
+    {
+      draft: (request.headers as Record<string, string>)["X-Include-Drafts"] ?? "false",
+      env: process.env.NEXT_DATOCMS_ENVIRONMENT,
+      query: getQueryName((JSON.parse(request.body as string ?? "") as { query: string }).query),
+    },
+    "Datocms Query",
+  );
   const response = await fetch("https://graphql.datocms.com/", request);
   const responseBody = (await response.json()) as { data: unknown };
   if (!response.ok) {
@@ -43,15 +50,6 @@ const getPageQuery = async <T>(
 ): Promise<T> => {
   const { isEnabled } = draftMode();
 
-  logger.debug(
-    {
-      draft: isEnabled,
-      env: process.env.NEXT_DATOCMS_ENVIRONMENT,
-      query: getQueryName(query),
-    },
-    "Datocms Query",
-  );
-
   const { data } = await dedupedFetch(
     JSON.stringify({
       method: "POST",
@@ -67,7 +65,7 @@ const getPageQuery = async <T>(
         "X-Base-Editing-Url": opts?.visualEditingBaseUrl,
       },
       body: JSON.stringify({ query, variables: opts?.variables }),
-      next: { revalidate: opts?.revalidate },
+      next: opts?.revalidate,
     }),
   );
 

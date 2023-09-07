@@ -6,19 +6,20 @@ import ShippingTab from "@/components/pages/shop/checkout/ShippingTab";
 import AccountTab from "@/components/pages/shop/checkout/AccountTab";
 import BillingTab from "@/components/pages/shop/checkout/BillingTab";
 import Calculation from "@/components/pages/shop/checkout/Calculate";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    robots: false,
-    description: "Checkout page for Midest Raptor Junkies.",
-    title: "Checkout",
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Checkout",
+      robots: false,
+      description: "Checkout page for Midest Raptor Junkies.",
+      slug: "/shop/checkout"
+    }
   });
 }
 

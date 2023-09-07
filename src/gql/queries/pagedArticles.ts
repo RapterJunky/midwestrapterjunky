@@ -1,3 +1,21 @@
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+
+export type Post = {
+  slug: string;
+  title: string;
+  id: string;
+  publishedAt: string;
+  tags: string[];
+  seo: SeoOrFaviconTag[];
+};
+
+export type PagedArticlesQueryResult = {
+  totalArticles: {
+    count: number;
+  };
+  posts: Post[];
+};
+
 const PagedArticles = `
 query PagedArticles($first: IntType = "5", $skip: IntType = "0") {
     totalArticles: _allArticlesMeta {

@@ -1,9 +1,7 @@
 import {
   StructuredText,
-  type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import { toNextMetadata, type SeoOrFaviconTag } from "react-datocms/seo";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 
 import {
@@ -11,45 +9,23 @@ import {
   renderBlock,
   renderInlineRecord,
 } from "@/lib/structuredTextRules";
-import type { ModulerContent, ResponsiveImage } from "@/types/page";
-import type { GenericPageResult } from "@/gql/queries/generic";
+import AboutUsQuery, { type AboutUsQueryResult } from "@/gql/queries/about_us";
 import ModuleContent from "@/components/layout/ModuleContent";
 import getPageQuery from "@/lib/services/GetPageQuery";
-import AboutUsQuery from "@/gql/queries/about_us";
 
-interface AboutUsProps extends GenericPageResult {
-  aboutUsModel: {
-    seo: SeoOrFaviconTag[];
-    imageTitle: string;
-    title: string;
-    content: StructuredTextGraphQlResponse<
-      {
-        content: ResponsiveImage<{ width: number; height: number }>;
-        __typename: string;
-        id: string;
-      },
-      {
-        title: string;
-        slug: string;
-        __typename: string;
-        id: string;
-      }
-    >;
-    footerContent: ModulerContent[];
-    image: ResponsiveImage | null;
-  };
-}
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getPageQuery<AboutUsProps>(AboutUsQuery);
-  return toNextMetadata([
-    ...data.site.faviconMetaTags,
-    ...data.aboutUsModel.seo,
-  ]);
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  const { aboutUsModel } = await getPageQuery<AboutUsQueryResult>(AboutUsQuery);
+
+  return getSeoTags({
+    datocms: aboutUsModel.seo,
+    parent
+  })
 }
 
 const AboutUs: React.FC = async () => {
-  const { aboutUsModel } = await getPageQuery<AboutUsProps>(AboutUsQuery);
+  const { aboutUsModel } = await getPageQuery<AboutUsQueryResult>(AboutUsQuery);
   return (
     <>
       <div className="mb-9 mt-40 flex flex-col gap-4 md:mx-40 md:flex-row">

@@ -1,20 +1,21 @@
-import UserProfile from "@/components/pages/profile/UserProfile";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
-import Provider from "@/components/providers/SessionProvider";
 import type { Metadata, ResolvingMetadata } from "next";
 
+import UserProfile from "@/components/pages/profile/UserProfile";
+import Provider from "@/components/providers/SessionProvider";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: "Profile - Midwest Raptor Junkies",
-    robots: false,
-    description: "Midwest Raptor Junkies user profile page.",
-    url: "https://midwestraptorjunkies.com/profile",
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Profile",
+      robots: false,
+      description: "Midwest Raptor Junkies user profile page.",
+      slug: "/profile",
+    }
   });
 }
 

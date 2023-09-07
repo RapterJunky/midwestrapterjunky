@@ -1,35 +1,19 @@
 import {
   type OgMetaAttributes,
   type RegularMetaAttributes,
-  type SeoOrFaviconTag,
-  toNextMetadata,
 } from "react-datocms/seo";
 import {
   StructuredText,
-  type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
-import type { GenericPageResult } from "@/gql/queries/generic";
+import PrivcyPolicyQuery, { type PrivcyPolicyQueryResult } from "@/gql/queries/privacy_policy";
 import ScrollToTop from "@/components/blog/ScrollToTop";
-import privcy_policy from "@/gql/queries/privacy_policy";
 import getPageQuery from "@/lib/services/GetPageQuery";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
-interface Props extends GenericPageResult {
-  policy: {
-    seo: SeoOrFaviconTag[];
-    updatedAt: string;
-    privacyPolicy: StructuredTextGraphQlResponse;
-    privacyPolicySeo: {
-      description: string | null;
-      title: string | null;
-      twitterCard: string | null;
-    };
-  };
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getPageQuery<Props>(privcy_policy);
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  const data = await getPageQuery<PrivcyPolicyQueryResult>(PrivcyPolicyQuery);
 
   const moddedTags = data.policy.seo.map((tag) => {
     if (tag.tag === "title") {
@@ -60,11 +44,14 @@ export async function generateMetadata(): Promise<Metadata> {
     return tag;
   });
 
-  return toNextMetadata([...data.site.faviconMetaTags, ...moddedTags]);
+  return getSeoTags({
+    parent,
+    datocms: moddedTags
+  });
 }
 
 const PrivacyPolicy: React.FC = async () => {
-  const data = await getPageQuery<Props>(privcy_policy);
+  const data = await getPageQuery<PrivcyPolicyQueryResult>(PrivcyPolicyQuery);
 
   return (
     <div className="flex justify-center">

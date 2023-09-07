@@ -1,34 +1,19 @@
 import {
   StructuredText,
-  type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
 import {
-  toNextMetadata,
   type OgMetaAttributes,
   type RegularMetaAttributes,
-  type SeoOrFaviconTag,
 } from "react-datocms/seo";
-import type { Metadata } from "next";
-import TermsOfServiceQuery from "@query/queries/terms_of_service";
-import type { GenericPageResult } from "@/gql/queries/generic";
+import type { Metadata, ResolvingMetadata } from "next";
+import TermsOfServiceQuery, { type TermsOfServiceResult } from "@query/queries/terms_of_service";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import getPageQuery from "@/lib/services/GetPageQuery";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
-interface Props extends GenericPageResult {
-  terms: {
-    seo: SeoOrFaviconTag[];
-    updatedAt: string | null;
-    termsOfServiceSeo: {
-      title: string | null;
-      twitterCard: string | null;
-      description: string | null;
-    };
-    termsOfService: StructuredTextGraphQlResponse;
-  };
-}
 
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getPageQuery<Props>(TermsOfServiceQuery);
+export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+  const data = await getPageQuery<TermsOfServiceResult>(TermsOfServiceQuery);
 
   const moddedTags = data.terms.seo.map((tag) => {
     if (tag.tag === "title") {
@@ -59,11 +44,14 @@ export async function generateMetadata(): Promise<Metadata> {
     return tag;
   });
 
-  return toNextMetadata([...data.site.faviconMetaTags, ...moddedTags]);
+  return getSeoTags({
+    parent,
+    datocms: moddedTags
+  })
 }
 
 const TermsOfService: React.FC = async () => {
-  const data = await getPageQuery<Props>(TermsOfServiceQuery);
+  const data = await getPageQuery<TermsOfServiceResult>(TermsOfServiceQuery);
   return (
     <div className="flex justify-center">
       <article className="lg:prose-md prose prose-sm mx-4 my-8 md:prose-base">

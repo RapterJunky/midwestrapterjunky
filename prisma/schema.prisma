@@ -89,7 +89,6 @@ model VerificationToken {
 
 model Comment {
   id           String     @id @default(uuid())
-  /// [Dast]
   content      String     @db.LongText
   created      DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
@@ -121,7 +120,6 @@ model ThreadPost {
   notifyOwner Boolean   @default(false)
   /// [Tags]
   tags        Json?
-  /// [Dast]
   content     String    @db.LongText
   owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   thread      Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade) // If thread is deleted remove post

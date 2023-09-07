@@ -5,22 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
 import getFullPageProps from "@lib/services/getFullPageProps";
 import SignInList from "@components/pages/signin/SignList";
 import { Skeleton } from "@/components/ui/skeleton";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import { Separator } from "@/components/ui/separator";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    description: "Login page for Midwest Raptor Junkies.",
-    title: "SignIn",
-    url: "https://midwestraptorjunkies.com/signin",
+  return getSeoTags({
+    parent,
+    seo: {
+      description: "Login page for Midwest Raptor Junkies.",
+      title: "SignIn",
+      slug: "/signin",
+    }
   });
 }
 
@@ -95,21 +96,21 @@ const SignIn: React.FC = async () => {
               </Suspense>
             </div>
 
-            <hr className="col-span-6" />
+            <Separator className="col-span-6" />
 
             <div className="col-span-6">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-zinc-500">
                 By clicking continue, you agree to our
                 <Link
                   href="/terms-of-service"
-                  className="mx-1 text-gray-700 underline"
+                  className="mx-1 text-zinc-700 underline"
                 >
                   terms of service
                 </Link>
                 and
                 <Link
                   href="/privacy-policy"
-                  className="ml-1 text-gray-700 underline"
+                  className="ml-1 text-zinc-700 underline"
                 >
                   privacy policy
                 </Link>

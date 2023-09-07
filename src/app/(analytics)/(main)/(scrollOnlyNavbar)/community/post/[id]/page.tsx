@@ -10,10 +10,10 @@ import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
 import SessionProvider from "@/components/providers/SessionProvider";
 import CommentProvider from "@/components/providers/CommentProvider";
 import PostActions from "@/components/pages/community/PostActions";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
 import getPost from "@/lib/services/community/getPost";
 import HtmlArticle from "@/components/HtmlArticle";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Badge } from "@/components/ui/badge";
 
 type PageParams = {
@@ -23,16 +23,22 @@ type PageParams = {
 export async function generateMetadata(
   { params }: PageParams,
   parent: ResolvingMetadata,
-): Promise<Metadata> {
-  const icons = (await parent).icons;
+): Promise<Metadata | null> {
+  const id = idSchema.safeParse(params.id);
+  if (!id.success) return null;
 
-  return getGenericSeoTags({
-    icons,
-    title: "post - Midwest Raptor Junkies",
-    robots: true,
-    description: "Midwest Raptor Junkies community page",
-    url: `https://midwestraptorjunkies.com/community/post/${params.id}`,
-  });
+  const post = await getPost(id.data);
+  if (!post) return null;
+
+  return getSeoTags({
+    parent,
+    seo: {
+      title: post.name,
+      robots: true,
+      description: "Midwest Raptor Junkies community page",
+      slug: `/community/post/${params.id}`,
+    }
+  })
 }
 
 const idSchema = z.string().uuid().nonempty();

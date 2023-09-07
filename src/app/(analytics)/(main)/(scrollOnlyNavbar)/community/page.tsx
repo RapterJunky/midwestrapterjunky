@@ -2,22 +2,22 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommunityPosts from "@/components/pages/community/CommunityPosts";
 import getCategories from "@/lib/services/community/getCategories";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import CategoryCard from "@/components/community/CategoryCard";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: "Community - Midwest Raptor Junkies",
-    robots: true,
-    description: "Midwest Raptor Junkies community page",
-    url: "https://midwestraptorjunkies.com/community",
-  });
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Community",
+      robots: true,
+      description: "Midwest Raptor Junkies community page",
+      slug: "/community",
+    }
+  })
 }
 
 const Community: React.FC = async () => {

@@ -4,21 +4,21 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import ErrorMessage from "@/components/pages/auth/error/ErrorMessage";
-import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    description: "Midwest Raptor Junkies auth error page",
-    title: "Error",
-    robots: false,
-    url: "https://midwestraptorjunkies.com/auth/error",
-  });
+  return getSeoTags({
+    parent,
+    seo: {
+      description: "Midwest Raptor Junkies auth error page",
+      title: "Error",
+      robots: false,
+      slug: "/auth/error",
+    }
+  })
 }
 
 const AuthError: React.FC = () => {

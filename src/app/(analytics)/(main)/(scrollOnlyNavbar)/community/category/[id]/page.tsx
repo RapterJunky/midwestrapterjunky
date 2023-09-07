@@ -6,9 +6,9 @@ import Link from "next/link";
 import { z } from "zod";
 
 import PaginateCategoryPosts from "@/components/pages/community/PaginateCategoryPosts";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import getCategory from "@/lib/services/community/getCategory";
 import { Button } from "@/components/ui/button";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 type PageParams = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -18,15 +18,20 @@ type PageParams = {
 export async function generateMetadata(
   { params }: PageParams,
   parent: ResolvingMetadata,
-): Promise<Metadata> {
-  const icons = (await parent).icons;
+): Promise<Metadata | null> {
+  const result = idSchema.safeParse(params.id);
+  if (!result.success) return null;
+  const category = await getCategory(result.data);
+  if (!category) return null;
 
-  return getGenericSeoTags({
-    icons,
-    title: "Category - Midwest Raptor Junkies",
-    robots: true,
-    description: "Midwest Raptor Junkies community page",
-    url: `https://midwestraptorjunkies.com/community/category/${params.id}`,
+  return getSeoTags({
+    parent,
+    seo: {
+      title: category.name,
+      robots: true,
+      description: "Midwest Raptor Junkies community page",
+      slug: `/community/category/${params.id}`
+    }
   });
 }
 

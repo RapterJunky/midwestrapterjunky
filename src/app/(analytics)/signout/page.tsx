@@ -1,35 +1,39 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
-import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
+
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import SignoutBtn from "@components/pages/signout/SignoutBtn";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    description: "Signout page for Midwest Raptor Junkies.",
-    title: "Signout",
+  return getSeoTags({
+    parent,
+    seo: {
+      robots: false,
+      slug: "/signout",
+      description: "Signout page for Midwest Raptor Junkies.",
+      title: "Signout"
+    }
   });
 }
 
 const Page: React.FC = () => {
   return (
     <div className="flex h-full items-center justify-center bg-neutral-200">
-      <div className="block max-w-sm rounded-lg bg-white p-6 shadow-lg">
-        <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800">
-          Signout
-        </h5>
-        <p className="mb-4 text-base text-neutral-600">
-          Are you sure you want to sign out?
-        </p>
-        <Suspense fallback={<span>Loading...</span>}>
-          <SignoutBtn />
-        </Suspense>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Signout</CardTitle>
+          <CardDescription>Are you sure you want to sign out?</CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Suspense fallback={<span>Loading...</span>}>
+            <SignoutBtn />
+          </Suspense>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

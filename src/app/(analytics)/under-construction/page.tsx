@@ -1,19 +1,20 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import getGenericSeoTags from "@lib/helpers/getGenericSeoTags";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    robots: false,
-    description: "This page on Midest Raptor Junkies is under construstion.",
-    title: "Under Construstion",
+  return getSeoTags({
+    parent,
+    seo: {
+      robots: false,
+      slug: "/not-found",
+      description: "Midwest Raptor Junkies failed to find what you where looking for.",
+      title: "Not Found",
+    }
   });
 }
 
