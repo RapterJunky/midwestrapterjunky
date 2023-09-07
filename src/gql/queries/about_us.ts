@@ -27,7 +27,7 @@ export type AboutUsQueryResult = {
     footerContent: ModulerContent[];
     image: ResponsiveImage | null;
   };
-}
+};
 
 const AboutUsQuery = `
 query AboutUsQuery {

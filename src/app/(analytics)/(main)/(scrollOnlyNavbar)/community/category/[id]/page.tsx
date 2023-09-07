@@ -20,23 +20,26 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const result = idSchema.safeParse(params.id);
-  if (!result.success) return getSeoTags({
-    parent,
-    seo: {
-      title: "Not Found",
-      robots: false,
-      description: "Given id is invaild",
-    }
-  });
+  if (!result.success)
+    return getSeoTags({
+      parent,
+      seo: {
+        title: "Not Found",
+        robots: false,
+        description: "Given id is invaild",
+      },
+    });
   const category = await getCategory(result.data);
-  if (!category) return getSeoTags({
-    parent,
-    seo: {
-      title: "Not Found",
-      robots: false,
-      description: "Midwest Raptor Junkies does not have a category with given id",
-    }
-  });
+  if (!category)
+    return getSeoTags({
+      parent,
+      seo: {
+        title: "Not Found",
+        robots: false,
+        description:
+          "Midwest Raptor Junkies does not have a category with given id",
+      },
+    });
 
   return getSeoTags({
     parent,
@@ -44,8 +47,8 @@ export async function generateMetadata(
       title: category.name,
       robots: true,
       description: "Midwest Raptor Junkies community page",
-      slug: `/community/category/${params.id}`
-    }
+      slug: `/community/category/${params.id}`,
+    },
   });
 }
 

@@ -22,13 +22,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const product = await getProduct(params.id);
 
-  if (!product) return getSeoTags({
-    parent,
-    seo: {
-      title: "Not Found",
-      description: "No product exists with given id"
-    }
-  });
+  if (!product)
+    return getSeoTags({
+      parent,
+      seo: {
+        title: "Not Found",
+        description: "No product exists with given id",
+      },
+    });
 
   return getSeoTags({
     parent,
@@ -36,7 +37,7 @@ export async function generateMetadata(
       title: product?.name ?? "MRJ Product",
       description: product?.description ?? "No product description",
       slug: `/shop/product/${params.id}`,
-    }
+    },
   });
 }
 
@@ -52,16 +53,16 @@ const ProductPage: React.FC<PageParams> = async ({ params }) => {
     name: product.name,
     offers: product.variations.length
       ? {
-        "@type": "Offer",
-        priceCurrency: product.variations.at(0)?.currency,
-        price: ((product.variations.at(0)?.price ?? 0) / 100).toString(),
-        seller: product.merchent
-          ? {
-            "@type": "Organization",
-            name: product.merchent,
-          }
-          : undefined,
-      }
+          "@type": "Offer",
+          priceCurrency: product.variations.at(0)?.currency,
+          price: ((product.variations.at(0)?.price ?? 0) / 100).toString(),
+          seller: product.merchent
+            ? {
+                "@type": "Organization",
+                name: product.merchent,
+              }
+            : undefined,
+        }
       : undefined,
   };
 

@@ -2,17 +2,20 @@ import {
   type OgMetaAttributes,
   type RegularMetaAttributes,
 } from "react-datocms/seo";
-import {
-  StructuredText,
-} from "react-datocms/structured-text";
+import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 
-import PrivcyPolicyQuery, { type PrivcyPolicyQueryResult } from "@/gql/queries/privacy_policy";
+import PrivcyPolicyQuery, {
+  type PrivcyPolicyQueryResult,
+} from "@/gql/queries/privacy_policy";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const data = await getPageQuery<PrivcyPolicyQueryResult>(PrivcyPolicyQuery);
 
   const moddedTags = data.policy.seo.map((tag) => {
@@ -46,7 +49,7 @@ export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<
 
   return getSeoTags({
     parent,
-    datocms: moddedTags
+    datocms: moddedTags,
   });
 }
 

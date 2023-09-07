@@ -105,10 +105,10 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               Search
             </Button>
           </form>
-          <div className="mt-dato-l relative">
+          <div className="relative mt-dato-l">
             {!isLoading && !error && data?.length ? (
               <div
-                className={`gap-dato-m grid grid-cols-5 opacity-100 duration-700 ease-in-out`}
+                className={`grid grid-cols-5 gap-dato-m opacity-100 duration-700 ease-in-out`}
               >
                 {data.map((product) => (
                   <div
@@ -121,7 +121,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
                     }
                   >
                     <div
-                      className="bg-dato-light block bg-cover pt-[100%]"
+                      className="block bg-dato-light bg-cover pt-[100%]"
                       style={{
                         backgroundImage: `url(${product.image.url})`,
                       }}
@@ -150,7 +150,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && !error && !data?.length ? (
               <div
-                className="bg-dato-light text-dato-light-body flex h-52 items-center justify-center text-center"
+                className="text-dato-light-body flex h-52 items-center justify-center bg-dato-light text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}
@@ -160,7 +160,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && error ? (
               <div
-                className="bg-dato-light text-dato-light-body flex h-52 items-center justify-center text-center"
+                className="text-dato-light-body flex h-52 items-center justify-center bg-dato-light text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}

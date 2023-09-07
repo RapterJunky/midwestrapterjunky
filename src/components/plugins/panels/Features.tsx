@@ -77,6 +77,7 @@ export const Features: React.FC<{
 
   return (
     <Panel
+      value="5"
       title="Feature Flags"
       mini={mini}
       setMini={() => setMini((state) => !state)}

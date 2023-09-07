@@ -10,9 +10,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.VERCEL_URL
+    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${
+      process.env.VERCEL_URL
     }`,
-  )
+  ),
 };
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {

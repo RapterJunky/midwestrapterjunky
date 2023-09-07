@@ -1,6 +1,4 @@
-import {
-  StructuredText,
-} from "react-datocms/structured-text";
+import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft, User2 } from "lucide-react";
 import type { TechArticle } from "schema-dts";
@@ -26,30 +24,32 @@ type PageParams = {
   params: { slug: string };
 };
 
-export async function generateMetadata({
-  params,
-}: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: PageParams,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { post } = await getPageQuery<ArticleQueryResult>(ArticleQuery, {
     variables: { slug: params.slug },
   });
 
-  if (!post) return getSeoTags({
-    parent,
-    seo: {
-      description: "Failed to find article",
-      title: "Not Found",
-      robots: false
-    }
-  })
+  if (!post)
+    return getSeoTags({
+      parent,
+      seo: {
+        description: "Failed to find article",
+        title: "Not Found",
+        robots: false,
+      },
+    });
 
   return getSeoTags({
     parent,
     datocms: post.seo,
     metadata: {
       keywords: post.tags,
-      authors: post.authors.map(value => ({ name: value.name }))
-    }
-  })
+      authors: post.authors.map((value) => ({ name: value.name })),
+    },
+  });
 }
 
 const Article: React.FC<PageParams> = async ({ params }) => {
@@ -76,8 +76,9 @@ const Article: React.FC<PageParams> = async ({ params }) => {
     keywords: post.tags.join(" "),
     datePublished: post.publishedAt,
     description: getDescriptionTag(post.seo),
-    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
-      }/blog/${post.slug}`,
+    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
+      process.env.VERCEL_URL
+    }/blog/${post.slug}`,
   };
 
   return (

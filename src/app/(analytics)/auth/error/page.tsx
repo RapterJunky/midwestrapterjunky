@@ -7,7 +7,7 @@ import ErrorMessage from "@/components/pages/auth/error/ErrorMessage";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -17,8 +17,8 @@ export async function generateMetadata(
       title: "Error",
       robots: false,
       slug: "/auth/error",
-    }
-  })
+    },
+  });
 }
 
 const AuthError: React.FC = () => {

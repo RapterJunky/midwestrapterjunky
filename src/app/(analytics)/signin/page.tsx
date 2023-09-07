@@ -12,7 +12,7 @@ import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Separator } from "@/components/ui/separator";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -21,7 +21,7 @@ export async function generateMetadata(
       description: "Login page for Midwest Raptor Junkies.",
       title: "SignIn",
       slug: "/signin",
-    }
+    },
   });
 }
 

@@ -152,7 +152,7 @@ const ImageItem: React.FC<{
         <Dropdown
           renderTrigger={({ onClick }) => (
             <button
-              className="hover:text-dato-dark flex items-center justify-center rounded-full p-1 hover:bg-neutral-400 hover:bg-opacity-75"
+              className="flex items-center justify-center rounded-full p-1 hover:bg-neutral-400 hover:bg-opacity-75 hover:text-dato-dark"
               onClick={onClick}
             >
               <FaEllipsisV />
@@ -383,7 +383,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
     <Canvas ctx={ctx}>
       <div className="relative flex flex-1 flex-col">
         <nav className="shadow">
-          <div className="border-dato-light mb-2 flex items-center justify-between border-b-2">
+          <div className="mb-2 flex items-center justify-between border-b-2 border-dato-light">
             <h1 className="ml-4 p-2 text-2xl font-bold">
               Choose from Google Drive
             </h1>
@@ -397,7 +397,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
               <UploadButton ctx={ctx} mutate={mutate} />
               <button
                 onClick={() => ctx.resolve(null)}
-                className="border-dato-light flex h-14 w-14 items-center justify-center rounded-tr-lg border-l-2 text-2xl hover:bg-neutral-100"
+                className="flex h-14 w-14 items-center justify-center rounded-tr-lg border-l-2 border-dato-light text-2xl hover:bg-neutral-100"
               >
                 <HiX />
               </button>
@@ -463,7 +463,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </form>
         </nav>
         <div className="h-full flex-1">
-          <main className="gap-dato-m relative flex max-h-[30lvi] flex-1 flex-wrap items-start justify-center overflow-y-scroll p-4">
+          <main className="relative flex max-h-[30lvi] flex-1 flex-wrap items-start justify-center gap-dato-m overflow-y-scroll p-4">
             {error ? (
               <div className="my-4 flex w-full items-center justify-center">
                 There was an error when loading the images.
@@ -527,7 +527,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           </div>
         </div>
         <div className="bg-dato-accent flex items-center justify-between p-2">
-          <div className="gap-dato-m text-dato-light flex">
+          <div className="flex gap-dato-m text-dato-light">
             {ctx.parameters.limitAssets ?? false ? (
               <span>
                 Selected: {selected.length} of{" "}

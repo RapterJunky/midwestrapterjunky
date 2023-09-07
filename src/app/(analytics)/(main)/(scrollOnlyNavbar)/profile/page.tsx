@@ -5,7 +5,7 @@ import Provider from "@/components/providers/SessionProvider";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -15,7 +15,7 @@ export async function generateMetadata(
       robots: false,
       description: "Midwest Raptor Junkies user profile page.",
       slug: "/profile",
-    }
+    },
   });
 }
 

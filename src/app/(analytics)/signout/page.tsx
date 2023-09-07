@@ -1,12 +1,18 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
 
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import SignoutBtn from "@components/pages/signout/SignoutBtn";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -15,8 +21,8 @@ export async function generateMetadata(
       robots: false,
       slug: "/signout",
       description: "Signout page for Midwest Raptor Junkies.",
-      title: "Signout"
-    }
+      title: "Signout",
+    },
   });
 }
 

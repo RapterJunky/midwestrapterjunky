@@ -432,6 +432,7 @@ export const Reports: React.FC<{
 
   return (
     <Panel
+      value="4"
       actions={
         <>
           <div className="mr-dato-m flex">

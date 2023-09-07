@@ -53,8 +53,8 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
 
   return (
     <Canvas ctx={ctx}>
-      <div className="gap-dato-m flex flex-col">
-        <div className="gap-dato-m mb-4 flex flex-wrap items-center justify-center">
+      <div className="flex flex-col gap-dato-m">
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-dato-m">
           {image ? (
             <SelectedImage
               idx={0}
@@ -69,9 +69,9 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             />
           ) : null}
         </div>
-        <div className="mb-dato-m gap-dato-s flex justify-center">
+        <div className="mb-dato-m flex justify-center gap-dato-s">
           <Button onClick={selectImage} buttonSize="xs">
-            <span className="gap-dato-s flex items-center justify-center">
+            <span className="flex items-center justify-center gap-dato-s">
               <FaGoogleDrive />
               From Google Drive
             </span>

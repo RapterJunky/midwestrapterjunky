@@ -18,11 +18,11 @@ const SelectedImage: React.FC<{
       onDragOver={(ev) => ev.preventDefault()}
       onDragStart={(ev) => ev.dataTransfer.setData("index", idx.toString())}
       draggable
-      className="border-dato-border bg-dato-lighter hover:border-dato-darker group relative flex h-32 w-56 cursor-move items-center justify-center rounded-md border shadow"
+      className="border-dato-border bg-dato-lighter hover:border-dato-darker group relative flex h-32 w-56 cursor-move items-center justify-center rounded-sm border shadow"
     >
       <div className="absolute hidden items-center justify-center rounded-sm bg-white py-2 shadow group-hover:flex">
         <button
-          className="hover:bg-dato-light hover:text-dato-alert w-full px-4 py-0.5 text-lg"
+          className="hover:text-dato-alert w-full px-4 py-0.5 text-lg hover:bg-dato-light"
           onClick={drop}
         >
           Remove

@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "@components/ui/tabs";
 import {
   Toolbar,
   ToolbarButton,
@@ -13,11 +13,12 @@ export const Panel: React.FC<
     actions?: React.ReactElement;
     title: string;
     mini: boolean;
+    value: string;
     setMini: () => void;
   }>
-> = ({ actions = null, title, children, mini, setMini }) => {
+> = ({ actions = null, title, children, mini, setMini, value }) => {
   return (
-    <Tab.Panel className="flex h-full flex-1 flex-col">
+    <TabsContent value={value} className="h-full flex-1 flex-col">
       <Toolbar>
         <ToolbarButton onClick={setMini}>
           {mini ? <FaChevronRight /> : <FaChevronLeft />}
@@ -31,7 +32,9 @@ export const Panel: React.FC<
           <SidebarLeftArrowIcon />
         </ToolbarButton>
       </Toolbar>
-      <div className="bg-dato-light h-full overflow-y-scroll">{children}</div>
-    </Tab.Panel>
+      <div className="h-full overflow-y-scroll bg-dato-light-bg">
+        {children}
+      </div>
+    </TabsContent>
   );
 };

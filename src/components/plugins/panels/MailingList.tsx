@@ -7,12 +7,179 @@ import {
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import update from "immutability-helper";
-import useSWR from "swr";
+import useSWR, { type KeyedMutator } from "swr";
 
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import DisplayDataStates from "./DisplayDataStates";
 import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper<{ id: number; email: string }>();
+
+const columns = [
+  columnHelper.accessor("email", {
+    header: "Email",
+  }),
+  columnHelper.accessor("id", {
+    header: "",
+    id: "id",
+  }),
+];
+
+const RenderTable: React.FC<{
+  ctx: RenderPageCtx;
+  data: { id: number; email: string }[];
+  mutate: KeyedMutator<
+    Paginate<{
+      id: number;
+      email: string;
+    }>
+  >;
+}> = ({ data, mutate, ctx }) => {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <table className="w-full divide-y">
+      <thead className="divide-x divide-y">
+        {table.getHeaderGroups().map((headerGroups) => (
+          <tr key={headerGroups.id} className="divide-x">
+            {headerGroups.headers.map((headers) => (
+              <th key={headers.id}>
+                {headers.isPlaceholder
+                  ? null
+                  : flexRender(
+                      headers.column.columnDef.header,
+                      headers.getContext(),
+                    )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody className="divide-y">
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} className="divide-x">
+            {row.getVisibleCells().map((cell) => (
+              <th key={cell.id}>
+                {cell.column.id === "id" ? (
+                  <Dropdown
+                    renderTrigger={({ open, onClick }) => (
+                      <Button
+                        buttonSize="xxs"
+                        buttonType="primary"
+                        onClick={onClick}
+                        rightIcon={
+                          open ? (
+                            <FaChevronUp
+                              style={{ fill: "var(--light-color)" }}
+                            />
+                          ) : (
+                            <FaChevronDown
+                              style={{ fill: "var(--light-color)" }}
+                            />
+                          )
+                        }
+                      >
+                        Actions
+                      </Button>
+                    )}
+                  >
+                    <DropdownMenu alignment="right">
+                      <DropdownOption
+                        red
+                        onClick={async () => {
+                          try {
+                            const sure = await ctx.openConfirm({
+                              title: "Confirm Deletion",
+                              content: `Are you sure you want to delete this "${row.getValue<string>(
+                                "email",
+                              )}"`,
+                              choices: [
+                                {
+                                  label: "Yes",
+                                  value: true,
+                                  intent: "negative",
+                                },
+                              ],
+                              cancel: {
+                                label: "Cancel",
+                                value: false,
+                              },
+                            });
+
+                            if (!sure) return;
+
+                            await mutate<
+                              Paginate<{ id: number; email: string }>
+                            >(
+                              async (current) => {
+                                if (!current)
+                                  throw new Error("Unable to process.");
+                                const idx = current?.result.findIndex(
+                                  (item) =>
+                                    item.id === row.getValue<number>("id"),
+                                );
+                                if (idx === -1)
+                                  throw new Error("Unable to find email.");
+
+                                await AuthFetch(
+                                  `/api/plugin/mail?id=${row.getValue<string>(
+                                    "id",
+                                  )}`,
+                                  { method: "DELETE" },
+                                );
+
+                                return update(current, {
+                                  result: { $splice: [[idx, 1]] },
+                                });
+                              },
+                              { revalidate: false, rollbackOnError: true },
+                            );
+                            ctx
+                              .notice(
+                                `Successfully removed email "${row.getValue<string>(
+                                  "email",
+                                )}"`,
+                              )
+                              .catch((e) => console.error(e));
+                          } catch (error) {
+                            ctx
+                              .alert("Failed to delete account.")
+                              .catch((e) => console.error(e));
+                          }
+                        }}
+                      >
+                        Delete
+                      </DropdownOption>
+                    </DropdownMenu>
+                  </Dropdown>
+                ) : (
+                  <a
+                    className="text-primary ml-2 underline"
+                    href={`mailto:${cell.getContext().getValue() as string}`}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </a>
+                )}
+              </th>
+            ))}
+            <th></th>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 export const MailingList: React.FC<{
   ctx: RenderPageCtx;
@@ -33,6 +200,7 @@ export const MailingList: React.FC<{
 
   return (
     <Panel
+      value="1"
       actions={
         <div className="flex gap-2">
           <Dropdown
@@ -90,8 +258,14 @@ export const MailingList: React.FC<{
         }}
       />
       {data && data.result.length ? (
-        <>
-          <ul className="mt-2 grid grid-cols-3 gap-2">
+        <RenderTable data={data.result} mutate={mutate} ctx={ctx} />
+      ) : null}
+    </Panel>
+  );
+};
+
+/*
+<ul className="mt-2 grid grid-cols-3 gap-2">
             {data.result.map((value) => (
               <li
                 className="flex items-center justify-between px-1 py-1.5 shadow odd:bg-neutral-200"
@@ -186,8 +360,5 @@ export const MailingList: React.FC<{
               </li>
             ))}
           </ul>
-        </>
-      ) : null}
-    </Panel>
-  );
-};
+
+*/

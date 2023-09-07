@@ -4,7 +4,7 @@ import Link from "next/link";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -12,9 +12,10 @@ export async function generateMetadata(
     seo: {
       robots: false,
       slug: "/not-found",
-      description: "Midwest Raptor Junkies failed to find what you where looking for.",
+      description:
+        "Midwest Raptor Junkies failed to find what you where looking for.",
       title: "Not Found",
-    }
+    },
   });
 }
 

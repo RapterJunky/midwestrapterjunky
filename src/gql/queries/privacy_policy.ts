@@ -12,7 +12,7 @@ export type PrivcyPolicyQueryResult = {
       twitterCard: string | null;
     };
   };
-}
+};
 
 const PrivcyPolicy = `
 query PrivcyPolicyQuery {

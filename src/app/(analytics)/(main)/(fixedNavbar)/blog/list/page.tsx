@@ -1,7 +1,9 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 
-import PagedArticles, { type PagedArticlesQueryResult } from "@/gql/queries/pagedArticles";
+import PagedArticles, {
+  type PagedArticlesQueryResult,
+} from "@/gql/queries/pagedArticles";
 import ListPagination from "@/components/pages/blog/ListPagination";
 import { getDescriptionTag } from "@/lib/utils/description";
 import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
@@ -16,7 +18,7 @@ type PageParams = {
 };
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -26,7 +28,7 @@ export async function generateMetadata(
       robots: true,
       description: "Midwest Raptor Junkies articles list page",
       slug: `/blog/list`,
-    }
+    },
   });
 }
 
@@ -45,7 +47,7 @@ const BlogList: React.FC<PageParams> = async ({ searchParams }) => {
         skip,
       },
       revalidate: {
-        revalidate: REVAILDATE_IN_2H
+        revalidate: REVAILDATE_IN_2H,
       },
     },
   );

@@ -18,6 +18,35 @@ module.exports = {
       },
     },
     extend: {
+      gap: {
+        "dato-s": "var(--spacing-s)",
+        "dato-m": "var(--spacing-m)",
+        "dato-l": "var(--spacing-l)",
+        "dato-xl": "var(--spacing-xl)",
+        "dato-xxl": "var(--spacing-xxl)",
+        "dato-xxxl": "var(--spacing-xxxl)",
+      },
+      margin: {
+        "dato-s": "var(--spacing-s)",
+        "dato-m": "var(--spacing-m)",
+        "dato-l": "var(--spacing-l)",
+        "dato-xl": "var(--spacing-xl)",
+        "dato-xxl": "var(--spacing-xxl)",
+        "dato-xxxl": "var(--spacing-xxxl)",
+      },
+      padding: {
+        "dato-s": "var(--spacing-s)",
+        "dato-m": "var(--spacing-m)",
+        "dato-l": "var(--spacing-l)",
+        "dato-xl": "var(--spacing-xl)",
+        "dato-xxl": "var(--spacing-xxl)",
+        "dato-xxxl": "var(--spacing-xxxl)",
+      },
+      colors: {
+        "dato-dark": "var(--dark-color)",
+        "dato-light": "var(--light-color)",
+        "dato-light-bg": "var(--light-bg-color)",
+      },
       fontFamily: {
         sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },

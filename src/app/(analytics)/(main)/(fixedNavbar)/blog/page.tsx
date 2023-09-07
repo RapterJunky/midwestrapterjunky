@@ -2,7 +2,9 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import QueryBlogLatest, { type BlogLatestQueryResult } from "@/gql/queries/blogLatest";
+import QueryBlogLatest, {
+  type BlogLatestQueryResult,
+} from "@/gql/queries/blogLatest";
 import { getDescriptionTag } from "@/lib/utils/description";
 import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
 import { formatLocalDate } from "@/lib/utils/timeFormat";
@@ -12,15 +14,18 @@ import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   return getSeoTags({
     parent,
     seo: {
       title: "Lastest Articles",
       description: "Midwest Raptor Junkies latest published articles.",
-      slug: "/blog"
-    }
-  })
+      slug: "/blog",
+    },
+  });
 }
 
 const MAX_DISPLAY = 5;
@@ -31,7 +36,7 @@ const Blog: React.FC = async () => {
       first: MAX_DISPLAY,
     },
     revalidate: {
-      revalidate: REVAILDATE_IN_2H
+      revalidate: REVAILDATE_IN_2H,
     },
   });
 

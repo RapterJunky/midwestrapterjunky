@@ -1,6 +1,4 @@
-import {
-  StructuredText,
-} from "react-datocms/structured-text";
+import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 
@@ -15,13 +13,16 @@ import getPageQuery from "@/lib/services/GetPageQuery";
 
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { aboutUsModel } = await getPageQuery<AboutUsQueryResult>(AboutUsQuery);
 
   return getSeoTags({
     datocms: aboutUsModel.seo,
-    parent
-  })
+    parent,
+  });
 }
 
 const AboutUs: React.FC = async () => {

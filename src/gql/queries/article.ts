@@ -28,7 +28,7 @@ export type ArticleQueryResult = {
     tags: string[];
     id: string;
   };
-}
+};
 
 const ArticleQuery = `
 query ArticlePageQuery($slug: String = "") {

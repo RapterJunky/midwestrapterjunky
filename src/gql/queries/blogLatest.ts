@@ -1,15 +1,15 @@
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 
 export type BlogLatestQueryResult = {
+  seo: SeoOrFaviconTag[];
+  posts: {
+    slug: string;
+    publishedAt: string | null;
+    title: string;
     seo: SeoOrFaviconTag[];
-    posts: {
-        slug: string;
-        publishedAt: string | null;
-        title: string;
-        seo: SeoOrFaviconTag[];
-        tags: string[];
-    }[];
-}
+    tags: string[];
+  }[];
+};
 
 const QueryBlogLatest = `
 query QueryBlogLatest($first: IntType = "5") {

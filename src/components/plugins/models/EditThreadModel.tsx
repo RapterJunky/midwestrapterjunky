@@ -196,7 +196,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             render={({ field }) => (
               <div
                 id="image"
-                className="gap-dato-l flex flex-col justify-center"
+                className="flex flex-col justify-center gap-dato-l"
               >
                 <div className="flex justify-center">
                   <Image
@@ -208,7 +208,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
                     width={120}
                   />
                 </div>
-                <div className="gap-dato-s flex justify-center">
+                <div className="flex justify-center gap-dato-s">
                   <Button
                     buttonSize="xxs"
                     buttonType="primary"

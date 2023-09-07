@@ -4,7 +4,14 @@ import { ChevronLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import type { CheckoutState } from "@/components/providers/CheckoutProvider";
 import DiscountForm from "@/components/pages/shop/checkout/DiscountForm";
 import SquareForm from "@/components/pages/shop/checkout/SquareForm";
@@ -162,8 +169,8 @@ const BillingTab: React.FC = () => {
             type="submit"
           >
             {form.formState.isSubmitting ||
-              form.formState.isValidating ||
-              order.isLoading ? (
+            form.formState.isValidating ||
+            order.isLoading ? (
               <>
                 <Spinner className="mr-2" />
                 {order.isLoading ? "Loading Order" : "Processing Order"}
@@ -171,12 +178,14 @@ const BillingTab: React.FC = () => {
             ) : (
               <>
                 Pay{" "}
-                {order.data?.netAmountDueMoney?.amount ? (
-                  Number(order.data?.netAmountDueMoney?.amount) / 100
-                ).toLocaleString(undefined, {
-                  style: "currency",
-                  currency: state.currencyCode,
-                }) : "No Items in cart"}
+                {order.data?.netAmountDueMoney?.amount
+                  ? (
+                      Number(order.data?.netAmountDueMoney?.amount) / 100
+                    ).toLocaleString(undefined, {
+                      style: "currency",
+                      currency: state.currencyCode,
+                    })
+                  : "No Items in cart"}
               </>
             )}
           </Button>

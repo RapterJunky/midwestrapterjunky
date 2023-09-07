@@ -62,7 +62,11 @@ export async function POST(request: Request) {
       body.entity.attributes?.revalidate ?? "null",
     ) as RevaildateSettings | null;
 
-    if (!data) return NextResponse.json({ revaildate: false });
+    if (!data)
+      return NextResponse.json(
+        { revaildate: false, message: "Non revalidatable" },
+        { status: 400 },
+      );
 
     switch (data.type) {
       case "page": {
@@ -108,6 +112,12 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ revaildated: false }, { status: 500 });
+    return NextResponse.json(
+      {
+        revaildated: false,
+        message: (error as Error)?.message ?? "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }

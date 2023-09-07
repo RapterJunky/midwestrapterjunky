@@ -6,7 +6,7 @@ import CategoryCard from "@/components/community/CategoryCard";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -16,8 +16,8 @@ export async function generateMetadata(
       robots: true,
       description: "Midwest Raptor Junkies community page",
       slug: "/community",
-    }
-  })
+    },
+  });
 }
 
 const Community: React.FC = async () => {

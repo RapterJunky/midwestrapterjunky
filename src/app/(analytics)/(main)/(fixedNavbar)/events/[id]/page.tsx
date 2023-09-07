@@ -1,7 +1,7 @@
 import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import type { Event } from 'schema-dts';
+import type { Event } from "schema-dts";
 import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,9 +24,10 @@ import { Button } from "@/components/ui/button";
 
 type PageParams = { params: { id: string } };
 
-export async function generateMetadata({
-  params,
-}: PageParams, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: PageParams,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { event } = await getPageQuery<EventPageQueryResult>(EventPageQuery, {
     variables: {
       eq: params.id,
@@ -38,9 +39,9 @@ export async function generateMetadata({
     datocms: event.seo,
     metadata: {
       openGraph: {
-        url: `https://midwestraptorjunkies.com/events/${params.id}`
-      }
-    }
+        url: `https://midwestraptorjunkies.com/events/${params.id}`,
+      },
+    },
   });
 }
 
@@ -56,8 +57,8 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
     eventAttendanceMode: "OfflineEventAttendanceMode",
     description: getDescriptionTag(event.seo),
     location: event.extraLocationDetails ?? undefined,
-    image: event.gallery.at(0)?.responsiveImage.src
-  }
+    image: event.gallery.at(0)?.responsiveImage.src,
+  };
 
   return (
     <article className="mx-auto max-w-3xl flex-grow px-4 sm:px-6 xl:max-w-5xl xl:px-0">
@@ -118,8 +119,8 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
               <h2 className="mb-1 text-base font-bold">Event Details</h2>
             </div>
             {!event?.shopItemLink &&
-              !(event.location || event.extraLocationDetails) &&
-              (!event.links || event.links.length === 0) ? (
+            !(event.location || event.extraLocationDetails) &&
+            (!event.links || event.links.length === 0) ? (
               <div className="mb-3 text-center">No details where provided.</div>
             ) : null}
 
@@ -170,17 +171,18 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
           "@context": "https://www.schema.org",
           location: event.extraLocationDetails
             ? {
-              "@type": "Place",
-              name: event.extraLocationDetails,
-            }
+                "@type": "Place",
+                name: event.extraLocationDetails,
+              }
             : undefined,
           "@type": "Event",
           name: event.title,
           startDate: event.dateFrom,
           endDate: event.dateTo,
           description: getDescriptionTag(event.seo),
-          url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
-            }://${process.env.VERCEL_URL}/events/${event.slug}`,
+          url: `${
+            process.env.VERCEL_ENV === "development" ? "http" : "https"
+          }://${process.env.VERCEL_URL}/events/${event.slug}`,
         })}
       </Script>
     </article>

@@ -1,18 +1,20 @@
-import {
-  StructuredText,
-} from "react-datocms/structured-text";
+import { StructuredText } from "react-datocms/structured-text";
 import {
   type OgMetaAttributes,
   type RegularMetaAttributes,
 } from "react-datocms/seo";
 import type { Metadata, ResolvingMetadata } from "next";
-import TermsOfServiceQuery, { type TermsOfServiceResult } from "@query/queries/terms_of_service";
+import TermsOfServiceQuery, {
+  type TermsOfServiceResult,
+} from "@query/queries/terms_of_service";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
-
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const data = await getPageQuery<TermsOfServiceResult>(TermsOfServiceQuery);
 
   const moddedTags = data.terms.seo.map((tag) => {
@@ -46,8 +48,8 @@ export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<
 
   return getSeoTags({
     parent,
-    datocms: moddedTags
-  })
+    datocms: moddedTags,
+  });
 }
 
 const TermsOfService: React.FC = async () => {

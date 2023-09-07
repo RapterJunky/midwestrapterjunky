@@ -11,7 +11,7 @@ export type CalendarQueryResult = {
   calendar: {
     seo: SeoOrFaviconTag[];
   };
-}
+};
 
 const CalendarQuery = `
     query CalendarQuery($date: DateTime, $first: IntType) {

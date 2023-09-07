@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -18,7 +18,7 @@ export async function generateMetadata(
       robots: false,
       description: "Midwest Raptor Junkies community topic editor",
       slug: "/community/topic",
-    }
+    },
   });
 }
 

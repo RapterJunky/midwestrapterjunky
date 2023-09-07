@@ -12,7 +12,7 @@ export type SponsorsQueryResult = {
       logo: ResponsiveImage;
     }[];
   };
-}
+};
 
 const SponsorsQuery = `
 query SponsorsQuery {

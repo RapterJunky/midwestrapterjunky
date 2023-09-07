@@ -131,7 +131,7 @@ const PreviewLink: React.FC<Props> = ({ ctx }) => {
           View Preview
         </ButtonLink>
       ) : (
-        <div className="gap-dato-s flex flex-col">
+        <div className="flex flex-col gap-dato-s">
           {previewHref.data.map((item, i) => (
             <ButtonLink
               key={i}

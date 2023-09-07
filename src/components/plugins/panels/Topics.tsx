@@ -140,6 +140,7 @@ export const Topics: React.FC<{
 
   return (
     <Panel
+      value="3"
       title="Topics List"
       mini={mini}
       actions={

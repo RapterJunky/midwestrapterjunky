@@ -9,7 +9,7 @@ import Calculation from "@/components/pages/shop/checkout/Calculate";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -18,8 +18,8 @@ export async function generateMetadata(
       title: "Checkout",
       robots: false,
       description: "Checkout page for Midest Raptor Junkies.",
-      slug: "/shop/checkout"
-    }
+      slug: "/shop/checkout",
+    },
   });
 }
 

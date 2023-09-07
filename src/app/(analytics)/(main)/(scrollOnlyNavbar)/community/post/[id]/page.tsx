@@ -25,24 +25,27 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const id = idSchema.safeParse(params.id);
-  if (!id.success) return getSeoTags({
-    parent,
-    seo: {
-      title: "Not Found",
-      robots: false,
-      description: "Given id is invaild",
-    }
-  })
+  if (!id.success)
+    return getSeoTags({
+      parent,
+      seo: {
+        title: "Not Found",
+        robots: false,
+        description: "Given id is invaild",
+      },
+    });
 
   const post = await getPost(id.data);
-  if (!post) return getSeoTags({
-    parent,
-    seo: {
-      title: "Not Found",
-      robots: false,
-      description: "Midwest raptor junkies does not have a post with given id",
-    }
-  })
+  if (!post)
+    return getSeoTags({
+      parent,
+      seo: {
+        title: "Not Found",
+        robots: false,
+        description:
+          "Midwest raptor junkies does not have a post with given id",
+      },
+    });
 
   return getSeoTags({
     parent,
@@ -51,8 +54,8 @@ export async function generateMetadata(
       robots: true,
       description: "Midwest Raptor Junkies community page",
       slug: `/community/post/${params.id}`,
-    }
-  })
+    },
+  });
 }
 
 const idSchema = z.string().uuid().nonempty();

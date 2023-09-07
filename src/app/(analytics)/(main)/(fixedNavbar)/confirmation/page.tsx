@@ -3,7 +3,7 @@ import ConfirmationMessage from "@/components/pages/confirmation/ConfirmationMes
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -12,8 +12,8 @@ export async function generateMetadata(
       title: "Confirmation",
       robots: false,
       description: "Confirmation page",
-      slug: "/confirmation"
-    }
+      slug: "/confirmation",
+    },
   });
 }
 

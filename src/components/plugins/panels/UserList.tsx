@@ -144,6 +144,7 @@ export const UserList: React.FC<{
     <Panel
       title="User List"
       mini={mini}
+      value="0"
       setMini={() => setMini((state) => !state)}
     >
       {!isLoading ? (

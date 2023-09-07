@@ -3,16 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 import getPageQuery from "@/lib/services/GetPageQuery";
-import SponsorsQuery, { type SponsorsQueryResult } from "@/gql/queries/sponsors";
+import SponsorsQuery, {
+  type SponsorsQueryResult,
+} from "@/gql/queries/sponsors";
 import { Button } from "@/components/ui/button";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
-export async function generateMetadata({ }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  {},
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
   return getSeoTags({
     parent,
-    datocms: sponsor.seo
-  })
+    datocms: sponsor.seo,
+  });
 }
 
 const Sponsors: React.FC = async () => {

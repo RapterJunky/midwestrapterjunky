@@ -12,6 +12,12 @@ import pluginMail from "@/lib/services/plugin/pluginMail";
 import pluginUser from "@lib/services/plugin/pluginUser";
 import pluginTAC from "@lib/services/plugin/pluginTAC";
 
+type RequestParams = {
+  params: {
+    midwestraptor: string[];
+  };
+};
+
 const vaildGet = z.enum([
   "authors",
   "reports",
@@ -38,10 +44,7 @@ const vaildPatch = z.enum(["authors", "category", "tac", "users"]);
 
 const vaildPost = z.enum(["authors", "square", "category", "mail", "users"]);
 
-export async function GET(
-  request: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function GET(request: Request, { params }: RequestParams) {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -50,7 +53,7 @@ export async function GET(
     )
       throw createHttpError.Unauthorized();
 
-    const route = vaildGet.parse(params.slug);
+    const route = vaildGet.parse(params.midwestraptor[0]);
 
     switch (route) {
       case "authors":
@@ -75,10 +78,7 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function POST(request: Request, { params }: RequestParams) {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -86,7 +86,7 @@ export async function POST(
       authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
-    const route = vaildPost.parse(params.slug);
+    const route = vaildPost.parse(params.midwestraptor[0]);
 
     switch (route) {
       case "authors":
@@ -103,10 +103,7 @@ export async function POST(
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function PATCH(request: Request, { params }: RequestParams) {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -114,7 +111,7 @@ export async function PATCH(
       authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
-    const route = vaildPatch.parse(params.slug);
+    const route = vaildPatch.parse(params.midwestraptor[0]);
 
     switch (route) {
       case "tac":
@@ -131,10 +128,7 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function DELETE(request: Request, { params }: RequestParams) {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -142,7 +136,7 @@ export async function DELETE(
       authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
-    const route = vaildDelete.parse(params.slug);
+    const route = vaildDelete.parse(params.midwestraptor[0]);
 
     switch (route) {
       case "authors":

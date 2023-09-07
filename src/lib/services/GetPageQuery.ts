@@ -9,7 +9,7 @@ type QueryOptions = {
   includeDrafts?: boolean;
   excludeInvalid?: boolean;
   visualEditingBaseUrl?: string;
-  revalidate?: NextFetchRequestConfig | undefined
+  revalidate?: NextFetchRequestConfig | undefined;
 };
 const getQueryName = (query: string) =>
   query.match(/query\s(?<name>\w+)[\s|\(]/)?.groups?.name;
@@ -18,9 +18,13 @@ const dedupedFetch = cache(async (requestData: string) => {
   const request = JSON.parse(requestData) as RequestInit;
   logger.debug(
     {
-      draft: (request.headers as Record<string, string>)["X-Include-Drafts"] ?? "false",
+      draft:
+        (request.headers as Record<string, string>)["X-Include-Drafts"] ??
+        "false",
       env: process.env.NEXT_DATOCMS_ENVIRONMENT,
-      query: getQueryName((JSON.parse(request.body as string ?? "") as { query: string }).query),
+      query: getQueryName(
+        (JSON.parse((request.body as string) ?? "") as { query: string }).query,
+      ),
     },
     "Datocms Query",
   );

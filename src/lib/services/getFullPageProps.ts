@@ -5,6 +5,8 @@ import GenericPageQuery, {
 import getPageQuery from "./GetPageQuery";
 
 const getFullPageProps = () =>
-  getPageQuery<GenericPageResult>(GenericPageQuery, { revalidate: { tags: ["navbar"] } });
+  getPageQuery<GenericPageResult>(GenericPageQuery, {
+    revalidate: { tags: ["navbar"] },
+  });
 
 export default getFullPageProps;

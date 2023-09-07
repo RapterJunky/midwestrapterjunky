@@ -89,7 +89,7 @@ export default function ShopFieldExtension({
     return (
       <Canvas ctx={ctx}>
         <div
-          className="p-dato-l border text-center"
+          className="border p-dato-l text-center"
           style={{
             borderColor: "var(--border-color)",
           }}
@@ -148,7 +148,7 @@ const RenderError: React.FC<{
 
   return (
     <div
-      className="p-dato-l border text-center"
+      className="border p-dato-l text-center"
       style={{
         borderColor: "var(--border-color)",
       }}
@@ -167,7 +167,7 @@ const RenderError: React.FC<{
 const NoProduct = ({ handleOpenModel }: { handleOpenModel: () => void }) => {
   return (
     <div
-      className="p-dato-l border text-center"
+      className="border p-dato-l text-center"
       style={{
         borderColor: "var(--border-color)",
       }}
