@@ -1,5 +1,10 @@
 "use client";
-import { $getRoot, $insertNodes, CLEAR_EDITOR_COMMAND, type LexicalEditor } from "lexical";
+import {
+  $getRoot,
+  $insertNodes,
+  CLEAR_EDITOR_COMMAND,
+  type LexicalEditor,
+} from "lexical";
 import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
@@ -45,7 +50,9 @@ const RichtextEditor: React.FC<{
 
       await new Promise<void>((ok, rej) => {
         state.read(() => {
-          const html = $generateHtmlFromNodes(editorRef.current as LexicalEditor);
+          const html = $generateHtmlFromNodes(
+            editorRef.current as LexicalEditor,
+          );
           formData.set("content", html);
 
           const deletedIds = (
@@ -80,22 +87,30 @@ const RichtextEditor: React.FC<{
     }
   };
 
-  const editorConfig = useMemo<InitialConfigType>(() => (
-    {
+  const editorConfig = useMemo<InitialConfigType>(
+    () => ({
       namespace: "usercomment",
       onError(error) {
         console.error(error);
         throw error;
       },
-      nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
+      nodes: [
+        LinkNode,
+        ListItemNode,
+        ListNode,
+        HeadingNode,
+        QuoteNode,
+        ImageNode,
+      ],
       editorState(editor) {
-        if (content?.length) editor.update(() => {
-          const parser = new DOMParser();
-          const dom = parser.parseFromString(content, "text/html");
-          const nodes = $generateNodesFromDOM(editor, dom);
-          $getRoot().select();
-          $insertNodes(nodes);
-        });
+        if (content?.length)
+          editor.update(() => {
+            const parser = new DOMParser();
+            const dom = parser.parseFromString(content, "text/html");
+            const nodes = $generateNodesFromDOM(editor, dom);
+            $getRoot().select();
+            $insertNodes(nodes);
+          });
       },
       theme: {
         text: {
@@ -105,9 +120,9 @@ const RichtextEditor: React.FC<{
         },
         root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[150px] outline-none",
       },
-    }
-  ), [content]);
-
+    }),
+    [content],
+  );
 
   return (
     <Form {...form}>

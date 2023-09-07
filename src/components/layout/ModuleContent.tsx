@@ -43,22 +43,39 @@ const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({
           case "CarouselRecord":
             return <Carousel {...(module as CarouselProps)} key={i} />;
           case "UpcomingeventRecord":
-            return <UpcomingEvent {...(module as UpcomingEventProps)} key={i} />;
+            return (
+              <UpcomingEvent {...(module as UpcomingEventProps)} key={i} />
+            );
           case "UpcomingeventswithimageRecord":
-            return <UpcomingEvents {...(module as UpcomingEventsProps)} key={i} />;
+            return (
+              <UpcomingEvents {...(module as UpcomingEventsProps)} key={i} />
+            );
           case "FeaturedshopRecord":
-            return <FeaturedShopItems {...(module as FeatureShopItemsProps)} key={i} />;
+            return (
+              <FeaturedShopItems
+                {...(module as FeatureShopItemsProps)}
+                key={i}
+              />
+            );
           case "ImageGalleryRecord":
             return <ImageGallery {...(module as ImageGalleryProps)} key={i} />;
           case "VideowithlinkRecord":
-            return <VideoWithLinks {...(module as VideoWithLinksProps)} key={i} />;
+            return (
+              <VideoWithLinks {...(module as VideoWithLinksProps)} key={i} />
+            );
           case "EmailCallToActionRecord":
             return (
-              <EmailCallToAction {...(module as EmailCallToActionProps)} key={i} />
+              <EmailCallToAction
+                {...(module as EmailCallToActionProps)}
+                key={i}
+              />
             );
           case "TestimonialAndShareRecord":
             return (
-              <TestimonialAndShare {...(module as TestimonialAndShareProps)} key={i} />
+              <TestimonialAndShare
+                {...(module as TestimonialAndShareProps)}
+                key={i}
+              />
             );
           case "SocialLinksBlockRecord":
             return <SocialLinks {...(module as SocialLinksProps)} key={i} />;

@@ -15,5 +15,28 @@ describe("Test if navbar can navigate to given page", () => {
         cy.location("pathname").should("eq", "/blog");
     });
 
+    it("Can navigate to sponsors", () => {
+        cy.get(`[data-cy="desktop-nav-link"]`).eq(2).contains("sponsors", { matchCase: false }).click();
+        cy.location("pathname").should("eq", "/sponsors");
+    });
+    it("Can navigate to about us", () => {
+        cy.get(`[data-cy="desktop-nav-link"]`).eq(3).contains("about us", { matchCase: false }).click();
+        cy.location("pathname").should("eq", "/about-us");
+    });
+
+    it("Can navigate to about us", () => {
+        cy.get(`[data-cy="desktop-nav-link"]`).eq(4).contains("about us", { matchCase: false }).click();
+        cy.location("pathname").should("eq", "/about-us");
+    });
+
+    it("Can navigate to calendar", () => {
+        cy.get(`[data-cy="desktop-nav-link"]`).eq(5).contains("calendar", { matchCase: false }).click();
+        cy.location("pathname").should("eq", "/calendar");
+    });
+
+    it("Can navigate to shop", () => {
+        cy.get(`[data-cy="desktop-nav-link"]`).eq(6).contains("shop", { matchCase: false }).click();
+        cy.location("pathname").should("eq", "/shop");
+    });
 
 });

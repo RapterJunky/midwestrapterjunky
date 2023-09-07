@@ -23,12 +23,19 @@ class Carousel {
    */
   private intervalInst: NodeJS.Timeout | undefined;
   private indicatorHandlers: (() => void)[] = [];
-  constructor(private target: string, private interval = 10_000) {
+  constructor(
+    private target: string,
+    private interval = 10_000,
+  ) {
     const root = document.getElementById(this.target);
     if (!root) throw new Error("Failed to init carousel");
 
-    const container = root.querySelector<HTMLDivElement>("[data-carousel-container]");
-    const indicators = root.querySelector<HTMLDivElement>("[data-carousel-indicators]");
+    const container = root.querySelector<HTMLDivElement>(
+      "[data-carousel-container]",
+    );
+    const indicators = root.querySelector<HTMLDivElement>(
+      "[data-carousel-indicators]",
+    );
     if (!container || !indicators) throw new Error("Failed to init carousel");
 
     this.indicators = indicators;
@@ -48,7 +55,10 @@ class Carousel {
 
       this.indicatorHandlers.push(() => this.slideTo(i));
 
-      (el as HTMLButtonElement).addEventListener("click", this.indicatorHandlers[i]!);
+      (el as HTMLButtonElement).addEventListener(
+        "click",
+        this.indicatorHandlers[i]!,
+      );
     }
 
     this.nextBtn?.addEventListener("click", this.next);
@@ -61,19 +71,18 @@ class Carousel {
   public next = () => {
     const next = this.position === this.length - 1 ? 0 : this.position + 1;
     this.slideTo(next);
-  }
+  };
   public prev = () => {
-    const prev = this.position === 0 ? this.length - 1 : this.position + 1;
+    const prev = this.position === 0 ? this.length - 1 : this.position - 1;
     this.slideTo(prev);
-  }
+  };
 
   private slideTo(idx: number) {
-
     const rotation = {
       left: idx === 0 ? this.length - 1 : idx - 1,
       middle: idx,
-      right: idx === this.length - 1 ? 0 : idx + 1
-    }
+      right: idx === this.length - 1 ? 0 : idx + 1,
+    };
 
     this.rotate(rotation);
     this.setActive(idx);
@@ -81,10 +90,13 @@ class Carousel {
       this.pause();
       this.cycle();
     }
-
   }
 
-  private rotate(rotationItems: { left: number; middle: number; right: number }) {
+  private rotate(rotationItems: {
+    left: number;
+    middle: number;
+    right: number;
+  }) {
     for (const el of this.container.children) {
       el.classList.add("hidden");
     }
@@ -95,31 +107,31 @@ class Carousel {
     if (!left || !middle || !right) return;
 
     left.classList.remove(
-      '-translate-x-full',
-      'translate-x-full',
-      'translate-x-0',
-      'hidden',
-      'z-20'
+      "-translate-x-full",
+      "translate-x-full",
+      "translate-x-0",
+      "hidden",
+      "z-20",
     );
-    left.classList.add('-translate-x-full', 'z-10');
+    left.classList.add("-translate-x-full", "z-10");
 
     middle.classList.remove(
-      '-translate-x-full',
-      'translate-x-full',
-      'translate-x-0',
-      'hidden',
-      'z-10'
+      "-translate-x-full",
+      "translate-x-full",
+      "translate-x-0",
+      "hidden",
+      "z-10",
     );
-    middle.classList.add('translate-x-0', 'z-20');
+    middle.classList.add("translate-x-0", "z-20");
 
     right.classList.remove(
-      '-translate-x-full',
-      'translate-x-full',
-      'translate-x-0',
-      'hidden',
-      'z-20'
+      "-translate-x-full",
+      "translate-x-full",
+      "translate-x-0",
+      "hidden",
+      "z-20",
     );
-    right.classList.add('translate-x-full', 'z-10');
+    right.classList.add("translate-x-full", "z-10");
   }
 
   public setActive(idx: number) {
@@ -142,7 +154,10 @@ class Carousel {
   public destory() {
     for (let i = 0; i < this.length; i++) {
       const el = this.indicators.children.item(i);
-      (el as HTMLButtonElement).removeEventListener("click", this.indicatorHandlers[i]!);
+      (el as HTMLButtonElement).removeEventListener(
+        "click",
+        this.indicatorHandlers[i]!,
+      );
     }
 
     this.nextBtn?.removeEventListener("click", this.next);
@@ -154,13 +169,12 @@ class Carousel {
   }
 }
 
-
 const Runtime: React.FC<{ id: string }> = ({ id }) => {
   useEffect(() => {
     const carousel = new Carousel(id);
     return () => {
       carousel.destory();
-    }
+    };
   }, [id]);
   return null;
 };

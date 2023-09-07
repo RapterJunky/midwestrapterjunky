@@ -196,7 +196,7 @@ const PostActions: React.FC<PostActionsProps> = ({
         </Button>
       ) : null}
       <Button
-        className="h-8 min-w-min ui-active:text-red-400 ui-active:hover:text-red-500 gap-2"
+        className="h-8 min-w-min gap-2 ui-active:text-red-400 ui-active:hover:text-red-500"
         type="button"
         title={data?.likedByMe ? "Unlike this post" : "Like this post"}
         data-headlessui-state={data?.likedByMe ? "active" : ""}

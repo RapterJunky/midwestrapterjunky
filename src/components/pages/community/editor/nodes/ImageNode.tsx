@@ -75,91 +75,91 @@ const ImageComment: React.FC<{
   __id,
   hasImageRef,
 }) => {
-    const [isSelected, setSelected, clearSelection] =
-      useLexicalNodeSelection(__key);
-    const imageRef = useRef(null);
-    const [editor] = useLexicalComposerContext();
+  const [isSelected, setSelected, clearSelection] =
+    useLexicalNodeSelection(__key);
+  const imageRef = useRef(null);
+  const [editor] = useLexicalComposerContext();
 
-    const onDelete = useCallback(
-      (ev: KeyboardEvent) => {
-        if (isSelected && $isNodeSelection($getSelection())) {
-          ev.preventDefault();
-          const node = $getNodeByKey(__key);
-          if ($isImageNode(node)) {
-            if (hasImageRef && __id && !node.isPlaceholder())
-              (editor as ExtendLexicalEditor).addDeletedImage(__id);
-            node.remove();
-          }
+  const onDelete = useCallback(
+    (ev: KeyboardEvent) => {
+      if (isSelected && $isNodeSelection($getSelection())) {
+        ev.preventDefault();
+        const node = $getNodeByKey(__key);
+        if ($isImageNode(node)) {
+          if (hasImageRef && __id && !node.isPlaceholder())
+            (editor as ExtendLexicalEditor).addDeletedImage(__id);
+          node.remove();
         }
-        return false;
-      },
-      [isSelected, __key, editor, __id, hasImageRef],
-    );
+      }
+      return false;
+    },
+    [isSelected, __key, editor, __id, hasImageRef],
+  );
 
-    useEffect(() => {
-      return mergeRegister(
-        editor.registerCommand<MouseEvent>(
-          CLICK_COMMAND,
-          (ev) => {
-            if (ev.target === imageRef.current) {
-              if (ev.shiftKey) {
-                setSelected(!isSelected);
-              } else {
-                clearSelection();
-                setSelected(true);
-              }
-              return true;
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerCommand<MouseEvent>(
+        CLICK_COMMAND,
+        (ev) => {
+          if (ev.target === imageRef.current) {
+            if (ev.shiftKey) {
+              setSelected(!isSelected);
+            } else {
+              clearSelection();
+              setSelected(true);
             }
+            return true;
+          }
 
-            return false;
-          },
-          COMMAND_PRIORITY_LOW,
-        ),
-        editor.registerCommand(
-          KEY_DELETE_COMMAND,
-          onDelete,
-          COMMAND_PRIORITY_LOW,
-        ),
-        editor.registerCommand(
-          KEY_BACKSPACE_COMMAND,
-          onDelete,
-          COMMAND_PRIORITY_LOW,
-        ),
-      );
-    }, [editor, onDelete, clearSelection, isSelected, setSelected]);
-
-    return (
-      <div>
-        {isSelected ? (
-          <Button
-            type="button"
-            onClick={() =>
-              editor.dispatchCommand(KEY_DELETE_COMMAND, new KeyboardEvent(""))
-            }
-            className="absolute left-2 top-2"
-            variant="destructive"
-            size="icon"
-          >
-            <Trash2 />
-          </Button>
-        ) : null}
-        <Image
-          ref={imageRef}
-          blurDataURL={__blurDataURL}
-          placeholder="blur"
-          unoptimized
-          referrerPolicy="no-referrer"
-          className={cn("block max-w-full rounded-sm", {
-            "border-2 border-blue-500": isSelected,
-          })}
-          src={__src}
-          alt={__alt}
-          width={__width}
-          height={__height}
-        />
-      </div>
+          return false;
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+        KEY_DELETE_COMMAND,
+        onDelete,
+        COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+        KEY_BACKSPACE_COMMAND,
+        onDelete,
+        COMMAND_PRIORITY_LOW,
+      ),
     );
-  };
+  }, [editor, onDelete, clearSelection, isSelected, setSelected]);
+
+  return (
+    <div>
+      {isSelected ? (
+        <Button
+          type="button"
+          onClick={() =>
+            editor.dispatchCommand(KEY_DELETE_COMMAND, new KeyboardEvent(""))
+          }
+          className="absolute left-2 top-2"
+          variant="destructive"
+          size="icon"
+        >
+          <Trash2 />
+        </Button>
+      ) : null}
+      <Image
+        ref={imageRef}
+        blurDataURL={__blurDataURL}
+        placeholder="blur"
+        unoptimized
+        referrerPolicy="no-referrer"
+        className={cn("block max-w-full rounded-sm", {
+          "border-2 border-blue-500": isSelected,
+        })}
+        src={__src}
+        alt={__alt}
+        width={__width}
+        height={__height}
+      />
+    </div>
+  );
+};
 
 export class ImageNode extends DecoratorNode<React.JSX.Element> {
   private __src: string;

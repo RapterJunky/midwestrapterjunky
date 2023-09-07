@@ -70,8 +70,8 @@ const TopicEditor: React.FC<
 
         return {
           ...content,
-          category: content.category.toString()
-        }
+          category: content.category.toString(),
+        };
       }
 
       const startingCategory = searchParams.get("category")?.toString();
@@ -80,7 +80,10 @@ const TopicEditor: React.FC<
         content: "",
         title: "",
         notification: true,
-        category: !Number.isNaN(startingCategory) && startingCategory !== "0" ? startingCategory ?? defaultCategory : defaultCategory,
+        category:
+          !Number.isNaN(startingCategory) && startingCategory !== "0"
+            ? startingCategory ?? defaultCategory
+            : defaultCategory,
         tags: [],
       };
     },
@@ -151,7 +154,7 @@ const TopicEditor: React.FC<
         throw new Error("Failed to update/create post");
       }
 
-      const body = await request.json() as { id: string; };
+      const body = (await request.json()) as { id: string };
 
       editorRef.current.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
 
@@ -171,38 +174,48 @@ const TopicEditor: React.FC<
     }
   };
 
-  const editorConfig = useMemo<InitialConfigType>(() => ({
-    namespace: "topic-editor",
-    onError(error) {
-      console.error(error);
-      throw error;
-    },
-    editorState(editor) {
-      if (postData) editor.update(() => {
-        const parser = new DOMParser();
-        const dom = parser.parseFromString(postData, "text/html");
-        const nodes = $generateNodesFromDOM(editor, dom);
-        $getRoot().select();
-        $insertNodes(nodes);
-      });
-    },
-    nodes: [LinkNode, ListItemNode, ListNode, HeadingNode, QuoteNode, ImageNode],
-    theme: {
-      text: {
-        strikethrough: "line-through",
-        underline: "underline",
-        underlineStrikethrough: "underline line-through",
+  const editorConfig = useMemo<InitialConfigType>(
+    () => ({
+      namespace: "topic-editor",
+      onError(error) {
+        console.error(error);
+        throw error;
       },
-      root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[400px] flex-1 md:min-h-[700px] outline-none",
-    },
-  }), [postData]);
-
+      editorState(editor) {
+        if (postData)
+          editor.update(() => {
+            const parser = new DOMParser();
+            const dom = parser.parseFromString(postData, "text/html");
+            const nodes = $generateNodesFromDOM(editor, dom);
+            $getRoot().select();
+            $insertNodes(nodes);
+          });
+      },
+      nodes: [
+        LinkNode,
+        ListItemNode,
+        ListNode,
+        HeadingNode,
+        QuoteNode,
+        ImageNode,
+      ],
+      theme: {
+        text: {
+          strikethrough: "line-through",
+          underline: "underline",
+          underlineStrikethrough: "underline line-through",
+        },
+        root: "select-text whitespace-pre-wrap break-words px-2 block relative min-h-[400px] flex-1 md:min-h-[700px] outline-none",
+      },
+    }),
+    [postData],
+  );
 
   return (
     <Form {...form}>
       <Dialog open={form.formState.isSubmitting}>
         <DialogContent closeable={false}>
-          <div className="flex flex-col justify-center items-center min-h-[400px] w-full">
+          <div className="flex min-h-[400px] w-full flex-col items-center justify-center">
             <Spinner className="h-14 w-14" />
             <span className="my-4">Processing...</span>
           </div>

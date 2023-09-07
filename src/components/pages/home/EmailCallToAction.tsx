@@ -15,7 +15,6 @@ export interface EmailCallToActionProps extends ModulerContent {
 }
 
 export default function EmailCallToAction(props: EmailCallToActionProps) {
-  console.log(props);
   return (
     <section
       style={{

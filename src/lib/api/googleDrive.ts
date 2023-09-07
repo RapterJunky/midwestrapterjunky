@@ -57,11 +57,13 @@ export const deleteImages = async (ids: string[]) => {
   const drive = googleDrive();
 
   const result = await Promise.allSettled(
-    ids.filter(value => !(value.startsWith("{") && value.endsWith("}"))).map((id) =>
-      drive.files.delete({
-        fileId: id,
-      }),
-    ),
+    ids
+      .filter((value) => !(value.startsWith("{") && value.endsWith("}")))
+      .map((id) =>
+        drive.files.delete({
+          fileId: id,
+        }),
+      ),
   );
 
   for (const item of result) {
@@ -151,7 +153,7 @@ export const uploadFile = async (
           read() {
             this.push(compressedImage);
             this.push(null);
-          }
+          },
         });
 
         const { data } = await drive.files.create({
@@ -231,7 +233,7 @@ export const uploadFileCMS = async (file: File, alt: string) => {
           read() {
             this.push(compressedImage);
             this.push(null);
-          }
+          },
         });
 
         const { data } = await drive.files.create({

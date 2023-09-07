@@ -18,7 +18,7 @@ const schema = z.object({
   content: z.string(),
   deletedId: z.array(z.string()).optional(),
   images: z.array(z.object({}).passthrough()).max(5).optional(),
-  id: z.string().uuid()
+  id: z.string().uuid(),
 });
 
 export async function DELETE(request: Request) {
@@ -84,8 +84,8 @@ export async function POST(request: Request) {
       content: data.get("content"),
       id: data.get("id"),
       deletedId: data.getAll("deletedId"),
-      images: data.getAll("images")
-    })
+      images: data.getAll("images"),
+    });
 
     let fullContent = content;
     if (images?.length) {
@@ -147,9 +147,11 @@ export async function POST(request: Request) {
               id: EMAIL_TEMPLTE_ID,
               data: {
                 topic_title: comment.threadPost.name,
-                topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
-                  }://${process.env.VERCEL_URL}/community/post/${comment.threadPost.id
-                  }`,
+                topic_link: `http${
+                  process.env.VERCEL_ENV !== "development" ? "s" : ""
+                }://${process.env.VERCEL_URL}/community/post/${
+                  comment.threadPost.id
+                }`,
               },
             },
           },
@@ -184,7 +186,7 @@ export async function PUT(request: Request) {
       content: data.get("content"),
       deletedId: data.getAll("deletedId"),
       images: data.getAll("images"),
-      id: data.get("id")
+      id: data.get("id"),
     });
 
     if (deletedId?.length) {
@@ -236,16 +238,16 @@ export async function PUT(request: Request) {
             name: true,
           },
         },
-      }
+      },
     });
 
     const likes = session
       ? await prisma.like.findMany({
-        where: {
-          userId: session.user.id,
-          commentId: { in: [comment.id] },
-        },
-      })
+          where: {
+            userId: session.user.id,
+            commentId: { in: [comment.id] },
+          },
+        })
       : [];
 
     const { _count, ...commentFields } = comment;
@@ -255,7 +257,6 @@ export async function PUT(request: Request) {
       likedByMe: !!likes.find((like) => like.commentId === comment.id),
       likeCount: _count.likes,
     });
-
   } catch (error) {
     return onError(error);
   }

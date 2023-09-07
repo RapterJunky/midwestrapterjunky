@@ -61,30 +61,30 @@ const ImageDialog: React.FC<
 
       const imageUrl = file?.file
         ? await new Promise<string>((ok, rej) => {
-          if (!file.file)
-            return rej(new Error("Failed to load file", { cause: "file" }));
+            if (!file.file)
+              return rej(new Error("Failed to load file", { cause: "file" }));
 
-          if (file.file.size > 5_000_000) {
-            return rej(
-              new Error("Image is larger than 5MB.", { cause: "file" }),
+            if (file.file.size > 5_000_000) {
+              return rej(
+                new Error("Image is larger than 5MB.", { cause: "file" }),
+              );
+            }
+
+            const reader = new FileReader();
+
+            reader.addEventListener("load", () => {
+              ok(reader.result as string);
+            });
+            reader.addEventListener("error", () =>
+              rej(
+                new Error("There was an error in loading the file.", {
+                  cause: "file",
+                }),
+              ),
             );
-          }
 
-          const reader = new FileReader();
-
-          reader.addEventListener("load", () => {
-            ok(reader.result as string);
-          });
-          reader.addEventListener("error", () =>
-            rej(
-              new Error("There was an error in loading the file.", {
-                cause: "file",
-              }),
-            ),
-          );
-
-          reader.readAsDataURL(file.file);
-        })
+            reader.readAsDataURL(file.file);
+          })
         : url;
 
       const load = await new Promise<{
@@ -184,7 +184,9 @@ const ImageDialog: React.FC<
               disabled={!!usingUrl}
               render={({ field: { value, onChange, ref, ...field } }) => (
                 <FormItem>
-                  <FormLabel>Uploaded Image {hasFile ? "is set" : "not set"}</FormLabel>
+                  <FormLabel>
+                    Uploaded Image {hasFile ? "is set" : "not set"}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       ref={(e) => {

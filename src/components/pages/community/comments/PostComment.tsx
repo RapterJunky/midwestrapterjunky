@@ -30,7 +30,7 @@ const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
     like,
     unlike,
     deleteComment,
-    updateComment
+    updateComment,
   } = useComments();
 
   return (
@@ -61,30 +61,32 @@ const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
               })}
             </div>
           </div>
-          {
-            edit ? (
-              <section className="mb-4">
-                <RichTextEditor onSubmit={async (formData) => {
+          {edit ? (
+            <section className="mb-4">
+              <RichTextEditor
+                onSubmit={async (formData) => {
                   setEdit(false);
                   await updateComment(formData);
-                }} id={data.id} content={data.content} />
-              </section>
-            ) : (
-              <article className="prose min-h-[50px] max-w-none prose-headings:my-0 prose-p:my-0 prose-a:cursor-pointer prose-a:text-blue-500">
-                {data.content ? (
-                  <HtmlArticle content={data.content} />
-                ) : (
-                  "Missing comment content!"
-                )}
-              </article>
-            )
-          }
+                }}
+                id={data.id}
+                content={data.content}
+              />
+            </section>
+          ) : (
+            <article className="prose min-h-[50px] max-w-none prose-headings:my-0 prose-p:my-0 prose-a:cursor-pointer prose-a:text-blue-500">
+              {data.content ? (
+                <HtmlArticle content={data.content} />
+              ) : (
+                "Missing comment content!"
+              )}
+            </article>
+          )}
           <div className="flex justify-between text-zinc-500">
             <div className="flex items-center gap-2">
               {status === "authenticated" &&
-                session?.user.id === data.owner.id ? (
+              session?.user.id === data.owner.id ? (
                 <Button
-                  onClick={() => setEdit(current => !current)}
+                  onClick={() => setEdit((current) => !current)}
                   className="h-8 w-8 hover:text-black"
                   variant="ghost"
                   size="icon"

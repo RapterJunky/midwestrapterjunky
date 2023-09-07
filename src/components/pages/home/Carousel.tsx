@@ -23,12 +23,15 @@ export default function CarouselElement(props: CarouselProps) {
   const carouselId = `${id.replaceAll(":", "")}-carousel`;
 
   return (
-    <section className="h-screen w-full relative" id={carouselId}>
+    <section className="relative h-screen w-full" id={carouselId}>
       <CarouselRuntime id={carouselId} />
-      <div className="absolute bottom-0 left-0 right-0 z-[22] mx-[15%] mb-4 flex list-none justify-center p-0" data-carousel-indicators>
+      <div
+        className="absolute bottom-0 left-0 right-0 z-[22] mx-[15%] mb-4 flex list-none justify-center p-0"
+        data-carousel-indicators
+      >
         {props.images.map((_, i) => (
           <button
-            className="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-500 ease-in motion-reduce:transition-none aria-[current='true']:opacity-100"
+            className="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-500 ease-in aria-[current='true']:opacity-100 motion-reduce:transition-none"
             key={i}
             aria-current={i === 0 ? "true" : "false"}
             type="button"
@@ -37,7 +40,7 @@ export default function CarouselElement(props: CarouselProps) {
         ))}
       </div>
       <button
-        className="absolute bottom-0 left-0 top-0 z-[21] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute bottom-0 left-0 top-0 z-[21] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
         data-carousel-prev
       >
@@ -50,7 +53,7 @@ export default function CarouselElement(props: CarouselProps) {
       </button>
       <button
         data-carousel-next
-        className="absolute bottom-0 right-0 top-0 z-[21] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+        className="ease-[cubic-bezier(0.25,0.1,0.25,1.0)] absolute bottom-0 right-0 top-0 z-[21] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
         type="button"
       >
         <span className="inline-block h-8 w-8">
@@ -60,9 +63,15 @@ export default function CarouselElement(props: CarouselProps) {
           Next
         </span>
       </button>
-      <div className="overflow-hidden relative h-full" data-carousel-container>
+      <div className="relative h-full overflow-hidden" data-carousel-container>
         {props.images.map((value, i) => (
-          <div key={i} className={cn("duration-700 ease-in-out h-full absolute inset-0 transition-transform transform", { "hidden": i !== 0 })}>
+          <div
+            key={i}
+            className={cn(
+              "absolute inset-0 h-full transform transition-transform duration-700 ease-in-out",
+              { hidden: i !== 0 },
+            )}
+          >
             <Image
               referrerPolicy="no-referrer"
               placeholder="blur"
@@ -71,7 +80,7 @@ export default function CarouselElement(props: CarouselProps) {
               sizes={value.responsiveImage.sizes}
               blurDataURL={value.blurUpThumb}
               src={value.responsiveImage.src}
-              className="block h-full w-full object-cover object-center select-none pointer-events-none"
+              className="pointer-events-none block h-full w-full select-none object-cover object-center"
               alt={value.responsiveImage?.alt ?? "Carousel Image"}
             />
             {value.responsiveImage.title ? (

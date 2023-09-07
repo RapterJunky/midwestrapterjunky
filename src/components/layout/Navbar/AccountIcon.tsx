@@ -2,6 +2,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { User2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const AccountIcon: React.FC = () => {
   const { data: session, status } = useSession();
@@ -21,14 +21,18 @@ const AccountIcon: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+        <Button
+          variant="ghost"
+          className="relative h-10 w-10 rounded-full"
+          data-cy="account-icons"
+        >
           <Avatar className="h-10 w-10 text-black">
             <AvatarFallback>
               <User2 />
             </AvatarFallback>
             <AvatarImage
               asChild
-              src={session?.user.image as string | undefined ?? ""}
+              src={(session?.user.image as string | undefined) ?? ""}
             >
               <Image
                 width={40}
@@ -55,16 +59,26 @@ const AccountIcon: React.FC = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/profile">Profile</Link>
+              <Link href="/profile" data-cy="account-profile-btn">
+                Profile
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem
+              data-cy="account-logout-btn"
+              onClick={() => signOut()}
+            >
               Log out
             </DropdownMenuItem>
           </>
         ) : (
           <>
-            <DropdownMenuItem onClick={() => signIn()}>Login</DropdownMenuItem>
+            <DropdownMenuItem
+              data-cy="account-signin-btn"
+              onClick={() => signIn()}
+            >
+              Login
+            </DropdownMenuItem>
           </>
         )}
       </DropdownMenuContent>

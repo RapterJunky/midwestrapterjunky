@@ -187,7 +187,8 @@ async function deleteComment(
 
 async function createComment(
   formData: FormData,
-  mutate: KeyedMutator<Paginate<TComment>>, session: Session | null
+  mutate: KeyedMutator<Paginate<TComment>>,
+  session: Session | null,
 ) {
   if (!session) throw new Error("Failed to vailate user");
   await mutate<Paginate<TComment>>(
@@ -200,14 +201,11 @@ async function createComment(
       });
       if (!request.ok) throw request;
 
-      const comment = await request.json() as TComment;
+      const comment = (await request.json()) as TComment;
 
       return {
         ...currentData,
-        result: [
-          comment,
-          ...currentData.result
-        ]
+        result: [comment, ...currentData.result],
       };
     },
     {
@@ -222,7 +220,9 @@ async function createComment(
           result: [
             {
               parentCommentId: null,
-              content: formData.get("content")?.toString() ?? "<p>Failed to load message</p>",
+              content:
+                formData.get("content")?.toString() ??
+                "<p>Failed to load message</p>",
               owner: {
                 image: session.user.image as string | null,
                 id: session.user.id,
@@ -233,11 +233,11 @@ async function createComment(
               children: 0,
               created: new Date().toISOString() as never as Date,
               updatedAt: new Date().toISOString() as never as Date,
-              id: "NEW_TEMP_ID"
+              id: "NEW_TEMP_ID",
             },
-            ...currentData.result
-          ]
-        }
+            ...currentData.result,
+          ],
+        };
       },
     },
   );
@@ -258,10 +258,10 @@ async function updateComment(
 
       if (!request.ok) throw request;
 
-      const comment = await request.json() as TComment;
+      const comment = (await request.json()) as TComment;
 
       const id = formData.get("id")?.toString();
-      const idx = currentData.result.findIndex(i => i.id === id)
+      const idx = currentData.result.findIndex((i) => i.id === id);
       const comments = currentData.result;
 
       if (idx === -1 || !id) {
@@ -278,9 +278,7 @@ async function updateComment(
 
       return {
         ...currentData,
-        result: [
-          ...comments
-        ],
+        result: [...comments],
       };
     },
     {
@@ -297,7 +295,7 @@ async function updateComment(
 
         const comments = currentData.result;
 
-        const idx = comments.findIndex(comment => comment.id === commentId);
+        const idx = comments.findIndex((comment) => comment.id === commentId);
         const comment = comments.at(idx);
         if (idx === -1 || !comment) return currentData;
 
@@ -305,8 +303,8 @@ async function updateComment(
 
         return {
           ...currentData,
-          result: [...comments]
-        }
+          result: [...comments],
+        };
       },
     },
   );
@@ -341,7 +339,8 @@ const CommentProvider: React.FC<
         report: (commentId, reason) => report(commentId, reason),
         like: (commentId) => like(commentId, comments.mutate),
         unlike: (commentId) => unlike(commentId, comments.mutate),
-        createComment: (formData) => createComment(formData, comments.mutate, session.data),
+        createComment: (formData) =>
+          createComment(formData, comments.mutate, session.data),
         updateComment: (formData) => updateComment(formData, comments.mutate),
         nextPage: () => setPage((current) => current + 1),
         prevPage: () => setPage((current) => current - 1),

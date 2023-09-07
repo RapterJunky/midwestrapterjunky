@@ -85,7 +85,12 @@ const TagInput: React.FC<Props> = ({ onBlur, onChange, value, vailidate }) => {
               ev.preventDefault();
               addTag();
             }
-            if (ev.key === "Backspace" && !inputValue.length && value.length && isKeyReleased) {
+            if (
+              ev.key === "Backspace" &&
+              !inputValue.length &&
+              value.length &&
+              isKeyReleased
+            ) {
               ev.preventDefault();
               removeTag(-1);
               setIsKeyReleased(false);
