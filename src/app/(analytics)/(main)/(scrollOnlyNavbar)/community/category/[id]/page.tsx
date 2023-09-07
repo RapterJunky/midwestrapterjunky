@@ -18,11 +18,25 @@ type PageParams = {
 export async function generateMetadata(
   { params }: PageParams,
   parent: ResolvingMetadata,
-): Promise<Metadata | null> {
+): Promise<Metadata> {
   const result = idSchema.safeParse(params.id);
-  if (!result.success) return null;
+  if (!result.success) return getSeoTags({
+    parent,
+    seo: {
+      title: "Not Found",
+      robots: false,
+      description: "Given id is invaild",
+    }
+  });
   const category = await getCategory(result.data);
-  if (!category) return null;
+  if (!category) return getSeoTags({
+    parent,
+    seo: {
+      title: "Not Found",
+      robots: false,
+      description: "Midwest Raptor Junkies does not have a category with given id",
+    }
+  });
 
   return getSeoTags({
     parent,

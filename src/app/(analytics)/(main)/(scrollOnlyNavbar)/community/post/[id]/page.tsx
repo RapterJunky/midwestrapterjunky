@@ -23,12 +23,26 @@ type PageParams = {
 export async function generateMetadata(
   { params }: PageParams,
   parent: ResolvingMetadata,
-): Promise<Metadata | null> {
+): Promise<Metadata> {
   const id = idSchema.safeParse(params.id);
-  if (!id.success) return null;
+  if (!id.success) return getSeoTags({
+    parent,
+    seo: {
+      title: "Not Found",
+      robots: false,
+      description: "Given id is invaild",
+    }
+  })
 
   const post = await getPost(id.data);
-  if (!post) return null;
+  if (!post) return getSeoTags({
+    parent,
+    seo: {
+      title: "Not Found",
+      robots: false,
+      description: "Midwest raptor junkies does not have a post with given id",
+    }
+  })
 
   return getSeoTags({
     parent,

@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { notFound } from "next/navigation";
 
 type PageParams = {
   params: { slug: string };
@@ -31,6 +32,15 @@ export async function generateMetadata({
   const { post } = await getPageQuery<ArticleQueryResult>(ArticleQuery, {
     variables: { slug: params.slug },
   });
+
+  if (!post) return getSeoTags({
+    parent,
+    seo: {
+      description: "Failed to find article",
+      title: "Not Found",
+      robots: false
+    }
+  })
 
   return getSeoTags({
     parent,
@@ -46,6 +56,9 @@ const Article: React.FC<PageParams> = async ({ params }) => {
   const { post } = await getPageQuery<ArticleQueryResult>(ArticleQuery, {
     variables: { slug: params.slug },
   });
+
+  if (!post) notFound();
+
   const { next, prev } = await getPageQuery<{
     next: { slug: string; title: string };
     prev: { slug: string; title: string };

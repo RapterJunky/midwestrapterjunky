@@ -22,6 +22,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const product = await getProduct(params.id);
 
+  if (!product) return getSeoTags({
+    parent,
+    seo: {
+      title: "Not Found",
+      description: "No product exists with given id"
+    }
+  });
+
   return getSeoTags({
     parent,
     seo: {
