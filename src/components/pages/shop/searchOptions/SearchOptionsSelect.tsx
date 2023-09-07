@@ -2,41 +2,36 @@
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const SearchOptionsSelect: React.FC<{
+const SearchOptionsSelect: React.FC<React.PropsWithChildren<{
   name: string;
   queryKey: string;
-  items: { name: string; value: string }[];
-}> = ({ name, queryKey, items }) => {
-  const params = new URLSearchParams(window.location.search);
+
+}>> = ({ name, queryKey, children }) => {
+  const params = useSearchParams();
   const router = useRouter();
   return (
     <Select
       defaultValue="DEFAULT"
       onValueChange={(value) => {
+        const nextParams = new URLSearchParams(params.toString());
         if (value === "DEFAULT") {
-          params.delete(queryKey);
+          nextParams.delete(queryKey);
         } else {
-          params.set(queryKey, value);
+          nextParams.set(queryKey, value);
         }
-        router.push(`/shop?${params.toString()}`);
+        router.push(`/shop?${nextParams.toString()}`);
       }}
     >
       <SelectTrigger>
         <SelectValue placeholder={name} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="DEFAULT">{name}</SelectItem>
-        {items.map((item, i) => (
-          <SelectItem key={i} value={item.value}>
-            {item.name}
-          </SelectItem>
-        ))}
+        {children}
       </SelectContent>
     </Select>
   );

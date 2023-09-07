@@ -3,6 +3,8 @@ import { Client } from "square";
 import { z } from "zod";
 import onError from "@/lib/api/handleError";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

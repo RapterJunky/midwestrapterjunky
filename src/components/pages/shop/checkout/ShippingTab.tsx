@@ -14,6 +14,13 @@ const ShippingTab: React.FC = () => {
   });
 
   const onSubmit = (state: CheckoutState) => {
+    if (!state.shipping) {
+      return form.setError("root", {
+        message: "Failed to submit",
+        type: "validate"
+      })
+    }
+
     dispatch({ payload: state.shipping, event: "FINSIH_SHIPPING" });
   };
 

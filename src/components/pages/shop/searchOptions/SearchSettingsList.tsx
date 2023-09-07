@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SearchOption from "./SearchOption";
 import SearchOptionsSelect from "./SearchOptionsSelect";
+import { SelectItem } from "@/components/ui/select";
 
 type SearchSettingsListProps = {
   name: string;
@@ -16,7 +17,14 @@ const SearchSettingsList: React.FC<SearchSettingsListProps> = ({
   return (
     <div className="relative inline-block w-full">
       <div className="mt-3 lg:hidden">
-        <SearchOptionsSelect queryKey={queryKey} items={items} name={name} />
+        <SearchOptionsSelect queryKey={queryKey} name={name}>
+          <SelectItem value="DEFAULT">{name}</SelectItem>
+          {items.map((item, i) => (
+            <SelectItem key={i} value={item.value}>
+              {item.name}
+            </SelectItem>
+          ))}
+        </SearchOptionsSelect>
       </div>
       <div className="absolute left-0 z-10 mb-10 mt-2 hidden w-full origin-top-left rounded-md shadow-lg lg:relative lg:block lg:shadow-none">
         <div className="shadow-xs rounded-sm bg-white lg:bg-none lg:shadow-none">
