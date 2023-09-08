@@ -2,9 +2,9 @@ import type { ItemAttributes } from "datocms-plugin-sdk/dist/types/SiteApiSchema
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas, ButtonLink } from "datocms-react-ui";
 import { useMemo } from "react";
-import { normalizeConfig } from "@/lib/utils/plugin/config";
 
-import type { RevaildateSettings } from "@/app/api/revalidate/route";
+import type { RevalidateSettings } from "@/app/api/revalidate/route";
+import { normalizeConfig } from "@/lib/utils/plugin/config";
 import { capitlize } from "@/lib/utils/capitlize";
 
 interface Props {
@@ -15,10 +15,10 @@ type PreviewSingle = { type: "single"; data: string };
 type PreviewMulti = { type: "multi"; data: { href: string; name: string }[] };
 type IPreviewLink = PreviewSingle | PreviewMulti | null;
 
-const getSettings = (value: unknown, slug: string): RevaildateSettings => {
+const getSettings = (value: unknown, slug: string): RevalidateSettings => {
   try {
     return (
-      (JSON.parse(value as string) as RevaildateSettings) ?? {
+      (JSON.parse(value as string) as RevalidateSettings) ?? {
         type: "page",
         slug: `/${slug}`,
       }
