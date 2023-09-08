@@ -103,8 +103,9 @@ const fetchSquare = async (data: StorefontsProducts): Promise<Products[]> => {
       index: data.products[i]?.idx ?? 0,
       product: {
         title: value.title,
-        onlineStoreUrl: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
-          }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
+        onlineStoreUrl: `${
+          process.env.VERCEL_ENV === "development" ? "http" : "https"
+        }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
         image: value.images?.at(0) ?? {
           url: getPlaceholderImage(value.title),
           alt: value.title,

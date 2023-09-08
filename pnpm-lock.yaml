@@ -203,6 +203,9 @@ dependencies:
   use-local-storage-state:
     specifier: ^19.0.4
     version: 19.0.4(react-dom@18.2.0)(react@18.2.0)
+  webhookthing:
+    specifier: ^0.6.2
+    version: 0.6.2
   zod:
     specifier: ^3.22.2
     version: 3.22.2
@@ -298,9 +301,6 @@ devDependencies:
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
-  webhookthing:
-    specifier: ^0.6.2
-    version: 0.6.2
 
 packages:
 
@@ -8401,7 +8401,7 @@ packages:
     resolution: {integrity: sha512-mnQYaYglDi91nuOp8RmswD7UPYpVtkKN/GQwlsF8dFdD/wEqXk0GC0R6lSzrHmV8egJE1YVpR5sGvKaXBWu3ww==}
     engines: {node: '>=14.16'}
     hasBin: true
-    dev: true
+    dev: false
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}

@@ -6,7 +6,8 @@
     "id": "39830648",
     "type": "item",
     "attributes": {
-      "name": "Mark Smith"
+      "name": "Mark Smith",
+      "revaildate": "{\"type\":\"pages\",\"slugs\":[\"/\",\"/blog\"]}"
     },
     "relationships": {
       "item_type": {

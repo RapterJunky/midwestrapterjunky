@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import SearchQuery, { type SearchQueryResult } from "@/gql/sqaure/searchQuery";
-import getSquareQuery from "@/lib/services/store/GetSquareQuery";
+import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
 
 const RelatedProducts: React.FC<{ id: string; category?: string }> = async ({
   id,

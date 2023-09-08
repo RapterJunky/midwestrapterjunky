@@ -137,7 +137,7 @@ const TopicEditor: React.FC<
 
       formData.set("category", formState.category);
       formData.set("notification", formState.notification ? "true" : "false");
-      formData.set("title", formState.title);
+      formData.set("title", formState.title.trim());
 
       if (hasEdit) {
         const id = searchParams?.get("edit");

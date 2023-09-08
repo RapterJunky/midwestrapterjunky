@@ -18,7 +18,9 @@ const getCategories = cache(async (): Promise<Categories[]> => {
     environment: process.env.SQUARE_MODE,
   });
 
-  const request = await client.catalogApi.listCatalog(undefined, "CATEGORY").catch((e: ApiResponse<ApiError>) => e);
+  const request = await client.catalogApi
+    .listCatalog(undefined, "CATEGORY")
+    .catch((e: ApiResponse<ApiError>) => e);
   if (!request?.result) return [];
 
   if ("errors" in request.result) {

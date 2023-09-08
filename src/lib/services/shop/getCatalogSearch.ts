@@ -31,6 +31,10 @@ const getCatalogSearch = async ({
         ? [{ id: VENDOR_ATTRIBUTE_ID, string: vendor }]
         : undefined,
     },
+  }).catch(() => {
+    return {
+      catalogItems: { pageInfo: { nextCursor: null }, nodes: [] },
+    } as SearchQueryResult;
   });
 
   switch (sort) {

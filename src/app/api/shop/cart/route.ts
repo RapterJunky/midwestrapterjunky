@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import CartQuery, { type CartQueryResult } from "@/gql/sqaure/cartQuery";
-import getSquareQuery from "@/lib/services/store/GetSquareQuery";
+import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
 import onError from "@/lib/api/handleError";
 
 export async function GET(request: Request) {

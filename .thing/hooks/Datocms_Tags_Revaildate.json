@@ -6,7 +6,8 @@
     "id": "39830648",
     "type": "item",
     "attributes": {
-      "name": "Mark Smith"
+      "name": "Mark Smith",
+      "revalidate": "{\"type\":\"tags\",\"tags\":[\"navbar\"]}"
     },
     "relationships": {
       "item_type": {

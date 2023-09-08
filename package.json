@@ -85,6 +85,7 @@
     "thumbhash": "^0.1.1",
     "use-debounce": "^9.0.4",
     "use-local-storage-state": "^19.0.4",
+    "webhookthing": "^0.6.2",
     "zod": "^3.22.2",
     "zod-validation-error": "^1.5.0"
   },
@@ -117,7 +118,6 @@
     "prisma-json-types-generator": "^3.0.0",
     "shadcn-ui": "^0.3.0",
     "tailwindcss": "^3.3.3",
-    "typescript": "^5.2.2",
-    "webhookthing": "^0.6.2"
+    "typescript": "^5.2.2"
   }
 }

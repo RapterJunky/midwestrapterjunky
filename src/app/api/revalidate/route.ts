@@ -3,14 +3,14 @@ import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import { logger } from "@/lib/logger";
 
-type RevaildatePage = { type: "page"; slug: string };
-type RevaildatePages = { type: "pages"; slugs: string[] };
-type RevaildateTags = { type: "tags"; tags: string[] };
+type RevalidatePage = { type: "page"; slug: string };
+type RevalidatePages = { type: "pages"; slugs: string[] };
+type RevalidateTags = { type: "tags"; tags: string[] };
 
-export type RevaildateSettings =
-  | RevaildatePage
-  | RevaildatePages
-  | RevaildateTags;
+export type RevalidateSettings =
+  | RevalidatePage
+  | RevalidatePages
+  | RevalidateTags;
 export interface WebhookRequest {
   environment: string;
   entity_type: string;
@@ -60,11 +60,11 @@ export async function POST(request: Request) {
 
     const data = JSON.parse(
       body.entity.attributes?.revalidate ?? "null",
-    ) as RevaildateSettings | null;
+    ) as RevalidateSettings | null;
 
     if (!data)
       return NextResponse.json(
-        { revaildate: false, message: "Non revalidatable" },
+        { revalidate: false, message: "No props for revalidating" },
         { status: 400 },
       );
 
@@ -79,17 +79,17 @@ export async function POST(request: Request) {
 
           revalidatePath(path);
         }
-        return NextResponse.json({ revaildate: true });
+        return NextResponse.json({ revalidate: true });
       }
       case "tags": {
         if (!data.tags.length)
-          throw createHttpError.BadRequest("Nothing to revailate");
+          throw createHttpError.BadRequest("Nothing to revalidate");
 
         for (const tag of data.tags) {
           revalidateTag(tag);
         }
 
-        return NextResponse.json({ revaildate: true });
+        return NextResponse.json({ revalidate: true });
       }
       case "pages": {
         const slugs = data.slugs;
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
           revalidatePath(page);
         }
 
-        return NextResponse.json({ revaildate: true });
+        return NextResponse.json({ revalidate: true });
       }
     }
   } catch (error) {
@@ -107,14 +107,14 @@ export async function POST(request: Request) {
 
     if (createHttpError.isHttpError(error)) {
       return NextResponse.json(
-        { ...error, revaildated: false },
+        { ...error, revalidated: false },
         { status: error.statusCode },
       );
     }
 
     return NextResponse.json(
       {
-        revaildated: false,
+        revalidated: false,
         message: (error as Error)?.message ?? "Unknown error",
       },
       { status: 500 },
