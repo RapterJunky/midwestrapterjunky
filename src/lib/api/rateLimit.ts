@@ -1,11 +1,14 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+const cache = new Map();
+
 const rateLimiter = new Ratelimit({
   redis: new Redis({
     url: process.env.KV_REST_API_URL,
     token: process.env.KV_REST_API_TOKEN,
   }),
+  ephemeralCache: cache,
   limiter: Ratelimit.slidingWindow(10, "10 s"),
   analytics: false,
   prefix: "ratelimit",

@@ -1,11 +1,13 @@
-import onError from "@/lib/api/handleError";
-import { authConfig } from "@/lib/config/auth";
-import createHttpError from "http-errors";
-import { getServerSession } from "next-auth";
-import { z } from "zod";
-import prisma from "@/lib/api/prisma";
-import { NextResponse } from "next/server";
 
+import { type NextRequest, NextResponse } from "next/server";
+import { authConfig } from "@/lib/config/auth";
+import { getServerSession } from "next-auth";
+import createHttpError from "http-errors";
+import { z } from "zod";
+
+import ratelimit from "@/lib/api/rateLimit";
+import onError from "@/lib/api/handleError";
+import prisma from "@/lib/api/prisma";
 const HEADER_TYPE = "x-content-type";
 
 const schema = z.object({
@@ -58,8 +60,10 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
     const session = await getServerSession(authConfig);
     if (!session) throw createHttpError.Unauthorized();
 
@@ -184,8 +188,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
     const session = await getServerSession(authConfig);
     if (!session) throw createHttpError.Unauthorized();
     const type = z

@@ -6,25 +6,25 @@ import FallBackOptions from "@/components/pages/shop/searchOptions/OptionsFallba
 import Categories from "@/components/pages/shop/searchOptions/Categories";
 import CatalogFallback from "@/components/pages/shop/CatalogFallback";
 import Vendors from "@/components/pages/shop/searchOptions/Vendors";
-import getGenericSeoTags from "@/lib/helpers/getGenericSeoTags";
 import Catalog from "@/components/pages/shop/Catalog";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 type PageParams = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const icons = (await parent).icons;
-
-  return getGenericSeoTags({
-    icons,
-    title: "Shop - Midwest Raptor Junkies",
-    robots: true,
-    description: "Midwest Raptor Junkies shop home page",
-    url: `https://midwestraptorjunkies.com/shop`,
+  return getSeoTags({
+    parent,
+    seo: {
+      title: "Shop",
+      robots: true,
+      description: "Midwest Raptor Junkies shop home page",
+      slug: `/shop`,
+    }
   });
 }
 

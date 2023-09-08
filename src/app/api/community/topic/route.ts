@@ -12,6 +12,7 @@ import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
 import { revalidatePath } from "next/cache";
+import ratelimit from "@/lib/api/rateLimit";
 
 const schema = z.object({
   deletedId: z.array(z.string()).optional(),
@@ -29,6 +30,9 @@ const schema = z.object({
 
 export async function PUT(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session || session.user.banned !== 0)
       throw createHttpError.Unauthorized();
@@ -104,6 +108,9 @@ export async function PUT(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session || session.user.banned !== 0)
       throw createHttpError.Unauthorized();
@@ -158,8 +165,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session) throw createHttpError.Unauthorized();
     const { searchParams } = new URL(request.url);
@@ -198,8 +208,11 @@ export async function GET(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session) throw createHttpError.Unauthorized();
 

@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import { z } from "zod";
 
@@ -13,6 +13,7 @@ import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
 import { logger } from "@/lib/logger";
 import sendMail from "@/lib/api/sendMail";
+import ratelimit from "@/lib/api/rateLimit";
 
 const schema = z.object({
   content: z.string(),
@@ -21,8 +22,10 @@ const schema = z.object({
   id: z.string().uuid(),
 });
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
     const session = await getServerSession(authConfig);
     if (!session) throw createHttpError.Unauthorized();
 
@@ -72,8 +75,11 @@ export async function DELETE(request: Request) {
 }
 
 const EMAIL_TEMPLTE_ID = "d-09d6805d0013445eb03fa020c5fabb7c";
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session || session.user.banned !== 0)
       throw createHttpError.Unauthorized();
@@ -147,11 +153,9 @@ export async function POST(request: Request) {
               id: EMAIL_TEMPLTE_ID,
               data: {
                 topic_title: comment.threadPost.name,
-                topic_link: `http${
-                  process.env.VERCEL_ENV !== "development" ? "s" : ""
-                }://${process.env.VERCEL_URL}/community/post/${
-                  comment.threadPost.id
-                }`,
+                topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
+                  }://${process.env.VERCEL_URL}/community/post/${comment.threadPost.id
+                  }`,
               },
             },
           },
@@ -174,8 +178,11 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
+    const limit = await ratelimit(request.ip);
+    if (!limit.success) throw new createHttpError.TooManyRequests();
+
     const session = await getServerSession(authConfig);
     if (!session || session.user.banned !== 0)
       throw createHttpError.Unauthorized();
@@ -243,11 +250,11 @@ export async function PUT(request: Request) {
 
     const likes = session
       ? await prisma.like.findMany({
-          where: {
-            userId: session.user.id,
-            commentId: { in: [comment.id] },
-          },
-        })
+        where: {
+          userId: session.user.id,
+          commentId: { in: [comment.id] },
+        },
+      })
       : [];
 
     const { _count, ...commentFields } = comment;

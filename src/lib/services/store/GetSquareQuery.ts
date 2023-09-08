@@ -8,6 +8,17 @@ const getQueryName = (query: string) =>
 const dedupedFetch = cache(async (requestData: string) => {
   const request = JSON.parse(requestData) as RequestInit;
 
+  const parsedBody = JSON.parse(request.body as string) as { query: string; variables?: Record<string, string> };
+
+  logger.debug(
+    {
+      query: getQueryName(parsedBody.query),
+      mode: process.env.SQUARE_MODE,
+      vars: parsedBody?.variables,
+    },
+    "SquareAPI request",
+  );
+
   const url =
     process.env.VERCEL_ENV === "production"
       ? "https://connect.squareup.com/public/graphql"
@@ -26,16 +37,13 @@ const dedupedFetch = cache(async (requestData: string) => {
         status: response.status,
         statusText: response.statusText,
         url,
+        body: parsedBody,
         errors: responseBody.errors,
         mode: process.env.SQUARE_MODE,
       },
       "Failed square query",
     );
-    throw new Error(
-      `${response.status} ${response.statusText}: ${JSON.stringify(
-        responseBody,
-      )}`,
-    );
+    throw new Error(`${response.status} ${response.statusText}`,);
   }
   return responseBody;
 });
@@ -49,15 +57,6 @@ export default async function getSquareQuery<T>(
   query: string,
   opts?: QueryOptions,
 ) {
-  logger.debug(
-    {
-      query: getQueryName(query),
-      mode: process.env.SQUARE_MODE,
-      vars: opts?.variables,
-    },
-    "SquareAPI request",
-  );
-
   const { data } = await dedupedFetch(
     JSON.stringify({
       method: "POST",

@@ -233,7 +233,8 @@ const errorResponses = {
 
 export async function POST(request: NextRequest) {
   try {
-    await ratelimit(request.ip);
+    const vaild = await ratelimit(request.ip);
+    if (!vaild.success) throw createHttpError.TooManyRequests();
 
     const idempotencyKey = randomUUID();
 

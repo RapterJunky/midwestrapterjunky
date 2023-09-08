@@ -40,9 +40,7 @@ const dedupedFetch = cache(async (requestData: string) => {
       "Failed datocms query",
     );
     throw new Error(
-      `${response.status} ${response.statusText}: ${JSON.stringify(
-        responseBody,
-      )}`,
+      `${response.status} ${response.statusText}`,
     );
   }
   return responseBody;
