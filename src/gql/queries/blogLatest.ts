@@ -1,17 +1,18 @@
-import Navbar from "../fragments/Navbar";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+
+export type BlogLatestQueryResult = {
+  seo: SeoOrFaviconTag[];
+  posts: {
+    slug: string;
+    publishedAt: string | null;
+    title: string;
+    seo: SeoOrFaviconTag[];
+    tags: string[];
+  }[];
+};
 
 const QueryBlogLatest = `
 query QueryBlogLatest($first: IntType = "5") {
-    _site {
-        faviconMetaTags {
-            attributes
-            content
-            tag
-        }
-    }
-    navbar {
-        ...NavbarRecordFragment
-    }
     posts: allArticles(first: $first, orderBy: _firstPublishedAt_DESC) {
         tags
         title
@@ -24,6 +25,5 @@ query QueryBlogLatest($first: IntType = "5") {
         publishedAt: _publishedAt
     }
 }
-${Navbar}
 `;
 export default QueryBlogLatest;

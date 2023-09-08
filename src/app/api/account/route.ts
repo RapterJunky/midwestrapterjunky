@@ -1,7 +1,8 @@
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
 
-import getAuthSession from "@api/getAuthSession";
+import { authConfig } from "@/lib/config/auth";
 import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
@@ -10,7 +11,8 @@ export const dynamic = "force-dynamic";
 
 export const GET = async () => {
   try {
-    const session = await getAuthSession({ throwOnNull: true });
+    const session = await getServerSession(authConfig);
+    if (!session) throw createHttpError.Unauthorized();
 
     const user = await prisma.user.findUnique({
       where: {
@@ -37,7 +39,8 @@ export const GET = async () => {
 
 export const DELETE = async () => {
   try {
-    const session = await getAuthSession({ throwOnNull: true });
+    const session = await getServerSession(authConfig);
+    if (!session) throw createHttpError.Unauthorized();
 
     const result = await prisma.user.delete({
       where: {

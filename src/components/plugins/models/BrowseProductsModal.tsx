@@ -112,7 +112,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
               >
                 {data.map((product) => (
                   <div
-                    className="border-var-border cursor-pointer appearance-none overflow-hidden rounded border bg-transparent p-1 pb-0 text-center hover:border-dato-accent"
+                    className="border-var-border hover:border-dato-accent cursor-pointer appearance-none overflow-hidden rounded border bg-transparent p-1 pb-0 text-center"
                     key={product.handle}
                     onClick={() =>
                       ctx.resolve(
@@ -150,7 +150,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && !error && !data?.length ? (
               <div
-                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
+                className="text-dato-light-body flex h-52 items-center justify-center bg-dato-light text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}
@@ -160,7 +160,7 @@ export default function BrowseProductsModel({ ctx }: { ctx: RenderModalCtx }) {
             ) : null}
             {!isLoading && error ? (
               <div
-                className="flex h-52 items-center justify-center bg-dato-light text-center text-dato-light-body"
+                className="text-dato-light-body flex h-52 items-center justify-center bg-dato-light text-center"
                 style={{
                   fontSize: "var(--font-size-xl)",
                 }}

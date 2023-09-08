@@ -23,10 +23,10 @@ import { useRef, useState } from "react";
 import { HiX } from "react-icons/hi";
 import Image from "next/image";
 
-import type { GoogleImage } from "@type/google";
 import type { CursorPaginate, ResponsiveImage } from "@type/page";
-import { AuthFetch } from "@utils/plugin/auth_fetch";
 import { GOOGLE_DRIVE_IMAGE_ROOT } from "@utils/googleConsts";
+import type { GoogleImage } from "@/lib/api/googleDrive";
+import { AuthFetch } from "@utils/plugin/auth_fetch";
 
 const ImageItem: React.FC<{
   item: GoogleImage;
@@ -142,7 +142,7 @@ const ImageItem: React.FC<{
     <div
       data-headlessui-state={active ? "active" : undefined}
       onClick={onSelected}
-      className="border-dato-lighter group relative flex cursor-pointer flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow hover:border-dato-darker ui-active:border-dato-accent"
+      className="border-dato-lighter hover:border-dato-darker ui-active:border-dato-accent group relative flex cursor-pointer flex-col items-center justify-center rounded-md border bg-neutral-100 px-1 py-1.5 shadow"
     >
       <div className="flex h-12 w-full content-center items-center gap-2 p-1">
         <FaImage className="m-2" />
@@ -526,7 +526,7 @@ const GDriveModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center justify-between bg-dato-accent p-2">
+        <div className="bg-dato-accent flex items-center justify-between p-2">
           <div className="flex gap-dato-m text-dato-light">
             {ctx.parameters.limitAssets ?? false ? (
               <span>

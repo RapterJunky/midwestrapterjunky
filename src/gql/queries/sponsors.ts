@@ -1,17 +1,21 @@
-import Navbar from "../fragments/Navbar";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { ResponsiveImage } from "@/types/page";
 import ImageHelper from "../fragments/ImageHelper";
+
+export type SponsorsQueryResult = {
+  sponsor: {
+    seo: SeoOrFaviconTag[];
+    sponsors: {
+      link: string | null;
+      sponsorName: string;
+      id: string;
+      logo: ResponsiveImage;
+    }[];
+  };
+};
+
 const SponsorsQuery = `
 query SponsorsQuery {
-    _site {
-        faviconMetaTags {
-          attributes
-          content
-          tag
-        }
-    }
-    navbar {
-        ...NavbarRecordFragment
-    }
     sponsor {
       seo: _seoMetaTags {
         attributes
@@ -26,7 +30,6 @@ query SponsorsQuery {
       }
     }
   }
-  ${Navbar}
 `;
 
 export default SponsorsQuery;

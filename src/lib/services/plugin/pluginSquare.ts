@@ -1,14 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { Client, Environment } from "square";
-import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { serialize } from "superjson";
 import { z } from "zod";
 
-import { applyRateLimit } from "@lib/api/rateLimiter";
-
 const modeQuery = z.enum(["item", "list"]).describe("Type of request");
 
-const request = z.object({
+const schema = z.object({
   token: z.string().nonempty().describe("Auth token"),
   sandbox: z
     .boolean()
@@ -23,12 +20,13 @@ const fetchItem = z.object({
   id: z.string().nonempty().describe("Id of product to fetch"),
 });
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") throw createHttpError.MethodNotAllowed();
-  await applyRateLimit(req, res);
+async function POST(request: Request) {
+  const { searchParams } = new URL(request.url);
 
-  const mode = modeQuery.parse(req.query.mode);
-  const { token, sandbox } = request.parse(req.body);
+  const body = await request.json();
+
+  const mode = modeQuery.parse(searchParams.get("mode"));
+  const { token, sandbox } = schema.parse(body);
 
   const client = new Client({
     accessToken: token,
@@ -36,7 +34,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (mode === "list") {
-    const { search } = searchRequest.parse(req.body);
+    const { search } = searchRequest.parse(body);
     const objects = await client.catalogApi.searchCatalogObjects({
       limit: 10,
       includeDeletedObjects: false,
@@ -53,16 +51,20 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { json } = serialize(objects.result);
 
-    return res.status(200).json(json);
+    return NextResponse.json(json);
   }
 
-  const { id } = fetchItem.parse(req.body);
+  const { id } = fetchItem.parse(body);
 
   const item = await client.catalogApi.retrieveCatalogObject(id, true);
 
   const { json } = serialize(item.result);
 
-  return res.status(200).json(json);
+  return NextResponse.json(json);
+}
+
+const handlers = {
+  POST,
 };
 
-export default handle;
+export default handlers;

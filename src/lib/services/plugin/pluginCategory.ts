@@ -1,7 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
-
 import prisma from "@api/prisma";
 
 const schema = z.object({
@@ -20,85 +19,92 @@ const patchSchema = createCategory.extend({
   id: z.number().positive().min(1),
 });
 
-const handle = async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case "GET": {
-      const { page } = schema.parse(req.query);
-
-      const [categires, meta] = await prisma.thread.paginate().withPages({
-        limit: 15,
-        includePageCount: true,
-        page,
-      });
-
-      return res.status(200).json({ ...meta, result: categires });
-    }
-    case "POST": {
-      const { tags, name, description, image, allowUserPosts } =
-        createCategory.parse(req.body);
-
-      const data = await prisma.thread.create({
-        data: {
-          description,
-          allowUserPosts,
-          image,
-          tags,
-          name,
-        },
-      });
-
-      await Promise.all([
-        res.revalidate("/community"),
-        res.revalidate("/community/create-topic"),
-      ]);
-
-      return res.status(201).json(data);
-    }
-    case "PATCH": {
-      const { id, tags, name, description, image, allowUserPosts } =
-        patchSchema.parse(req.body);
-
-      const data = await prisma.thread.update({
-        where: {
-          id,
-        },
-        data: {
-          tags,
-          allowUserPosts,
-          name,
-          description,
-          image,
-        },
-      });
-
-      await Promise.all([
-        res.revalidate("/community"),
-        res.revalidate("/community/create-topic"),
-      ]);
-
-      return res.status(200).json(data);
-    }
-    case "DELETE": {
-      const { id } = z
-        .object({ id: z.coerce.number().positive().min(1) })
-        .parse(req.query);
-
-      const data = await prisma.thread.delete({
-        where: {
-          id,
-        },
-      });
-
-      await Promise.all([
-        res.revalidate("/community"),
-        res.revalidate("/community/create-topic"),
-      ]);
-
-      return res.status(200).json(data);
-    }
-    default:
-      throw createHttpError.MethodNotAllowed();
-  }
+const revaildate = () => {
+  revalidatePath("/community");
+  revalidatePath("/community/topic");
 };
 
-export default handle;
+async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const { page } = schema.parse(Object.fromEntries(searchParams.entries()));
+
+  const [categires, meta] = await prisma.thread.paginate().withPages({
+    limit: 15,
+    includePageCount: true,
+    page,
+  });
+
+  return NextResponse.json({ ...meta, result: categires });
+}
+
+async function POST(request: Request) {
+  const body = await request.json();
+
+  const { tags, name, description, image, allowUserPosts } =
+    createCategory.parse(body);
+
+  const data = await prisma.thread.create({
+    data: {
+      description,
+      allowUserPosts,
+      image,
+      tags,
+      name,
+    },
+  });
+
+  revaildate();
+
+  return NextResponse.json(data, { status: 201 });
+}
+
+async function PATCH(request: Request) {
+  const body = await request.json();
+
+  const { id, tags, name, description, image, allowUserPosts } =
+    patchSchema.parse(body);
+
+  const data = await prisma.thread.update({
+    where: {
+      id,
+    },
+    data: {
+      tags,
+      allowUserPosts,
+      name,
+      description,
+      image,
+    },
+  });
+
+  revaildate();
+
+  return NextResponse.json(data);
+}
+
+async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const { id } = z
+    .object({ id: z.coerce.number().positive().min(1) })
+    .parse(Object.fromEntries(searchParams.entries()));
+
+  const data = await prisma.thread.delete({
+    where: {
+      id,
+    },
+  });
+
+  revaildate();
+
+  return NextResponse.json(data);
+}
+
+const handlers = {
+  GET,
+  POST,
+  DELETE,
+  PATCH,
+};
+
+export default handlers;

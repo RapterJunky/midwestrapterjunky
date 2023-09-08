@@ -1,7 +1,7 @@
+"use client";
+import { MessagesSquare, ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import HiAnnotation from "@components/icons/HiAnnotation";
-import HiArrowUp from "@components/icons/HiArrowUp";
 interface Props {
   comments: boolean;
 }
@@ -38,7 +38,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
           onClick={handleScrollToComment}
           className="rounded-full bg-gray-200 p-4 text-gray-500 transition-all hover:bg-gray-300"
         >
-          <HiAnnotation />
+          <MessagesSquare />
         </button>
       ) : null}
       <button
@@ -48,7 +48,7 @@ const ScrollToTop = ({ comments = false }: Props) => {
         onClick={handleScrollTop}
         className="rounded-full bg-gray-200 p-4 text-gray-500 transition-all hover:bg-gray-300"
       >
-        <HiArrowUp />
+        <ArrowUp />
       </button>
     </div>
   );

@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Lock, Pin } from "lucide-react";
 
-import HiLockClosed from "@components/icons/HiLockClosed";
-import FaThumbtack from "@components/icons/FaThumbtack";
-import TagList from "./TagList";
+import { Badge } from "../ui/badge";
 
 type Props = {
   title: string;
@@ -38,7 +37,9 @@ const CategoryCard: React.FC<Props> = ({
       <td className="px-2 py-3">
         <h3>
           <Link href={slug}>
-            <div className="mb-4 text-xl font-bold">{title}</div>
+            <div className="mb-4 scroll-m-20 text-2xl font-bold tracking-tight">
+              {title}
+            </div>
             <div className="float-none mb-8 mr-8 mt-1 flex justify-center sm:float-left sm:aspect-square">
               <Image
                 className="rounded-full object-cover object-center"
@@ -50,16 +51,20 @@ const CategoryCard: React.FC<Props> = ({
             </div>
           </Link>
         </h3>
-        <p className="mt-2 line-clamp-5 flex-shrink overflow-hidden text-neutral-600">
+        <p className="mt-2 line-clamp-5 flex-shrink overflow-hidden leading-7 text-zinc-600">
           {desciption}
         </p>
         {tags ? (
           <div className="clear-both mt-1 w-full">
-            <TagList tags={tags} />
+            <div className="mb-2 flex flex-wrap gap-2">
+              {tags.map((tag, i) => (
+                <Badge key={i}>{tag}</Badge>
+              ))}
+            </div>
           </div>
         ) : null}
       </td>
-      <td className="px-2 py-3 align-top text-xl font-bold text-neutral-600 md:text-right">
+      <td className="px-2 py-3 align-top text-xl font-bold text-zinc-600 md:text-right">
         <div className="h-full">
           <span className="mr-2 md:mr-0">{topics}</span>
           <span className="md:hidden">Topics</span>
@@ -72,17 +77,17 @@ const CategoryCard: React.FC<Props> = ({
             <li className="text-primary">No Topics Yet!</li>
           ) : (
             latestTopics.map((topic, i) => (
-              <li key={i}>
+              <li key={i} className="p-1">
                 <Link
-                  className="flex items-center gap-1 text-neutral-500"
-                  href={`/community/p/${topic.id}`}
+                  className="flex items-center gap-1 text-zinc-500"
+                  href={`/community/post/${topic.id}`}
                 >
-                  {topic.locked ? <HiLockClosed className="h-4 w-4" /> : null}
-                  {topic.pinned ? <FaThumbtack className="h-4 w-4" /> : null}
-                  <span className="line-clamp-1 overflow-hidden text-primary">
+                  {topic.locked ? <Lock className="h-4 w-4" /> : null}
+                  {topic.pinned ? <Pin className="h-4 w-4" /> : null}
+                  <span className="line-clamp-1 overflow-hidden text-sm font-medium text-blue-500 underline">
                     {topic.name}
                   </span>
-                  <span className="text-sm text-neutral-400">
+                  <span className="text-sm text-zinc-400">
                     {new Date(topic.createdAt).toLocaleDateString("en-us", {
                       month: "short",
                       day: "numeric",

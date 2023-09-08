@@ -1,0 +1,9 @@
+{
+  "url": "http://localhost:3000/api/revaildate",
+  "headers": {
+    "x-site-id": "SITE_ID",
+    "x-webhook-id": "GENERATED_WEBHOOK_ID",
+    "x-environment": "dev",
+    "authorization": "Bearer %%REVALIDATE_TOKEN%%"
+  }
+}

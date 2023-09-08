@@ -1,3 +1,3 @@
 ## Midwest Raptor Junkies
 
-Community hub, events page, and online store.
+Community hub and online store.
