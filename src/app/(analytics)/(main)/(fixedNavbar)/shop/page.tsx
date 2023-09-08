@@ -24,7 +24,7 @@ export async function generateMetadata(
       robots: true,
       description: "Midwest Raptor Junkies shop home page",
       slug: `/shop`,
-    }
+    },
   });
 }
 

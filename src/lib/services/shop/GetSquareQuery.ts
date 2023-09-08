@@ -8,7 +8,10 @@ const getQueryName = (query: string) =>
 const dedupedFetch = cache(async (requestData: string) => {
   const request = JSON.parse(requestData) as RequestInit;
 
-  const parsedBody = JSON.parse(request.body as string) as { query: string; variables?: Record<string, string> };
+  const parsedBody = JSON.parse(request.body as string) as {
+    query: string;
+    variables?: Record<string, string>;
+  };
 
   logger.debug(
     {
@@ -37,13 +40,14 @@ const dedupedFetch = cache(async (requestData: string) => {
         status: response.status,
         statusText: response.statusText,
         url,
-        body: parsedBody,
+        query: getQueryName(parsedBody.query),
+        variables: parsedBody?.variables,
         errors: responseBody.errors,
         mode: process.env.SQUARE_MODE,
       },
       "Failed square query",
     );
-    throw new Error(`${response.status} ${response.statusText}`,);
+    throw new Error(`${response.status} ${response.statusText}`);
   }
   return responseBody;
 });

@@ -18,7 +18,7 @@ const getProduct = cache(async (productId: string) => {
   const request = await client.catalogApi.retrieveCatalogObject(
     productId,
     true,
-  );
+  )
 
   if ("errors" in request.result) {
     logger.error(request.result.errors);
@@ -62,9 +62,8 @@ const getProduct = cache(async (productId: string) => {
   if (!images.length) {
     images = [
       {
-        url: `https://api.dicebear.com/6.x/icons/png?seed=${
-          itemData?.name ?? "PH"
-        }`,
+        url: `https://api.dicebear.com/6.x/icons/png?seed=${itemData?.name ?? "PH"
+          }`,
         alt: "Product Image",
       },
     ];

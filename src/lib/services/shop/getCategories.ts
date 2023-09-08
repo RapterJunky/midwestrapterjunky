@@ -1,5 +1,5 @@
+import { type ApiError, type ApiResponse, Client } from "square";
 import { cache } from "react";
-import { Client } from "square";
 import "server-only";
 
 import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
@@ -18,7 +18,8 @@ const getCategories = cache(async (): Promise<Categories[]> => {
     environment: process.env.SQUARE_MODE,
   });
 
-  const request = await client.catalogApi.listCatalog(undefined, "CATEGORY");
+  const request = await client.catalogApi.listCatalog(undefined, "CATEGORY").catch((e: ApiResponse<ApiError>) => e);
+  if (!request?.result) return [];
 
   if ("errors" in request.result) {
     logger.error(request.result, "Square API request error");

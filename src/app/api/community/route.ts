@@ -1,4 +1,3 @@
-
 import { type NextRequest, NextResponse } from "next/server";
 import { authConfig } from "@/lib/config/auth";
 import { getServerSession } from "next-auth";

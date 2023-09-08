@@ -153,9 +153,11 @@ export async function POST(request: NextRequest) {
               id: EMAIL_TEMPLTE_ID,
               data: {
                 topic_title: comment.threadPost.name,
-                topic_link: `http${process.env.VERCEL_ENV !== "development" ? "s" : ""
-                  }://${process.env.VERCEL_URL}/community/post/${comment.threadPost.id
-                  }`,
+                topic_link: `http${
+                  process.env.VERCEL_ENV !== "development" ? "s" : ""
+                }://${process.env.VERCEL_URL}/community/post/${
+                  comment.threadPost.id
+                }`,
               },
             },
           },
@@ -250,11 +252,11 @@ export async function PUT(request: NextRequest) {
 
     const likes = session
       ? await prisma.like.findMany({
-        where: {
-          userId: session.user.id,
-          commentId: { in: [comment.id] },
-        },
-      })
+          where: {
+            userId: session.user.id,
+            commentId: { in: [comment.id] },
+          },
+        })
       : [];
 
     const { _count, ...commentFields } = comment;

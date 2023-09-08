@@ -7,11 +7,12 @@ import {
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const SearchOptionsSelect: React.FC<React.PropsWithChildren<{
-  name: string;
-  queryKey: string;
-
-}>> = ({ name, queryKey, children }) => {
+const SearchOptionsSelect: React.FC<
+  React.PropsWithChildren<{
+    name: string;
+    queryKey: string;
+  }>
+> = ({ name, queryKey, children }) => {
   const params = useSearchParams();
   const router = useRouter();
   return (
@@ -30,9 +31,7 @@ const SearchOptionsSelect: React.FC<React.PropsWithChildren<{
       <SelectTrigger>
         <SelectValue placeholder={name} />
       </SelectTrigger>
-      <SelectContent>
-        {children}
-      </SelectContent>
+      <SelectContent>{children}</SelectContent>
     </Select>
   );
 };

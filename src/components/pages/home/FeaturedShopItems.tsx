@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ModulerContent } from "@/types/page";
-import getFeaturedItems from "@/lib/services/shop/getFeaturedItems";
+import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
 
 export interface FeatureShopItemsProps extends ModulerContent {
   items: { item: { value: string } }[];
