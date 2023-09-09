@@ -27,9 +27,9 @@ export const formatLocalDate = (
       : date
     : new Date();
   return data.toLocaleDateString(locale, {
-    weekday: options?.weekday,
-    year: options?.year,
-    month: options?.month,
-    day: options?.day,
+    weekday: options?.weekday ?? "long",
+    year: options?.year ?? "numeric",
+    month: options?.month ?? "long",
+    day: options?.day ?? "numeric",
   });
 };

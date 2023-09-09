@@ -1,13 +1,28 @@
-import Navbar from "../fragments/Navbar";
-const privcy_policy = `
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+
+export type PrivcyPolicyQueryResult = {
+  policy: {
+    seo: SeoOrFaviconTag[];
+    updatedAt: string;
+    privacyPolicy: StructuredTextGraphQlResponse;
+    privacyPolicySeo: {
+      description: string | null;
+      title: string | null;
+      twitterCard: string | null;
+    };
+  };
+};
+
+const PrivcyPolicy = `
 query PrivcyPolicyQuery {
     policy: termsandprivacy {
-      _seoMetaTags {
+      seo: _seoMetaTags {
         attributes
         content
         tag
       }
-      _updatedAt
+      updatedAt: _updatedAt
       privacyPolicy {
         blocks
         links
@@ -19,18 +34,7 @@ query PrivcyPolicyQuery {
         twitterCard
       }
     }
-    _site {
-      faviconMetaTags {
-        attributes
-        content
-        tag
-      }
-    }
-    navbar {
-        ...NavbarRecordFragment
-    }
   }
-  ${Navbar}
 `;
 
-export default privcy_policy;
+export default PrivcyPolicy;

@@ -8,7 +8,6 @@ import {
   DropdownSeparator,
 } from "datocms-react-ui";
 import { FaSearch, FaChevronUp, FaChevronDown } from "react-icons/fa";
-import { StructuredText } from "react-datocms/structured-text";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { useDebounce } from "use-debounce";
 import { useCtx } from "datocms-react-ui";
@@ -19,11 +18,11 @@ import useSWR from "swr";
 
 import type { User, Report, ThreadPost, Comment } from "@prisma/client";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
-import { renderBlock } from "@/lib/structuredTextRules";
 import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
 import DatoCmsPagination from "./Pagination";
 import DisplayDataStates from "./DisplayDataStates";
+import HtmlArticle from "@/components/HtmlArticle";
 
 type ContentType = Paginate<
   Omit<Report, "created"> & {
@@ -255,10 +254,7 @@ const CommentReport: React.FC<
         <p className="p-1 text-sm">{reason}</p>
         <h4 className="font-bold">Offending Comment:</h4>
         <div className="w-1/2 p-1 text-sm">
-          <StructuredText
-            renderBlock={renderBlock}
-            data={comment.content as PrismaJson.PostComment}
-          />
+          <HtmlArticle content={comment.content} />
         </div>
         <h4 className="font-bold">Owner:</h4>
         <div className="ml-4">
@@ -432,6 +428,7 @@ export const Reports: React.FC<{
 
   return (
     <Panel
+      value="4"
       actions={
         <>
           <div className="mr-dato-m flex">

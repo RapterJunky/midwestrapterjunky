@@ -110,7 +110,7 @@ const EditThreadModel: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             <span>Category Description</span>
           </FormLabel>
           <textarea
-            className={`w-full border placeholder:text-dato-placeholder ${
+            className={`placeholder:text-dato-placeholder w-full border ${
               errors.description
                 ? "border-dato-alert focus:border-dato-alert focus:shadow-[0_0_0_3px_rgba(var(--alert-color-rgb-components),.2)]"
                 : "border-dato-border focus:border-dato-accent focus:shadow-[0_0_0_3px_var(--semi-transparent-accent-color)]"

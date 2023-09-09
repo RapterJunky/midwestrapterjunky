@@ -1,24 +1,25 @@
 import type { InventoryCount } from "square";
 import { useMemo } from "react";
 import useSWR from "swr";
+import { fetcher } from "@/lib/api/fetcher";
 
 const useInventory = (item: string | undefined) => {
   const { data, isLoading, error } = useSWR<
     InventoryCount[],
-    Error | Response,
-    string | undefined
-  >(item, async (key) => {
-    if (!key) throw new Error("No Key set");
-    return fetch(`/api/shop/inventory?item=${key}`).then((value) =>
-      value.json(),
-    ) as Promise<InventoryCount[]>;
-  });
+    Response,
+    [string, string] | null
+  >(item ? ["/api/shop/inventory", item] : null, ([url, item]) =>
+    fetcher(`${url}?item=${item}`),
+  );
 
   const inStock = useMemo(() => {
     if (!data) return false;
     if (!data.length) return true;
     return data.some(
-      (value) => value.state === "IN_STOCK" && value.quantity !== "0",
+      (value) =>
+        value.state === "IN_STOCK" &&
+        !Number.isNaN(value.quantity) &&
+        Number(value.quantity) > 0,
     );
   }, [data]);
 

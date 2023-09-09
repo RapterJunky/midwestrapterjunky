@@ -1,26 +1,28 @@
-import CarouselFragment from "../fragments/Carousel";
-import EmailCallToActionFragment from "../fragments/EmailCallToAction";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+
 import UpcomingEventsWithImage from "../fragments/UpcomingEventsWithImage";
-import UpcomingEvent from "../fragments/UpcomingEvent";
+import EmailCallToActionFragment from "../fragments/EmailCallToAction";
 import TestimonialAndShare from "../fragments/TestimonialAndShare";
-import FeaturedShop from "../fragments/FeaturedShop";
-import Navbar from "../fragments/Navbar";
-import AdvertBlock from "../fragments/AdvertBlock";
-import SocialLinks from "../fragments/SocialLinks";
-import ImageGallery from "../fragments/ImageGallery";
-import VideoWithLink from "../fragments/VideoWithLink";
 import CustomHtmlSection from "../fragments/CustomHtmlSection";
 import CountdownFragment from "@query/fragments/CountDown";
+import UpcomingEvent from "../fragments/UpcomingEvent";
+import VideoWithLink from "../fragments/VideoWithLink";
+import ImageGallery from "../fragments/ImageGallery";
+import FeaturedShop from "../fragments/FeaturedShop";
+import CarouselFragment from "../fragments/Carousel";
+import AdvertBlock from "../fragments/AdvertBlock";
+import SocialLinks from "../fragments/SocialLinks";
+import type { ModulerContent } from "@/types/page";
+
+export type HomePageQueryResult = {
+  home: {
+    seo: SeoOrFaviconTag[];
+    bodyContent: ModulerContent[];
+  };
+};
 
 const HomePageQuery = `
     query HomePage { 
-        _site {
-            faviconMetaTags {
-              attributes
-              content
-              tag
-            }
-        }
         home {
             bodyContent {
                 ...CRFragment
@@ -36,14 +38,11 @@ const HomePageQuery = `
                 ...CHSFragment
                 ...CountdownFragment
             }
-            _seoMetaTags {
+            seo: _seoMetaTags {
                 attributes
                 content
                 tag
             }
-        }
-        navbar {
-            ...NavbarRecordFragment
         }
     }
 ${CarouselFragment}
@@ -57,7 +56,6 @@ ${AdvertBlock}
 ${SocialLinks}
 ${ImageGallery}
 ${VideoWithLink}
-${Navbar}
 ${CountdownFragment}
 `;
 

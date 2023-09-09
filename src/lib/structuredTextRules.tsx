@@ -72,13 +72,16 @@ export const renderInlineRecord = ({
   }
 };
 
-export const renderBlock = ({
-  record,
-}: RenderBlockContext<{
-  __typename: string;
-  id: string;
-  content: ResponsiveImage<{ width: number; height: number }>;
-}>) => {
+export const renderBlock = (
+  {
+    record,
+  }: RenderBlockContext<{
+    __typename: string;
+    id: string;
+    content: ResponsiveImage<{ width: number; height: number }>;
+  }>,
+  opts?: { unoptimized: boolean },
+) => {
   switch (record.__typename) {
     case "ImageRecord":
       if (!record.content) return null;
@@ -86,6 +89,7 @@ export const renderBlock = ({
       return (
         <div className="relative flex justify-center">
           <Image
+            unoptimized={opts?.unoptimized ?? false}
             referrerPolicy="no-referrer"
             placeholder={record.content?.blurUpThumb?.length ? "blur" : "empty"}
             className="rounded-sm object-center shadow"

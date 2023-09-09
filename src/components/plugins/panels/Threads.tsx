@@ -169,6 +169,7 @@ export const Threads: React.FC<{
 
   return (
     <Panel
+      value="2"
       actions={
         <Button onClick={createModel} buttonType="primary" buttonSize="m">
           Create Category
@@ -189,7 +190,7 @@ export const Threads: React.FC<{
       />
       {data && data?.result?.length ? (
         <>
-          <ul className="mt-dato-m space-y-dato-m">
+          <ul className="space-y-dato-m mt-dato-m">
             {data
               ? data.result.map((value) => (
                   <li
@@ -211,7 +212,7 @@ export const Threads: React.FC<{
                       <div className="flex flex-wrap gap-1">
                         {(value.tags as string[])?.map((tag, i) => (
                           <span
-                            className="rounded-md bg-dato-accent px-1 py-0.5 text-dato-light"
+                            className="bg-dato-accent rounded-md px-1 py-0.5 text-dato-light"
                             key={i}
                           >
                             {tag}

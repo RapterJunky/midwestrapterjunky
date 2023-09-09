@@ -94,7 +94,7 @@ export default function ShopFieldExtension({
             borderColor: "var(--border-color)",
           }}
         >
-          <div className="mb-5 text-dato-light-body">
+          <div className="text-dato-light-body mb-5">
             No storefronts available.
           </div>
           <Button
@@ -153,7 +153,7 @@ const RenderError: React.FC<{
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mb-5 text-dato-light-body">
+      <div className="text-dato-light-body mb-5">
         <h4 className="mb-2 font-bold">{message}</h4>
         <code className="text-sm">{cause}</code>
       </div>
@@ -172,7 +172,7 @@ const NoProduct = ({ handleOpenModel }: { handleOpenModel: () => void }) => {
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mb-5 text-dato-light-body">No product selected!</div>
+      <div className="text-dato-light-body mb-5">No product selected!</div>
       <Button onClick={handleOpenModel} buttonSize="s" leftIcon={<FaSearch />}>
         Browse products
       </Button>
@@ -192,7 +192,7 @@ const RenderProduct: React.FC<{
           style={{ backgroundImage: `url(${data.image.url})` }}
         />
         <div className="flex-1 text-left">
-          <div className="mb-1 flex items-center gap-2 text-dato-accent">
+          <div className="text-dato-accent mb-1 flex items-center gap-2">
             <a
               className="text-sm font-bold hover:underline"
               target="_blank"

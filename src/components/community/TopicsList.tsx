@@ -5,7 +5,7 @@ import { useRef } from "react";
 import TopicTable from "@components/community/TopicTable";
 import TopicCard from "@components/community/TopicCard";
 import type { Paginate } from "@type/page";
-import { singleFetch } from "@api/fetch";
+import { fetcher } from "@api/fetcher";
 import TopicCardSkeletion from "./TopicCardSkeletion";
 
 type Props = {
@@ -51,7 +51,7 @@ const TopicsList: React.FC<Props> = ({
           : ""
       }${mode === "category" ? `&categoryId=${categoryId}&mode=category` : ""}`;
     },
-    singleFetch as () => Promise<Paginate<Post>>,
+    fetcher as () => Promise<Paginate<Post>>,
     {
       revalidateOnFocus: false,
     },
@@ -119,7 +119,7 @@ const TopicsList: React.FC<Props> = ({
       {mode !== "suggest" ? (
         <div className="mt-4 flex justify-center">
           <button
-            className="inline-block rounded-sm bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 disabled:pointer-events-none disabled:opacity-70 ui-active:bg-primary-700 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            className="bg-primary hover:bg-primary-600 focus:bg-primary-600 ui-active:bg-primary-700 inline-block rounded-sm px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 disabled:pointer-events-none disabled:opacity-70 ui-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
             disabled={data?.at((data?.length ?? 0) - 1)?.isLastPage ?? true}
             onClick={() => setSize(size + 1)}
           >

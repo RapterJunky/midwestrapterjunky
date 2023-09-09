@@ -1,13 +1,15 @@
+import type { NextRequest } from "next/server";
+import { redirect } from "next/navigation";
 import createHttpError from "http-errors";
 import { draftMode } from "next/headers";
 import { z } from "zod";
 
-import { logger } from "@lib/logger";
 import onError from "@api/handleError";
+import { logger } from "@lib/logger";
 
 const slugValidation = z.string().startsWith("/");
 
-export function GET(request: Request) {
+export function GET(request: NextRequest) {
   const searchParams = new URL(request.url).searchParams;
   if (searchParams.get("secret") !== process.env.PREVIEW_TOKEN)
     return onError(createHttpError.Unauthorized());
@@ -20,5 +22,5 @@ export function GET(request: Request) {
 
   draftMode().enable();
 
-  return Response.redirect(`http://${process.env.VERCEL_URL}${result.data}`);
+  redirect(result.data);
 }

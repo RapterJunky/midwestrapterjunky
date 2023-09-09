@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith("/plugins")) {
     const token = request.nextUrl.searchParams.get("token");
-    if (token !== process.env.PLUGIN_TOKEN)
+    if (!token || token !== process.env.PLUGIN_TOKEN)
       return NextResponse.redirect(new URL("/not-found", request.url), 301);
   }
 
@@ -34,5 +34,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/plugins/:path*", "/community/:path*", "/shop/:path*"],
+  matcher: ["/plugins/(.*)", "/community/:path*", "/shop/:path*"],
 };

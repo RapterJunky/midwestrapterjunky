@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
-import { Tab } from "@headlessui/react";
 import { useState } from "react";
 
 import { MailingList } from "../panels/MailingList";
@@ -18,6 +17,9 @@ import { UserList } from "../panels/UserList";
 import { Threads } from "../panels/Threads";
 import { Reports } from "../panels/Reports";
 import { Topics } from "../panels/Topics";
+
+import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
   const [mini, setMini] = useState(false);
@@ -37,45 +39,61 @@ const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
 
   return (
     <Canvas ctx={ctx}>
-      <Tab.Group
-        defaultValue={2}
-        vertical
-        as="div"
-        className="absolute flex h-full w-full flex-1"
+      <Tabs
+        defaultValue="2"
+        className="absolute flex h-full w-full flex-1 overflow-hidden rounded-none"
+        orientation="vertical"
       >
-        <Tab.List
-          className={`flex flex-col border-r bg-dato-dark text-dato-light transition ${
-            mini ? "w-12" : "w-52"
-          }`}
+        <TabsList
+          className={cn(
+            "flex h-full w-52 flex-col items-start justify-start rounded-none border-r bg-dato-dark text-dato-light transition",
+            { "w-12": mini },
+          )}
         >
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          <TabsTrigger
+            value="0"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaUser /> {mini ? null : "Users List"}
-          </Tab>
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          </TabsTrigger>
+          <TabsTrigger
+            value="1"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaEnvelope /> {mini ? null : "Mailing List"}
-          </Tab>
-          <Tab className="flex items-center gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          </TabsTrigger>
+          <TabsTrigger
+            value="2"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaColumns /> {mini ? null : "Categories"}
-          </Tab>
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          </TabsTrigger>
+          <TabsTrigger
+            value="3"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaRegCommentDots /> {mini ? null : "Topics"}
-          </Tab>
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          </TabsTrigger>
+          <TabsTrigger
+            value="4"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaFlag /> {mini ? null : "Reports"}
-          </Tab>
-          <Tab className="flex items-center justify-start gap-1 px-4 py-2 text-left outline-none hover:text-gray-300 ui-selected:bg-gray-400 ui-selected:bg-opacity-20">
+          </TabsTrigger>
+          <TabsTrigger
+            value="5"
+            className="flex w-full items-center justify-start gap-2"
+          >
             <FaKey /> {mini ? null : "Feature Flags"}
-          </Tab>
-        </Tab.List>
-        <Tab.Panels className="h-full w-full">
-          <UserList mini={mini} setMini={setMini} ctx={ctx} />
-          <MailingList mini={mini} setMini={setMini} ctx={ctx} />
-          <Threads mini={mini} setMini={setMini} ctx={ctx} />
-          <Topics mini={mini} setMini={setMini} ctx={ctx} />
-          <Reports mini={mini} setMini={setMini} />
-          <Features mini={mini} setMini={setMini} ctx={ctx} />
-        </Tab.Panels>
-      </Tab.Group>
+          </TabsTrigger>
+        </TabsList>
+        <UserList mini={mini} setMini={setMini} ctx={ctx} />
+        <MailingList mini={mini} setMini={setMini} ctx={ctx} />
+        <Threads mini={mini} setMini={setMini} ctx={ctx} />
+        <Topics mini={mini} setMini={setMini} ctx={ctx} />
+        <Reports mini={mini} setMini={setMini} />
+        <Features mini={mini} setMini={setMini} ctx={ctx} />
+      </Tabs>
     </Canvas>
   );
 };
