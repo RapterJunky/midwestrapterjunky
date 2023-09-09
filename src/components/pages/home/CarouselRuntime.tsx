@@ -25,7 +25,7 @@ class Carousel {
   private indicatorHandlers: (() => void)[] = [];
   constructor(
     private target: string,
-    private interval = 10_000,
+    private interval = 8000,
   ) {
     const root = document.getElementById(this.target);
     if (!root) throw new Error("Failed to init carousel");
