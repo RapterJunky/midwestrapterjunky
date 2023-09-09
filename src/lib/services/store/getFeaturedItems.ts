@@ -138,8 +138,17 @@ const keyGeneration = (
   }
 };
 
-const getFeaturedItems = cache(
-  async (items: { id: string; item: { value: string } | null }[]): Promise<Storefront.Product[]> => {
+const getFeaturedItems = async (items: { id: string; item: { value: string } | null }[]): Promise<Storefront.Product[]> => {
+
+  const request = JSON.stringify(items);
+
+  return _getFeaturedItems(request);
+}
+
+const _getFeaturedItems = cache(
+  async (request: string): Promise<Storefront.Product[]> => {
+    const items = JSON.parse(request) as { id: string; item: { value: string } | null }[];
+
     const query = new Map<Storefront.StorefrontType, StorefontsProducts>();
 
     if (!items) return [];
