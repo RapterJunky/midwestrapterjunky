@@ -6,14 +6,13 @@ import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
 
-
 const schema = z.object({
   post: z.string().uuid(),
   parent: z.string().uuid().optional(),
   page: z.coerce.number().positive().min(1).optional().default(1),
 });
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = REVALIDATE_IN_1H;
 
 export async function GET(request: NextRequest) {
@@ -59,11 +58,11 @@ export async function GET(request: NextRequest) {
 
     const likes = session
       ? await prisma.like.findMany({
-        where: {
-          userId: session.user.id,
-          commentId: { in: comments.map((value) => value.id) },
-        },
-      })
+          where: {
+            userId: session.user.id,
+            commentId: { in: comments.map((value) => value.id) },
+          },
+        })
       : [];
 
     const result = [];

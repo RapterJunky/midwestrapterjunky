@@ -5,7 +5,7 @@ import { z } from "zod";
 import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
 import onError from "@/lib/api/handleError";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = REVALIDATE_IN_1H;
 
 export async function GET(request: NextRequest) {

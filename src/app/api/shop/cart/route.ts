@@ -4,7 +4,7 @@ import CartQuery, { type CartQueryResult } from "@/gql/sqaure/cartQuery";
 import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
 import onError from "@/lib/api/handleError";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
