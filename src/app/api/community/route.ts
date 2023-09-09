@@ -17,7 +17,7 @@ const reportSchema = schema.extend({
   reason: z.string(),
 });
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authConfig);
     const { searchParams } = new URL(request.url);

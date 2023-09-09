@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { Client } from "square";
 import { z } from "zod";
+
+import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
 import onError from "@/lib/api/handleError";
 
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic';
+export const revalidate = REVALIDATE_IN_1H;
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
 
     const discount = z.string().parse(searchParams.get("discount"));
 

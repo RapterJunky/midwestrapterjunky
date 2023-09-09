@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import CartQuery, { type CartQueryResult } from "@/gql/sqaure/cartQuery";
 import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
 import onError from "@/lib/api/handleError";
 
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
 
     const cart = searchParams.get("cart")?.toString();
 

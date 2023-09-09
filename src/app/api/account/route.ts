@@ -7,8 +7,6 @@ import onError from "@api/handleError";
 import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
 
-export const dynamic = "force-dynamic";
-
 export const GET = async () => {
   try {
     const session = await getServerSession(authConfig);
