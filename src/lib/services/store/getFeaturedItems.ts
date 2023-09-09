@@ -103,9 +103,8 @@ const fetchSquare = async (data: StorefontsProducts): Promise<Products[]> => {
       index: data.products[i]?.idx ?? 0,
       product: {
         title: value.title,
-        onlineStoreUrl: `${
-          process.env.VERCEL_ENV === "development" ? "http" : "https"
-        }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
+        onlineStoreUrl: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
+          }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
         image: value.images?.at(0) ?? {
           url: getPlaceholderImage(value.title),
           alt: value.title,
@@ -139,13 +138,32 @@ const keyGeneration = (
   }
 };
 
-const getFeaturedItems = cache(
-  async (items: string[]): Promise<Storefront.Product[]> => {
+const getFeaturedItems = async (items: { id: string; item: { value: string } | null }[]): Promise<Storefront.Product[]> => {
+
+  const request = JSON.stringify(items);
+
+  return _getFeaturedItems(request);
+}
+
+const _getFeaturedItems = cache(
+  async (request: string): Promise<Storefront.Product[]> => {
+    const items = JSON.parse(request) as { id: string; item: { value: string } | null }[];
+
     const query = new Map<Storefront.StorefrontType, StorefontsProducts>();
 
+    if (!items) return [];
+
     // sort data into their storefronts and tenants
-    for (const [idx, item] of items.entries()) {
-      const [storefront, tenant, product] = item.split(
+    for (const [idx, shopItem] of items.entries()) {
+
+      if (!shopItem || !shopItem.item) {
+        logger.info({
+          id: shopItem?.id ?? "Unknown ID",
+        }, `Was given a shop item with no data`);
+        continue;
+      }
+
+      const [storefront, tenant, product] = shopItem.item.value.split(
         "$",
       ) as EncodeProductItem;
 

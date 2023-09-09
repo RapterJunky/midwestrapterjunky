@@ -4,7 +4,7 @@ import type { ModulerContent } from "@/types/page";
 import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
 
 export interface FeatureShopItemsProps extends ModulerContent {
-  items: { item: { value: string } }[];
+  items: { id: string; item: { value: string } | null }[];
 }
 
 //https://shopify.dev/custom-storefronts/tools/graphiql-storefront-api
@@ -32,9 +32,7 @@ const formatter = (
 };
 
 const FeaturedShopItems: React.FC<FeatureShopItemsProps> = async (props) => {
-  const data = await getFeaturedItems(
-    props.items.map((value) => value.item.value),
-  );
+  const data = await getFeaturedItems(props.items);
 
   if (!data.length) return null;
 
