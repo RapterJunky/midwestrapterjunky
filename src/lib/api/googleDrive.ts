@@ -1,10 +1,13 @@
+import { GoogleAuth } from 'google-auth-library/build/src/auth/googleauth';
+import { drive_v3 } from "googleapis/build/src/apis/drive/v3";
 import { rgbaToDataURL } from "thumbhash";
 import { Readable } from "node:stream";
-import { google } from "googleapis";
 import { parse } from "node:path";
 import sharp from "sharp";
+
 import { GOOGLE_DRIVE_IMAGE_ROOT } from "../utils/googleConsts";
 import { logger } from "../logger";
+
 export type GoogleImage = {
   id: string;
   name: string;
@@ -25,7 +28,7 @@ const googleDrive = () => {
     process.env.GOOGLE_SERVICE_KEY,
   ) as NodeJS.GoogleServiceKey;
 
-  const auth = new google.auth.GoogleAuth({
+  const auth = new GoogleAuth({
     projectId: creds.project_id,
     credentials: {
       type: creds.type,
@@ -36,7 +39,7 @@ const googleDrive = () => {
     scopes: ["https://www.googleapis.com/auth/drive"],
   });
 
-  return google.drive({ version: "v3", auth });
+  return new drive_v3.Drive({ auth });
 };
 
 export const driveConfig = {

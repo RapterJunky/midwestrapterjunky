@@ -1,5 +1,4 @@
 import "server-only";
-
 import FeaturedQuery, {
   type FeaturedQueryResult,
 } from "@/gql/sqaure/featuredQuery";
@@ -145,6 +144,10 @@ const getFeaturedItems = async (items: { id: string; item: { value: string } | n
   return _getFeaturedItems(request);
 }
 
+/** 
+ * Pass input as string due to comparison between objects
+ * @see https://react.dev/reference/react/cache
+ */
 const _getFeaturedItems = cache(
   async (request: string): Promise<Storefront.Product[]> => {
     const items = JSON.parse(request) as { id: string; item: { value: string } | null }[];
