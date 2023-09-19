@@ -102,8 +102,9 @@ const fetchSquare = async (data: StorefontsProducts): Promise<Products[]> => {
       index: data.products[i]?.idx ?? 0,
       product: {
         title: value.title,
-        onlineStoreUrl: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
-          }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
+        onlineStoreUrl: `${
+          process.env.VERCEL_ENV === "development" ? "http" : "https"
+        }://${process.env.VERCEL_URL}/shop/product/${value.id}`,
         image: value.images?.at(0) ?? {
           url: getPlaceholderImage(value.title),
           alt: value.title,
@@ -137,20 +138,24 @@ const keyGeneration = (
   }
 };
 
-const getFeaturedItems = async (items: { id: string; item: { value: string } | null }[]): Promise<Storefront.Product[]> => {
-
+const getFeaturedItems = async (
+  items: { id: string; item: { value: string } | null }[],
+): Promise<Storefront.Product[]> => {
   const request = JSON.stringify(items);
 
   return _getFeaturedItems(request);
-}
+};
 
-/** 
+/**
  * Pass input as string due to comparison between objects
  * @see https://react.dev/reference/react/cache
  */
 const _getFeaturedItems = cache(
   async (request: string): Promise<Storefront.Product[]> => {
-    const items = JSON.parse(request) as { id: string; item: { value: string } | null }[];
+    const items = JSON.parse(request) as {
+      id: string;
+      item: { value: string } | null;
+    }[];
 
     const query = new Map<Storefront.StorefrontType, StorefontsProducts>();
 
@@ -158,11 +163,13 @@ const _getFeaturedItems = cache(
 
     // sort data into their storefronts and tenants
     for (const [idx, shopItem] of items.entries()) {
-
       if (!shopItem || !shopItem.item) {
-        logger.info({
-          id: shopItem?.id ?? "Unknown ID",
-        }, `Was given a shop item with no data`);
+        logger.info(
+          {
+            id: shopItem?.id ?? "Unknown ID",
+          },
+          `Was given a shop item with no data`,
+        );
         continue;
       }
 

@@ -1,4 +1,4 @@
-import { GoogleAuth } from 'google-auth-library/build/src/auth/googleauth';
+import { GoogleAuth } from "google-auth-library/build/src/auth/googleauth";
 import { drive_v3 } from "googleapis/build/src/apis/drive/v3";
 import { rgbaToDataURL } from "thumbhash";
 import { Readable } from "node:stream";

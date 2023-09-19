@@ -44,7 +44,7 @@ const vaildPatch = z.enum(["authors", "category", "tac", "users"]);
 
 const vaildPost = z.enum(["authors", "square", "category", "mail", "users"]);
 
-export async function GET(request: Request, { params }: RequestParams) {
+export const GET = async (request: Request, { params }: RequestParams) => {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -72,13 +72,15 @@ export async function GET(request: Request, { params }: RequestParams) {
         return pluginTAC.GET(request);
       case "images":
         return pluginImages.GET(request);
+      default:
+        throw createHttpError.BadRequest();
     }
   } catch (error) {
     return onError(error);
   }
-}
+};
 
-export async function POST(request: Request, { params }: RequestParams) {
+export const POST = async (request: Request, { params }: RequestParams) => {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -86,6 +88,7 @@ export async function POST(request: Request, { params }: RequestParams) {
       authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
+
     const route = vaildPost.parse(params.midwestraptor[0]);
 
     switch (route) {
@@ -96,12 +99,14 @@ export async function POST(request: Request, { params }: RequestParams) {
       case "category":
         return pluginCaetgory.POST(request);
       case "mail":
-        return pluginCaetgory.POST(request);
+        return await pluginMail.POST(request);
+      default:
+        throw new createHttpError.BadRequest();
     }
   } catch (error) {
     return onError(error);
   }
-}
+};
 
 export async function PATCH(request: Request, { params }: RequestParams) {
   try {
@@ -122,6 +127,8 @@ export async function PATCH(request: Request, { params }: RequestParams) {
         return pluginCaetgory.PATCH(request);
       case "users":
         return pluginUser.PATCH(request);
+      default:
+        throw createHttpError.BadRequest();
     }
   } catch (error) {
     return onError(error);
@@ -151,6 +158,8 @@ export async function DELETE(request: Request, { params }: RequestParams) {
         return pluginUser.DELETE(request);
       case "images":
         return pluginImages.DELETE(request);
+      default:
+        throw createHttpError.BadRequest();
     }
   } catch (error) {
     return onError(error);
@@ -174,6 +183,8 @@ export async function PUT(
       case "flags": {
         return pluginFlags.PUT(request);
       }
+      default:
+        throw createHttpError.BadRequest();
     }
   } catch (error) {
     return onError(error);
