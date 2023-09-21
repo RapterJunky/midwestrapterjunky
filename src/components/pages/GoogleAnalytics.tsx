@@ -1,8 +1,13 @@
 import Script from "next/script";
+import Head from "next/head";
 
 const GoogleAnalytics: React.FC<{ debug: boolean }> = ({ debug }) => {
   return (
     <>
+      <Head>
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="preconnect" href="//www.googletagmanager.com" />
+      </Head>
       <Script
         id="google-analytics-js"
         strategy="afterInteractive"
@@ -11,19 +16,16 @@ const GoogleAnalytics: React.FC<{ debug: boolean }> = ({ debug }) => {
       <Script
         id="google-analytics"
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag("js",new Date());
-                gtag("config","${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}",{
-                    page_path: window.location.pathname,
-                    transport_url: "https://www.google-analytics.com",
-                    first_party_collection: true,
-                    ${debug ? `debug_mode: ${debug}` : ""}
-                });`,
-        }}
-      ></Script>
+      >
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag("js",new Date());
+          gtag("config","${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}",{
+              page_path: window.location.pathname,
+              ${debug ? `debug_mode: ${debug}` : ""}
+          });`}
+      </Script>
     </>
   );
 };
