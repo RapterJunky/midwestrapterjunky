@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 
-const root = `http${process.env.VERCEL_ENV === "development" ? "" : "s"}://${
-  process.env.VERCEL_URL
-}`;
+const root = `http${process.env.VERCEL_ENV === "development" ? "" : "s"}://${process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_URL
+  }`;
 
 const routes = [
   root,

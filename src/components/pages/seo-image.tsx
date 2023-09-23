@@ -25,9 +25,8 @@ export const SEOImage = () => {
             width={500}
             height={500}
             alt=""
-            src={`${
-              process.env.VERCEL_ENV === "development" ? "http" : "https"
-            }://${process.env.VERCEL_URL}/facebook.png`}
+            src={`${process.env.VERCEL_ENV === "development" ? "http" : "https"
+              }://${process.env.NEXT_PUBLIC_SITE_URL}/facebook.png`}
           />
         </div>
       </div>

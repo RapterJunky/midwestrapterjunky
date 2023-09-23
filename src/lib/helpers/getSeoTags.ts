@@ -18,9 +18,8 @@ type Opts = {
   datocms?: TitleMetaLinkTag[] | SeoOrFaviconTag[];
 };
 
-const host = `${
-  process.env.VERCEL_ENV === "development" ? "http" : "https"
-}://${process.env.VERCEL_URL}`;
+const host = `${process.env.VERCEL_ENV === "development" ? "http" : "https"
+  }://${process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_URL}`;
 
 const defaultRobots = (allow: boolean): Metadata["robots"] => ({
   index: allow,
