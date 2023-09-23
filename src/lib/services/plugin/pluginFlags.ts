@@ -9,15 +9,9 @@ const schema = z.record(
   }),
 );
 
-const CONFIG_ID = "08db4a5e-9da2-4f87-8127-177d185c01ae";
-const env =
-  process.env.VERCEL_ENV !== "production"
-    ? "08db4a5e-9d88-41a5-8db1-d00b50df6630"
-    : "08db4a5e-9d97-4083-8220-ec3b0deecce8";
-
 async function GET() {
   const response = await fetch(
-    `https://api.configcat.com/v1/configs/${CONFIG_ID}/environments/${env}/values`,
+    `https://api.configcat.com/v1/configs/${process.env.CONFIG_CAT_CONFIG_ID}/environments/${process.env.CONFIG_CAT_ENV}/values`,
     {
       headers: {
         Authorization: `Basic ${process.env.CONFIG_CAT_MANAGEMENT}`,
@@ -40,7 +34,7 @@ async function PUT(request: Request) {
   const results = await Promise.allSettled(
     Object.values(data).map(async (flag) => {
       const response = await fetch(
-        `https://api.configcat.com/v1/environments/${env}/settings/${flag.id}/value`,
+        `https://api.configcat.com/v1/environments/${process.env.CONFIG_CAT_ENV}/settings/${flag.id}/value`,
         {
           method: "PUT",
           body: JSON.stringify({

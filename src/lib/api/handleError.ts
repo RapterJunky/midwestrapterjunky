@@ -1,5 +1,4 @@
 import { fromZodError } from "zod-validation-error";
-import type { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
 import { Prisma } from "@prisma/client";
@@ -13,12 +12,7 @@ export type ApiErrorResponse = {
   details?: unknown[] | { message: string }[];
 };
 
-function onError(error: unknown, res: NextApiResponse): void;
-function onError(error: unknown): NextResponse<ApiErrorResponse>;
-function onError(
-  error: unknown,
-  res?: NextApiResponse,
-): NextResponse<ApiErrorResponse> | void {
+function onError(error: unknown): NextResponse<ApiErrorResponse> {
   if (error instanceof ZodError) {
     const badRequest = createHttpError.BadRequest();
     const zodError = fromZodError(error);
@@ -31,7 +25,6 @@ function onError(
       details: zodError.details,
     };
 
-    if (res) return res.status(badRequest.statusCode).json(response);
     return NextResponse.json(response, { status: badRequest.statusCode });
   }
 
@@ -44,7 +37,6 @@ function onError(
       details: [],
     };
 
-    if (res) return res.status(error.statusCode).json(response);
     return NextResponse.json(response, { status: error.statusCode });
   }
 
@@ -58,7 +50,6 @@ function onError(
       status: badRequest.statusCode,
       details: [],
     };
-    if (res) return res.status(badRequest.statusCode).json(response);
     return NextResponse.json(response, { status: badRequest.statusCode });
   }
   /*
@@ -71,7 +62,6 @@ function onError(
       status: badRequest.statusCode,
       details: [{ code: error.code }, error.meta],
     };
-    if (res) return res.status(badRequest.statusCode).json(response);
     return NextResponse.json(response, { status: badRequest.statusCode });
   }
 
@@ -82,7 +72,6 @@ function onError(
     details: [],
   };
 
-  if (res) return res.status(internalError.statusCode).json(response);
   return NextResponse.json(response, { status: internalError.statusCode });
 }
 

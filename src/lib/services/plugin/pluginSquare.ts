@@ -1,4 +1,9 @@
-import { Client, Environment } from "square";
+import {
+  Client,
+  Environment,
+  type SearchCatalogObjectsResponse,
+  type RetrieveCatalogObjectResponse,
+} from "square";
 import { NextResponse } from "next/server";
 import { serialize } from "superjson";
 import { z } from "zod";
@@ -51,7 +56,7 @@ async function POST(request: Request) {
 
     const { json } = serialize(objects.result);
 
-    return NextResponse.json(json);
+    return NextResponse.json(json as SearchCatalogObjectsResponse);
   }
 
   const { id } = fetchItem.parse(body);
@@ -60,7 +65,7 @@ async function POST(request: Request) {
 
   const { json } = serialize(item.result);
 
-  return NextResponse.json(json);
+  return NextResponse.json(json as RetrieveCatalogObjectResponse);
 }
 
 const handlers = {

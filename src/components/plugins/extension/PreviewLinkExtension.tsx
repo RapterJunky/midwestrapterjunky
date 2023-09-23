@@ -1,4 +1,3 @@
-import type { ItemAttributes } from "datocms-plugin-sdk/dist/types/SiteApiSchema";
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas, ButtonLink } from "datocms-react-ui";
 import { useMemo } from "react";
@@ -31,7 +30,7 @@ const getSettings = (value: unknown, slug: string): RevalidateSettings => {
 
 const replaceVariables = (
   entityPath: string,
-  attributes: ItemAttributes,
+  attributes: object,
   locale: string | null,
 ) => {
   // patch bug

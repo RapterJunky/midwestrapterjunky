@@ -35,15 +35,20 @@ const serviceKey = z
  * built with invalid env vars.
  */
 const server = z.object({
+  CONFIG_CAT_ENV: z.string().uuid(),
+  CONFIG_CAT_CONFIG_ID: z.string().uuid(),
+
   NODE_ENV: z.enum(["development", "test", "production"]),
   DATOCMS_READONLY_TOKEN: z.string(),
   DATOCMS_API_TOKEN: z.string().min(1),
   DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
 
   USE_JSON_IMAGE: z.string().nullable().optional(),
+  POST_EMAIL_NOTIFACTION_TEMPLTE: z.string().min(1),
 
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
+  GOOGLE_SITE_VERIFICATION: z.string(),
 
   SENDGIRD_API_KEY: z.string().min(1),
 
@@ -135,6 +140,12 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
+  CONFIG_CAT_CONFIG_ID: process.env.CONFIG_CAT_CONFIG_ID,
+  CONFIG_CAT_ENV: process.env.CONFIG_CAT_ENV,
+
+  POST_EMAIL_NOTIFACTION_TEMPLTE: process.env.POST_EMAIL_NOTIFACTION_TEMPLTE,
+
   CONFIG_CAT_MANAGEMENT: process.env.CONFIG_CAT_MANAGEMENT,
   CONFIG_CAT_KEY: process.env.CONFIG_CAT_KEY,
   NODE_ENV: process.env.NODE_ENV,

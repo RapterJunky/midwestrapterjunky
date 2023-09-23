@@ -6,11 +6,7 @@ import {
   type ColumnDef,
   flexRender,
 } from "@tanstack/react-table";
-import {
-  TextInput,
-  SelectInput,
-  Spinner,
-} from "datocms-react-ui";
+import { TextInput, SelectInput, Spinner } from "datocms-react-ui";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { useState, useMemo } from "react";
 import useSWR from "swr";
@@ -152,7 +148,7 @@ export const UserList: React.FC<{
                               {typeof table
                                 .getPreFilteredRowModel()
                                 .flatRows[0]?.getValue(header.column.id) ===
-                                "number" ? (
+                              "number" ? (
                                 <SelectInput
                                   value={header.column.getFilterValue()}
                                   onChange={(e) =>
@@ -197,7 +193,13 @@ export const UserList: React.FC<{
                         )}
                       </td>
                     ))}
-                    <UserItem ctx={ctx} mutate={mutate} rowName={rowName} rowId={rowId} rowBanned={rowBanned} />
+                    <UserItem
+                      ctx={ctx}
+                      mutate={mutate}
+                      rowName={rowName}
+                      rowId={rowId}
+                      rowBanned={rowBanned}
+                    />
                   </tr>
                 );
               })}

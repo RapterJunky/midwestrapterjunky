@@ -74,7 +74,6 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-const EMAIL_TEMPLTE_ID = "d-09d6805d0013445eb03fa020c5fabb7c";
 export async function POST(request: NextRequest) {
   try {
     const limit = await ratelimit(request.ip);
@@ -150,7 +149,7 @@ export async function POST(request: NextRequest) {
           {
             to: comment.threadPost.owner.email,
             templete: {
-              id: EMAIL_TEMPLTE_ID,
+              id: process.env.POST_EMAIL_NOTIFACTION_TEMPLTE,
               data: {
                 topic_title: comment.threadPost.name,
                 topic_link: `http${

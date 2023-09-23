@@ -46,7 +46,7 @@ export const Threads: React.FC<{
       })) as Thread | undefined;
       if (!result) return;
 
-      await mutate(
+      await mutate<Paginate<Thread>>(
         async (current) => {
           if (!current) throw new Error("Missing Source Data");
           const response = await AuthFetch("/api/plugin/category", {

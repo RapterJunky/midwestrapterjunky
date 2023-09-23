@@ -14,6 +14,11 @@ export async function generateMetadata(
   return getSeoTags({
     datocms: home.seo,
     parent,
+    metadata: {
+      verification: {
+        google: process.env.GOOGLE_SITE_VERIFICATION,
+      },
+    },
   });
 }
 
