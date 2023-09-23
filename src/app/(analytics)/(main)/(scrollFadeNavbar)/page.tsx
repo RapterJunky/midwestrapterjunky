@@ -6,7 +6,7 @@ import HomePageQuery, { type HomePageQueryResult } from "@/gql/queries/home";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { home } = await getPageQuery<HomePageQueryResult>(HomePageQuery);
@@ -15,10 +15,10 @@ export async function generateMetadata(
     datocms: home.seo,
     parent,
     metadata: {
-      other: {
-        "google-site-verification": process.env.GOOGLE_SITE_VERIFICATION
-      }
-    }
+      verification: {
+        google: process.env.GOOGLE_SITE_VERIFICATION,
+      },
+    },
   });
 }
 
