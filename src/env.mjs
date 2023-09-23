@@ -48,6 +48,7 @@ const server = z.object({
 
   CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
+  GOOGLE_SITE_VERIFICATION: z.string(),
 
   SENDGIRD_API_KEY: z.string().min(1),
 
@@ -139,6 +140,7 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
   CONFIG_CAT_CONFIG_ID: process.env.CONFIG_CAT_CONFIG_ID,
   CONFIG_CAT_ENV: process.env.CONFIG_CAT_ENV,
 
