@@ -23,6 +23,9 @@ export default function ImageGallery(props: ImageGalleryProps) {
                 referrerPolicy="no-referrer"
                 placeholder="blur"
                 loading="lazy"
+                unoptimized={value.responsiveImage.src.startsWith(
+                  "https://drive.google.com",
+                )}
                 blurDataURL={value.blurUpThumb}
                 width={value.responsiveImage.width}
                 height={value.responsiveImage.height}

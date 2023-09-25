@@ -1,13 +1,8 @@
 import Script from "next/script";
-import Head from "next/head";
 
 const GoogleAnalytics: React.FC<{ debug: boolean }> = ({ debug }) => {
   return (
     <>
-      <Head>
-        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-        <link rel="preconnect" href="//www.googletagmanager.com" />
-      </Head>
       <Script
         id="google-analytics-js"
         strategy="afterInteractive"

@@ -29,6 +29,9 @@ export default function UpcomingEvents(props: UpcomingEventsProps) {
               loading="lazy"
               placeholder={event.bgImage?.blurUpThumb ? "blur" : "empty"}
               className="pointer-events-none object-cover object-center"
+              unoptimized={event.bgImage.responsiveImage.src.startsWith(
+                "https://drive.google.com",
+              )}
               height={event.bgImage.responsiveImage.height}
               width={event.bgImage.responsiveImage.width}
               src={event.bgImage.responsiveImage.src}

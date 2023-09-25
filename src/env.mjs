@@ -131,6 +131,8 @@ const client = z.object({
     .transform((value) => value.split(","))
     .optional()
     .default([]),
+
+  NEXT_PUBLIC_SITE_URL: z.string().optional(),
 });
 
 /**
@@ -229,6 +231,8 @@ const processEnv = {
     process.env.NEXT_PUBLIC_VERCEL_GIT_PREVIOUS_SHA,
 
   NEXT_PUBLIC_FEATURE_FLAGS: process.env.NEXT_PUBLIC_FEATURE_FLAGS,
+
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
 };
 
 // Don't touch the part below
