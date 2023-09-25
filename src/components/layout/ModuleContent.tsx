@@ -32,6 +32,7 @@ import Carousel, { type CarouselProps } from "@/components/pages/home/Carousel";
 import HtmlSection from "@components/pages/home/HtmlSection";
 
 import type { ModulerContent } from "@/types/page";
+import SingleImage, { type SingleImageProps } from "../pages/home/SingleImage";
 
 const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({
   modules,
@@ -85,6 +86,8 @@ const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({
             return <HtmlSection {...module} key={i} />;
           case "CountdownRecord":
             return <CountdownSection {...(module as CountDownProps)} key={i} />;
+          case "ImageRecord":
+            return <SingleImage {...module as SingleImageProps} key={i} />
           default:
             return null;
         }

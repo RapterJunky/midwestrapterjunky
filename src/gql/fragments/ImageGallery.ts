@@ -7,16 +7,3 @@ fragment IGFragment on ImageGalleryRecord {
     images ${ImageHelper("gallery")}
   }`;
 export default ImageGralleryFragment;
-/*
-{
-      responsiveImage {
-        sizes
-        alt
-        src
-        height
-        width
-      }
-      blurUpThumb
-    }
-
-*/

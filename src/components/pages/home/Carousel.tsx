@@ -77,6 +77,7 @@ export default function CarouselElement(props: CarouselProps) {
               placeholder="blur"
               loading="lazy"
               fill
+              unoptimized={value.responsiveImage.src.startsWith("https://drive.google.com")}
               sizes={value.responsiveImage.sizes}
               blurDataURL={value.blurUpThumb}
               src={value.responsiveImage.src}
