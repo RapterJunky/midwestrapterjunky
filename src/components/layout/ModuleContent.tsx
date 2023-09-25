@@ -87,7 +87,7 @@ const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({
           case "CountdownRecord":
             return <CountdownSection {...(module as CountDownProps)} key={i} />;
           case "ImageRecord":
-            return <SingleImage {...module as SingleImageProps} key={i} />
+            return <SingleImage {...(module as SingleImageProps)} key={i} />;
           default:
             return null;
         }

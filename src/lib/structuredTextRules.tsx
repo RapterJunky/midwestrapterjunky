@@ -89,7 +89,12 @@ export const renderBlock = (
       return (
         <div className="relative flex justify-center">
           <Image
-            unoptimized={opts?.unoptimized ?? record.content.responsiveImage.src.startsWith("https://drive.google.com")}
+            unoptimized={
+              opts?.unoptimized ??
+              record.content.responsiveImage.src.startsWith(
+                "https://drive.google.com",
+              )
+            }
             referrerPolicy="no-referrer"
             placeholder={record.content?.blurUpThumb?.length ? "blur" : "empty"}
             className="rounded-sm object-center shadow"

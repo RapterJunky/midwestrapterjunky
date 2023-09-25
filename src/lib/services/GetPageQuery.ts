@@ -29,7 +29,10 @@ const dedupedFetch = cache(async (requestData: string) => {
     "Datocms Query",
   );
   const response = await fetch("https://graphql.datocms.com/", request);
-  const responseBody = (await response.json()) as { data: unknown, errors?: { message: string; }[] };
+  const responseBody = (await response.json()) as {
+    data: unknown;
+    errors?: { message: string }[];
+  };
   if (!response.ok) {
     logger.error(
       {
@@ -43,8 +46,13 @@ const dedupedFetch = cache(async (requestData: string) => {
   }
 
   if ("errors" in responseBody) {
-    logger.error(responseBody.errors, responseBody.errors?.at(0)?.message ?? "Unknown query error.");
-    throw new Error(responseBody.errors?.at(0)?.message ?? "Unknown query error.");
+    logger.error(
+      responseBody.errors,
+      responseBody.errors?.at(0)?.message ?? "Unknown query error.",
+    );
+    throw new Error(
+      responseBody.errors?.at(0)?.message ?? "Unknown query error.",
+    );
   }
 
   return responseBody;

@@ -17,10 +17,10 @@ import SocialLinks from "../fragments/SocialLinks";
 import type { ModulerContent } from "@/types/page";
 
 export type HomePageQueryResult = {
-    home: {
-        seo: SeoOrFaviconTag[];
-        bodyContent: ModulerContent[];
-    };
+  home: {
+    seo: SeoOrFaviconTag[];
+    bodyContent: ModulerContent[];
+  };
 };
 
 const HomePageQuery = `
