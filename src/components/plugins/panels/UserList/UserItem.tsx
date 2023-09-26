@@ -50,7 +50,8 @@ const UserItem: React.FC<{
       );
       ctx
         .notice(
-          `Successfully ${!rowBanned ? "soft banned" : "unbanned"
+          `Successfully ${
+            !rowBanned ? "soft banned" : "unbanned"
           } user ${rowName}`,
         )
         .catch((e) => console.error(e));
