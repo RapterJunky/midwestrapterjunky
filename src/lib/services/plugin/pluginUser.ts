@@ -62,7 +62,7 @@ async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const { id } = z
     .object({ id: z.string().cuid() })
-    .parse(Object.fromEntries(searchParams.entries()));
+    .parse({ id: searchParams.get("id") });
 
   await prisma.user.delete({
     where: {

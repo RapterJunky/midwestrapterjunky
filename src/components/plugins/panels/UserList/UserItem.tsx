@@ -123,7 +123,7 @@ const UserItem: React.FC<{
           if (!current) throw new Error("No data to update.");
 
           const user = current.result.findIndex((item) => item.id === rowId);
-          if (user !== -1) throw new Error("Unable to find user index.");
+          if (user === -1) throw new Error("Unable to find user index.");
 
           await AuthFetch(`/api/plugin/users?id=${rowId}`, {
             method: "DELETE",
@@ -136,6 +136,7 @@ const UserItem: React.FC<{
         { revalidate: false, rollbackOnError: true },
       );
     } catch (error) {
+      console.error(error);
       ctx.alert("Failed to delete account.").catch((e) => console.error(e));
     }
   };
