@@ -2,3 +2,5 @@
 build
 coverage
 .next
+
+/public/scripts/new-relic-loader-spa-1.242.0.min.js

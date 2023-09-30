@@ -1,6 +1,6 @@
 {
   "name": "rapterjunky",
-  "version": "1.1.5",
+  "version": "1.2.5",
   "private": true,
   "scripts": {
     "dev": "next dev | pino-pretty",

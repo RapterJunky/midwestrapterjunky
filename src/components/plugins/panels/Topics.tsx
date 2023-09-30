@@ -200,13 +200,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                            <span
-                              className="text-dato-xs rounded-sm bg-green-500 px-1 text-white"
-                              key={i}
-                            >
-                              {value}
-                            </span>
-                          ))
+                          <span
+                            className="rounded-sm text-xs bg-green-500 px-1 text-white"
+                            key={i}
+                          >
+                            {value}
+                          </span>
+                        ))
                         : null}
                     </div>
                   </div>
@@ -230,12 +230,10 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${
-                          topic.pinned ? "unpinned" : "pinned"
-                        } topic.`,
-                        error: `Failed to ${
-                          topic.pinned ? "Unpin Topic" : "Pin Topic"
-                        }`,
+                        success: `Successfully ${topic.pinned ? "unpinned" : "pinned"
+                          } topic.`,
+                        error: `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"
+                          }`,
                       }}
                       data={{
                         id: topic.id,
@@ -254,12 +252,10 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${
-                          topic.locked ? "unlocked" : "locked"
-                        } topic.`,
-                        error: `Failed to ${
-                          topic.locked ? "unlock" : "lock"
-                        } topic.`,
+                        success: `Successfully ${topic.locked ? "unlocked" : "locked"
+                          } topic.`,
+                        error: `Failed to ${topic.locked ? "unlock" : "lock"
+                          } topic.`,
                       }}
                       data={{
                         id: topic.id,
@@ -362,64 +358,3 @@ export const Topics: React.FC<{
     </Panel>
   );
 };
-
-/*
- <DropdownOption
-                      onClick={async () => {
-                        try {
-                          await mutate(
-                            async (current) => {
-                              if (!current)
-                                throw new Error("Unable to process.");
-                              const idx = current.result.findIndex(
-                                (item) => item.id === topic.id
-                              );
-                              if (idx === -1)
-                                throw new Error("Failed to find topic");
-
-                              const response = await AuthFetch(
-                                `/api/plugin/tac`,
-                                {
-                                  method: "PATCH",
-                                  json: {
-                                    id: topic.id,
-                                    type: "topic",
-                                    prop: "pinned",
-                                    value: !topic.pinned,
-                                  },
-                                }
-                              );
-
-                              const data = (await response.json()) as Topic;
-
-                              return update(current, {
-                                result: { [idx]: { $set: data } },
-                              });
-                            },
-                            { revalidate: false, rollbackOnError: true }
-                          );
-                          ctx
-                            .notice(
-                              `Successfully ${topic.pinned ? "unpinned" : "pinned"} topic.`
-                            )
-                            .catch((e) => console.error(e));
-                        } catch (error) {
-                          ctx
-                            .alert(
-                              `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"
-                              }`
-                            )
-                            .catch((e) => console.error(e));
-                        }
-                      }}
-                    >
-                      <div className="font-semibold">
-                        {topic.pinned ? "Unpin Topic" : "Pin Topic"}
-                      </div>
-                      <div className="text-sm tracking-tighter text-neutral-500">
-                        {topic.pinned
-                          ? "Unpin this topic from its category."
-                          : "Pin this topic to its category."}
-                      </div>
-                    </DropdownOption>
- */

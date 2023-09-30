@@ -35,22 +35,14 @@ const serviceKey = z
  * built with invalid env vars.
  */
 const server = z.object({
-  CONFIG_CAT_ENV: z.string().uuid(),
   CONFIG_CAT_CONFIG_ID: z.string().uuid(),
-
-  NODE_ENV: z.enum(["development", "test", "production"]),
-  DATOCMS_READONLY_TOKEN: z.string(),
-  DATOCMS_API_TOKEN: z.string().min(1),
-  DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
-
-  USE_JSON_IMAGE: z.string().nullable().optional(),
-  POST_EMAIL_NOTIFACTION_TEMPLTE: z.string().min(1),
-
-  CONFIG_CAT_KEY: z.string(),
   CONFIG_CAT_MANAGEMENT: z.string(),
-  GOOGLE_SITE_VERIFICATION: z.string(),
+  CONFIG_CAT_ENV: z.string().uuid(),
+  CONFIG_CAT_KEY: z.string(),
 
-  SENDGIRD_API_KEY: z.string().min(1),
+  DATOCMS_ENVIRONMENT: z.enum(["dev", "preview", "main"]),
+  DATOCMS_API_TOKEN: z.string().min(1),
+  DATOCMS_READONLY_TOKEN: z.string(),
 
   GOOGLE_SERVICE_KEY: serviceKey.transform((value, ctx) => {
     try {
@@ -60,30 +52,37 @@ const server = z.object({
       return z.NEVER;
     }
   }),
-  GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
+  GOOGLE_SITE_VERIFICATION: z.string(),
+  GOOGLE_CLIENT_ID: z.string().min(1),
 
-  FACEBOOK_CLIENT_ID: z.string().min(1),
+  SENDGIRD_API_KEY: z.string().min(1),
+
   FACEBOOK_CLIENT_SECRET: z.string().min(1),
+  FACEBOOK_CLIENT_ID: z.string().min(1),
 
-  SQAURE_MERCHANT_ID: z.string().min(1),
   SQAURE_ACCESS_TOKEN: z.string().min(1),
   SQUARE_MODE: z.nativeEnum(Environment),
+  SQAURE_MERCHANT_ID: z.string().min(1),
 
-  KEYS_TOKEN: z.string().min(1),
+  NODE_ENV: z.enum(["development", "test", "production"]),
+  USE_JSON_IMAGE: z.string().nullable().optional(),
+  POST_EMAIL_NOTIFACTION_TEMPLTE: z.string().min(1),
+
   REVALIDATE_TOKEN: z.string().min(1),
   PREVIEW_TOKEN: z.string().min(1),
   PLUGIN_TOKEN: z.string().min(1),
+  KEYS_TOKEN: z.string().min(1),
   APP_KEY: z.string().min(1),
   SHOP_ID: z.string().min(1),
 
-  KV_URL: z.string(),
-  KV_REST_API_URL: z.string(),
-  KV_REST_API_TOKEN: z.string(),
-  KV_REST_API_READ_ONLY_TOKEN: z.string(),
-
-  DATABASE_URL: z.string().min(1),
   NEXTAUTH_URL: z.string().optional(),
+  DATABASE_URL: z.string().min(1),
+
+  KV_REST_API_READ_ONLY_TOKEN: z.string(),
+  KV_REST_API_TOKEN: z.string(),
+  KV_REST_API_URL: z.string(),
+  KV_URL: z.string(),
 
   CI: z.coerce.boolean(),
   VERCEL: z.coerce.boolean(),
@@ -108,6 +107,7 @@ const server = z.object({
  */
 const client = z.object({
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().min(1),
+
   NEXT_PUBLIC_SQUARE_APPID: z.string().min(1),
   NEXT_PUBLIC_SQAURE_LOCATION_ID: z.string().min(1),
   NEXT_PUBLIC_SQUARE_MODE: z.enum(["sandbox", "production"]),
@@ -125,6 +125,12 @@ const client = z.object({
   NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_LOGIN: z.string().optional(),
   NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME: z.string().optional(),
   NEXT_PUBLIC_VERCEL_GIT_PREVIOUS_SHA: z.string().optional(),
+
+  NEXT_PUBLIC_NEW_RELIC_ACCOUNT_ID: z.string(),
+  NEXT_PUBLIC_NEW_RELIC_TRUST_KEY: z.string(),
+  NEXT_PUBLIC_NEW_RELIC_AGENT_ID: z.string(),
+  NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY: z.string(),
+  NEXT_PUBLIC_NEW_RELIC_APPLICATION_ID: z.string(),
 
   NEXT_PUBLIC_FEATURE_FLAGS: z
     .string()
@@ -233,6 +239,15 @@ const processEnv = {
   NEXT_PUBLIC_FEATURE_FLAGS: process.env.NEXT_PUBLIC_FEATURE_FLAGS,
 
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+
+  NEXT_PUBLIC_NEW_RELIC_ACCOUNT_ID:
+    process.env.NEXT_PUBLIC_NEW_RELIC_ACCOUNT_ID,
+  NEXT_PUBLIC_NEW_RELIC_TRUST_KEY: process.env.NEXT_PUBLIC_NEW_RELIC_TRUST_KEY,
+  NEXT_PUBLIC_NEW_RELIC_AGENT_ID: process.env.NEXT_PUBLIC_NEW_RELIC_AGENT_ID,
+  NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY:
+    process.env.NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY,
+  NEXT_PUBLIC_NEW_RELIC_APPLICATION_ID:
+    process.env.NEXT_PUBLIC_NEW_RELIC_APPLICATION_ID,
 };
 
 // Don't touch the part below

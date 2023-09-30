@@ -1,6 +1,6 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas, Button } from "datocms-react-ui";
-import { FaGoogleDrive } from "react-icons/fa";
+import { FaGoogleDrive, FaPlus } from "react-icons/fa";
 import update from "immutability-helper";
 import { useState } from "react";
 import get from "lodash.get";
@@ -22,7 +22,9 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
       id: "gDriveModel",
       closeDisabled: true,
       width: "fullWidth",
+      initialHeight: window.screen.availHeight - (window.screen.availHeight * 0.05) - 105, // 710,
       parameters: {
+        height: window.screen.availHeight - (window.screen.availHeight * 0.05) - 100,
         maxAssets: ctx.parameters.maxAssets ?? Infinity,
         minAssets: ctx.parameters.minAssets ?? Infinity,
         current: images ? images.length : 0,
@@ -51,7 +53,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
   return (
     <Canvas ctx={ctx}>
       <div className="flex flex-col gap-dato-m">
-        <div className="mb-4 flex flex-wrap items-center gap-dato-m">
+        <div className="mb-4 items-center gap-dato-m grid grid-cols-3">
           {(images ?? []).map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {
@@ -85,7 +87,13 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
             />
           ))}
         </div>
-        <div className="mb-dato-m flex justify-center gap-dato-s">
+        <div className="mb-dato-m flex gap-dato-s">
+          <Button buttonSize="xs">
+            <span className="flex items-center justify-center gap-dato-s">
+              <FaPlus />
+              Upload File
+            </span>
+          </Button>
           <Button onClick={selectImages} buttonSize="xs">
             <span className="flex items-center justify-center gap-dato-s">
               <FaGoogleDrive />

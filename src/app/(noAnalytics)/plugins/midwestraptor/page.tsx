@@ -41,7 +41,7 @@ const GDriveAddon = dynamic(
   () => import("@components/plugins/extension/Google/GDriveMultiExtension"),
 );
 const GDriveModel = dynamic(
-  () => import("@components/plugins/models/GDriveModal"),
+  () => import("@components/plugins/models/GoogleDriveModal"),
 );
 const GDriveConfig = dynamic(
   () => import("@components/plugins/config/GDriveConfigSceen"),
