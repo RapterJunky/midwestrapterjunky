@@ -22,9 +22,11 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
       id: "gDriveModel",
       closeDisabled: true,
       width: "fullWidth",
-      initialHeight: window.screen.availHeight - (window.screen.availHeight * 0.05) - 105, // 710,
+      initialHeight:
+        window.screen.availHeight - window.screen.availHeight * 0.05 - 105, // 710,
       parameters: {
-        height: window.screen.availHeight - (window.screen.availHeight * 0.05) - 100,
+        height:
+          window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
         maxAssets: ctx.parameters.maxAssets ?? Infinity,
         minAssets: ctx.parameters.minAssets ?? Infinity,
         current: images ? images.length : 0,
@@ -53,7 +55,7 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
   return (
     <Canvas ctx={ctx}>
       <div className="flex flex-col gap-dato-m">
-        <div className="mb-4 items-center gap-dato-m grid grid-cols-3">
+        <div className="mb-4 grid grid-cols-3 items-center gap-dato-m">
           {(images ?? []).map((image, i) => (
             <SelectedImage
               onDrop={(from, to) => {

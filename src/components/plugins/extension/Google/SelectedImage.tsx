@@ -9,7 +9,7 @@ const SelectedImage: React.FC<{
   image: ResponsiveImage<{ width: number; height: number }>;
 }> = ({ image, drop, idx, onDrop }) => {
   return (
-    <div className="border-[var(--border-color)] flex flex-col hover:shadow hover:border-[var(--darker-border-color)] group border rounded-md">
+    <div className="group flex flex-col rounded-md border border-[var(--border-color)] hover:border-[var(--darker-border-color)] hover:shadow">
       <div
         onDrop={(ev) => {
           ev.preventDefault();
@@ -22,7 +22,7 @@ const SelectedImage: React.FC<{
         style={{ backgroundColor: "var(--lighter-bg-color)" }}
         className="relative flex h-32 w-56 cursor-move items-center justify-center"
       >
-        <div className="absolute hidden items-center flex-col justify-center rounded-md py-2 group-hover:flex shadow-lg bg-white">
+        <div className="absolute hidden flex-col items-center justify-center rounded-md bg-white py-2 shadow-lg group-hover:flex">
           <button
             className="w-full px-4 py-0.5 text-[var(--font-size-xs)] hover:bg-[var(--light-bg-color)] hover:text-[var(--alert-color)]"
             onClick={drop}
@@ -42,8 +42,10 @@ const SelectedImage: React.FC<{
           blurDataURL={image.blurUpThumb}
         />
       </div>
-      <div className="py-2 flex justify-center border-t border-[var(--border-color)]">
-        <span className="text-xs text-[var(--light-body-color)]">No metadata set</span>
+      <div className="flex justify-center border-t border-[var(--border-color)] py-2">
+        <span className="text-xs text-[var(--light-body-color)]">
+          No metadata set
+        </span>
       </div>
     </div>
   );
