@@ -40,7 +40,8 @@ const FeaturedShopItems: React.FC<FeatureShopItemsProps> = async (props) => {
     <section className="flex max-h-max flex-col bg-zinc-100">
       <div className="my-4 flex flex-wrap justify-center gap-4 p-4">
         {data.map(({ handle, image, priceRange, title, onlineStoreUrl }, i) => (
-          <Link key={`${i}-${handle}`}
+          <Link
+            key={`${i}-${handle}`}
             className={`flex flex-col items-center gap-2 p-4 animate-in fade-in-0 fill-mode-forwards hover:shadow hover:outline hover:outline-1 hover:outline-gray-300 ${[
               "delay-75",
               "delay-150",

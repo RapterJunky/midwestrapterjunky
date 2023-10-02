@@ -4,7 +4,10 @@ import Image from "next/image";
 import { GOOGLE_DRIVE_IMAGE_ROOT } from "@/lib/utils/googleConsts";
 import type { GoogleImage } from "@/lib/api/googleDrive";
 
-const ModalImage: React.FC<{ image: GoogleImage, onSelected: (state: boolean, id: string) => void, }> = ({ image, onSelected }) => {
+const ModalImage: React.FC<{
+  image: GoogleImage;
+  onSelected: (state: boolean, id: string) => void;
+}> = ({ image, onSelected }) => {
   const [selected, setSelected] = useState(false);
 
   const imageId = image.id;
@@ -23,7 +26,9 @@ const ModalImage: React.FC<{ image: GoogleImage, onSelected: (state: boolean, id
         <div className="relative h-full rounded-md">
           <Image
             blurDataURL={image.appProperties?.blurthumb}
-            placeholder={image.appProperties?.blurthumb?.length ? "blur" : "empty"}
+            placeholder={
+              image.appProperties?.blurthumb?.length ? "blur" : "empty"
+            }
             className="rounded-md object-contain object-center"
             referrerPolicy="no-referrer"
             unoptimized

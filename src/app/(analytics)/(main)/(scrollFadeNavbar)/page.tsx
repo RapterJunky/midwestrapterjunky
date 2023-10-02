@@ -6,7 +6,7 @@ import HomePageQuery, { type HomePageQueryResult } from "@/gql/queries/home";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   try {

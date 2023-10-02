@@ -25,9 +25,11 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
       id: "gDriveModel",
       closeDisabled: true,
       width: "fullWidth",
-      initialHeight: window.screen.availHeight - window.screen.availHeight * 0.05 - 105,
+      initialHeight:
+        window.screen.availHeight - window.screen.availHeight * 0.05 - 105,
       parameters: {
-        height: window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
+        height:
+          window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
         maxAssets: 1,
         minAssets: 1,
         current: image ? 1 : 0,
@@ -74,7 +76,11 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
           ) : null}
         </div>
         <div className="mb-dato-m flex gap-dato-s">
-          <UploadAsset callback={(data) => setImage(getImageProps(data))} ctx={ctx} btnSize="xs">
+          <UploadAsset
+            callback={(data) => setImage(getImageProps(data))}
+            ctx={ctx}
+            btnSize="xs"
+          >
             <span className="flex items-center justify-center gap-dato-s">
               <FaPlus />
               Upload File

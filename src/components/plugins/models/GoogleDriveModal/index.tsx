@@ -66,41 +66,53 @@ const GoogleDriveModal: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
 
   const onImageSelected = useCallback((state: boolean, id: string) => {
     if (state) {
-      setSelected(current => update(current, { $push: [id] }));
+      setSelected((current) => update(current, { $push: [id] }));
       return;
     }
 
-    setSelected(current => {
-      const idx = current.findIndex(value => value === id);
+    setSelected((current) => {
+      const idx = current.findIndex((value) => value === id);
       if (idx === -1) return current;
       return update(current, { $splice: [[idx, 1]] });
-    })
+    });
   }, []);
 
   const addImages = async () => {
     try {
       setLoading(true);
-      if (!data) throw new Error("Failed to load assets.", { cause: "MISSING_DATA_SOURCE" });
+      if (!data)
+        throw new Error("Failed to load assets.", {
+          cause: "MISSING_DATA_SOURCE",
+        });
 
       const current = ctx.parameters.current as number;
       const max = ctx.parameters.maxAssets as number;
       const min = ctx.parameters.minAssets as number;
 
-      if (current + selected.length > max) throw new Error(`Too many assets have been selected. There can only be ${max} assets.`, {
-        cause: "MAX_ASSETS"
-      });
-      if (current + selected.length < min) throw new Error(`There needs to be a minium ${min} assets`, { cause: "MIN_ASSETS" });
-
+      if (current + selected.length > max)
+        throw new Error(
+          `Too many assets have been selected. There can only be ${max} assets.`,
+          {
+            cause: "MAX_ASSETS",
+          },
+        );
+      if (current + selected.length < min)
+        throw new Error(`There needs to be a minium ${min} assets`, {
+          cause: "MIN_ASSETS",
+        });
 
       const images: ResponsiveImage<{ width: number; height: number }>[] = [];
       const params = new URLSearchParams();
       params.set("type", "blurthumb");
       // image to generate blur data
       for (const id of selected) {
-        const image = data.result.find(value => value.id === id);
+        const image = data.result.find((value) => value.id === id);
         if (!image) continue;
 
-        if ("blurthumb" in image.appProperties && image.appProperties.blurthumb.length) {
+        if (
+          "blurthumb" in image.appProperties &&
+          image.appProperties.blurthumb.length
+        ) {
           images.push(getImageProps(image));
           continue;
         }
@@ -109,14 +121,19 @@ const GoogleDriveModal: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
 
       await mutate<CursorPaginate<GoogleImage>>(async (current) => {
         if (!current) throw new Error("Failed to generate image data");
-        const response = await AuthFetch(`/api/plugin/images?${params.toString()}`);
+        const response = await AuthFetch(
+          `/api/plugin/images?${params.toString()}`,
+        );
 
-        const blurs = await response.json() as { id: string; blurthumb: string; }[];
+        const blurs = (await response.json()) as {
+          id: string;
+          blurthumb: string;
+        }[];
 
         const results = [...current.result];
 
         for (const blur of blurs) {
-          const idx = results.findIndex(value => value.id === blur.id);
+          const idx = results.findIndex((value) => value.id === blur.id);
           if (idx === -1) continue;
           const item = results.at(idx);
           if (!item) continue;
@@ -130,11 +147,17 @@ const GoogleDriveModal: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
       await ctx.resolve(images);
     } catch (error) {
       console.error(error);
-      ctx.alert(error instanceof Error && error.cause ? error.message : "There was an error when adding assets").catch(e => console.log(e));
+      ctx
+        .alert(
+          error instanceof Error && error.cause
+            ? error.message
+            : "There was an error when adding assets",
+        )
+        .catch((e) => console.log(e));
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <Canvas ctx={ctx}>
@@ -256,7 +279,11 @@ const GoogleDriveModal: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
             ) : data && data.result.length > 0 ? (
               <>
                 {data.result.map((value) => (
-                  <ModalImage key={value.id} image={value} onSelected={onImageSelected} />
+                  <ModalImage
+                    key={value.id}
+                    image={value}
+                    onSelected={onImageSelected}
+                  />
                 ))}
               </>
             ) : null}
@@ -294,15 +321,31 @@ const GoogleDriveModal: React.FC<{ ctx: RenderModalCtx }> = ({ ctx }) => {
           className="relative flex flex-shrink border-t bg-[var(--accent-color)] px-4 py-3"
           data-id="footer"
         >
-          <div className="w-full flex items-center text-[var(--placeholder-body-color)]">
+          <div className="flex w-full items-center text-[var(--placeholder-body-color)]">
             {selected.length > 0 ? (
               <div className="flex">
-                <span className="mr-1">{selected.length === 1 ? "One" : selected.length} selected:</span>
-                <button onClick={() => setSelected([])} className="underline">Deselect</button>
+                <span className="mr-1">
+                  {selected.length === 1 ? "One" : selected.length} selected:
+                </span>
+                <button onClick={() => setSelected([])} className="underline">
+                  Deselect
+                </button>
               </div>
             ) : null}
           </div>
-          {(selected.length) > 0 ? <Button disabled={loading} onClick={addImages} type="button" leftIcon={loading ? (<Spinner />) : null} buttonSize="s">Add {selected.length} assets</Button> : (<div className="h-10"></div>)}
+          {selected.length > 0 ? (
+            <Button
+              disabled={loading}
+              onClick={addImages}
+              type="button"
+              leftIcon={loading ? <Spinner /> : null}
+              buttonSize="s"
+            >
+              Add {selected.length} assets
+            </Button>
+          ) : (
+            <div className="h-10"></div>
+          )}
         </section>
       </div>
     </Canvas>

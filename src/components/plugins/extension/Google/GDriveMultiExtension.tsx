@@ -92,12 +92,16 @@ const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
           ))}
         </div>
         <div className="mb-dato-m flex gap-dato-s">
-          <UploadAsset callback={(data) => {
-            setImages((current) => {
-              const nextData = [...current, getImageProps(data)];
-              return nextData;
-            });
-          }} ctx={ctx} btnSize="xs">
+          <UploadAsset
+            callback={(data) => {
+              setImages((current) => {
+                const nextData = [...current, getImageProps(data)];
+                return nextData;
+              });
+            }}
+            ctx={ctx}
+            btnSize="xs"
+          >
             <span className="flex items-center justify-center gap-dato-s">
               <FaPlus />
               Upload File
