@@ -165,6 +165,7 @@ export const uploadFile = async (
             parents: [driveConfig.uploadFolderId],
             appProperties: {
               label: "user_upload",
+              env: process.env.VERCEL_ENV,
             },
           },
           media: {
@@ -247,6 +248,7 @@ export const uploadFileCMS = async (file: File, alt: string) => {
               blurthumb: "",
               alt,
               sizes: "",
+              env: process.env.VERCEL_ENV,
               label: "cms_upload",
             },
           },

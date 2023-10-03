@@ -7,7 +7,7 @@
     "type": "item",
     "attributes": {
       "name": "Mark Smith",
-      "revalidate": "{\"type\":\"page\",\"slug\":\"/\"}"
+      "revalidate": "{\"type\":\"page\",\"slug\":\"/sponsors\"}"
     },
     "relationships": {
       "item_type": {

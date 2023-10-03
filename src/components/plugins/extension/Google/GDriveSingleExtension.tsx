@@ -1,11 +1,13 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Button, Canvas } from "datocms-react-ui";
-import { FaGoogleDrive } from "react-icons/fa";
+import { FaGoogleDrive, FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import get from "lodash.get";
 
 import type { ResponsiveImage } from "@type/page";
 import SelectedImage from "./SelectedImage";
+import UploadAsset from "../../models/GoogleDriveModal/UploadAsset";
+import { getImageProps } from "@/lib/utils/plugin/imageProps";
 
 const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
   ctx,
@@ -23,7 +25,11 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
       id: "gDriveModel",
       closeDisabled: true,
       width: "fullWidth",
+      initialHeight:
+        window.screen.availHeight - window.screen.availHeight * 0.05 - 105,
       parameters: {
+        height:
+          window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
         maxAssets: 1,
         minAssets: 1,
         current: image ? 1 : 0,
@@ -69,7 +75,17 @@ const GDriveSingleExtension: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({
             />
           ) : null}
         </div>
-        <div className="mb-dato-m flex justify-center gap-dato-s">
+        <div className="mb-dato-m flex gap-dato-s">
+          <UploadAsset
+            callback={(data) => setImage(getImageProps(data))}
+            ctx={ctx}
+            btnSize="xs"
+          >
+            <span className="flex items-center justify-center gap-dato-s">
+              <FaPlus />
+              Upload File
+            </span>
+          </UploadAsset>
           <Button onClick={selectImage} buttonSize="xs">
             <span className="flex items-center justify-center gap-dato-s">
               <FaGoogleDrive />

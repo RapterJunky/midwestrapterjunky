@@ -9,6 +9,7 @@ export type SponsorsQueryResult = {
       link: string | null;
       sponsorName: string;
       id: string;
+      description: string | null;
       logo: ResponsiveImage;
     }[];
   };
@@ -25,6 +26,7 @@ query SponsorsQuery {
       sponsors {
         link
         id
+        description
         sponsorName
         logo ${ImageHelper("sponsor")}
       }

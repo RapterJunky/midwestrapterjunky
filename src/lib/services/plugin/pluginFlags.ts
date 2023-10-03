@@ -54,14 +54,11 @@ async function PUT(request: Request) {
 
   for (const result of results) {
     if (result.status === "rejected") {
-      logger.error(
-        result.reason as unknown,
-        (result.reason as Response).statusText,
-      );
+      logger.error(result.reason, (result.reason as Response).statusText);
     }
   }
 
-  return NextResponse.json("", { status: 204 });
+  return new Response(null, { status: 204 });
 }
 
 const handlers = {

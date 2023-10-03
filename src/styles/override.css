@@ -1,0 +1,9 @@
+html,
+body {
+  height: 100%;
+}
+
+body > div:first-of-type {
+  height: 100%;
+  padding-bottom: 0 !important;
+}

@@ -1,8 +1,9 @@
 import { toNextMetadata } from "react-datocms/seo";
 import type { Metadata } from "next";
 
-import GoogleAnalytics from "@components/pages/GoogleAnalytics";
+import GoogleAnalytics from "@components/analytics/GoogleAnalytics";
 import getFullPageProps from "@/lib/services/getFullPageProps";
+import NewRelic from "@/components/analytics/NewRelic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
@@ -15,6 +16,7 @@ const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     <>
       {children}
       <GoogleAnalytics debug={process.env.VERCEL_ENV !== "production"} />
+      {process.env.VERCEL_ENV === "production" ? <NewRelic /> : null}
     </>
   );
 };

@@ -2,49 +2,78 @@ import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import getPageQuery from "@/lib/services/GetPageQuery";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
 import SponsorsQuery, {
   type SponsorsQueryResult,
 } from "@/gql/queries/sponsors";
-import { Button } from "@/components/ui/button";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import { Button } from "@/components/ui/button";
 
 export async function generateMetadata(
   {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
-  return getSeoTags({
-    parent,
-    datocms: sponsor.seo,
-  });
+  try {
+    const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
+    return getSeoTags({
+      parent,
+      datocms: sponsor.seo,
+    });
+  } catch (e) {
+    return getSeoTags({
+      parent,
+      metadata: {
+        title: "Error",
+      },
+    });
+  }
 }
 
 const Sponsors: React.FC = async () => {
   const { sponsor } = await getPageQuery<SponsorsQueryResult>(SponsorsQuery);
   return (
-    <div className="mb-4 flex w-full flex-grow flex-col items-center justify-center gap-6 divide-y divide-gray-300">
-      <h1 className="md:leading-14 my-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-5xl">
+    <div className="mb-4 flex w-full flex-grow flex-col items-center gap-6 divide-y divide-zinc-300">
+      <h1 className="md:leading-14 my-4 mt-28 text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 sm:text-4xl sm:leading-10 md:text-5xl">
         Our Sponsors
       </h1>
-      <section className="grid w-full max-w-7xl grid-cols-1 gap-8 px-4 pt-4 sm:grid-cols-2 md:grid-cols-3 md:px-0">
+      <section className="grid w-full max-w-7xl grid-cols-1 gap-8 px-4 pt-4 md:grid-cols-2 md:px-0 lg:grid-cols-3">
         {sponsor.sponsors.map((value) => (
-          <Button asChild key={value.id} variant="ghost">
-            <Link
-              href={value.link ?? "/"}
-              className="flex h-48 w-full items-center justify-center rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
+          <Link href={value.link ?? "/"} key={value.id}>
+            <Card
+              key={value.id}
+              className="flex h-full flex-col rounded-sm shadow"
             >
-              <div className="relative h-20 w-20">
-                <Image
-                  className="object-cover object-center"
-                  src={value.logo.responsiveImage.src}
-                  alt={value.logo.responsiveImage.alt ?? value.sponsorName}
-                  sizes={value.logo.responsiveImage.sizes}
-                  fill
-                />
+              <div className="flex h-48 w-full flex-shrink items-center justify-center bg-zinc-200 p-2 hover:bg-zinc-300">
+                <div className="relative h-3/4 w-3/4">
+                  <Image
+                    className="object-contain object-center"
+                    src={value.logo.responsiveImage.src}
+                    alt={value.logo.responsiveImage.alt ?? value.sponsorName}
+                    sizes={value.logo.responsiveImage.sizes}
+                    fill
+                  />
+                </div>
               </div>
-            </Link>
-          </Button>
+              {value.description ? (
+                <CardContent className="p-4 pt-3">
+                  <CardDescription>{value.description}</CardDescription>
+                </CardContent>
+              ) : null}
+              {value.link ? (
+                <CardFooter className="flex flex-grow items-end justify-end p-4 pb-3">
+                  <Button size="sm" variant="secondary">
+                    View more
+                  </Button>
+                </CardFooter>
+              ) : null}
+            </Card>
+          </Link>
         ))}
       </section>
     </div>
