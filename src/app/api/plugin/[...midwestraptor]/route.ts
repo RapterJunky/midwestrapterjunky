@@ -166,10 +166,7 @@ export async function DELETE(request: Request, { params }: RequestParams) {
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function PUT(request: Request, { params }: RequestParams) {
   try {
     const authorization = request.headers.get("authorization");
     if (
@@ -177,7 +174,7 @@ export async function PUT(
       authorization.replace("Bearer ", "") !== process.env.PLUGIN_TOKEN
     )
       throw createHttpError.Unauthorized();
-    const route = vaildPut.parse(params.slug);
+    const route = vaildPut.parse(params.midwestraptor[0]);
 
     switch (route) {
       case "flags": {

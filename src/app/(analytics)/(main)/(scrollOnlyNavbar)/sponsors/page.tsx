@@ -34,9 +34,9 @@ const Sponsors: React.FC = async () => {
               href={value.link ?? "/"}
               className="flex h-48 w-full items-center justify-center rounded-sm bg-gray-200 p-2 hover:bg-gray-300"
             >
-              <div className="relative h-20 w-20">
+              <div className="relative h-3/4 w-3/4">
                 <Image
-                  className="object-cover object-center"
+                  className="object-contain object-center"
                   src={value.logo.responsiveImage.src}
                   alt={value.logo.responsiveImage.alt ?? value.sponsorName}
                   sizes={value.logo.responsiveImage.sizes}

@@ -65,7 +65,9 @@ const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({
             {...value}
           />
         ))}
-        {pageLinks.length > 7 ? <LinksDropdown links={pageLinks} /> : null}
+        {pageLinks.length > 7 ? (
+          <LinksDropdown links={pageLinks.slice(7)} />
+        ) : null}
       </div>
       <div className="ml-auto flex items-center lg:ml-1">
         <Provider>

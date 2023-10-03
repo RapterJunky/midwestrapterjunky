@@ -13,7 +13,11 @@ const LinksDropdown: React.FC<{ links: LinkWithIcon[] }> = ({ links }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="link" size="sm" className="px-1 font-bold uppercase">
+        <Button
+          variant="link"
+          size="sm"
+          className="px-1 font-bold uppercase text-inherit transition-colors duration-700 ease-in-out"
+        >
           More <ChevronDown className="h-6 w-6" />
         </Button>
       </DropdownMenuTrigger>

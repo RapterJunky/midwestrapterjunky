@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:3000/api/revaildate",
+  "url": "http://localhost:3000/api/revalidate",
   "headers": {
     "x-site-id": "SITE_ID",
     "x-webhook-id": "GENERATED_WEBHOOK_ID",
