@@ -14,9 +14,9 @@ export interface FormState {
 }
 
 const Edit: React.FC<{
-  setEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  setPageState: (value: "edit" | "select" | "options") => void;
   ctx: RenderModalCtx;
-}> = ({ ctx, setEdit }) => {
+}> = ({ ctx, setPageState }) => {
   const isEdit = !!Object.keys(ctx.parameters).length;
   const {
     control,
@@ -198,7 +198,7 @@ const Edit: React.FC<{
           </Button>
         ) : (
           <Button
-            onClick={() => setEdit(false)}
+            onClick={() => setPageState("options")}
             disabled={isSubmitting}
             leftIcon={
               <FaBackward style={{ fill: "var(--lighter-bg-color)" }} />

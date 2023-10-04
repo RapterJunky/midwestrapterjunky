@@ -7,17 +7,18 @@ import Select from "./Select";
 import Edit from "./Edit";
 
 const EditAuthorModal = ({ ctx }: { ctx: RenderModalCtx }) => {
-  const [isEdit, setEdit] = useState(!!Object.keys(ctx.parameters).length);
-  const [select, setSelect] = useState(false);
+  const [pageState, setPageState] = useState<"edit" | "options" | "select">(
+    !!Object.keys(ctx.parameters).length ? "edit" : "options",
+  );
 
   return (
     <Canvas ctx={ctx}>
-      {isEdit ? (
-        <Edit ctx={ctx} setEdit={setEdit} />
-      ) : select ? (
-        <Select ctx={ctx} />
+      {pageState === "edit" ? (
+        <Edit ctx={ctx} setPageState={(value) => setPageState(value)} />
+      ) : pageState === "select" ? (
+        <Select ctx={ctx} setPageState={(value) => setPageState(value)} />
       ) : (
-        <Options setEdit={setEdit} setSelect={setSelect} />
+        <Options setPageState={(value) => setPageState(value)} />
       )}
     </Canvas>
   );

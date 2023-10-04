@@ -34,8 +34,9 @@ export const AuthFetch = async (
     headers,
   });
 
-  if (!result.ok)
+  if (!result.ok) {
+    console.error(result);
     throw new RequestError(result, "There was an error in the request");
-
+  }
   return result;
 };
