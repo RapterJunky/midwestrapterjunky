@@ -8,11 +8,11 @@ export const getImageProps = (
   return {
     blurUpThumb: image.appProperties?.blurthumb ?? "",
     responsiveImage: {
-      alt: image.appProperties?.alt.length
-        ? image.appProperties.alt
+      alt: image.appProperties?.alt?.length
+        ? image.appProperties?.alt
         : image.name,
       src: `${GOOGLE_DRIVE_IMAGE_ROOT}${image.id}`,
-      sizes: image.appProperties?.sizes.length
+      sizes: image.appProperties?.sizes?.length
         ? image.appProperties.sizes
         : `(max-width: ${image.imageMediaMetadata.width}px) 100vw, ${image.imageMediaMetadata.width}px`,
       width: image.imageMediaMetadata.width,

@@ -49,8 +49,8 @@ const Sponsors: React.FC = async () => {
               key={value.id}
               className="flex h-full flex-col rounded-sm shadow"
             >
-              <div className="flex h-48 w-full flex-shrink items-center justify-center bg-zinc-200 p-2 hover:bg-zinc-300">
-                <div className="relative h-3/4 w-3/4">
+              <div className="relative flex h-48 w-full flex-shrink items-center justify-center bg-zinc-200 p-2 hover:bg-zinc-300">
+                <div className="relative h-full w-full">
                   <Image
                     className="object-contain object-center"
                     src={value.logo.responsiveImage.src}
