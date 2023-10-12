@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -31,7 +31,7 @@ export async function generateMetadata(
 const MAX_DISPLAY = 5;
 
 const Blog: React.FC = async () => {
-  let { posts } = await getPageQuery<BlogLatestQueryResult>(QueryBlogLatest, {
+  const { posts } = await getPageQuery<BlogLatestQueryResult>(QueryBlogLatest, {
     variables: {
       first: MAX_DISPLAY,
     },
@@ -39,8 +39,6 @@ const Blog: React.FC = async () => {
       revalidate: REVAILDATE_IN_2H,
     },
   });
-
-  posts = [];
 
   return (
     <>
