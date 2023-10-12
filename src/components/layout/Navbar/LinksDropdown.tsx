@@ -16,7 +16,7 @@ const LinksDropdown: React.FC<{ links: LinkWithIcon[] }> = ({ links }) => {
         <Button
           variant="link"
           size="sm"
-          className="px-1 font-bold uppercase text-inherit transition-colors duration-700 ease-in-out"
+          className="px-1 font-bold uppercase text-inherit duration-inherit"
         >
           More <ChevronDown className="h-6 w-6" />
         </Button>

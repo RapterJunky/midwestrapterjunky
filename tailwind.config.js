@@ -18,6 +18,9 @@ module.exports = {
       },
     },
     extend: {
+      transitionDuration: {
+        inherit: "inherit",
+      },
       gap: {
         "dato-s": "var(--spacing-s)",
         "dato-m": "var(--spacing-m)",

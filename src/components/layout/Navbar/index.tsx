@@ -60,7 +60,7 @@ const Navbar: React.FC<VariantProps<typeof navbarVariants>> = async ({
         {pageLinks.slice(0, 7).map((value, i) => (
           <IconLink
             dataCy="desktop-nav-link"
-            className="px-2 font-bold uppercase text-inherit transition-colors duration-700 ease-in-out"
+            className="px-2 font-bold uppercase text-inherit duration-inherit"
             key={i}
             {...value}
           />
