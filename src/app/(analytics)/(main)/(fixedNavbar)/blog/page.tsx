@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
@@ -31,7 +31,7 @@ export async function generateMetadata(
 const MAX_DISPLAY = 5;
 
 const Blog: React.FC = async () => {
-  const { posts } = await getPageQuery<BlogLatestQueryResult>(QueryBlogLatest, {
+  let { posts } = await getPageQuery<BlogLatestQueryResult>(QueryBlogLatest, {
     variables: {
       first: MAX_DISPLAY,
     },
@@ -40,10 +40,12 @@ const Blog: React.FC = async () => {
     },
   });
 
+  posts = [];
+
   return (
     <>
       <Separator />
-      <div className="mx-auto max-w-3xl flex-1 px-4 sm:px-6 xl:max-w-5xl xl:px-0">
+      <div className="mx-auto max-w-3xl flex-1 px-4 sm:px-6 xl:max-w-5xl xl:px-0 w-full">
         <div className="divide-y divide-zinc-200">
           <div className="space-y-2 pb-8 pt-6 md:space-y-5">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -54,8 +56,11 @@ const Blog: React.FC = async () => {
             </p>
           </div>
           <ul className="divide-y divide-zinc-200">
-            {!posts.length ? "No posts found." : null}
-            {posts.map((post) => (
+            {!posts.length ? (
+              <li className="p-2 h-96 flex justify-center items-center">
+                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">No posts where found.</h3>
+              </li>
+            ) : posts.map((post) => (
               <li key={post.slug} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
