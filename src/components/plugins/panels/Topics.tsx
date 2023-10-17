@@ -133,9 +133,9 @@ export const Topics: React.FC<{
     e.preventDefault();
 
     const data = new FormData(e.target as HTMLFormElement);
-    const search = data.get("search");
+    const search = data.get("search")?.toString() ?? "";
 
-    setSearch(search ? search.toString() : "");
+    setSearch(search);
   };
 
   return (

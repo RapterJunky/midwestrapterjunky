@@ -19,7 +19,12 @@ const Sidenav: React.FC<{ links: LinkWithIcon[]; logo: ResponsiveImage }> = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="duration-inherit">
+        <Button
+          data-cy="sidenav-btn"
+          variant="ghost"
+          size="icon"
+          className="duration-inherit"
+        >
           <Menu className="h-8 w-8" />
         </Button>
       </SheetTrigger>
