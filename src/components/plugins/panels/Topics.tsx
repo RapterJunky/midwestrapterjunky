@@ -112,7 +112,7 @@ const DropdownAction: React.FC<DropdownActionProps> = ({
   );
 };
 
-export const Topics: React.FC<{
+const Topics: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -154,6 +154,17 @@ export const Topics: React.FC<{
           >
             <FaSearch />
           </Button>
+
+          {/*<Button onClick={() => ctx.openModal({
+            id: "mrj_topic_editor",
+            width: "fullWidth",
+            closeDisabled: true,
+            initialHeight: window.screen.availHeight - window.screen.availHeight * 0.05 - 105,
+            parameters: {
+              height: window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
+              id: null
+            }
+          })} type="button" buttonType="primary" buttonSize="s">Create Topic</Button>*/}
         </form>
       }
       setMini={() => setMini((state) => !state)}
@@ -200,13 +211,13 @@ export const Topics: React.FC<{
                     <div className="flex flex-wrap gap-2">
                       {topic.tags
                         ? topic.tags.map((value, i) => (
-                            <span
-                              className="rounded-sm bg-green-500 px-1 text-xs text-white"
-                              key={i}
-                            >
-                              {value}
-                            </span>
-                          ))
+                          <span
+                            className="rounded-sm bg-green-500 px-1 text-xs text-white"
+                            key={i}
+                          >
+                            {value}
+                          </span>
+                        ))
                         : null}
                     </div>
                   </div>
@@ -230,12 +241,10 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${
-                          topic.pinned ? "unpinned" : "pinned"
-                        } topic.`,
-                        error: `Failed to ${
-                          topic.pinned ? "Unpin Topic" : "Pin Topic"
-                        }`,
+                        success: `Successfully ${topic.pinned ? "unpinned" : "pinned"
+                          } topic.`,
+                        error: `Failed to ${topic.pinned ? "Unpin Topic" : "Pin Topic"
+                          }`,
                       }}
                       data={{
                         id: topic.id,
@@ -254,12 +263,10 @@ export const Topics: React.FC<{
                       mutate={mutate}
                       ctx={ctx}
                       messages={{
-                        success: `Successfully ${
-                          topic.locked ? "unlocked" : "locked"
-                        } topic.`,
-                        error: `Failed to ${
-                          topic.locked ? "unlock" : "lock"
-                        } topic.`,
+                        success: `Successfully ${topic.locked ? "unlocked" : "locked"
+                          } topic.`,
+                        error: `Failed to ${topic.locked ? "unlock" : "lock"
+                          } topic.`,
                       }}
                       data={{
                         id: topic.id,
@@ -362,3 +369,5 @@ export const Topics: React.FC<{
     </Panel>
   );
 };
+
+export default Topics;

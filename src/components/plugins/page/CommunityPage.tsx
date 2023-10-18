@@ -9,17 +9,18 @@ import {
 } from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
+import dynamic from "next/dynamic";
 import { useState } from "react";
-
-import { MailingList } from "../panels/MailingList";
-import { Features } from "../panels/Features";
-import { UserList } from "../panels/UserList";
-import { Threads } from "../panels/Threads";
-import { Reports } from "../panels/Reports";
-import { Topics } from "../panels/Topics";
 
 import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { cn } from "@/lib/utils";
+
+const MailingList = dynamic(() => import("../panels/MailingList"));
+const Features = dynamic(() => import("../panels/Features"));
+const UserList = dynamic(() => import("../panels/UserList"));
+const Threads = dynamic(() => import("../panels/Threads"));
+const Reports = dynamic(() => import("../panels/Reports"));
+const Topics = dynamic(() => import("../panels/Topics"));
 
 const CommunityPage: React.FC<{ ctx: RenderPageCtx }> = ({ ctx }) => {
   const [mini, setMini] = useState(false);

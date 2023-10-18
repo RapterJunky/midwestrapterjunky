@@ -33,7 +33,7 @@ const banTypes = [
 
 type BanType = (typeof banTypes)[0];
 
-export const UserList: React.FC<{
+const UserList: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -148,7 +148,7 @@ export const UserList: React.FC<{
                               {typeof table
                                 .getPreFilteredRowModel()
                                 .flatRows[0]?.getValue(header.column.id) ===
-                              "number" ? (
+                                "number" ? (
                                 <SelectInput
                                   value={header.column.getFilterValue()}
                                   onChange={(e) =>
@@ -215,3 +215,5 @@ export const UserList: React.FC<{
     </Panel>
   );
 };
+
+export default UserList;

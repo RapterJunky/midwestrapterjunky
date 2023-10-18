@@ -14,7 +14,6 @@ import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 
 import "datocms-react-ui/styles.css";
-import GDriveSingleExtension from "@components/plugins/extension/Google/GDriveSingleExtension";
 
 const FIELD_EXTENSION_GDRIVE_SINGLE_ID = "mrj_gdrive_single";
 const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
@@ -28,10 +27,15 @@ const MODEL_EDIT_AUTHOR_ID = "editAuthor";
 const MODEL_STOREFRONT_ID = "storefrontModel";
 const MODEL_GDRIVE_ID = "gDriveModel";
 const MODEL_MAIL_SETTINGS_ID = "mrj_mail_settings";
+const MODEL_TOPIC_EDITOR_ID = "mrj_topic_editor";
 
 const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 
 const MESSAGE_BOARD_PAGE_ID = "community";
+
+const TopicCreaterModal = dynamic(() => import("@/components/plugins/models/TopicCreaterModal"));
+
+const GDriveSingleExtension = dynamic(() => import("@components/plugins/extension/Google/GDriveSingleExtension"));
 
 const MailSettingsModel = dynamic(
   () => import("@/components/plugins/models/MailSettingsModel"),
@@ -283,6 +287,8 @@ const MidwestRaptorPlugin: React.FC = () => {
           return <GDriveModel ctx={ctx as RenderModalCtx} />;
         case MODEL_MAIL_SETTINGS_ID:
           return <MailSettingsModel ctx={ctx as RenderModalCtx} />;
+        case MODEL_TOPIC_EDITOR_ID:
+          return <TopicCreaterModal ctx={ctx as RenderModalCtx} />
         default:
           return null;
       }

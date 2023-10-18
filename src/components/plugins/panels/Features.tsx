@@ -30,7 +30,7 @@ type FormState = {
   };
 };
 
-export const Features: React.FC<{
+const Features: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -145,3 +145,6 @@ export const Features: React.FC<{
     </Panel>
   );
 };
+
+
+export default Features;
