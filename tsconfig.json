@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["cypress"],
     "target": "ES2015",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -37,9 +38,10 @@
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "cypress.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "src/*.mjs"],
+  "exclude": ["node_modules", "src/*.mjs", "cypress.config.ts", "cypress"],
   "ts-node": {
     "esm": true
   }

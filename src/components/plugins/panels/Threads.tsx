@@ -19,7 +19,7 @@ import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
 import DisplayDataStates from "./DisplayDataStates";
 
-export const Threads: React.FC<{
+const Threads: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -264,3 +264,5 @@ export const Threads: React.FC<{
     </Panel>
   );
 };
+
+export default Threads;

@@ -24,10 +24,11 @@ const config = {
     "cypress/**/*",
     "datocms/**/*",
     ".eslintrc.cjs",
+    "cypress.d.ts",
     "*.config.ts",
     "*.config.mjs",
     "*.config.js",
-    "*.config.cjs"
+    "*.config.cjs",
   ],
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],

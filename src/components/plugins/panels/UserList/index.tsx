@@ -33,7 +33,7 @@ const banTypes = [
 
 type BanType = (typeof banTypes)[0];
 
-export const UserList: React.FC<{
+const UserList: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -215,3 +215,5 @@ export const UserList: React.FC<{
     </Panel>
   );
 };
+
+export default UserList;

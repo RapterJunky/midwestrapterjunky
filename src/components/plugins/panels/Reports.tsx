@@ -346,7 +346,7 @@ const CommentReport: React.FC<
   );
 };
 
-export const Reports: React.FC<{
+const Reports: React.FC<{
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ mini, setMini }) => {
@@ -539,3 +539,5 @@ export const Reports: React.FC<{
     </Panel>
   );
 };
+
+export default Reports;

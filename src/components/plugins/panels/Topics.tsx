@@ -112,7 +112,7 @@ const DropdownAction: React.FC<DropdownActionProps> = ({
   );
 };
 
-export const Topics: React.FC<{
+const Topics: React.FC<{
   ctx: RenderPageCtx;
   mini: boolean;
   setMini: React.Dispatch<React.SetStateAction<boolean>>;
@@ -133,9 +133,9 @@ export const Topics: React.FC<{
     e.preventDefault();
 
     const data = new FormData(e.target as HTMLFormElement);
-    const search = data.get("search");
+    const search = data.get("search")?.toString() ?? "";
 
-    setSearch(search ? search.toString() : "");
+    setSearch(search);
   };
 
   return (
@@ -154,6 +154,17 @@ export const Topics: React.FC<{
           >
             <FaSearch />
           </Button>
+
+          {/*<Button onClick={() => ctx.openModal({
+            id: "mrj_topic_editor",
+            width: "fullWidth",
+            closeDisabled: true,
+            initialHeight: window.screen.availHeight - window.screen.availHeight * 0.05 - 105,
+            parameters: {
+              height: window.screen.availHeight - window.screen.availHeight * 0.05 - 100,
+              id: null
+            }
+          })} type="button" buttonType="primary" buttonSize="s">Create Topic</Button>*/}
         </form>
       }
       setMini={() => setMini((state) => !state)}
@@ -362,3 +373,5 @@ export const Topics: React.FC<{
     </Panel>
   );
 };
+
+export default Topics;
