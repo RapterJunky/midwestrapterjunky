@@ -148,7 +148,7 @@ const UserList: React.FC<{
                               {typeof table
                                 .getPreFilteredRowModel()
                                 .flatRows[0]?.getValue(header.column.id) ===
-                                "number" ? (
+                              "number" ? (
                                 <SelectInput
                                   value={header.column.getFilterValue()}
                                   onChange={(e) =>

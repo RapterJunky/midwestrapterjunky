@@ -58,9 +58,9 @@ const RenderTable: React.FC<{
                 {headers.isPlaceholder
                   ? null
                   : flexRender(
-                    headers.column.columnDef.header,
-                    headers.getContext(),
-                  )}
+                      headers.column.columnDef.header,
+                      headers.getContext(),
+                    )}
               </th>
             ))}
           </tr>

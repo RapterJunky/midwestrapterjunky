@@ -33,9 +33,13 @@ const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
 
 const MESSAGE_BOARD_PAGE_ID = "community";
 
-const TopicCreaterModal = dynamic(() => import("@/components/plugins/models/TopicCreaterModal"));
+const TopicCreaterModal = dynamic(
+  () => import("@/components/plugins/models/TopicCreaterModal"),
+);
 
-const GDriveSingleExtension = dynamic(() => import("@components/plugins/extension/Google/GDriveSingleExtension"));
+const GDriveSingleExtension = dynamic(
+  () => import("@components/plugins/extension/Google/GDriveSingleExtension"),
+);
 
 const MailSettingsModel = dynamic(
   () => import("@/components/plugins/models/MailSettingsModel"),
@@ -288,7 +292,7 @@ const MidwestRaptorPlugin: React.FC = () => {
         case MODEL_MAIL_SETTINGS_ID:
           return <MailSettingsModel ctx={ctx as RenderModalCtx} />;
         case MODEL_TOPIC_EDITOR_ID:
-          return <TopicCreaterModal ctx={ctx as RenderModalCtx} />
+          return <TopicCreaterModal ctx={ctx as RenderModalCtx} />;
         default:
           return null;
       }
