@@ -1,8 +1,8 @@
 import "server-only";
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import prisma from "@/lib/api/prisma";
 
-const getCategories = cache(async () => {
+const getCategories = unstable_cache(async () => {
   return prisma.thread.findMany({
     select: {
       description: true,
@@ -30,6 +30,9 @@ const getCategories = cache(async () => {
       },
     },
   });
+}, undefined, {
+  tags: ["community-categories"],
+  revalidate: 600
 });
 
 export default getCategories;

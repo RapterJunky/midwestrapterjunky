@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import createHttpError from "http-errors";
 import { z } from "zod";
@@ -11,7 +12,7 @@ import {
 import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
-import { revalidatePath } from "next/cache";
+
 import ratelimit from "@/lib/api/rateLimit";
 
 const schema = z.object({
@@ -159,6 +160,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateTag("community-categories");
+
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     return onError(error);
@@ -238,6 +241,8 @@ export async function DELETE(request: NextRequest) {
         id: post.id,
       },
     });
+
+    revalidateTag("community-categories");
 
     return NextResponse.json(result);
   } catch (error) {

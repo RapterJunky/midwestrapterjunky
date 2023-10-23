@@ -5,9 +5,6 @@ import getCategories from "@/lib/services/community/getCategories";
 import CategoryCard from "@/components/community/CategoryCard";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
-// Revalidate at most every 10 mins
-export const revalidate = 600;
-
 export async function generateMetadata(
   { },
   parent: ResolvingMetadata,
@@ -63,7 +60,6 @@ const Community: React.FC = async () => {
                     latestTopics={category.posts}
                   />
                 ))}
-                <tr></tr>
               </tbody>
             </table>
           </TabsContent>
