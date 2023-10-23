@@ -16,7 +16,7 @@ const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     <>
       {children}
       <GoogleAnalytics debug={process.env.VERCEL_ENV !== "production"} />
-      {process.env.VERCEL_ENV === "production" ? <NewRelic /> : null}
+      {process.env.VERCEL_ENV !== "development" ? <NewRelic /> : null}
     </>
   );
 };
