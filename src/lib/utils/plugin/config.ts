@@ -12,24 +12,26 @@ export type VaildConfig = {
   previewSecret?: string;
   storefronts: StorefrontPluginConfig[];
   keyToken: string;
-  paramsVersion: "8";
+  paramsVersion: "9";
   autoApplyToFieldsWithApiKey: string;
+  revalidateToken: string;
 };
 
 export type Config = VaildConfig | Partial<VaildConfig>;
 
 export function isVaildConfig(params: Config): params is VaildConfig {
-  return params && "paramsVersion" in params && params.paramsVersion === "8";
+  return params && "paramsVersion" in params && params.paramsVersion === "9";
 }
 
 export function normalizeConfig(params: Config): VaildConfig {
   if (isVaildConfig(params)) return params;
 
   return {
+    revalidateToken: params?.revalidateToken ?? "",
     siteUrl: params?.siteUrl ?? "",
     previewPath: params?.previewPath ?? "",
     previewSecret: params?.previewSecret,
-    paramsVersion: "8",
+    paramsVersion: "9",
     storefronts: params?.storefronts ?? [],
     keyToken: params?.keyToken ?? "",
     autoApplyToFieldsWithApiKey: params.autoApplyToFieldsWithApiKey ?? "",

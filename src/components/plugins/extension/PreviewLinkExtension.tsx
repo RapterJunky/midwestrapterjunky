@@ -1,5 +1,5 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, ButtonLink } from "datocms-react-ui";
+import { Canvas, ButtonLink, Button } from "datocms-react-ui";
 import { useMemo } from "react";
 
 import type { RevalidateSettings } from "@/app/api/revalidate/route";
@@ -56,7 +56,7 @@ const replaceVariables = (
 
 const PreviewLink: React.FC<Props> = ({ ctx }) => {
   const config = ctx.formValues[ctx.fieldPath];
-  const { siteUrl, previewPath, previewSecret } = normalizeConfig(
+  const { siteUrl, previewPath, previewSecret, revalidateToken } = normalizeConfig(
     ctx.plugin.attributes.parameters,
   );
   const multiLang = ctx.site.attributes.locales.length > 1;
@@ -114,6 +114,34 @@ const PreviewLink: React.FC<Props> = ({ ctx }) => {
     ctx.itemType.attributes.api_key,
   ]);
 
+  const forceUpdate = async () => {
+    const request = await fetch(`/api/revalidate`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${revalidateToken}`,
+        "Content-Type": "application/json",
+        "x-environment": "force-update",
+        "x-site-id": "midwestraptor",
+        "x-webhook-id": "force-update"
+      },
+      body: JSON.stringify({
+        entity: {
+          attributes: {
+            id: ctx.item?.id,
+            slug: ctx.formValues["slug"],
+            revalidate: config
+          }
+        }
+      })
+    })
+    if (request.ok) {
+      return ctx.notice("Successfully, Updated").catch(e => console.error(e));
+    }
+
+    ctx.alert("There was an error updating page").catch(e => console.error(e));
+    console.error(request);
+  }
+
   return (
     <Canvas ctx={ctx}>
       {ctx.itemStatus === "new" ? (
@@ -121,14 +149,19 @@ const PreviewLink: React.FC<Props> = ({ ctx }) => {
       ) : !previewHref ? (
         "This item does not support previewing!"
       ) : previewHref.type === "single" ? (
-        <ButtonLink
-          href={previewHref.data}
-          fullWidth
-          buttonType="primary"
-          target="_blank"
-        >
-          View Preview
-        </ButtonLink>
+        (
+          <div className="flex flex-col gap-2">
+            <ButtonLink
+              href={previewHref.data}
+              fullWidth
+              buttonType="primary"
+              target="_blank"
+            >
+              View Preview
+            </ButtonLink>
+            <Button fullWidth onClick={forceUpdate}>Force Update</Button>
+          </div>
+        )
       ) : (
         <div className="flex flex-col gap-dato-s">
           {previewHref.data.map((item, i) => (

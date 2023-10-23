@@ -1,10 +1,10 @@
 const GetNextArticles = `
     query MyQuery($date: DateTime, $id: ItemId) {
-        next: article(filter: {id: {neq: $id}, _publishedAt: {gt: $date}}, orderBy: _publishedAt_ASC) {
+        next: article(filter: {hiddenArticle: { eq: false }, id: {neq: $id}, _publishedAt: {gt: $date}}, orderBy: _publishedAt_ASC) {
             slug
             title
         }
-        prev: article(filter: {id: {neq: $id}, _publishedAt: {lt: $date}}, orderBy: _publishedAt_DESC) {
+        prev: article(filter: {hiddenArticle: { eq: false }, id: {neq: $id}, _publishedAt: {lt: $date}}, orderBy: _publishedAt_DESC) {
             slug
             title
         }

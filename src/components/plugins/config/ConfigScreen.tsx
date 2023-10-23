@@ -138,6 +138,23 @@ const ConfigScreen: React.FC<{ ctx: RenderConfigScreenCtx }> = ({ ctx }) => {
             )}
           />
         </FieldGroup>
+        <FieldGroup>
+          <Controller
+            control={control}
+            rules={{ required: "This field is required!" }}
+            name="revalidateToken"
+            render={({ field: { ref: _ref, ...field }, formState }) => (
+              <TextField
+                error={formState.errors.revalidateToken?.message}
+                id={field.name}
+                label="Revaildation token"
+                placeholder="xxxxxxxxxx"
+                required
+                {...field}
+              />
+            )}
+          />
+        </FieldGroup>
         <h1 className="text-2xl font-bold">Storefronts</h1>
         <Controller
           control={control}

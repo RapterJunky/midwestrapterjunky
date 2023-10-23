@@ -47,7 +47,7 @@ export async function generateMetadata(
     datocms: post.seo,
     metadata: {
       keywords: post.tags,
-      authors: post.authors.map((value) => ({ name: value.name })),
+      authors: post.authors?.map((value) => ({ name: value.name })),
     },
   });
 }
@@ -59,7 +59,7 @@ const Article: React.FC<PageParams> = async ({ params }) => {
 
   if (!post) notFound();
 
-  const { next, prev } = await getPageQuery<{
+  const { next, prev } = !post.hiddenArticle ? await getPageQuery<{
     next: { slug: string; title: string };
     prev: { slug: string; title: string };
   }>(GetNextArticles, {
@@ -67,18 +67,17 @@ const Article: React.FC<PageParams> = async ({ params }) => {
       id: post.id,
       date: post.publishedAt ?? new Date().toISOString(),
     },
-  });
+  }) : { next: null, prev: null };
 
   const jsonld: TechArticle = {
     "@type": "TechArticle",
     headline: post.title,
-    author: post.authors.at(0)?.name,
-    keywords: post.tags.join(" "),
+    author: post.authors?.at(0)?.name,
+    keywords: post.tags?.join(" "),
     datePublished: post.publishedAt,
     description: getDescriptionTag(post.seo),
-    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-      process.env.VERCEL_URL
-    }/blog/${post.slug}`,
+    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
+      }/blog/${post.slug}`,
   };
 
   return (
@@ -118,7 +117,7 @@ const Article: React.FC<PageParams> = async ({ params }) => {
                 <dt className="sr-only">Authors</dt>
                 <dd>
                   <ul className="flex justify-center space-x-8 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                    {post.authors.map((author, i) => (
+                    {post.authors?.map((author, i) => (
                       <li className="flex items-center space-x-2" key={i}>
                         <Avatar>
                           <AvatarImage asChild src={author.avatar ?? ""}>
@@ -149,7 +148,21 @@ const Article: React.FC<PageParams> = async ({ params }) => {
                           </dd>
                         </dl>
                       </li>
-                    ))}
+                    )) ?? (
+                        <li className="flex items-center space-x-2">
+                          <Avatar>
+                            <AvatarImage src={""}>
+                            </AvatarImage>
+                            <AvatarFallback>
+                              <User2 />
+                            </AvatarFallback>
+                          </Avatar>
+                          <dl className="whitespace-nowrap text-sm font-medium leading-5">
+                            <dt className="sr-only">Name</dt>
+                            <dd className="text-zinc-900">Unknown Author</dd>
+                          </dl>
+                        </li>
+                      )}
                   </ul>
                 </dd>
               </dl>
@@ -203,13 +216,15 @@ const Article: React.FC<PageParams> = async ({ params }) => {
                     ) : null}
                   </div>
                 ) : null}
-                <div className="pt-4 xl:pt-8">
-                  <Button asChild variant="ghost">
-                    <Link href="/blog">
-                      <ArrowLeft className="mr-2" /> Back
-                    </Link>
-                  </Button>
-                </div>
+                {!post.hiddenArticle ? (
+                  <div className="pt-4 xl:pt-8">
+                    <Button asChild variant="ghost">
+                      <Link href="/blog">
+                        <ArrowLeft className="mr-2" /> Back
+                      </Link>
+                    </Button>
+                  </div>
+                ) : null}
               </section>
             </div>
           </div>
