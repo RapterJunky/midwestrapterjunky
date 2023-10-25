@@ -14,18 +14,18 @@ const emailValidator = z.object({
     .max(254)
     .superRefine(async (email, ctx) => {
       console.time("Vaildate Time");
-      const result = await validate({
+      const { valid, reason, validators } = await validate({
         email,
         validateRegex: true,
         validateMx: true,
       });
       console.timeEnd("Vaildate Time");
-      if (!result.valid) {
+      if (!valid) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-            result.validators[result.reason as keyof typeof result.validators]
-              ?.reason ?? "Failed to vaild email.",
+            validators[reason as keyof typeof validators]
+              ?.reason ?? "Failed to vaildate email.",
           fatal: true,
         });
         return z.NEVER;
@@ -33,7 +33,7 @@ const emailValidator = z.object({
     }),
 });
 
-//export const maxDuration = 5
+export const maxDuration = 15;
 
 export const POST = async (request: NextRequest) => {
   let message = "The server encountered an error.";
