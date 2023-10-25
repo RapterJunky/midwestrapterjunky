@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { fromZodError } from "zod-validation-error";
-import validate from "deep-email-validator";
+//import validate from "deep-email-validator";
+import validate from '@lib/deep_email_validator';
 import client from "@sendgrid/client";
 import { z, ZodError } from "zod";
 
@@ -14,18 +15,21 @@ const emailValidator = z.object({
     .max(254)
     .superRefine(async (email, ctx) => {
       console.time("Vaildate Time");
-      const { valid, reason, validators } = await validate({
+      const { valid, reason } = await validate({
         email,
-        validateRegex: true,
-        validateMx: true,
+        /**
+        * Can't use SMTP do to vercel blocking it
+        * @see https://github.com/vercel/vercel/discussions/4857
+        */
+        validateSMTP: false,
       });
       console.timeEnd("Vaildate Time");
       if (!valid) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message:
-            validators[reason as keyof typeof validators]
-              ?.reason ?? "Failed to vaildate email.",
+          message: reason
+            /*validators[reason as keyof typeof validators]
+              ?.reason ?? "Failed to vaildate email."*/,
           fatal: true,
         });
         return z.NEVER;
@@ -33,7 +37,7 @@ const emailValidator = z.object({
     }),
 });
 
-export const maxDuration = 15;
+//export const maxDuration = 10;
 
 export const POST = async (request: NextRequest) => {
   let message = "The server encountered an error.";
@@ -98,9 +102,9 @@ export const POST = async (request: NextRequest) => {
     ),
     {
       headers: {
-        //"X-RateLimit-Limit": limit.toString(),
-        //"X-RateLimit-Remaining": remaining.toString(),
-        //"X-RateLimit-Reset": reset.toString(),
+        "X-RateLimit-Limit": limit.toString(),
+        "X-RateLimit-Remaining": remaining.toString(),
+        "X-RateLimit-Reset": reset.toString(),
       },
       status: 302,
     },
