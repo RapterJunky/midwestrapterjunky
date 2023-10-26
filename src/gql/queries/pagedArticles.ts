@@ -18,20 +18,20 @@ export type PagedArticlesQueryResult = {
 
 const PagedArticles = `
 query PagedArticles($first: IntType = "5", $skip: IntType = "0") {
-    totalArticles: _allArticlesMeta {
-        count
+  totalArticles: _allArticlesMeta(filter: { hiddenArticle: { eq: false } }) {
+      count
+  }
+  posts: allArticles(orderBy: _firstPublishedAt_DESC, skip: $skip, first: $first, filter: { hiddenArticle:{ eq: false } }) {
+    slug
+    title
+    id
+    tags
+    seo: _seoMetaTags {
+      attributes
+      tag
     }
-    posts: allArticles(orderBy: _firstPublishedAt_DESC, skip: $skip, first: $first) {
-      slug
-      title
-      id
-      tags
-      seo: _seoMetaTags {
-        attributes
-        tag
-      }
-      publishedAt: _publishedAt
-    }
+    publishedAt: _publishedAt
+  }
 }`;
 
 export default PagedArticles;

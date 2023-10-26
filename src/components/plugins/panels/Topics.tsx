@@ -201,7 +201,10 @@ const Topics: React.FC<{
                     <h1 className="line-clamp-1 flex items-center text-lg font-bold underline">
                       {topic.locked ? <FaLock /> : null}
                       {topic.pinned ? <FaThumbtack /> : null}
-                      <Link href={`/community/p/${topic.id}`} prefetch={false}>
+                      <Link
+                        href={`/community/post/${topic.id}`}
+                        prefetch={false}
+                      >
                         {topic.name}
                       </Link>
                     </h1>

@@ -2,6 +2,9 @@ import "server-only";
 import { cache } from "react";
 import prisma from "@/lib/api/prisma";
 
+// Revalidate at most every 10 mins
+export const revalidate = 60;
+
 const getPosts = cache(async (sort: "latest" | "top") => {
   const posts = await prisma.threadPost.findMany({
     take: 15,

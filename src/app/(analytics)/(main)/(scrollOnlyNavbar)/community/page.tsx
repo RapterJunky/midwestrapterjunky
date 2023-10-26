@@ -60,7 +60,6 @@ const Community: React.FC = async () => {
                     latestTopics={category.posts}
                   />
                 ))}
-                <tr></tr>
               </tbody>
             </table>
           </TabsContent>

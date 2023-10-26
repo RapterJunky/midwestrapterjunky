@@ -13,7 +13,7 @@ export type BlogLatestQueryResult = {
 
 const QueryBlogLatest = `
 query QueryBlogLatest($first: IntType = "5") {
-    posts: allArticles(first: $first, orderBy: _firstPublishedAt_DESC) {
+    posts: allArticles(first: $first, orderBy: _firstPublishedAt_DESC, filter:{ hiddenArticle: { eq:false } }) {
         tags
         title
         slug

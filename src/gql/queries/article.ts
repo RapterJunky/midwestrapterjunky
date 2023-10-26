@@ -14,6 +14,7 @@ export type ArticleQueryResult = {
       },
       { title: string; slug: string; __typename: string; id: string }
     >;
+    hiddenArticle: boolean;
     publishedAt: string;
     authors: {
       avatar: string | null;
@@ -38,6 +39,7 @@ query ArticlePageQuery($slug: String = "") {
             content
             tag
         }
+        hiddenArticle
         publishedAt: _publishedAt
         authors
         id
