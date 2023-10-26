@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { fromZodError } from "zod-validation-error";
 //import validate from "deep-email-validator";
-import validate from '@lib/deep_email_validator';
+import validate from "@lib/deep_email_validator";
 import client from "@sendgrid/client";
 import { z, ZodError } from "zod";
 
@@ -18,19 +18,18 @@ const emailValidator = z.object({
       const { valid, reason } = await validate({
         email,
         /**
-        * Can't use SMTP do to vercel blocking it
-        * @see https://github.com/vercel/vercel/discussions/4857
-        */
+         * Can't use SMTP do to vercel blocking it
+         * @see https://github.com/vercel/vercel/discussions/4857
+         */
         validateSMTP: false,
       });
       console.timeEnd("Vaildate Time");
       if (!valid) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: reason
-            /*validators[reason as keyof typeof validators]
-              ?.reason ?? "Failed to vaildate email."*/,
-          fatal: true,
+          message: reason,
+          /*validators[reason as keyof typeof validators]
+              ?.reason ?? "Failed to vaildate email."*/ fatal: true,
         });
         return z.NEVER;
       }
@@ -96,7 +95,8 @@ export const POST = async (request: NextRequest) => {
 
   return NextResponse.redirect(
     new URL(
-      `/confirmation?mode=email&status=${ok ? "ok" : "error"
+      `/confirmation?mode=email&status=${
+        ok ? "ok" : "error"
       }&message=${encodeURIComponent(message)}`,
       request.nextUrl.origin,
     ),

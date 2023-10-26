@@ -59,15 +59,17 @@ const Article: React.FC<PageParams> = async ({ params }) => {
 
   if (!post) notFound();
 
-  const { next, prev } = !post.hiddenArticle ? await getPageQuery<{
-    next: { slug: string; title: string };
-    prev: { slug: string; title: string };
-  }>(GetNextArticles, {
-    variables: {
-      id: post.id,
-      date: post.publishedAt ?? new Date().toISOString(),
-    },
-  }) : { next: null, prev: null };
+  const { next, prev } = !post.hiddenArticle
+    ? await getPageQuery<{
+        next: { slug: string; title: string };
+        prev: { slug: string; title: string };
+      }>(GetNextArticles, {
+        variables: {
+          id: post.id,
+          date: post.publishedAt ?? new Date().toISOString(),
+        },
+      })
+    : { next: null, prev: null };
 
   const jsonld: TechArticle = {
     "@type": "TechArticle",
@@ -76,8 +78,9 @@ const Article: React.FC<PageParams> = async ({ params }) => {
     keywords: post.tags?.join(" "),
     datePublished: post.publishedAt,
     description: getDescriptionTag(post.seo),
-    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${process.env.VERCEL_URL
-      }/blog/${post.slug}`,
+    url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
+      process.env.VERCEL_URL
+    }/blog/${post.slug}`,
   };
 
   return (
@@ -149,20 +152,19 @@ const Article: React.FC<PageParams> = async ({ params }) => {
                         </dl>
                       </li>
                     )) ?? (
-                        <li className="flex items-center space-x-2">
-                          <Avatar>
-                            <AvatarImage src={""}>
-                            </AvatarImage>
-                            <AvatarFallback>
-                              <User2 />
-                            </AvatarFallback>
-                          </Avatar>
-                          <dl className="whitespace-nowrap text-sm font-medium leading-5">
-                            <dt className="sr-only">Name</dt>
-                            <dd className="text-zinc-900">Unknown Author</dd>
-                          </dl>
-                        </li>
-                      )}
+                      <li className="flex items-center space-x-2">
+                        <Avatar>
+                          <AvatarImage src={""}></AvatarImage>
+                          <AvatarFallback>
+                            <User2 />
+                          </AvatarFallback>
+                        </Avatar>
+                        <dl className="whitespace-nowrap text-sm font-medium leading-5">
+                          <dt className="sr-only">Name</dt>
+                          <dd className="text-zinc-900">Unknown Author</dd>
+                        </dl>
+                      </li>
+                    )}
                   </ul>
                 </dd>
               </dl>

@@ -27,13 +27,13 @@ const getPosts = cache(async (sort: "latest" | "top") => {
     orderBy:
       sort === "latest"
         ? {
-          createdAt: "desc",
-        }
+            createdAt: "desc",
+          }
         : {
-          likes: {
-            _count: "desc",
+            likes: {
+              _count: "desc",
+            },
           },
-        },
   });
 
   return posts;
