@@ -6,7 +6,7 @@ import CategoryCard from "@/components/community/CategoryCard";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({

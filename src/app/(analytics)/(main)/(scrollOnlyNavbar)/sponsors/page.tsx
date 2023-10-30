@@ -16,7 +16,7 @@ import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   try {
@@ -24,6 +24,7 @@ export async function generateMetadata(
     return getSeoTags({
       parent,
       datocms: sponsor.seo,
+      slug: "/sponsors"
     });
   } catch (e) {
     return getSeoTags({

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { host } from "@/lib/utils/host";
 import "../styles/globals.css";
 
 const inter = Inter({
@@ -9,10 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    `${process.env.VERCEL_ENV === "development" ? "http://" : "https://"}${process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_URL
-    }`,
-  ),
+  metadataBase: new URL(host),
 };
 
 export const viewport: Viewport = {

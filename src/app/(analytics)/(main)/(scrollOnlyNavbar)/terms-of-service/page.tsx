@@ -12,7 +12,7 @@ import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const data = await getPageQuery<TermsOfServiceResult>(TermsOfServiceQuery);
@@ -48,6 +48,7 @@ export async function generateMetadata(
 
   return getSeoTags({
     parent,
+    slug: "/terms-of-service",
     datocms: moddedTags,
   });
 }

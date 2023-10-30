@@ -1,14 +1,14 @@
-import { toNextMetadata } from "react-datocms/seo";
 import type { Metadata } from "next";
 
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics";
 import getFullPageProps from "@/lib/services/getFullPageProps";
 import NewRelic from "@/components/analytics/NewRelic";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
 
-  return toNextMetadata(data.site.faviconMetaTags);
+  return getSeoTags({ datocms: data.site.faviconMetaTags });
 }
 
 const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {

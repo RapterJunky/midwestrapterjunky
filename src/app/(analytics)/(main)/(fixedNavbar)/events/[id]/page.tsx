@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 import IconLink from "@/components/ui/IconLink";
 import { Button } from "@/components/ui/button";
+import { host } from "@/lib/utils/host";
 
 type PageParams = { params: { id: string } };
 
@@ -37,9 +38,10 @@ export async function generateMetadata(
   return getSeoTags({
     parent,
     datocms: event.seo,
+    slug: `/events/${params.id}`,
     metadata: {
       openGraph: {
-        url: `https://midwestraptorjunkies.com/events/${params.id}`,
+        url: `${host}/events/${params.id}`,
       },
     },
   });
@@ -119,8 +121,8 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
               <h2 className="mb-1 text-base font-bold">Event Details</h2>
             </div>
             {!event?.shopItemLink &&
-            !(event.location || event.extraLocationDetails) &&
-            (!event.links || event.links.length === 0) ? (
+              !(event.location || event.extraLocationDetails) &&
+              (!event.links || event.links.length === 0) ? (
               <div className="mb-3 text-center">No details where provided.</div>
             ) : null}
 
@@ -171,18 +173,17 @@ const EventPage: React.FC<PageParams> = async ({ params }) => {
           "@context": "https://www.schema.org",
           location: event.extraLocationDetails
             ? {
-                "@type": "Place",
-                name: event.extraLocationDetails,
-              }
+              "@type": "Place",
+              name: event.extraLocationDetails,
+            }
             : undefined,
           "@type": "Event",
           name: event.title,
           startDate: event.dateFrom,
           endDate: event.dateTo,
           description: getDescriptionTag(event.seo),
-          url: `${
-            process.env.VERCEL_ENV === "development" ? "http" : "https"
-          }://${process.env.VERCEL_URL}/events/${event.slug}`,
+          url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"
+            }://${process.env.VERCEL_URL}/events/${event.slug}`,
         })}
       </Script>
     </article>
