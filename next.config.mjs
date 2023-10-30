@@ -18,18 +18,51 @@ const nextConfig = withAnalyzer({
   reactStrictMode: true,
   images: {
     deviceSizes: [150, 300, 600, 900, 1200, 1500, 1800, 2100],
-    domains: [
-      "www.datocms-assets.com",
-      "cdn.shopify.com",
-      "api.lorem.space",
-      "images.unsplash.com",
-      "api.dicebear.com",
-      "img.youtube.com",
-      "lh3.googleusercontent.com",
-      "square-catalog-sandbox.s3.amazonaws.com",
-      "square-catalog.s3.amazonaws.com",
-      "drive.google.com",
-      "platform-lookaside.fbsbx.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.datocms-assets.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.lorem.space",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "https",
+        hostname: "square-catalog-sandbox.s3.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "square-catalog.s3.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com",
+      },
     ],
   },
   async redirects() {
