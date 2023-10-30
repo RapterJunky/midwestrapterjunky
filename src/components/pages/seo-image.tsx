@@ -1,4 +1,5 @@
-import { ImageResponse } from "next/server";
+import { ImageResponse } from "next/og";
+import { host } from "@/lib/utils/host";
 
 export const config = {
   alt: "Page Thumbnail",
@@ -25,9 +26,7 @@ export const SEOImage = () => {
             width={500}
             height={500}
             alt=""
-            src={`${
-              process.env.VERCEL_ENV === "development" ? "http" : "https"
-            }://${process.env.VERCEL_URL}/facebook.png`}
+            src={`${host}/facebook.png`}
           />
         </div>
       </div>

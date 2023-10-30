@@ -55,7 +55,7 @@ const defaultSeo = ({
       images: ["/opengraph-image"],
     },
     alternates: {
-      canonical: url
+      canonical: url,
     },
     robots: defaultRobots(robots),
     description,
@@ -69,25 +69,27 @@ const getSeoTags = async ({
   metadata,
   datocms,
   seo,
-  slug
+  slug,
 }: Opts): Promise<Metadata> => {
   const parentSeo = parent ? await parent : {};
   const datocmsSeo = datocms ? toNextMetadata(datocms) : ({} as Metadata);
-  const customMetadata = metadata ? metadata : {}
+  const customMetadata = metadata ? metadata : {};
   const genericSeo = seo ? defaultSeo(seo) : {};
 
-  const canonical = slug ? {
-    alternates: {
-      canonical: `${host}${slug}`
-    }
-  } as Metadata : {};
+  const canonical = slug
+    ? ({
+        alternates: {
+          canonical: `${host}${slug}`,
+        },
+      } as Metadata)
+    : {};
 
   return {
     ...parentSeo,
     ...datocmsSeo,
     ...customMetadata,
     ...genericSeo,
-    ...canonical
+    ...canonical,
   };
 };
 

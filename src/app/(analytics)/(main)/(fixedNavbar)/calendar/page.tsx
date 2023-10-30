@@ -11,7 +11,7 @@ import Calendar from "@/components/Calendar";
 const MAX_FETCH = 8;
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { calendar } = await getPageQuery<CalendarQueryResult>(CalendarQuery, {
