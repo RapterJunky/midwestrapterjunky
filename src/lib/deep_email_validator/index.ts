@@ -47,7 +47,7 @@ export default async function validate(
       reason: "",
     };
   } catch (error) {
-    logger.error("Email validation error", error);
+    logger.error(error, "Email validation error");
     return {
       valid: false,
       reason: (error as Error).message ?? "Failed to validate email",

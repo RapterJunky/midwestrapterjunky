@@ -14,6 +14,19 @@ const rateLimiter = new Ratelimit({
   prefix: "ratelimit",
 });
 
+export class RateLimitError extends Error {
+  constructor(public limit: number, public remaining: number, public reset: number) {
+    super("Too many requests");
+  }
+  getHeaders() {
+    return {
+      "X-RateLimit-Limit": this.limit.toString(),
+      "X-RateLimit-Remaining": this.remaining.toString(),
+      "X-RateLimit-Reset": this.reset.toString(),
+    }
+  }
+}
+
 type RatelimitResponse = Awaited<ReturnType<typeof rateLimiter.limit>>;
 
 const ratelimit = async (
@@ -29,5 +42,11 @@ const ratelimit = async (
   }
   return rateLimiter.limit(ip);
 };
+
+
+export const limit = async (ip: string | undefined = "anonymous") => {
+  const { success, remaining, reset, limit } = await ratelimit(ip);
+  if (!success) throw new RateLimitError(limit, remaining, reset);
+}
 
 export default ratelimit;

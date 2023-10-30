@@ -9,7 +9,9 @@ import type { MxRecord } from "node:dns";
  * @return {*}  {Promise<MxRecord>}
  */
 export async function getBestMx(domain: string): Promise<MxRecord> {
-  const addresses = await resolveMx(domain);
+  const addresses = await resolveMx(domain).catch((e) => {
+    throw new Error("Failed to validate mailbox", { cause: (e as Error)?.message ?? "Unknown error" });
+  });
   let bestIndex = 0;
 
   for (let i = 0; i < addresses.length; i++) {
