@@ -38,24 +38,24 @@ type Discount = { name: string; id: string; scope: "ORDER" };
 export type Actions =
   | { payload: boolean; event: "SHIPPING_DONE" }
   | {
-      event: "FINISH_ACCOUNT_TAB_AS_GUEST";
-      payload: {
-        email: string;
-      };
-    }
+    event: "FINISH_ACCOUNT_TAB_AS_GUEST";
+    payload: {
+      email: string;
+    };
+  }
   | {
-      event: "FINISH_ACCOUNT_TAB_AS_USER";
-      payload: {
-        email: string;
-        shipping: Partial<Address> | null;
-        accountId: string;
-      };
-    }
+    event: "FINISH_ACCOUNT_TAB_AS_USER";
+    payload: {
+      email: string;
+      shipping: Partial<Address> | null;
+      accountId: string;
+    };
+  }
   | { payload: Address; event: "FINSIH_SHIPPING" }
   | {
-      payload: { billing: Address | undefined; billingAsShipping: boolean };
-      event: "FINISH_BILLING";
-    }
+    payload: { billing: Address | undefined; billingAsShipping: boolean };
+    event: "FINISH_BILLING";
+  }
   | { payload: Discount; event: "ADD_DISCOUNT" }
   | { payload: string; event: "REMOVE_DISCOUNT" }
   | { payload: "account" | "shipping" | "billing"; event: "SET_TAB" };
@@ -220,7 +220,7 @@ const makePayment = async (
 
   const orderRaw = window.localStorage.getItem(CART_LOCALSTOARGE_KEY);
   if (!orderRaw)
-    throw new Error("There are not items in the cart", {
+    throw new Error("There are no items in the cart", {
       cause: "INVAILD_ORDER_1",
     });
   const order = JSON.parse(orderRaw) as {
