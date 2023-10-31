@@ -22,12 +22,7 @@ export const SEOImage = () => {
       >
         <div tw="flex justify-center w-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            width={500}
-            height={500}
-            alt=""
-            src={`${host}/facebook.png`}
-          />
+          <img width={500} height={500} alt="" src={`${host}/facebook.png`} />
         </div>
       </div>
     ),
