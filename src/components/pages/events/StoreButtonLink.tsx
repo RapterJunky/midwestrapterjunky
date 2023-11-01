@@ -1,24 +1,18 @@
-import { Button } from "@/components/ui/button";
-import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
 import Link from "next/link";
+import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
+import { Button } from "@/components/ui/button";
 
 const StoreButtonLink: React.FC<{ value: string }> = async (props) => {
-  const data = (await fetch(
-    `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-      process.env.VERCEL_URL
-    }/api/products?find=${btoa(props.value)}`,
-    {
-      next: {
-        revalidate: REVAILDATE_IN_2H,
-      },
-    },
-  ).then((value) => value.json())) as Storefront.Product[];
+  const products = await getFeaturedItems([{ id: "1", item: { value: props.value } }])
 
-  if (!data || !data.length || "message" in data) return null;
+  if (!products) return null;
+
+  const product = products.at(0);
+  if (!product) return null;
 
   return (
     <Button asChild>
-      <Link href={data?.at(0)?.onlineStoreUrl ?? "/404"}>View Store Page</Link>
+      <Link href={product.onlineStoreUrl ?? "/404"}>View Store Page</Link>
     </Button>
   );
 };
