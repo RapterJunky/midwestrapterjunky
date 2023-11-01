@@ -78,19 +78,26 @@ const getSeoTags = async ({
 
   const canonical = slug
     ? ({
-        alternates: {
-          canonical: `${host}${slug}`,
-        },
-      } as Metadata)
+      alternates: {
+        canonical: `${host}${slug}`,
+      },
+    } as Metadata)
     : {};
 
-  return {
+
+  const data: Metadata = {
     ...parentSeo,
     ...datocmsSeo,
     ...customMetadata,
     ...genericSeo,
     ...canonical,
   };
+
+  if (data.openGraph && slug && !("url" in data.openGraph)) {
+    data.openGraph.url = `${host}${slug}`;
+  }
+
+  return data;
 };
 
 export default getSeoTags;
