@@ -3,7 +3,9 @@ import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
 import { Button } from "@/components/ui/button";
 
 const StoreButtonLink: React.FC<{ value: string }> = async (props) => {
-  const products = await getFeaturedItems([{ id: "1", item: { value: props.value } }])
+  const products = await getFeaturedItems([
+    { id: "1", item: { value: props.value } },
+  ]);
 
   if (!products) return null;
 
