@@ -49,6 +49,7 @@ export async function generateMetadata(
 
   return getSeoTags({
     parent,
+    slug: "/privacy-policy",
     datocms: moddedTags,
   });
 }

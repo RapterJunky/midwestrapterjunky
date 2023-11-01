@@ -4,6 +4,7 @@ import {
   toNextMetadata,
 } from "react-datocms/seo";
 import type { Metadata, ResolvingMetadata } from "next";
+import { host } from "../utils/host";
 
 type Opts = {
   seo?: {
@@ -13,14 +14,11 @@ type Opts = {
     category?: string;
     robots?: boolean;
   };
+  slug?: string;
   metadata?: Metadata;
   parent?: ResolvingMetadata;
   datocms?: TitleMetaLinkTag[] | SeoOrFaviconTag[];
 };
-
-const host = `${
-  process.env.VERCEL_ENV === "development" ? "http" : "https"
-}://${process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_URL}`;
 
 const defaultRobots = (allow: boolean): Metadata["robots"] => ({
   index: allow,
@@ -56,6 +54,9 @@ const defaultSeo = ({
       type: "website",
       images: ["/opengraph-image"],
     },
+    alternates: {
+      canonical: url,
+    },
     robots: defaultRobots(robots),
     description,
     category,
@@ -68,17 +69,27 @@ const getSeoTags = async ({
   metadata,
   datocms,
   seo,
+  slug,
 }: Opts): Promise<Metadata> => {
   const parentSeo = parent ? await parent : {};
   const datocmsSeo = datocms ? toNextMetadata(datocms) : ({} as Metadata);
   const customMetadata = metadata ? metadata : {};
   const genericSeo = seo ? defaultSeo(seo) : {};
 
+  const canonical = slug
+    ? ({
+        alternates: {
+          canonical: `${host}${slug}`,
+        },
+      } as Metadata)
+    : {};
+
   return {
     ...parentSeo,
     ...datocmsSeo,
     ...customMetadata,
     ...genericSeo,
+    ...canonical,
   };
 };
 

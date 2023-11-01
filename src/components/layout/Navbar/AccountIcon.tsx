@@ -25,6 +25,7 @@ const AccountIcon: React.FC = () => {
           variant="ghost"
           className="relative h-10 w-10 rounded-full"
           data-cy="account-icons"
+          aria-label="account"
         >
           <Avatar className="h-10 w-10 text-black">
             <AvatarFallback>

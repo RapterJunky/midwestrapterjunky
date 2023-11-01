@@ -26,6 +26,7 @@ export async function generateMetadata(
 
   return getSeoTags({
     parent,
+    slug: "/calendar",
     datocms: calendar.seo,
   });
 }

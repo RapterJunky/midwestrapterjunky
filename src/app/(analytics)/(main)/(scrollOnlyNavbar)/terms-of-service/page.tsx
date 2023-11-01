@@ -48,6 +48,7 @@ export async function generateMetadata(
 
   return getSeoTags({
     parent,
+    slug: "/terms-of-service",
     datocms: moddedTags,
   });
 }

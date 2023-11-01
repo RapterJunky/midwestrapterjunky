@@ -7,20 +7,19 @@
  *
  * @export
  * @param {string} email
- * @return {*}  {(Promise<string | undefined>)}
+ * @return {*}  {(Promise<void>)}
  */
 export default async function checkDisposable(email: string): Promise<void> {
-  const res = await fetch(
-    `https://open.kickbox.com/v1/disposable/${encodeURIComponent(email)}`,
-  );
+  try {
+    const res = await fetch(
+      `https://open.kickbox.com/v1/disposable/${encodeURIComponent(email)}`,
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to validate email");
-  }
+    if (!res.ok) throw new Error();
 
-  const data = (await res.json()) as { disposable: boolean };
-
-  if (data.disposable) {
+    const data = (await res.json()) as { disposable: boolean };
+    if (data.disposable) throw new Error();
+  } catch (_error) {
     throw new Error("Email was created using a disposable email service.");
   }
 }

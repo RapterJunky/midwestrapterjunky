@@ -220,7 +220,7 @@ const makePayment = async (
 
   const orderRaw = window.localStorage.getItem(CART_LOCALSTOARGE_KEY);
   if (!orderRaw)
-    throw new Error("There are not items in the cart", {
+    throw new Error("There are no items in the cart", {
       cause: "INVAILD_ORDER_1",
     });
   const order = JSON.parse(orderRaw) as {

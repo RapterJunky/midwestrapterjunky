@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 import IconLink from "@/components/ui/IconLink";
 import { Button } from "@/components/ui/button";
+import { host } from "@/lib/utils/host";
 
 type PageParams = { params: { id: string } };
 
@@ -37,9 +38,10 @@ export async function generateMetadata(
   return getSeoTags({
     parent,
     datocms: event.seo,
+    slug: `/events/${params.id}`,
     metadata: {
       openGraph: {
-        url: `https://midwestraptorjunkies.com/events/${params.id}`,
+        url: `${host}/events/${params.id}`,
       },
     },
   });

@@ -21,6 +21,7 @@ export async function generateMetadata(
 
   return getSeoTags({
     datocms: aboutUsModel.seo,
+    slug: "/about-us",
     parent,
   });
 }

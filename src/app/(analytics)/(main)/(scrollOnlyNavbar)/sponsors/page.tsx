@@ -24,6 +24,7 @@ export async function generateMetadata(
     return getSeoTags({
       parent,
       datocms: sponsor.seo,
+      slug: "/sponsors",
     });
   } catch (e) {
     return getSeoTags({
