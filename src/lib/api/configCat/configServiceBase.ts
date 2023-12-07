@@ -67,8 +67,8 @@ export default class ConfigServiceBase {
         error instanceof Response
           ? error.statusText
           : error instanceof Error
-          ? error.message
-          : "";
+            ? error.message
+            : "";
       logger.error(
         error,
         `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`,

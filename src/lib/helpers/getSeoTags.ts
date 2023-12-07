@@ -78,12 +78,11 @@ const getSeoTags = async ({
 
   const canonical = slug
     ? ({
-      alternates: {
-        canonical: `${host}${slug}`,
-      },
-    } as Metadata)
+        alternates: {
+          canonical: `${host}${slug}`,
+        },
+      } as Metadata)
     : {};
-
 
   const data: Metadata = {
     ...parentSeo,
