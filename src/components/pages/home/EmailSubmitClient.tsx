@@ -43,7 +43,7 @@ export default function AddEmail() {
 
   return (
     <form
-      action={formAction}
+      action={formAction as never}
       className="flex w-3/4 flex-col justify-center from-white sm:w-2/5 lg:mr-2"
     >
       <SubmitBtn />

@@ -34,7 +34,10 @@ const emailValidator = z.object({
     }),
 });
 
-const submitEmail = async (prevState: unknown, formData: FormData) => {
+const submitEmail = async (
+  prevState: unknown,
+  formData: FormData,
+): Promise<{ error: string | null }> => {
   const valid = await emailValidator.safeParseAsync({
     email: formData.get("email"),
   });
