@@ -126,7 +126,7 @@ const client = z.object({
   NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME: z.string().optional(),
   NEXT_PUBLIC_VERCEL_GIT_PREVIOUS_SHA: z.string().optional(),
 
-  NEW_PUBLIC_POSTHOG_KEY: z.string(),
+  NEXT_PUBLIC_POSTHOG_KEY: z.string(),
 
   NEXT_PUBLIC_FEATURE_FLAGS: z
     .string()
@@ -236,7 +236,7 @@ const processEnv = {
 
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
 
-  NEW_PUBLIC_POSTHOG_KEY: process.env.NEW_PUBLIC_POSTHOG_KEY,
+  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
 };
 
 // Don't touch the part below
