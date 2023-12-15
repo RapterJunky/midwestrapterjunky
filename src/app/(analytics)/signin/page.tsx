@@ -10,18 +10,19 @@ import SignInList from "@components/pages/signin/SignList";
 import { Skeleton } from "@/components/ui/skeleton";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Separator } from "@/components/ui/separator";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import LoginPageQuery, { type LoginPageQueryResult } from "@/gql/queries/login_page";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
+  const { login } = await getPageQuery<LoginPageQueryResult>(LoginPageQuery);
+
   return getSeoTags({
     parent,
-    seo: {
-      description: "Login page for Midwest Raptor Junkies.",
-      title: "SignIn",
-      slug: "/signin",
-    },
+    slug: "/signin",
+    datocms: login.seo,
   });
 }
 
@@ -34,13 +35,18 @@ const getIcon = async () => {
 };
 
 const SignIn: React.FC = async () => {
+  const { login } = await getPageQuery<LoginPageQueryResult>(LoginPageQuery);
   const icon = await getIcon();
+
   return (
     <div className="dark:bg-zinc-900 dark:text-zinc-50 lg:grid lg:min-h-screen lg:grid-cols-12">
       <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
         <Image
-          src="https://www.datocms-assets.com/77949/1676234561-220865184_6246667838678383_7191752647666209634_n.webp"
-          alt="signup background"
+          sizes={login.background.responsiveImage.sizes}
+          blurDataURL={login.background.blurUpThumb}
+          src={login.background.responsiveImage.src}
+          placeholder={login.background.blurUpThumb ? "blur" : "empty"}
+          alt={login.background.responsiveImage.alt ?? "login page background"}
           fill
           className="inset-0 h-full w-full object-cover opacity-80"
         />
@@ -76,10 +82,10 @@ const SignIn: React.FC = async () => {
               </Link>
             </Avatar>
             <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-              Welcome to Midwest Raptor Junkies
+              {login.welcomeTitle}
             </h1>
             <p className="mt-4 leading-relaxed text-gray-500">
-              A place with all the raptor knowledge you need.
+              {login.welcomeSubheading}
             </p>
           </div>
           <div className="mt-8 grid grid-cols-6 gap-6">

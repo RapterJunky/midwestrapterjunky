@@ -83,7 +83,7 @@ export const POST = async (request: NextRequest) => {
         providerAccountId: data.user_id,
       },
       select: {
-        userId: true,
+        userId: true
       },
     });
     if (!accountUser) throw createHttpError.NotFound();
@@ -94,10 +94,19 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
+    await prisma.session.delete({
+      where: {
+        id: "",
+        userId: accountUser.userId
+      }
+    });
+
+    const id = randomBytes(10).toString("hex");
+
     return NextResponse.json({
-      url: `${host}${process.env.VERCEL_URL
-        }/api/callback/fb`,
-      confirmation_code: randomBytes(10).toString("hex"),
+      url: `${host}/${process.env.VERCEL_URL
+        }/profile/fb-status?id=${id}`,
+      confirmation_code: id,
     });
   } catch (error) {
     return onError(error);
