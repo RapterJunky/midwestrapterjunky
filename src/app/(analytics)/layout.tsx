@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 import GoogleAnalytics from "@components/analytics/GoogleAnalytics";
 import getFullPageProps from "@/lib/services/getFullPageProps";
-import NewRelic from "@/components/analytics/NewRelic";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import PHProvider from "@/components/analytics/PostHog";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();
@@ -14,9 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
 const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
-      {children}
+      <PHProvider>{children}</PHProvider>
       <GoogleAnalytics debug={process.env.VERCEL_ENV !== "production"} />
-      {process.env.VERCEL_ENV !== "development" ? <NewRelic /> : null}
     </>
   );
 };

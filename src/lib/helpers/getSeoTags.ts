@@ -84,13 +84,29 @@ const getSeoTags = async ({
       } as Metadata)
     : {};
 
-  return {
+  const data: Metadata = {
     ...parentSeo,
     ...datocmsSeo,
     ...customMetadata,
     ...genericSeo,
     ...canonical,
   };
+
+  if ("themeColor" in data) {
+    delete data.themeColor;
+  }
+  if ("colorScheme" in data) {
+    delete data.colorScheme;
+  }
+  if ("viewport" in data) {
+    delete data.viewport;
+  }
+
+  if (data.openGraph && slug && !("url" in data.openGraph)) {
+    data.openGraph.url = `${host}${slug}`;
+  }
+
+  return data;
 };
 
 export default getSeoTags;

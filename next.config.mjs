@@ -14,6 +14,14 @@ const withAnalyzer = withBundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withAnalyzer({
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/:path*",
+        destination: "https://app.posthog.com/:path*",
+      },
+    ];
+  },
   productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
   reactStrictMode: true,
   images: {
