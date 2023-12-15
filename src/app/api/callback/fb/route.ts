@@ -7,6 +7,8 @@ import { logger } from "@lib/logger";
 import onError from "@api/handleError";
 import prisma from "@api/prisma";
 
+import { host } from "@lib/utils/host";
+
 interface JSONWebToken {
   algorithm: string;
   user_id: string;
@@ -93,9 +95,8 @@ export const POST = async (request: NextRequest) => {
     });
 
     return NextResponse.json({
-      url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-        process.env.VERCEL_URL
-      }/api/callback/fb`,
+      url: `${host}${process.env.VERCEL_URL
+        }/api/callback/fb`,
       confirmation_code: randomBytes(10).toString("hex"),
     });
   } catch (error) {
