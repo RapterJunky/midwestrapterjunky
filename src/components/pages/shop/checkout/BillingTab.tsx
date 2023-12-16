@@ -76,7 +76,7 @@ const BillingTab: React.FC = () => {
         code={error?.code ?? "UNKNOWN"}
       />
       <ShopLoadingDialog open={form.formState.isSubmitting} />
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ph-no-capture">
         <div className="mb-4">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             Billing
@@ -169,8 +169,8 @@ const BillingTab: React.FC = () => {
             type="submit"
           >
             {form.formState.isSubmitting ||
-            form.formState.isValidating ||
-            order.isLoading ? (
+              form.formState.isValidating ||
+              order.isLoading ? (
               <>
                 <Spinner className="mr-2" />
                 {order.isLoading ? "Loading Order" : "Processing Order"}
@@ -180,11 +180,11 @@ const BillingTab: React.FC = () => {
                 Pay{" "}
                 {order.data?.netAmountDueMoney?.amount
                   ? (
-                      Number(order.data?.netAmountDueMoney?.amount) / 100
-                    ).toLocaleString(undefined, {
-                      style: "currency",
-                      currency: state.currencyCode,
-                    })
+                    Number(order.data?.netAmountDueMoney?.amount) / 100
+                  ).toLocaleString(undefined, {
+                    style: "currency",
+                    currency: state.currencyCode,
+                  })
                   : "No Items in cart"}
               </>
             )}

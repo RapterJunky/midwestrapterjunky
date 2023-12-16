@@ -16,7 +16,7 @@ import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Button } from "@/components/ui/button";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   try {
@@ -45,7 +45,7 @@ const Sponsors: React.FC = async () => {
       </h1>
       <section className="grid w-full max-w-7xl grid-cols-1 gap-8 px-4 pt-4 md:grid-cols-2 md:px-0 lg:grid-cols-3">
         {sponsor.sponsors.map((value) => (
-          <Link href={value.link ?? "/"} key={value.id}>
+          <Link className="ph-autocapture" href={value.link ?? "/"} key={value.id} data-ph-capture-attribute-sponsor-url={value.link ?? "/"}>
             <Card
               key={value.id}
               className="flex h-full flex-col rounded-sm shadow"

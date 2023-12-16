@@ -26,7 +26,7 @@ const AddressForm: React.FC<{
   type: "shipping" | "billing";
 }> = ({ control, type, comments, name }) => {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 ph-no-capture">
       <div className="mb-4">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           {name} Address
@@ -53,6 +53,7 @@ const AddressForm: React.FC<{
                   placeholder="John"
                   type="text"
                   required
+                  className="ph-no-capture"
                   autoComplete="given-name"
                   maxLength={100}
                 />
@@ -80,6 +81,7 @@ const AddressForm: React.FC<{
                   placeholder="Doe"
                   type="text"
                   required
+                  className="ph-no-capture"
                   autoComplete="family-name"
                   maxLength={100}
                 />
@@ -104,6 +106,7 @@ const AddressForm: React.FC<{
                 placeholder="542 W. 15th Street"
                 type="text"
                 required
+                className="ph-no-capture"
                 autoComplete={`${type} address-line-1`}
               />
             </FormControl>
@@ -122,6 +125,7 @@ const AddressForm: React.FC<{
                 {...field}
                 placeholder="Apt. (SelectItemal)"
                 type="text"
+                className="ph-no-capture"
                 autoComplete={`${type} address-line-2`}
               />
             </FormControl>
@@ -141,6 +145,7 @@ const AddressForm: React.FC<{
                 {...field}
                 placeholder="city"
                 type="text"
+                className="ph-no-capture"
                 autoComplete="city"
               />
             </FormControl>
@@ -329,6 +334,7 @@ const AddressForm: React.FC<{
                 maxLength={30}
                 inputMode="numeric"
                 required
+                className="ph-no-capture"
                 {...field}
                 placeholder="+1 321 456 3987"
                 type="tel"
@@ -354,7 +360,7 @@ const AddressForm: React.FC<{
             <FormItem>
               <FormLabel>Zip / Postal Code</FormLabel>
               <FormControl>
-                <Textarea placeholder="Comments (optonal)" {...field} />
+                <Textarea className="ph-no-capture" placeholder="Comments (optonal)" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

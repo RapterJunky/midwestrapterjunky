@@ -92,7 +92,7 @@ const SquareForm: React.FC = () => {
       <div
         data-cy="billing-card-details"
         data-status={loading ? "loading" : "ready"}
-        className={`shadow-square-input mt-1 ${loading ? "hidden" : ""}`}
+        className={`ph-no-capture shadow-square-input mt-1 ${loading ? "hidden" : ""}`}
         id="sqaure-card-container"
       />
       {loading ? (

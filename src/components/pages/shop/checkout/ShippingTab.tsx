@@ -26,7 +26,7 @@ const ShippingTab: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ph-no-capture">
         <AddressForm
           comments={true}
           type="shipping"
