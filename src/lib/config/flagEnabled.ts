@@ -1,6 +1,6 @@
+import type { ValueAndVariationId } from "@api/configCat/rollout";
 import type { Flags } from "@lib/config/flags";
 import configCat from "@api/configCat";
-import type { ValueAndVariationId } from "@api/configCat/rollout";
 
 const flagEnabled = async (
   flag: Flags,
