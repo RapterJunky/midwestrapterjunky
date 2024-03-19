@@ -1,5 +1,6 @@
 "use client";
-import { useSearchParams, useRouter } from "next/navigation";
+
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 const ListPagination: React.FC<{

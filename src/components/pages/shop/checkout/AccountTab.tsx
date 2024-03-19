@@ -1,6 +1,10 @@
 "use client";
+
+import { Check } from "lucide-react";
+import { signIn, useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
 import type { Customer } from "square";
-import { Separator } from "@/components/ui/separator";
+import type { CheckoutState } from "@/components/providers/CheckoutProvider";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,12 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Check } from "lucide-react";
-import { useForm } from "react-hook-form";
-import useCheckout from "@/hooks/shop/useCheckout";
-import type { CheckoutState } from "@/components/providers/CheckoutProvider";
-import { signIn, useSession } from "next-auth/react";
+import { Separator } from "@/components/ui/separator";
 import Spinner from "@/components/ui/Spinner";
+import useCheckout from "@/hooks/shop/useCheckout";
 
 const AccountTab: React.FC = () => {
   const { state, dispatch } = useCheckout();

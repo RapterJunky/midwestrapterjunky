@@ -1,9 +1,9 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CommunityPosts from "@/components/pages/community/CommunityPosts";
-import getCategories from "@/lib/services/community/getCategories";
 import CategoryCard from "@/components/community/CategoryCard";
+import CommunityPosts from "@/components/pages/community/CommunityPosts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getCategories from "@/lib/services/community/getCategories";
 
 export async function generateMetadata(
   {},

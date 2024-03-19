@@ -1,5 +1,5 @@
-import { type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 import { type SeoOrFaviconTag } from "react-datocms/seo";
+import { type StructuredTextGraphQlResponse } from "react-datocms/structured-text";
 
 export type TermsOfServiceResult = {
   terms: {

@@ -1,17 +1,17 @@
 "use client";
+
 import type {
   Card,
   Payments,
   TokenStatus,
 } from "@square/web-payments-sdk-types";
-import { createContext, useState, useReducer } from "react";
-import useSWR, { type SWRResponse } from "swr";
-import type { Order } from "square";
 import Script from "next/script";
-
+import { createContext, useReducer, useState } from "react";
+import type { Order } from "square";
+import useSWR, { type SWRResponse } from "swr";
 import type { CartItem } from "@/components/providers/ShoppingCartProvider";
-import useThrottle from "@/hooks/useThrottle";
 import useCart from "@/hooks/shop/useCart";
+import useThrottle from "@/hooks/useThrottle";
 
 export type Address = {
   address_line?: string;

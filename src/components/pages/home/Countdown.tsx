@@ -1,4 +1,5 @@
 "use client";
+
 import Countdown, { type CountdownRendererFn } from "react-countdown";
 import type { Color, ModulerContent } from "@type/page";
 

@@ -1,8 +1,8 @@
 import { type RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import Image from "next/image";
-import { FaPlusCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { Canvas } from "datocms-react-ui";
+import Image from "next/image";
 import { useMemo } from "react";
+import { FaEdit, FaPlusCircle, FaTrash } from "react-icons/fa";
 
 export interface AuthorItem {
   avatar: string | null;

@@ -1,9 +1,8 @@
 import { cache } from "react";
 import { Client } from "square";
 import "server-only";
-
-import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 import { logger } from "@lib/logger";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 
 const DEFAULT_PRODUCT_DESCRIPTION = "No product description";
 

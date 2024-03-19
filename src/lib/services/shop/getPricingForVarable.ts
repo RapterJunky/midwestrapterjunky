@@ -1,5 +1,5 @@
-import type { Client, Money } from "square";
 import createHttpError from "http-errors";
+import type { Client, Money } from "square";
 
 type PricedItem = {
   pricingType: string;

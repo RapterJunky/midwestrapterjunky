@@ -1,19 +1,17 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { revalidateTag, revalidatePath } from "next/cache";
-import { getServerSession } from "next-auth";
 import createHttpError from "http-errors";
+import { getServerSession } from "next-auth";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-
 import {
   deleteImages,
   extractImgTags,
   uploadFiles,
 } from "@/lib/api/googleDrive";
-import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
-
 import ratelimit from "@/lib/api/rateLimit";
+import { authConfig } from "@/lib/config/auth";
 
 const schema = z.object({
   deletedId: z.array(z.string()).optional(),

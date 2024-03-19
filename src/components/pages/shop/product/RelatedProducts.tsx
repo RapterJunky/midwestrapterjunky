@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import SearchQuery, { type SearchQueryResult } from "@/gql/sqaure/searchQuery";
 import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
 

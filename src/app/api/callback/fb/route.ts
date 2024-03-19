@@ -1,12 +1,10 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { createHmac, randomBytes } from "node:crypto";
 import createHttpError from "http-errors";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-
-import { logger } from "@lib/logger";
 import onError from "@api/handleError";
 import prisma from "@api/prisma";
-
+import { logger } from "@lib/logger";
 import { host } from "@lib/utils/host";
 
 interface JSONWebToken {
@@ -83,7 +81,7 @@ export const POST = async (request: NextRequest) => {
         providerAccountId: data.user_id,
       },
       select: {
-        userId: true
+        userId: true,
       },
     });
     if (!accountUser) throw createHttpError.NotFound();
@@ -97,15 +95,14 @@ export const POST = async (request: NextRequest) => {
     await prisma.session.delete({
       where: {
         id: "",
-        userId: accountUser.userId
-      }
+        userId: accountUser.userId,
+      },
     });
 
     const id = randomBytes(10).toString("hex");
 
     return NextResponse.json({
-      url: `${host}/${process.env.VERCEL_URL
-        }/profile/fb-status?id=${id}`,
+      url: `${host}/${process.env.VERCEL_URL}/profile/fb-status?id=${id}`,
       confirmation_code: id,
     });
   } catch (error) {

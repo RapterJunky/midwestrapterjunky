@@ -1,5 +1,5 @@
-import type { ModulerContent, ResponsiveImage } from "@/types/page";
 import Image from "next/image";
+import type { ModulerContent, ResponsiveImage } from "@/types/page";
 
 export interface SingleImageProps extends ModulerContent {
   content: ResponsiveImage;

@@ -1,5 +1,5 @@
-import getVenders from "@/lib/services/shop/getVenders";
 import SearchSettingsList from "./SearchSettingsList";
+import getVenders from "@/lib/services/shop/getVenders";
 
 const Vendors: React.FC = () => {
   const vendors = getVenders();

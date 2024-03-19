@@ -1,4 +1,5 @@
 /// <reference types="@total-typescript/ts-reset"/>
+
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 declare module React {
   type EnterKeyHintOptions =
@@ -17,12 +18,13 @@ declare module React {
   }
 }
 
+type Mammoth = () => typeof import("mammoth");
 declare module "mammoth/mammoth.browser.min" {
-  export default (await import("mammoth")).default;
+  export { default } from "mammoth";
 }
 
 declare module "mammoth/mammoth.browser" {
-  export default (await import("mammoth")).default;
+  export { default } from "mammoth";
 }
 
 type DotEnv = typeof import("./env.mjs").env;

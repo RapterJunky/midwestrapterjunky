@@ -1,6 +1,6 @@
+import createHttpError from "http-errors";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
-import createHttpError from "http-errors";
 import { logger } from "@/lib/logger";
 
 type RevalidatePage = { type: "page"; slug: string };

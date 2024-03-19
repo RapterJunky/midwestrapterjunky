@@ -1,5 +1,5 @@
-import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 

@@ -1,5 +1,5 @@
-import { ShoppingCartContext } from "@/components/providers/ShoppingCartProvider";
 import { useContext } from "react";
+import { ShoppingCartContext } from "@/components/providers/ShoppingCartProvider";
 
 const useCart = () => {
   const ctx = useContext(ShoppingCartContext);

@@ -1,20 +1,19 @@
-import type { Metadata, ResolvingMetadata } from "next";
 import { Lock, Pin, User2 } from "lucide-react";
-import { notFound } from "next/navigation";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { z } from "zod";
-
-import PostComments from "@/components/pages/community/comments/PostComments";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
-import SessionProvider from "@/components/providers/SessionProvider";
-import CommentProvider from "@/components/providers/CommentProvider";
-import PostActions from "@/components/pages/community/PostActions";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
-import getPost from "@/lib/services/community/getPost";
 import HtmlArticle from "@/components/HtmlArticle";
-import getSeoTags from "@/lib/helpers/getSeoTags";
+import PostComments from "@/components/pages/community/comments/PostComments";
+import PostActions from "@/components/pages/community/PostActions";
+import SuggestedPosts from "@/components/pages/community/SuggestedPosts";
+import CommentProvider from "@/components/providers/CommentProvider";
+import SessionProvider from "@/components/providers/SessionProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPost from "@/lib/services/community/getPost";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 
 type PageParams = {
   params: { id: string };
@@ -24,7 +23,7 @@ export async function generateMetadata(
   { params }: PageParams,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const id = idSchema.safeParse(params.id);
+  const id = z.string().uuid().safeParse(params.id);
   if (!id.success)
     return getSeoTags({
       parent,
@@ -58,10 +57,8 @@ export async function generateMetadata(
   });
 }
 
-const idSchema = z.string().uuid().nonempty();
-
 const Post: React.FC<PageParams> = async ({ params }) => {
-  const id = idSchema.safeParse(params.id);
+  const id = z.string().uuid().safeParse(params.id);
   if (!id.success) notFound();
 
   const post = await getPost(id.data);

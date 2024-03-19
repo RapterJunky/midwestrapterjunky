@@ -1,6 +1,6 @@
-import Link from "next/link";
 import SearchOption from "./SearchOption";
 import SearchOptionsSelect from "./SearchOptionsSelect";
+import Link from "next/link";
 import { SelectItem } from "@/components/ui/select";
 
 type SearchSettingsListProps = {

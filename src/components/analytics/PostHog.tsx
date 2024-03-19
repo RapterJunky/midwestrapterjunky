@@ -1,8 +1,9 @@
 "use client";
+
 import { usePathname, useSearchParams } from "next/navigation";
+import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
-import posthog from "posthog-js";
 import { host } from "@/lib/utils/host";
 
 if (typeof window !== "undefined") {
@@ -10,8 +11,8 @@ if (typeof window !== "undefined") {
     api_host: `${host}/ingest`,
     autocapture: {
       dom_event_allowlist: ["click"],
-      css_selector_allowlist: ["ph-autocapture"]
-    }
+      css_selector_allowlist: ["ph-autocapture"],
+    },
   });
 }
 

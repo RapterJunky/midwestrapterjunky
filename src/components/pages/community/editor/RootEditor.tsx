@@ -1,20 +1,19 @@
+import ImagesPlugin from "./plugins/ImagesPlugin";
+import RichTextToolBar from "./RichTextToolBar";
+import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import {
   LexicalComposer,
   type InitialConfigType,
 } from "@lexical/react/LexicalComposer";
-import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import ImagesPlugin from "./plugins/ImagesPlugin";
-import RichTextToolBar from "./RichTextToolBar";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import type { LexicalEditor } from "lexical";
-import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 const RootEditor = forwardRef<
   LexicalEditor,

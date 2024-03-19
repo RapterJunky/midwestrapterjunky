@@ -1,11 +1,10 @@
 import type { Metadata, ResolvingMetadata } from "next";
-
-import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
-import SessionProvider from "@/components/providers/SessionProvider";
 import TopicEditor from "@/components/pages/community/TopicEditor";
+import SessionProvider from "@/components/providers/SessionProvider";
 import { SelectContent, SelectItem } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
 
 export async function generateMetadata(
   {},

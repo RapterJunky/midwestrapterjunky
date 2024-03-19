@@ -1,17 +1,16 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
-
+import ListPagination from "@/components/pages/blog/ListPagination";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import PagedArticles, {
   type PagedArticlesQueryResult,
 } from "@/gql/queries/pagedArticles";
-import ListPagination from "@/components/pages/blog/ListPagination";
-import { getDescriptionTag } from "@/lib/utils/description";
-import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
-import { Badge } from "@/components/ui/badge";
+import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import { getDescriptionTag } from "@/lib/utils/description";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 
 type PageParams = {
   searchParams: { [key: string]: string | string[] | undefined };

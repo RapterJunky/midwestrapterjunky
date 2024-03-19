@@ -1,10 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
-import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
+import { authConfig } from "@/lib/config/auth";
+import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
 
 const schema = z.object({
   post: z.string().uuid(),

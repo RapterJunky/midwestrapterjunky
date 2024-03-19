@@ -1,3 +1,7 @@
+import DisplayDataStates from "./DisplayDataStates";
+import DatoCmsPagination from "./Pagination";
+import { Panel } from "./Panel";
+import type { Thread } from "@prisma/client";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import {
   Button,
@@ -6,18 +10,13 @@ import {
   DropdownOption,
   DropdownSeparator,
 } from "datocms-react-ui";
-import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
 import update from "immutability-helper";
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
+import { FaChevronDown, FaChevronUp, FaEdit, FaTrash } from "react-icons/fa";
 import useSWR from "swr";
-
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
-import type { Thread } from "@prisma/client";
-import DatoCmsPagination from "./Pagination";
 import type { Paginate } from "@type/page";
-import { Panel } from "./Panel";
-import DisplayDataStates from "./DisplayDataStates";
 
 const Threads: React.FC<{
   ctx: RenderPageCtx;

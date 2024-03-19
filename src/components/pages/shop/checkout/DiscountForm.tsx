@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
 import { X } from "lucide-react";
-import useCheckout from "@/hooks/shop/useCheckout";
-import { Input } from "@/components/ui/input";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Spinner from "@/components/ui/Spinner";
+import useCheckout from "@/hooks/shop/useCheckout";
 
 const DiscountForm: React.FC = () => {
   const { state, dispatch } = useCheckout();

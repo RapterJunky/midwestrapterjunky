@@ -1,5 +1,5 @@
-import TopicTable from "@/components/community/TopicTable";
 import TopicCard from "@/components/community/TopicCard";
+import TopicTable from "@/components/community/TopicTable";
 import getPosts from "@/lib/services/community/getPosts";
 
 const CommunityPosts: React.FC<{ type: "latest" | "top" }> = async ({

@@ -1,5 +1,5 @@
-import Spinner from "@/components/ui/Spinner";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import Spinner from "@/components/ui/Spinner";
 
 const ShopLoadingDialog: React.FC<{ open: boolean }> = ({ open }) => {
   return (

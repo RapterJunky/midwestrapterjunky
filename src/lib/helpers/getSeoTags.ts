@@ -1,10 +1,10 @@
+import { host } from "../utils/host";
+import type { Metadata, ResolvingMetadata } from "next";
 import {
+  toNextMetadata,
   type SeoOrFaviconTag,
   type TitleMetaLinkTag,
-  toNextMetadata,
 } from "react-datocms/seo";
-import type { Metadata, ResolvingMetadata } from "next";
-import { host } from "../utils/host";
 
 type Opts = {
   seo?: {

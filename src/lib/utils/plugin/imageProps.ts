@@ -1,6 +1,6 @@
+import { GOOGLE_DRIVE_IMAGE_ROOT } from "../googleConsts";
 import type { GoogleImage } from "@/lib/api/googleDrive";
 import type { ResponsiveImage } from "@/types/page";
-import { GOOGLE_DRIVE_IMAGE_ROOT } from "../googleConsts";
 
 export const getImageProps = (
   image: GoogleImage,

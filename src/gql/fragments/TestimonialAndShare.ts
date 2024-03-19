@@ -1,4 +1,5 @@
 import ImageHelper from "./ImageHelper";
+
 const TASFragment = `
 fragment TASFragment on TestimonialAndShareRecord {
     __typename

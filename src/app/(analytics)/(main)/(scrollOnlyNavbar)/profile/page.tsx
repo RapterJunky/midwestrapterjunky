@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-
 import UserProfile from "@/components/pages/profile/UserProfile";
 import Provider from "@/components/providers/SessionProvider";
 import getSeoTags from "@/lib/helpers/getSeoTags";

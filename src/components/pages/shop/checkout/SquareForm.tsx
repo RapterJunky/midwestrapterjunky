@@ -1,4 +1,5 @@
 "use client";
+
 import type { CardClassSelectors } from "@square/web-payments-sdk-types";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -1,6 +1,6 @@
+import ImageHelper from "../fragments/ImageHelper";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { ResponsiveImage } from "@/types/page";
-import ImageHelper from "../fragments/ImageHelper";
 
 export type SponsorsQueryResult = {
   sponsor: {

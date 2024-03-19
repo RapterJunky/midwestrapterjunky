@@ -1,7 +1,6 @@
 import "server-only";
 import { draftMode } from "next/headers";
 import { cache } from "react";
-
 import { logger } from "@lib/logger";
 
 type QueryOptions = {

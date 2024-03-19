@@ -1,18 +1,18 @@
 import {
-  isParagraph,
   isHeading,
+  isParagraph,
   type RenderRule,
   type TrasformFn,
 } from "datocms-structured-text-utils";
+import Image from "next/image";
+import Link from "next/link";
 import {
-  renderNodeRule,
   renderMarkRule,
+  renderNodeRule,
   type RenderBlockContext,
   type RenderInlineRecordContext,
 } from "react-datocms/structured-text";
 import { HiLink } from "react-icons/hi";
-import Image from "next/image";
-import Link from "next/link";
 import type { ResponsiveImage } from "@type/page";
 
 //https://github.com/datocms/react-datocms/blob/master/docs/structured-text.md

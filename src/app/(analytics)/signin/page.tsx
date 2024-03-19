@@ -1,20 +1,21 @@
-import type { FaviconAttributes } from "react-datocms/seo";
 import type { Metadata, ResolvingMetadata } from "next";
-import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { Suspense } from "react";
+import type { FaviconAttributes } from "react-datocms/seo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import getFullPageProps from "@lib/services/getFullPageProps";
-import SignInList from "@components/pages/signin/SignList";
-import { Skeleton } from "@/components/ui/skeleton";
-import getSeoTags from "@/lib/helpers/getSeoTags";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import LoginPageQuery, {
+  type LoginPageQueryResult,
+} from "@/gql/queries/login_page";
+import getSeoTags from "@/lib/helpers/getSeoTags";
 import getPageQuery from "@/lib/services/GetPageQuery";
-import LoginPageQuery, { type LoginPageQueryResult } from "@/gql/queries/login_page";
+import SignInList from "@components/pages/signin/SignList";
+import getFullPageProps from "@lib/services/getFullPageProps";
 
 export async function generateMetadata(
-  { },
+  {},
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { login } = await getPageQuery<LoginPageQueryResult>(LoginPageQuery);

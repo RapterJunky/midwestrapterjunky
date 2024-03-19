@@ -1,13 +1,12 @@
+import { AuthFetch } from "../utils/plugin/auth_fetch";
+import { APIError } from "./ShopifyClient";
 import type {
-  CatalogObject,
   ApiResponse,
+  CatalogObject,
   RetrieveCatalogObjectResponse,
   SearchCatalogObjectsResponse,
 } from "square";
-
 import getPlaceholderImage from "@lib/utils/getPlaceholderImage";
-import { AuthFetch } from "../utils/plugin/auth_fetch";
-import { APIError } from "./ShopifyClient";
 
 export const squareToShopifyProduct = (
   product: CatalogObject,

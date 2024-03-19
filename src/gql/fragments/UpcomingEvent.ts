@@ -1,4 +1,5 @@
 import ImageHelper from "./ImageHelper";
+
 const UpcomingEventFragment = `
 fragment UERFragment on UpcomingeventRecord {
     __typename

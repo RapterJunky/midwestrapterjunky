@@ -1,16 +1,16 @@
-import onError from "@/lib/api/handleError";
-import ratelimit from "@/lib/api/rateLimit";
-import { logger } from "@/lib/logger";
 import createHttpError from "http-errors";
 import { NextResponse, type NextRequest } from "next/server";
 import {
+  Client,
   type ApiResponse,
   type CalculateOrderResponse,
-  Client,
   type OrderLineItem,
 } from "square";
 import { serialize } from "superjson";
 import { z } from "zod";
+import onError from "@/lib/api/handleError";
+import ratelimit from "@/lib/api/rateLimit";
+import { logger } from "@/lib/logger";
 
 const schema = z.object({
   location_id: z.string().nonempty("Missing location id"),

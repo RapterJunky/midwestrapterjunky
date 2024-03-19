@@ -1,14 +1,13 @@
-import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, Button } from "datocms-react-ui";
-import { FaGoogleDrive, FaPlus } from "react-icons/fa";
-import update from "immutability-helper";
-import { useState } from "react";
-import get from "lodash.get";
-
-import type { ResponsiveImage } from "@type/page";
-import SelectedImage from "./SelectedImage";
 import UploadAsset from "../../models/GoogleDriveModal/UploadAsset";
+import SelectedImage from "./SelectedImage";
+import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import { Button, Canvas } from "datocms-react-ui";
+import update from "immutability-helper";
+import get from "lodash.get";
+import { useState } from "react";
+import { FaGoogleDrive, FaPlus } from "react-icons/fa";
 import { getImageProps } from "@/lib/utils/plugin/imageProps";
+import type { ResponsiveImage } from "@type/page";
 
 const GDriveAddon: React.FC<{ ctx: RenderFieldExtensionCtx }> = ({ ctx }) => {
   const [images, setImages] = useState<

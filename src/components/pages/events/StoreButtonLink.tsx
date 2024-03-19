@@ -1,6 +1,6 @@
 import Link from "next/link";
-import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
 import { Button } from "@/components/ui/button";
+import getFeaturedItems from "@/lib/services/store/getFeaturedItems";
 
 const StoreButtonLink: React.FC<{ value: string }> = async (props) => {
   const products = await getFeaturedItems([

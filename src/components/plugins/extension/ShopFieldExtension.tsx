@@ -1,18 +1,17 @@
+import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import { Button, Canvas } from "datocms-react-ui";
+import get from "lodash.get";
 import {
-  FaSearch,
   FaExternalLinkAlt,
+  FaSearch,
+  FaSync,
   FaTimesCircle,
   FaWrench,
-  FaSync,
 } from "react-icons/fa";
-import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, Button } from "datocms-react-ui";
-import get from "lodash.get";
 import useSWR from "swr";
-
 import ShopifyClient, { APIError } from "@/lib/plugin/ShopifyClient";
-import { normalizeConfig } from "@/lib/utils/plugin/config";
 import SquareClient from "@/lib/plugin/SquareClient";
+import { normalizeConfig } from "@/lib/utils/plugin/config";
 
 export default function ShopFieldExtension({
   ctx,

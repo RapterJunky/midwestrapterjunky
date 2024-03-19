@@ -1,17 +1,4 @@
-import {
-  Button,
-  Dropdown,
-  DropdownMenu,
-  DropdownOption,
-} from "datocms-react-ui";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import type { RenderPageCtx } from "datocms-plugin-sdk";
-import update from "immutability-helper";
-import useSWR, { type KeyedMutator } from "swr";
-
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import DisplayDataStates from "./DisplayDataStates";
-import type { Paginate } from "@type/page";
 import { Panel } from "./Panel";
 import {
   createColumnHelper,
@@ -19,6 +6,18 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import type { RenderPageCtx } from "datocms-plugin-sdk";
+import {
+  Button,
+  Dropdown,
+  DropdownMenu,
+  DropdownOption,
+} from "datocms-react-ui";
+import update from "immutability-helper";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import useSWR, { type KeyedMutator } from "swr";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
+import type { Paginate } from "@type/page";
 
 const columnHelper = createColumnHelper<{ id: number; email: string }>();
 

@@ -1,12 +1,11 @@
-import type { ResolvingMetadata, Metadata } from "next";
-
+import type { Metadata, ResolvingMetadata } from "next";
+import Calendar from "@/components/Calendar";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
 import CalendarQuery, {
   type CalendarQueryResult,
 } from "@query/queries/calendar";
-import { REVAILDATE_IN_12H } from "@lib/revaildateTimings";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import getSeoTags from "@/lib/helpers/getSeoTags";
-import Calendar from "@/components/Calendar";
 
 const MAX_FETCH = 8;
 

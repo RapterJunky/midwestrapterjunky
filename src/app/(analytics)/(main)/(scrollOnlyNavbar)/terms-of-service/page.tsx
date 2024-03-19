@@ -1,15 +1,15 @@
-import { StructuredText } from "react-datocms/structured-text";
+import type { Metadata, ResolvingMetadata } from "next";
 import {
   type OgMetaAttributes,
   type RegularMetaAttributes,
 } from "react-datocms/seo";
-import type { Metadata, ResolvingMetadata } from "next";
+import { StructuredText } from "react-datocms/structured-text";
+import ScrollToTop from "@/components/blog/ScrollToTop";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import TermsOfServiceQuery, {
   type TermsOfServiceResult,
 } from "@query/queries/terms_of_service";
-import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
   {},

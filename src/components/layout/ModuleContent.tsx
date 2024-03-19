@@ -1,38 +1,37 @@
-import TestimonialAndShare, {
-  type TestimonialAndShareProps,
-} from "@components/pages/home/TestimonialAndShare";
+import SingleImage, { type SingleImageProps } from "../pages/home/SingleImage";
+import Carousel, { type CarouselProps } from "@/components/pages/home/Carousel";
+import UpcomingEvent, {
+  type UpcomingEventProps,
+} from "@/components/pages/home/UpcomingEvent";
+import type { ModulerContent } from "@/types/page";
+import AdvertBlock, {
+  type AdvertBlockProps,
+} from "@components/pages/home/AdvertBlock";
+import CountdownSection, {
+  type CountDownProps,
+} from "@components/pages/home/Countdown";
 import EmailCallToAction, {
   type EmailCallToActionProps,
 } from "@components/pages/home/EmailCallToAction";
 import FeaturedShopItems, {
   type FeatureShopItemsProps,
 } from "@components/pages/home/FeaturedShopItems";
+import HtmlSection from "@components/pages/home/HtmlSection";
+import ImageGallery, {
+  type ImageGalleryProps,
+} from "@components/pages/home/ImageGallery";
+import SocialLinks, {
+  type SocialLinksProps,
+} from "@components/pages/home/SocialLinks";
+import TestimonialAndShare, {
+  type TestimonialAndShareProps,
+} from "@components/pages/home/TestimonialAndShare";
 import UpcomingEvents, {
   type UpcomingEventsProps,
 } from "@components/pages/home/UpcomingEvents";
 import VideoWithLinks, {
   type VideoWithLinksProps,
 } from "@components/pages/home/VideoWithLink";
-import UpcomingEvent, {
-  type UpcomingEventProps,
-} from "@/components/pages/home/UpcomingEvent";
-import ImageGallery, {
-  type ImageGalleryProps,
-} from "@components/pages/home/ImageGallery";
-import CountdownSection, {
-  type CountDownProps,
-} from "@components/pages/home/Countdown";
-import SocialLinks, {
-  type SocialLinksProps,
-} from "@components/pages/home/SocialLinks";
-import AdvertBlock, {
-  type AdvertBlockProps,
-} from "@components/pages/home/AdvertBlock";
-import Carousel, { type CarouselProps } from "@/components/pages/home/Carousel";
-import HtmlSection from "@components/pages/home/HtmlSection";
-
-import type { ModulerContent } from "@/types/page";
-import SingleImage, { type SingleImageProps } from "../pages/home/SingleImage";
 
 const ModuleContent: React.FC<{ modules: ModulerContent[] }> = ({
   modules,

@@ -1,6 +1,15 @@
+import { INSERT_IMAGE_COMMAND } from "./plugins/ImagesPlugin";
 import type { LexicalEditor } from "lexical";
-import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -10,17 +19,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { INSERT_IMAGE_COMMAND } from "./plugins/ImagesPlugin";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 const ImageDialog: React.FC<
   React.PropsWithChildren<{ activeEditor: LexicalEditor }>

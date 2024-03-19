@@ -1,11 +1,10 @@
+import createHttpError from "http-errors";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import createHttpError from "http-errors";
-
 import { authConfig } from "@/lib/config/auth";
 import onError from "@api/handleError";
-import { logger } from "@lib/logger";
 import prisma from "@api/prisma";
+import { logger } from "@lib/logger";
 
 export const GET = async () => {
   try {

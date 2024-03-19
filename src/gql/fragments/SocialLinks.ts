@@ -8,5 +8,5 @@ fragment SLFragment on SocialLinksBlockRecord {
         hex
       }
     }
-}` as const;
+}`;
 export default SocialLinksFragment;

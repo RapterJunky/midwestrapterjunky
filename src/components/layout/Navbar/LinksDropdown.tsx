@@ -1,5 +1,4 @@
 import { ChevronDown } from "lucide-react";
-import IconLink from "@/components/ui/IconLink";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import IconLink from "@/components/ui/IconLink";
 import type { LinkWithIcon } from "@/types/page";
 
 const LinksDropdown: React.FC<{ links: LinkWithIcon[] }> = ({ links }) => {

@@ -1,7 +1,7 @@
-import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
-import type { SeoOrFaviconTag } from "react-datocms/seo";
-import type { ResponsiveImage } from "@/types/page";
 import ImageHelper from "../fragments/ImageHelper";
+import type { SeoOrFaviconTag } from "react-datocms/seo";
+import type { StructuredTextGraphQlResponse } from "react-datocms/structured-text";
+import type { ResponsiveImage } from "@/types/page";
 
 export type ArticleQueryResult = {
   post: {

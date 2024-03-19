@@ -1,12 +1,11 @@
+//import { ChevronRight } from "lucide-react";
+import AddEmail from "./EmailSubmitClient";
 import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-
-//import { ChevronRight } from "lucide-react";
 import { markRules } from "@lib/structuredTextRules";
 import type { Color, ModulerContent } from "@type/page";
-import AddEmail from "./EmailSubmitClient";
 
 export interface EmailCallToActionProps extends ModulerContent {
   callToActionMessage: StructuredTextGraphQlResponse;

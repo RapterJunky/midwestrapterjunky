@@ -1,18 +1,22 @@
 "use client";
+
+import { $getNewImages, ImageNode } from "./nodes/ImageNode";
+import { type ExtendLexicalEditor } from "./plugins/ImagesPlugin";
+import RootEditor from "./RootEditor";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import { LinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
+import type { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import {
   $getRoot,
   $insertNodes,
   CLEAR_EDITOR_COMMAND,
   type LexicalEditor,
 } from "lexical";
-import type { InitialConfigType } from "@lexical/react/LexicalComposer";
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListNode, ListItemNode } from "@lexical/list";
-import { useForm } from "react-hook-form";
-import { LinkNode } from "@lexical/link";
 import { useMemo, useRef } from "react";
-
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,11 +24,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { type ExtendLexicalEditor } from "./plugins/ImagesPlugin";
-import { $getNewImages, ImageNode } from "./nodes/ImageNode";
-import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/Spinner";
-import RootEditor from "./RootEditor";
 
 export type FormState = {
   message: unknown[];

@@ -1,10 +1,9 @@
-import { Button, FieldError, FormLabel } from "datocms-react-ui";
-import { Controller, type Control } from "react-hook-form";
-import type { RenderModalCtx } from "datocms-plugin-sdk";
-import { FaTrash } from "react-icons/fa";
-import Image from "next/image";
-
 import type { FormState } from "./Edit";
+import type { RenderModalCtx } from "datocms-plugin-sdk";
+import { Button, FieldError, FormLabel } from "datocms-react-ui";
+import Image from "next/image";
+import { Controller, type Control } from "react-hook-form";
+import { FaTrash } from "react-icons/fa";
 
 type ImageSelectProps = {
   ctx: RenderModalCtx;

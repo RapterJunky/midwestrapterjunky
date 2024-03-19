@@ -1,19 +1,18 @@
-import { getServerSession } from "next-auth";
-import { type NextRequest, NextResponse } from "next/server";
 import createHttpError from "http-errors";
+import { getServerSession } from "next-auth";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-
 import {
   deleteImages,
   extractImgTags,
   uploadFiles,
 } from "@/lib/api/googleDrive";
-import { authConfig } from "@/lib/config/auth";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
-import { logger } from "@/lib/logger";
-import sendMail from "@/lib/api/sendMail";
 import ratelimit from "@/lib/api/rateLimit";
+import sendMail from "@/lib/api/sendMail";
+import { authConfig } from "@/lib/config/auth";
+import { logger } from "@/lib/logger";
 
 const schema = z.object({
   content: z.string(),

@@ -1,12 +1,11 @@
-import { useVirtualizer } from "@tanstack/react-virtual";
-import useSWRInfinite from "swr/infinite";
-import { useRef } from "react";
-
-import TopicTable from "@components/community/TopicTable";
-import TopicCard from "@components/community/TopicCard";
-import type { Paginate } from "@type/page";
-import { fetcher } from "@api/fetcher";
 import TopicCardSkeletion from "./TopicCardSkeletion";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRef } from "react";
+import useSWRInfinite from "swr/infinite";
+import { fetcher } from "@api/fetcher";
+import TopicCard from "@components/community/TopicCard";
+import TopicTable from "@components/community/TopicTable";
+import type { Paginate } from "@type/page";
 
 type Props = {
   sort: "top" | "latest";

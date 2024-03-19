@@ -1,18 +1,17 @@
-import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowRight } from "lucide-react";
+import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
-
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import QueryBlogLatest, {
   type BlogLatestQueryResult,
 } from "@/gql/queries/blogLatest";
-import { getDescriptionTag } from "@/lib/utils/description";
-import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { REVAILDATE_IN_2H } from "@/lib/revaildateTimings";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import { getDescriptionTag } from "@/lib/utils/description";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 
 export async function generateMetadata(
   {},

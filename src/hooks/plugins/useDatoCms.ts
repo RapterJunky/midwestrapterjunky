@@ -1,7 +1,7 @@
 import { connect } from "datocms-plugin-sdk";
 import { useState } from "react";
 import useOnce from "@hook/useOnce";
-import type { PluginSettings, RenderPage, Context } from "@type/dato-hook";
+import type { Context, PluginSettings, RenderPage } from "@type/dato-hook";
 
 interface PluginState {
   page: RenderPage;

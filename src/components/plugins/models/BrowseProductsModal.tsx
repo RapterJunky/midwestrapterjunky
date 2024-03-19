@@ -1,22 +1,21 @@
-import {
-  Canvas,
-  Spinner,
-  Button,
-  TextInput,
-  SelectInput,
-} from "datocms-react-ui";
 import type { RenderModalCtx } from "datocms-plugin-sdk";
-import { FaSearch } from "react-icons/fa";
+import {
+  Button,
+  Canvas,
+  SelectInput,
+  Spinner,
+  TextInput,
+} from "datocms-react-ui";
 import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import useSWR from "swr";
-
+import ShopifyClient from "@lib/plugin/ShopifyClient";
+import SquareClient from "@lib/plugin/SquareClient";
 import {
   normalizeConfig,
   type StorefrontPluginConfig,
   type VaildConfig,
 } from "@lib/utils/plugin/config";
-import ShopifyClient from "@lib/plugin/ShopifyClient";
-import SquareClient from "@lib/plugin/SquareClient";
 
 type RequestValue = [string, string | undefined, string | undefined];
 

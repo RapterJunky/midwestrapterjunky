@@ -1,18 +1,16 @@
 "use client";
+
 import type {
   RenderConfigScreenCtx,
   RenderFieldExtensionCtx,
-  RenderPageCtx,
-  RenderModalCtx,
   RenderManualFieldExtensionConfigScreenCtx,
+  RenderModalCtx,
+  RenderPageCtx,
 } from "datocms-plugin-sdk";
-
 import dynamic from "next/dynamic";
-
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
-
 import "datocms-react-ui/styles.css";
 
 const FIELD_EXTENSION_GDRIVE_SINGLE_ID = "mrj_gdrive_single";

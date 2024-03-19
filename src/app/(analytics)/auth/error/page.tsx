@@ -1,8 +1,7 @@
-import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import { Suspense } from "react";
+import type { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
-
+import { Suspense } from "react";
 import ErrorMessage from "@/components/pages/auth/error/ErrorMessage";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 

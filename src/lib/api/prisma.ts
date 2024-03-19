@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call*/
-import { type Prisma, PrismaClient } from "@prisma/client";
 import paginate from "./pagination";
+import { PrismaClient, type Prisma } from "@prisma/client";
 
 type PrismaModel = {
   findFirst: CallableFunction;

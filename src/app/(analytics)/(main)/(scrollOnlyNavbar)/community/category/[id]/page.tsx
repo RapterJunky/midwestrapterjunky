@@ -1,14 +1,13 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { z } from "zod";
-
 import PaginateCategoryPosts from "@/components/pages/community/PaginateCategoryPosts";
-import getCategory from "@/lib/services/community/getCategory";
 import { Button } from "@/components/ui/button";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getCategory from "@/lib/services/community/getCategory";
 
 type PageParams = {
   searchParams: { [key: string]: string | string[] | undefined };

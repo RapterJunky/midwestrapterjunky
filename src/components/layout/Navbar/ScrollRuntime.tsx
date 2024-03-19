@@ -1,5 +1,7 @@
 "use client";
+
 import { useCallback, useEffect } from "react";
+
 const ScrollRuntime = () => {
   const onScroll = useCallback(() => {
     const navbar = document.getElementById("navbar");

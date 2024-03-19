@@ -1,21 +1,20 @@
+import { Panel } from "../Panel";
+import Pagination from "./Pagination";
+import UserItem from "./UserItem";
 import {
-  type PaginationState,
-  useReactTable,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  useReactTable,
   type ColumnDef,
-  flexRender,
+  type PaginationState,
 } from "@tanstack/react-table";
-import { TextInput, SelectInput, Spinner } from "datocms-react-ui";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
-import { useState, useMemo } from "react";
+import { SelectInput, Spinner, TextInput } from "datocms-react-ui";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
-
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import type { Paginate } from "@type/page";
-import Pagination from "./Pagination";
-import { Panel } from "../Panel";
-import UserItem from "./UserItem";
 
 export type User = {
   email: string | null;

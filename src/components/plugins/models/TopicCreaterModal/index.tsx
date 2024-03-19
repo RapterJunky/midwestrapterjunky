@@ -1,6 +1,5 @@
 import type { RenderModalCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
-
 import "../../../../styles/override.css";
 import Editor from "./editor";
 

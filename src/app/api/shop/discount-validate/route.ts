@@ -1,9 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { Client } from "square";
 import { z } from "zod";
-
-import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
 import onError from "@/lib/api/handleError";
+import { REVALIDATE_IN_1H } from "@/lib/revaildateTimings";
 
 export const dynamic = "force-dynamic";
 export const revalidate = REVALIDATE_IN_1H;

@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { buttonVariants } from "./button";
+import Link from "next/link";
 import FontAwesomeIcon from "@/components/ui/FontAwesomeIcon";
-import type { LinkWithIcon } from "@type/page";
 import { cn } from "@/lib/utils";
+import type { LinkWithIcon } from "@type/page";
 
 const IconLink: React.FC<
   LinkWithIcon & { className: string; dataCy?: string }

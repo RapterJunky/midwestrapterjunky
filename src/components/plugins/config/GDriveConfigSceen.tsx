@@ -1,6 +1,6 @@
 import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
-import { Canvas, Form, TextField, SwitchField } from "datocms-react-ui";
-import { useState, useCallback, useMemo } from "react";
+import { Canvas, Form, SwitchField, TextField } from "datocms-react-ui";
+import { useCallback, useMemo, useState } from "react";
 
 type Parameters = {
   minAssets: number;

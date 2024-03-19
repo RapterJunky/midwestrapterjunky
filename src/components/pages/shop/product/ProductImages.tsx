@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 const ProductImages: React.FC<{
   name: string;

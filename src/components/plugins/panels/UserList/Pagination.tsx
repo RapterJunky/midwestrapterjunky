@@ -1,7 +1,7 @@
+import type { User } from "./index";
 import type { Table } from "@tanstack/react-table";
 import { Button, SelectInput } from "datocms-react-ui";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import type { User } from "./index";
 
 const pageSizes = [
   { label: "Show 10", value: 10 },

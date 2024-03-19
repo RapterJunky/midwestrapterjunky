@@ -1,14 +1,14 @@
 import "server-only";
+import { cache } from "react";
 import FeaturedQuery, {
   type FeaturedQueryResult,
 } from "@/gql/sqaure/featuredQuery";
-import getShopifyQuery from "@/lib/services/store/getShopifyQuery";
 import getSquareQuery from "@/lib/services/shop/GetSquareQuery";
-import getPlaceholderImage from "@utils/getPlaceholderImage";
-import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
+import getShopifyQuery from "@/lib/services/store/getShopifyQuery";
 import { getKeys } from "@lib/dynamic_keys";
 import { logger } from "@lib/logger";
-import { cache } from "react";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
+import getPlaceholderImage from "@utils/getPlaceholderImage";
 
 type Products = {
   index: number;
@@ -26,8 +26,8 @@ const fetchShopify = async (data: StorefontsProducts): Promise<Products[]> => {
   const keys = await getKeys(data.keys);
 
   const items = Object.entries(keys);
-  const access_token = items.find(
-    (value) => value.at(0)?.endsWith("_ACCESS_TOKEN"),
+  const access_token = items.find((value) =>
+    value.at(0)?.endsWith("_ACCESS_TOKEN"),
   );
   const domain = items.find((value) => value[0].endsWith("_SHOPIFY_DOMAIN"));
 

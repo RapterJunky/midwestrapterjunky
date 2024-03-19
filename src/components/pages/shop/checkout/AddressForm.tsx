@@ -1,11 +1,5 @@
 import type { Control } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import type { CheckoutState } from "@/components/providers/CheckoutProvider";
 import {
   FormControl,
   FormField,
@@ -13,10 +7,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { CheckoutState } from "@/components/providers/CheckoutProvider";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 
 const AddressForm: React.FC<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +26,7 @@ const AddressForm: React.FC<{
   type: "shipping" | "billing";
 }> = ({ control, type, comments, name }) => {
   return (
-    <div className="space-y-2 ph-no-capture">
+    <div className="ph-no-capture space-y-2">
       <div className="mb-4">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           {name} Address
@@ -360,7 +360,11 @@ const AddressForm: React.FC<{
             <FormItem>
               <FormLabel>Zip / Postal Code</FormLabel>
               <FormControl>
-                <Textarea className="ph-no-capture" placeholder="Comments (optonal)" {...field} />
+                <Textarea
+                  className="ph-no-capture"
+                  placeholder="Comments (optonal)"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

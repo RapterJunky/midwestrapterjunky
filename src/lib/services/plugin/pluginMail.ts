@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import createHttpError from "http-errors";
 import client from "@sendgrid/client";
+import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const schema = z.object({

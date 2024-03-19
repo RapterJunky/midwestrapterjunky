@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-
-import GoogleAnalytics from "@components/analytics/GoogleAnalytics";
-import getFullPageProps from "@/lib/services/getFullPageProps";
-import getSeoTags from "@/lib/helpers/getSeoTags";
 import PHProvider from "@/components/analytics/PostHog";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getFullPageProps from "@/lib/services/getFullPageProps";
+import GoogleAnalytics from "@components/analytics/GoogleAnalytics";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();

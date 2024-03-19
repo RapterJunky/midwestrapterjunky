@@ -1,9 +1,9 @@
+import Link from "next/link";
 import TopicCard from "@/components/community/TopicCard";
 import TopicTable from "@/components/community/TopicTable";
 import { Button } from "@/components/ui/button";
 import getCategoryPosts from "@/lib/services/community/getCategoryPosts";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 const PaginateCategoryPosts: React.FC<{
   category: number;

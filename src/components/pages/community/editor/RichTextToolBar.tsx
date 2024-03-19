@@ -1,10 +1,27 @@
+import ImageDialog from "./ImageDialog";
+import LinkDialog from "./LinkDialog";
+import { $isAutoLinkNode, $isLinkNode } from "@lexical/link";
 import {
+  $isListNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  ListNode,
+} from "@lexical/list";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import {
+  $createHeadingNode,
+  $createQuoteNode,
+  $isHeadingNode,
+} from "@lexical/rich-text";
+import { $isAtNodeEnd, $setBlocksType } from "@lexical/selection";
+import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
+import {
+  $createParagraphNode,
   $getSelection,
   $isRangeSelection,
-  $createParagraphNode,
+  COMMAND_PRIORITY_CRITICAL,
   FORMAT_TEXT_COMMAND,
   SELECTION_CHANGE_COMMAND,
-  COMMAND_PRIORITY_CRITICAL,
   type RangeSelection,
 } from "lexical";
 import {
@@ -22,25 +39,8 @@ import {
   Strikethrough,
   Underline,
 } from "lucide-react";
-import {
-  $isListNode,
-  ListNode,
-  INSERT_ORDERED_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
-} from "@lexical/list";
-import {
-  $createHeadingNode,
-  $createQuoteNode,
-  $isHeadingNode,
-} from "@lexical/rich-text";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { $setBlocksType, $isAtNodeEnd } from "@lexical/selection";
-import { $isLinkNode, $isAutoLinkNode } from "@lexical/link";
 import { Button } from "@/components/ui/button";
-import ImageDialog from "./ImageDialog";
-import LinkDialog from "./LinkDialog";
 
 const defaultEditorState = {
   isBold: false,

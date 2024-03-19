@@ -1,11 +1,12 @@
 "use client";
+
 import { ChevronLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { CheckoutState } from "@/components/providers/CheckoutProvider";
-import AddressForm from "@components/pages/shop/checkout/AddressForm";
-import useCheckout from "@/hooks/shop/useCheckout";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import useCheckout from "@/hooks/shop/useCheckout";
+import AddressForm from "@components/pages/shop/checkout/AddressForm";
 
 const ShippingTab: React.FC = () => {
   const { state, dispatch } = useCheckout();

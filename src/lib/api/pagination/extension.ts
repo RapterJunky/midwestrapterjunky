@@ -1,14 +1,14 @@
-import { Prisma } from "@prisma/client/extension";
+import { paginateWithCursor } from "./cursor";
+import { paginateWithPages } from "./page-number";
 import type {
-  PageNumberPaginationOptions,
-  PageNumberPaginationMeta,
-  CursorPaginationOptions,
   CursorPaginationMeta,
+  CursorPaginationOptions,
+  PageNumberPaginationMeta,
+  PageNumberPaginationOptions,
   PrismaModel,
   PrismaQuery,
 } from "./types";
-import { paginateWithPages } from "./page-number";
-import { paginateWithCursor } from "./cursor";
+import { Prisma } from "@prisma/client/extension";
 
 export function paginate<T, A, TResult extends Prisma.Result<T, A, "findMany">>(
   this: T,

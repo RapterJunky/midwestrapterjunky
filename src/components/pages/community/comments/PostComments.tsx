@@ -1,11 +1,12 @@
 "use client";
+
+import PostComment from "./PostComment";
+import SkeletionComment from "./SkeletonComment";
 import { signIn, useSession } from "next-auth/react";
 import RichTextEditor from "@/components/pages/community/editor/dynamicRichTextEditor";
-import useComments from "@/hooks/community/useComments";
-import { Separator } from "@/components/ui/separator";
-import SkeletionComment from "./SkeletonComment";
 import { Button } from "@/components/ui/button";
-import PostComment from "./PostComment";
+import { Separator } from "@/components/ui/separator";
+import useComments from "@/hooks/community/useComments";
 
 const PostComments: React.FC = () => {
   const { data: session, status } = useSession();

@@ -1,6 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
-
 import {
   Card,
   CardDescription,
@@ -8,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SignoutBtn from "@components/pages/signout/SignoutBtn";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import SignoutBtn from "@components/pages/signout/SignoutBtn";
 
 export async function generateMetadata(
   {},

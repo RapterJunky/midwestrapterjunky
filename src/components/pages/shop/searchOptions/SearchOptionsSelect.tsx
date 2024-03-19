@@ -1,11 +1,12 @@
 "use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const SearchOptionsSelect: React.FC<
   React.PropsWithChildren<{

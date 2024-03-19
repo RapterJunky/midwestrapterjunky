@@ -1,8 +1,7 @@
+import { Badge } from "../ui/badge";
+import { Lock, Pin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, Pin } from "lucide-react";
-
-import { Badge } from "../ui/badge";
 
 type Props = {
   title: string;

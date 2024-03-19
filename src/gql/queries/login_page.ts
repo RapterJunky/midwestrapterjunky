@@ -1,14 +1,14 @@
+import ImageHelper from "../fragments/ImageHelper";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { ResponsiveImage } from "@/types/page";
-import ImageHelper from "../fragments/ImageHelper";
 
 export type LoginPageQueryResult = {
   login: {
-    background: ResponsiveImage,
+    background: ResponsiveImage;
     welcomeTitle: string;
     welcomeSubheading: string;
-    seo: SeoOrFaviconTag[]
-  }
+    seo: SeoOrFaviconTag[];
+  };
 };
 
 const LoginPageQuery = `

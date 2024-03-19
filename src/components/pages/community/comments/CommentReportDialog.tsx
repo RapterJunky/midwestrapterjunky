@@ -1,18 +1,17 @@
 import { Flag } from "lucide-react";
 import { useState } from "react";
-
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import Spinner from "@/components/ui/Spinner";
 import { Label } from "@/components/ui/label";
+import Spinner from "@/components/ui/Spinner";
+import { Textarea } from "@/components/ui/textarea";
 
 const CommentReportDialog: React.FC<{
   id: string;

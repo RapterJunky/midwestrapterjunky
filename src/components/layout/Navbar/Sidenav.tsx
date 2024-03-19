@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import IconLink from "@/components/ui/IconLink";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
 import { capitlize } from "@/lib/utils/capitlize";
-import IconLink from "@/components/ui/IconLink";
+import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
 
 const Sidenav: React.FC<{ links: LinkWithIcon[]; logo: ResponsiveImage }> = ({
   links,
