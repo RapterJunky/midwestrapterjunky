@@ -8,28 +8,11 @@ import type {
   RenderPageCtx,
 } from "datocms-plugin-sdk";
 import dynamic from "next/dynamic";
+import { FIELD_ADDON_ID_DOCX, FIELD_EXTENSION_GDRIVE_ID, FIELD_EXTENSION_GDRIVE_SINGLE_ID, FIELD_EXTENSION_ID, FIELD_EXTENSION_ID_AUTHOR, FIELD_EXTENSION_ID_PREVIEW, MESSAGE_BOARD_PAGE_ID, MODEL_BROWSE_PRODUCTS_ID, MODEL_EDIT_AUTHOR_ID, MODEL_GDRIVE_ID, MODEL_MAIL_SETTINGS_ID, MODEL_STOREFRONT_ID, MODEL_THEAD_ID, MODEL_TOPIC_EDITOR_ID } from '@lib/utils/plugin/consts';
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
 import "datocms-react-ui/styles.css";
-
-const FIELD_EXTENSION_GDRIVE_SINGLE_ID = "mrj_gdrive_single";
-const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
-const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";
-const FIELD_EXTENSION_GDRIVE_ID = "mrj_gdrive";
-const FIELD_EXTENSION_ID = "shopProduct";
-
-const MODEL_THEAD_ID = "thread-model";
-const MODEL_BROWSE_PRODUCTS_ID = "browseProducts";
-const MODEL_EDIT_AUTHOR_ID = "editAuthor";
-const MODEL_STOREFRONT_ID = "storefrontModel";
-const MODEL_GDRIVE_ID = "gDriveModel";
-const MODEL_MAIL_SETTINGS_ID = "mrj_mail_settings";
-const MODEL_TOPIC_EDITOR_ID = "mrj_topic_editor";
-
-const FIELD_ADDON_ID_DOCX = "mrj_docx_import";
-
-const MESSAGE_BOARD_PAGE_ID = "community";
 
 const TopicCreaterModal = dynamic(
   () => import("@/components/plugins/models/TopicCreaterModal"),
