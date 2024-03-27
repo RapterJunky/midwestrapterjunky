@@ -1,6 +1,7 @@
 import type { Cache } from "./cache";
 import type { ProjectConfig, ProjectConfigJSON } from "./types";
-import { logger } from "@lib/logger";
+
+//import { logger } from "@lib/logger";
 
 export type ConfigFetcher = {
   getConfig<
@@ -50,13 +51,13 @@ export default class ConfigServiceBase {
           };
         }
         default: {
-          logger.error(
+          console.error(
             response,
             `Failed to download feature flags & settings from ConfigCat. Status: ${
               response && response.status
             } - ${response && response.statusText}`,
           );
-          logger.info(
+          console.info(
             "Double-check your SDK Key on https://app.configcat.com/sdkkey",
           );
           return lastConfig;
@@ -69,11 +70,11 @@ export default class ConfigServiceBase {
           : error instanceof Error
             ? error.message
             : "";
-      logger.error(
+      console.error(
         error,
         `2Failed to download feature flags & settings from ConfigCat. Status: ${message}`,
       );
-      logger.info(
+      console.info(
         "Double-check your SDK Key on https://app.configcat.com/sdkkey",
       );
       return lastConfig;

@@ -13,7 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
 const AnalyticsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <PHProvider>{children}</PHProvider>
+      {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" ? (
+        <PHProvider>{children}</PHProvider>
+      ) : (
+        children
+      )}
       <GoogleAnalytics debug={process.env.VERCEL_ENV !== "production"} />
     </>
   );

@@ -1,6 +1,7 @@
 import SearchOption from "./SearchOption";
 import SearchOptionsSelect from "./SearchOptionsSelect";
 import Link from "next/link";
+import { Suspense } from "react";
 import { SelectItem } from "@/components/ui/select";
 
 type SearchSettingsListProps = {
@@ -17,14 +18,16 @@ const SearchSettingsList: React.FC<SearchSettingsListProps> = ({
   return (
     <div className="relative inline-block w-full">
       <div className="mt-3 lg:hidden">
-        <SearchOptionsSelect queryKey={queryKey} name={name}>
-          <SelectItem value="DEFAULT">{name}</SelectItem>
-          {items.map((item, i) => (
-            <SelectItem key={i} value={item.value}>
-              {item.name}
-            </SelectItem>
-          ))}
-        </SearchOptionsSelect>
+        <Suspense>
+          <SearchOptionsSelect queryKey={queryKey} name={name}>
+            <SelectItem value="DEFAULT">{name}</SelectItem>
+            {items.map((item, i) => (
+              <SelectItem key={i} value={item.value}>
+                {item.name}
+              </SelectItem>
+            ))}
+          </SearchOptionsSelect>
+        </Suspense>
       </div>
       <div className="absolute left-0 z-10 mb-10 mt-2 hidden w-full origin-top-left rounded-md shadow-lg lg:relative lg:block lg:shadow-none">
         <div className="shadow-xs rounded-sm bg-white lg:bg-none lg:shadow-none">
@@ -40,14 +43,16 @@ const SearchSettingsList: React.FC<SearchSettingsListProps> = ({
                   {name}
                 </Link>
               </li>
-              {items.map((item, i) => (
-                <SearchOption
-                  queryKey={queryKey}
-                  name={item.name}
-                  value={item.value}
-                  key={i}
-                />
-              ))}
+              <Suspense>
+                {items.map((item, i) => (
+                  <SearchOption
+                    queryKey={queryKey}
+                    name={item.name}
+                    value={item.value}
+                    key={i}
+                  />
+                ))}
+              </Suspense>
             </ul>
           </div>
         </div>

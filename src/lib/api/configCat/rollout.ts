@@ -1,5 +1,6 @@
 import type { ProjectConfig } from "./types";
-import { logger } from "@lib/logger";
+
+//import { logger } from "@lib/logger";
 
 export type ValueAndVariationId<TDefault extends string | boolean | number> = {
   value: TDefault;
@@ -23,7 +24,7 @@ export function RolloutEvaluate<TDefault extends string | boolean | number>(
   defaultVariationId?: TDefault,
 ): ValueAndVariationId<TDefault> | null {
   if (!config || !config.configJSON) {
-    logger.error(
+    console.error(
       { defaultValue, defaultVariationId },
       "JSONConfig is not present. Returning default values",
     );
@@ -31,7 +32,7 @@ export function RolloutEvaluate<TDefault extends string | boolean | number>(
   }
 
   if (!config.configJSON[key]) {
-    logger.error(
+    console.error(
       config,
       `Evaluating getValue(${key}) failed. Returning default value '${JSON.stringify(
         defaultValue,

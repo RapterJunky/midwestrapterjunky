@@ -2,6 +2,9 @@
   "name": "rapterjunky",
   "version": "1.7.0",
   "private": true,
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +13,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "prettier": "prettier --check --cache ./src",
-    "pretter:fix": "prettier --write ./src",
+    "prettier:fix": "prettier --write ./src",
     "cli-lint": "cross-env SKIP_ENV_VALIDATION=true pnpm lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",

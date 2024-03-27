@@ -3,9 +3,6 @@ import flagEnabled from "@lib/config/flagEnabled";
 import { Flags } from "@lib/config/flags";
 
 export async function middleware(request: NextRequest) {
-  //if (request.nextUrl.pathname.startsWith("/404"))
-  //  return NextResponse.redirect(new URL("/not-found", request.url), 301);
-
   if (request.nextUrl.pathname.startsWith("/community")) {
     const enabled = await flagEnabled(Flags.Community);
 

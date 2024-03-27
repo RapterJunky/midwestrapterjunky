@@ -1,4 +1,3 @@
-
 export const FIELD_EXTENSION_GDRIVE_SINGLE_ID = "mrj_gdrive_single";
 export const FIELD_EXTENSION_ID_PREVIEW = "mrj_preview_link";
 export const FIELD_EXTENSION_ID_AUTHOR = "RJ_AUTHOR_EDITOR";

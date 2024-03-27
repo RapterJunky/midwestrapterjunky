@@ -8,10 +8,25 @@ import type {
   RenderPageCtx,
 } from "datocms-plugin-sdk";
 import dynamic from "next/dynamic";
-import { FIELD_ADDON_ID_DOCX, FIELD_EXTENSION_GDRIVE_ID, FIELD_EXTENSION_GDRIVE_SINGLE_ID, FIELD_EXTENSION_ID, FIELD_EXTENSION_ID_AUTHOR, FIELD_EXTENSION_ID_PREVIEW, MESSAGE_BOARD_PAGE_ID, MODEL_BROWSE_PRODUCTS_ID, MODEL_EDIT_AUTHOR_ID, MODEL_GDRIVE_ID, MODEL_MAIL_SETTINGS_ID, MODEL_STOREFRONT_ID, MODEL_THEAD_ID, MODEL_TOPIC_EDITOR_ID } from '@lib/utils/plugin/consts';
 import { useDatoCMS } from "@hook/plugins/useDatoCms";
 import StructuredTextFields from "@lib/plugin/StructuredTextFields";
 import { isVaildConfig, normalizeConfig } from "@lib/utils/plugin/config";
+import {
+  FIELD_ADDON_ID_DOCX,
+  FIELD_EXTENSION_GDRIVE_ID,
+  FIELD_EXTENSION_GDRIVE_SINGLE_ID,
+  FIELD_EXTENSION_ID,
+  FIELD_EXTENSION_ID_AUTHOR,
+  FIELD_EXTENSION_ID_PREVIEW,
+  MESSAGE_BOARD_PAGE_ID,
+  MODEL_BROWSE_PRODUCTS_ID,
+  MODEL_EDIT_AUTHOR_ID,
+  MODEL_GDRIVE_ID,
+  MODEL_MAIL_SETTINGS_ID,
+  MODEL_STOREFRONT_ID,
+  MODEL_THEAD_ID,
+  MODEL_TOPIC_EDITOR_ID,
+} from "@lib/utils/plugin/consts";
 import "datocms-react-ui/styles.css";
 
 const TopicCreaterModal = dynamic(

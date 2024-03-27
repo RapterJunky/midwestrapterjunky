@@ -77,7 +77,7 @@ const server = z.object({
   SHOP_ID: z.string().min(1),
 
   NEXTAUTH_URL: z.string().optional(),
-  DATABASE_URL: z.string().min(1),
+  POSTGRES_PRISMA_URL: z.string().min(1),
 
   KV_REST_API_READ_ONLY_TOKEN: z.string(),
   KV_REST_API_TOKEN: z.string(),
@@ -186,7 +186,7 @@ const processEnv = {
   APP_KEY: process.env.APP_KEY,
   SHOP_ID: process.env.SHOP_ID,
 
-  DATABASE_URL: process.env.DATABASE_URL,
+  POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 
   CI: process.env.CI,
