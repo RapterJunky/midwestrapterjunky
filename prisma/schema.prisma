@@ -21,13 +21,6 @@ model Authors {
   id     String @unique
 }
 
-model Cache {
-  id      Int     @id @default(autoincrement())
-  key     String  @unique
-  data    Json
-  isDirty Boolean
-}
-
 model Settings {
   id    Int    @id @default(autoincrement())
   key   String @unique
