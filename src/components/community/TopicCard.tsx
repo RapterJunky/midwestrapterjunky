@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { Pin, Lock } from "lucide-react";
-
 import { Badge } from "../ui/badge";
+import { Lock, Pin } from "lucide-react";
+import Link from "next/link";
 import toRelativeTime from "@/lib/utils/toRelativeTime";
 
 type Props = {

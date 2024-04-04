@@ -1,24 +1,23 @@
-import { StructuredText } from "react-datocms/structured-text";
-import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft, User2 } from "lucide-react";
-import type { TechArticle } from "schema-dts";
-import Script from "next/script";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
-import ArticleQuery, { type ArticleQueryResult } from "@/gql/queries/article";
-import { getDescriptionTag } from "@/lib/utils/description";
-import GetNextArticles from "@/gql/queries/next_articles";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
-import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import { Separator } from "@/components/ui/separator";
-import getSeoTags from "@/lib/helpers/getSeoTags";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
+import Script from "next/script";
+import { StructuredText } from "react-datocms/structured-text";
+import type { TechArticle } from "schema-dts";
+import ScrollToTop from "@/components/blog/ScrollToTop";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import ArticleQuery, { type ArticleQueryResult } from "@/gql/queries/article";
+import GetNextArticles from "@/gql/queries/next_articles";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
+import { renderBlock, renderInlineRecord } from "@/lib/structuredTextRules";
+import { getDescriptionTag } from "@/lib/utils/description";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 
 type PageParams = {
   params: { slug: string };

@@ -1,15 +1,19 @@
+import type { ExtendLexicalEditor } from "../plugins/ImagesPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
+import { mergeRegister } from "@lexical/utils";
 import {
   $applyNodeReplacement,
   $getNodeByKey,
+  $getRoot,
   $getSelection,
   $isNodeSelection,
-  DecoratorNode,
-  COMMAND_PRIORITY_LOW,
-  KEY_DELETE_COMMAND,
-  KEY_BACKSPACE_COMMAND,
-  CLICK_COMMAND,
-  $getRoot,
   $isParagraphNode,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_LOW,
+  DecoratorNode,
+  KEY_BACKSPACE_COMMAND,
+  KEY_DELETE_COMMAND,
   type DOMConversionMap,
   type DOMConversionOutput,
   type DOMExportOutput,
@@ -20,14 +24,9 @@ import {
   type SerializedLexicalNode,
   type Spread,
 } from "lexical";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
-import { mergeRegister } from "@lexical/utils";
-import { useCallback, useEffect, useRef } from "react";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-
-import type { ExtendLexicalEditor } from "../plugins/ImagesPlugin";
+import { useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

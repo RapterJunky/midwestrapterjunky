@@ -1,13 +1,12 @@
+import Link from "next/link";
 import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import Link from "next/link";
-import { markRules } from "@lib/structuredTextRules";
 import { Button } from "@/components/ui/button";
-
-import type { Color, ModulerContent } from "@type/page";
 import YoutubeFrame from "@components/YoutubeFrame";
+import { markRules } from "@lib/structuredTextRules";
+import type { Color, ModulerContent } from "@type/page";
 
 export interface VideoWithLinksProps extends ModulerContent {
   videoLink: string;

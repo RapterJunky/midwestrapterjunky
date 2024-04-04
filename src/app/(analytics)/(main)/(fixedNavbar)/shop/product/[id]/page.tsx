@@ -1,16 +1,15 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import type { Product } from "schema-dts";
 import Script from "next/script";
 import { Suspense } from "react";
-
-import RelatedProductsFallback from "@/components/pages/shop/product/RelatedProductsFallback";
-import RelatedProducts from "@/components/pages/shop/product/RelatedProducts";
-import ProductImages from "@/components/pages/shop/product/ProductImages";
+import type { Product } from "schema-dts";
 import ProductForm from "@/components/pages/shop/product/ProductForm";
-import getProduct from "@/lib/services/shop/getProduct";
+import ProductImages from "@/components/pages/shop/product/ProductImages";
+import RelatedProducts from "@/components/pages/shop/product/RelatedProducts";
+import RelatedProductsFallback from "@/components/pages/shop/product/RelatedProductsFallback";
 import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getProduct from "@/lib/services/shop/getProduct";
 
 type PageParams = {
   params: { id: string };

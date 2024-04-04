@@ -1,12 +1,12 @@
-import { TabsContent } from "@components/ui/tabs";
 import {
+  SidebarLeftArrowIcon,
   Toolbar,
   ToolbarButton,
-  ToolbarTitle,
   ToolbarStack,
-  SidebarLeftArrowIcon,
+  ToolbarTitle,
 } from "datocms-react-ui";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { TabsContent } from "@components/ui/tabs";
 
 export const Panel: React.FC<
   React.PropsWithChildren<{

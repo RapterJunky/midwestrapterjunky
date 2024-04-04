@@ -1,10 +1,10 @@
+import { resetOrdering, resetSelection } from "./helpers";
 import type {
   PageNumberPaginationMeta,
   PageNumberPaginationOptions,
   PrismaModel,
   PrismaQuery,
 } from "./types";
-import { resetOrdering, resetSelection } from "./helpers";
 
 type PaginateWithPagesOptions = Required<PageNumberPaginationOptions>;
 

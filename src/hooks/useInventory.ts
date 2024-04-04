@@ -1,5 +1,5 @@
-import type { InventoryCount } from "square";
 import { useMemo } from "react";
+import type { InventoryCount } from "square";
 import useSWR from "swr";
 import { fetcher } from "@/lib/api/fetcher";
 

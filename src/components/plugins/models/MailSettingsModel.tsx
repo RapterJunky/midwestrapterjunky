@@ -1,25 +1,24 @@
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import {
   Button,
+  ButtonLink,
   Canvas,
   FieldError,
-  FormLabel,
-  TextField,
   FieldGroup,
   FieldHint,
-  SwitchField,
   Form,
+  FormLabel,
   SelectField,
   Spinner,
-  ButtonLink,
+  SwitchField,
+  TextField,
 } from "datocms-react-ui";
-import { useForm, Controller } from "react-hook-form";
-import type { RenderModalCtx } from "datocms-plugin-sdk";
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import TagInput from "@components/TagInput";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 type MailItemNumber = {
   label: string;

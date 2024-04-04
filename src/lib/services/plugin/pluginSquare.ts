@@ -1,10 +1,10 @@
+import { NextResponse } from "next/server";
 import {
   Client,
   Environment,
-  type SearchCatalogObjectsResponse,
   type RetrieveCatalogObjectResponse,
+  type SearchCatalogObjectsResponse,
 } from "square";
-import { NextResponse } from "next/server";
 import { serialize } from "superjson";
 import { z } from "zod";
 

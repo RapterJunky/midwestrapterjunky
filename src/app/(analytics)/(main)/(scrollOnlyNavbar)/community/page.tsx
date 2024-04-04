@@ -1,9 +1,9 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CommunityPosts from "@/components/pages/community/CommunityPosts";
-import getCategories from "@/lib/services/community/getCategories";
 import CategoryCard from "@/components/community/CategoryCard";
+import CommunityPosts from "@/components/pages/community/CommunityPosts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getCategories from "@/lib/services/community/getCategories";
 
 export async function generateMetadata(
   {},
@@ -48,18 +48,29 @@ const Community: React.FC = async () => {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {categories.map((category, i) => (
-                  <CategoryCard
-                    key={i}
-                    title={category.name}
-                    desciption={category.description}
-                    image={{ src: category.image, alt: "Category Image" }}
-                    tags={category.tags as string[]}
-                    slug={`/community/category/${category.id}`}
-                    topics={category._count.posts}
-                    latestTopics={category.posts}
-                  />
-                ))}
+                {categories.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="w-full text-center text-neutral-600"
+                    >
+                      <div className="mt-4 p-2">Theres nothing here yet.</div>
+                    </td>
+                  </tr>
+                ) : (
+                  categories.map((category, i) => (
+                    <CategoryCard
+                      key={i}
+                      title={category.name}
+                      desciption={category.description}
+                      image={{ src: category.image, alt: "Category Image" }}
+                      tags={category.tags as string[]}
+                      slug={`/community/category/${category.id}`}
+                      topics={category._count.posts}
+                      latestTopics={category.posts}
+                    />
+                  ))
+                )}
               </tbody>
             </table>
           </TabsContent>

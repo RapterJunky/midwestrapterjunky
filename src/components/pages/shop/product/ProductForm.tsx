@@ -1,6 +1,9 @@
 "use client";
+
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,11 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import useInventory from "@/hooks/useInventory";
 import Spinner from "@/components/ui/Spinner";
 import useCart from "@/hooks/shop/useCart";
+import useInventory from "@/hooks/useInventory";
 
 const ProductForm: React.FC<{
   name: string;

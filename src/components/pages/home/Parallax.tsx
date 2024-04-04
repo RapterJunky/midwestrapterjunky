@@ -1,6 +1,7 @@
 "use client";
-import { Parallax as ParallaxProvider, Background } from "react-parallax";
+
 import Image from "next/image";
+import { Background, Parallax as ParallaxProvider } from "react-parallax";
 import type { ResponsiveImage } from "@/types/page";
 
 const Parallax: React.FC<{ background: ResponsiveImage }> = ({

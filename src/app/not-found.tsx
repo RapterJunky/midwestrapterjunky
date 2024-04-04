@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-
 import NotFoundPage from "@/components/pages/notfound/NotFoundPage";
-import getFullPageProps from "@/lib/services/getFullPageProps";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getFullPageProps from "@/lib/services/getFullPageProps";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getFullPageProps();

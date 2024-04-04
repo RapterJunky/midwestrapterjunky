@@ -1,4 +1,4 @@
-import { run, POPULAR_TLDS } from "@zootools/email-spell-checker";
+import { POPULAR_TLDS, run } from "@zootools/email-spell-checker";
 
 export async function checkTypo(
   email: string,

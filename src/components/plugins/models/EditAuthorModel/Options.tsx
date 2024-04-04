@@ -1,5 +1,5 @@
+import { FaUserPlus, FaUserTag } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
-import { FaUserTag, FaUserPlus } from "react-icons/fa";
 
 interface OptionsProps {
   setPageState: (value: "edit" | "select" | "options") => void;

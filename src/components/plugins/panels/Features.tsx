@@ -1,13 +1,13 @@
-import type { RenderPageCtx } from "datocms-plugin-sdk";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Form,
-  SwitchField,
-  Button,
-  Spinner,
-  FieldGroup,
-} from "datocms-react-ui";
 import { Panel } from "./Panel";
+import type { RenderPageCtx } from "datocms-plugin-sdk";
+import {
+  Button,
+  FieldGroup,
+  Form,
+  Spinner,
+  SwitchField,
+} from "datocms-react-ui";
+import { Controller, useForm } from "react-hook-form";
 import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 type FeatureFlag = {

@@ -1,10 +1,9 @@
-import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-
-import { getKeys, addKeys, dropKeys } from "@lib/dynamic_keys";
-import onError from "@api/handleError";
 import { auth } from "@api/auth";
+import onError from "@api/handleError";
+import { addKeys, dropKeys, getKeys } from "@lib/dynamic_keys";
 
 const patchVaildation = z
   .array(

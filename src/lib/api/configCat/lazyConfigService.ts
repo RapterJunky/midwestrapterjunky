@@ -1,6 +1,5 @@
 import type { Cache } from "./cache";
-import type { ConfigFetcher } from "./configServiceBase";
-import ConfigServiceBase from "./configServiceBase";
+import ConfigServiceBase, { type ConfigFetcher } from "./configServiceBase";
 import type { ProjectConfig } from "./types";
 
 export default class LazyConfigService

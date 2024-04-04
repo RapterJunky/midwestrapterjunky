@@ -2,9 +2,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useId } from "react";
-
-import type { ModulerContent, ResponsiveImage } from "@type/page";
 import { cn } from "@/lib/utils";
+import type { ModulerContent, ResponsiveImage } from "@type/page";
 
 export interface CarouselProps extends ModulerContent {
   images: ResponsiveImage<{

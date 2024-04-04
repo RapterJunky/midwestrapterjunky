@@ -1,10 +1,10 @@
+import { resetSelection } from "./helpers";
 import type {
   CursorPaginationMeta,
   CursorPaginationOptions,
   PrismaModel,
   PrismaQuery,
 } from "./types";
-import { resetSelection } from "./helpers";
 
 interface PaginateWithCursorOptions<R, C>
   extends CursorPaginationOptions<R, C> {

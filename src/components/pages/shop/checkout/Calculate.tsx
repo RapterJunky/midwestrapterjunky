@@ -1,9 +1,10 @@
 "use client";
+
+import ShoppingCartItem from "../ShoppingCartItem";
+import ShoppingCartItemSkeleton from "../ShoppingCartItemSkeleton";
 import { useMemo } from "react";
 import { Separator } from "@/components/ui/separator";
 import useCheckout from "@/hooks/shop/useCheckout";
-import ShoppingCartItem from "../ShoppingCartItem";
-import ShoppingCartItemSkeleton from "../ShoppingCartItemSkeleton";
 
 const RenderMoney: React.FC<{
   code: string;

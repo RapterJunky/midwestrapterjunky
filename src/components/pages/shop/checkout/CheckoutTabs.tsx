@@ -1,6 +1,6 @@
 "use client";
-import { Tabs } from "@/components/ui/tabs";
 
+import { Tabs } from "@/components/ui/tabs";
 import useCheckout from "@/hooks/shop/useCheckout";
 
 const CheckoutTabs: React.FC<React.PropsWithChildren> = ({ children }) => {

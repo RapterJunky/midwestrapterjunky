@@ -1,6 +1,6 @@
+import { InMemoryCache } from "./cache";
 import { ConfigCatClient } from "./client";
 import LazyConfigService from "./lazyConfigService";
-import { InMemoryCache } from "./cache";
 
 type Global = typeof globalThis & { configCat: ConfigCatClient };
 

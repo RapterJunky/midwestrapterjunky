@@ -1,4 +1,5 @@
 import ImageHelper from "./ImageHelper";
+
 const UEWIRFragment = `
 fragment UEWIRFragment on UpcomingeventswithimageRecord {
     events {

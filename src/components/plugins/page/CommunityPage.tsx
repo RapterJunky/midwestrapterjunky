@@ -1,19 +1,18 @@
-import {
-  FaFlag,
-  FaColumns,
-  FaRegTimesCircle,
-  FaEnvelope,
-  FaRegCommentDots,
-  FaKey,
-  FaUser,
-} from "react-icons/fa";
 import type { RenderPageCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-
-import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
+import {
+  FaColumns,
+  FaEnvelope,
+  FaFlag,
+  FaKey,
+  FaRegCommentDots,
+  FaRegTimesCircle,
+  FaUser,
+} from "react-icons/fa";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
 
 const MailingList = dynamic(() => import("../panels/MailingList"));
 const Features = dynamic(() => import("../panels/Features"));

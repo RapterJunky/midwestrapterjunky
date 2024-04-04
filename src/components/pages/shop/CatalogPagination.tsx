@@ -1,7 +1,7 @@
-import Link from "next/link";
-import type { SearchQueryResult } from "@/gql/sqaure/searchQuery";
 import CatalogPrevButton from "./CatalogPrevButton";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { SearchQueryResult } from "@/gql/sqaure/searchQuery";
 import { cn } from "@/lib/utils";
 
 const CatalogPagination: React.FC<

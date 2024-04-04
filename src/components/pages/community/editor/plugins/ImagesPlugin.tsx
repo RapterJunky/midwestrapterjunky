@@ -1,20 +1,20 @@
 import {
-  createCommand,
-  $insertNodes,
-  $isRootOrShadowRoot,
-  $createParagraphNode,
-  COMMAND_PRIORITY_EDITOR,
-  type LexicalEditor,
-  type LexicalCommand,
-} from "lexical";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
-import { useEffect } from "react";
-import {
   $createImageNode,
   ImageNode,
   type ImagePayload,
 } from "../nodes/ImageNode";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
+import {
+  $createParagraphNode,
+  $insertNodes,
+  $isRootOrShadowRoot,
+  COMMAND_PRIORITY_EDITOR,
+  createCommand,
+  type LexicalCommand,
+  type LexicalEditor,
+} from "lexical";
+import { useEffect } from "react";
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 

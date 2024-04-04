@@ -1,3 +1,5 @@
+import type { User } from "./index";
+import type { RenderPageCtx } from "datocms-plugin-sdk";
 import {
   Button,
   Dropdown,
@@ -5,13 +7,11 @@ import {
   DropdownOption,
   DropdownSeparator,
 } from "datocms-react-ui";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import type { RenderPageCtx } from "datocms-plugin-sdk";
 import update from "immutability-helper";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import type { KeyedMutator } from "swr";
-import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 import type { Paginate } from "@/types/page";
-import type { User } from "./index";
+import { AuthFetch } from "@lib/utils/plugin/auth_fetch";
 
 const UserItem: React.FC<{
   mutate: KeyedMutator<Paginate<User>>;

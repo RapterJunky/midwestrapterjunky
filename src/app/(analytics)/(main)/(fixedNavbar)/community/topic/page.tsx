@@ -1,11 +1,11 @@
 import type { Metadata, ResolvingMetadata } from "next";
-
-import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
-import SessionProvider from "@/components/providers/SessionProvider";
+import { Suspense } from "react";
 import TopicEditor from "@/components/pages/community/TopicEditor";
+import SessionProvider from "@/components/providers/SessionProvider";
 import { SelectContent, SelectItem } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getCategoriesIds from "@/lib/services/community/getCategoriesIds";
 
 export async function generateMetadata(
   {},
@@ -37,15 +37,17 @@ const TopicPage: React.FC = async () => {
         <div className="flex-1">
           <div className="container h-full py-6">
             <SessionProvider>
-              <TopicEditor defaultCategory={ids.at(0)?.id.toString() ?? "1"}>
-                <SelectContent>
-                  {ids.map((value, i) => (
-                    <SelectItem key={i} value={value.id.toString()}>
-                      {value.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </TopicEditor>
+              <Suspense>
+                <TopicEditor defaultCategory={ids.at(0)?.id.toString() ?? "1"}>
+                  <SelectContent>
+                    {ids.map((value, i) => (
+                      <SelectItem key={i} value={value.id.toString()}>
+                        {value.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </TopicEditor>
+              </Suspense>
             </SessionProvider>
           </div>
         </div>

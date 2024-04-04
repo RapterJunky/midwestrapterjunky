@@ -1,16 +1,15 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import {
   type OgMetaAttributes,
   type RegularMetaAttributes,
 } from "react-datocms/seo";
 import { StructuredText } from "react-datocms/structured-text";
-import type { Metadata, ResolvingMetadata } from "next";
-
+import ScrollToTop from "@/components/blog/ScrollToTop";
 import PrivcyPolicyQuery, {
   type PrivcyPolicyQueryResult,
 } from "@/gql/queries/privacy_policy";
-import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
 
 export async function generateMetadata(
   {},

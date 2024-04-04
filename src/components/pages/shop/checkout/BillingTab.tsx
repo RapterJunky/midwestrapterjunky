@@ -1,9 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 
+import AddressForm from "./AddressForm";
+import ErrorDialog from "./ErrorDialog";
+import ShopLoadingDialog from "./ShopLoadingDialog";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import DiscountForm from "@/components/pages/shop/checkout/DiscountForm";
+import SquareForm from "@/components/pages/shop/checkout/SquareForm";
+import type { CheckoutState } from "@/components/providers/CheckoutProvider";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -12,17 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { CheckoutState } from "@/components/providers/CheckoutProvider";
-import DiscountForm from "@/components/pages/shop/checkout/DiscountForm";
-import SquareForm from "@/components/pages/shop/checkout/SquareForm";
 import { Separator } from "@/components/ui/separator";
-import ShopLoadingDialog from "./ShopLoadingDialog";
-import { Checkbox } from "@/components/ui/checkbox";
 import useCheckout from "@/hooks/shop/useCheckout";
-import { Button } from "@/components/ui/button";
 import Spinner from "@components/ui/Spinner";
-import AddressForm from "./AddressForm";
-import ErrorDialog from "./ErrorDialog";
 
 const BillingTab: React.FC = () => {
   const [error, setError] = useState<{ message: string; code: string }>();
@@ -76,7 +76,7 @@ const BillingTab: React.FC = () => {
         code={error?.code ?? "UNKNOWN"}
       />
       <ShopLoadingDialog open={form.formState.isSubmitting} />
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ph-no-capture">
         <div className="mb-4">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             Billing

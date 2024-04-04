@@ -1,8 +1,9 @@
 "use server";
-import { fromZodError } from "zod-validation-error";
-import { redirect } from "next/navigation";
+
 import client from "@sendgrid/client";
+import { redirect } from "next/navigation";
 import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 import validate from "@lib/deep_email_validator";
 import { logger } from "@lib/logger";
 

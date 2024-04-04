@@ -1,18 +1,17 @@
 import type { RenderModalCtx } from "datocms-plugin-sdk";
 import {
-  Canvas,
-  Form,
-  FieldGroup,
-  TextField,
-  SelectField,
   Button,
+  Canvas,
+  FieldGroup,
+  Form,
+  SelectField,
   SwitchField,
+  TextField,
 } from "datocms-react-ui";
-import { useForm, Controller } from "react-hook-form";
-
-import type { StorefrontPluginConfig } from "@lib/utils/plugin/config";
+import { Controller, useForm } from "react-hook-form";
 import ShopifyClient from "@lib/plugin/ShopifyClient";
 import SquareClient from "@lib/plugin/SquareClient";
+import type { StorefrontPluginConfig } from "@lib/utils/plugin/config";
 
 const options = [
   { label: "Shopify", value: "S" },

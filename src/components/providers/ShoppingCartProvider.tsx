@@ -1,7 +1,8 @@
 "use client";
-import useLocalStorageState from "use-local-storage-state";
+
 import { createContext } from "react";
 import useSWR from "swr";
+import useLocalStorageState from "use-local-storage-state";
 import { fetcher } from "@/lib/api/fetcher";
 
 export type CartItem = {

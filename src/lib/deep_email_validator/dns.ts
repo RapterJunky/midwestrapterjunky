@@ -1,5 +1,5 @@
-import { resolveMx } from "node:dns/promises";
 import type { MxRecord } from "node:dns";
+import { resolveMx } from "node:dns/promises";
 
 /**
  * @see https://github.com/mfbx9da4/deep-email-validator/blob/master/src/dns/dns.ts

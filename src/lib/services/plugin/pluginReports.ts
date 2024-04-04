@@ -1,7 +1,6 @@
-import { NextResponse } from "next/server";
 import createHttpError from "http-errors";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-
 import prisma from "@api/prisma";
 
 const getSchema = z.object({

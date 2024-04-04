@@ -1,17 +1,15 @@
-import { StructuredText } from "react-datocms/structured-text";
 import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
-
+import { StructuredText } from "react-datocms/structured-text";
+import ModuleContent from "@/components/layout/ModuleContent";
+import AboutUsQuery, { type AboutUsQueryResult } from "@/gql/queries/about_us";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import {
   markRules,
   renderBlock,
   renderInlineRecord,
 } from "@/lib/structuredTextRules";
-import AboutUsQuery, { type AboutUsQueryResult } from "@/gql/queries/about_us";
-import ModuleContent from "@/components/layout/ModuleContent";
-import getPageQuery from "@/lib/services/GetPageQuery";
-
-import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
   {},

@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import type { ResponsiveImage } from "@type/page";
 
 const SelectedImage: React.FC<{

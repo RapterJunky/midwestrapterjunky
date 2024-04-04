@@ -1,6 +1,6 @@
 import { draftMode } from "next/headers";
-import ExitPreview from "@/components/ui/ExitPreview";
 import Footer from "@/components/layout/Footer";
+import ExitPreview from "@/components/ui/ExitPreview";
 
 const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { isEnabled } = draftMode();

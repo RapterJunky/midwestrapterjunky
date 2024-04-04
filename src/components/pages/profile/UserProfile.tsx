@@ -1,6 +1,11 @@
 "use client";
+
+import DeleteAccount from "./DeleteAccount";
+import SocialAccounts from "./SocialAccounts";
+import { User2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -10,10 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SocialAccounts from "./SocialAccounts";
-import DeleteAccount from "./DeleteAccount";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User2 } from "lucide-react";
 
 const UserProfile: React.FC = () => {
   const { data: session, status } = useSession({

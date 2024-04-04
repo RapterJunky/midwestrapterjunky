@@ -1,14 +1,13 @@
+import Parallax from "./Parallax";
+import { Star } from "lucide-react";
+import Link from "next/link";
 import {
   StructuredText,
   type StructuredTextGraphQlResponse,
 } from "react-datocms/structured-text";
-import { Star } from "lucide-react";
-import Link from "next/link";
-
-import type { Color, ModulerContent, ResponsiveImage } from "@type/page";
-import { markRules } from "@lib/structuredTextRules";
 import { Button } from "@/components/ui/button";
-import Parallax from "./Parallax";
+import { markRules } from "@lib/structuredTextRules";
+import type { Color, ModulerContent, ResponsiveImage } from "@type/page";
 
 export interface TestimonialAndShareProps extends ModulerContent {
   description: StructuredTextGraphQlResponse;

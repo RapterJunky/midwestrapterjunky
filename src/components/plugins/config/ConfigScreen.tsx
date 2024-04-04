@@ -1,15 +1,14 @@
-import { Button, Canvas, TextField, Form, FieldGroup } from "datocms-react-ui";
 import type { RenderConfigScreenCtx } from "datocms-plugin-sdk";
-import { useForm, Controller } from "react-hook-form";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Button, Canvas, FieldGroup, Form, TextField } from "datocms-react-ui";
 import { useState } from "react";
-
+import { Controller, useForm } from "react-hook-form";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 import {
   normalizeConfig,
   type StorefrontPluginConfig,
   type VaildConfig,
 } from "@/lib/utils/plugin/config";
-import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 
 const getKeys = (storefront: VaildConfig["storefronts"][0]) => {
   const keys: string[] = [];

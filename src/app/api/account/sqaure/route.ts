@@ -1,9 +1,8 @@
+import createHttpError from "http-errors";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import createHttpError from "http-errors";
-import { serialize } from "superjson";
 import { Client } from "square";
-
+import { serialize } from "superjson";
 import { authConfig } from "@/lib/config/auth";
 import onError from "@api/handleError";
 import prisma from "@api/prisma";

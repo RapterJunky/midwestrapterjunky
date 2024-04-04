@@ -1,8 +1,9 @@
-import type { NonTextNode } from "datocms-structured-text-slate-utils";
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, Button } from "datocms-react-ui";
+import { Button, Canvas } from "datocms-react-ui";
+import type { NonTextNode } from "datocms-structured-text-slate-utils";
 import { useRef, useState } from "react";
 import type { jsx as typedJsx } from "slate-hyperscript";
+
 type NewLine = "\n";
 
 type Text = ReturnType<typeof typedJsx>;

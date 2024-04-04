@@ -1,6 +1,6 @@
-import ShoppingCardProvider from "@/components/providers/ShoppingCartProvider";
 import CheckoutProvider from "@/components/providers/CheckoutProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
+import ShoppingCardProvider from "@/components/providers/ShoppingCartProvider";
 
 const CheckoutLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (

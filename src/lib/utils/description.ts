@@ -1,7 +1,7 @@
 import type {
-  SeoOrFaviconTag,
   RegularMetaAttributes,
   SeoMetaTag,
+  SeoOrFaviconTag,
 } from "react-datocms";
 
 export const getDescriptionTag = (tags: SeoOrFaviconTag[]): string => {

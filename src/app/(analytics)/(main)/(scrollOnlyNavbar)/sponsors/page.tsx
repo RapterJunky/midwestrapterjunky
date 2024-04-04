@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,9 +11,8 @@ import {
 import SponsorsQuery, {
   type SponsorsQueryResult,
 } from "@/gql/queries/sponsors";
-import getPageQuery from "@/lib/services/GetPageQuery";
 import getSeoTags from "@/lib/helpers/getSeoTags";
-import { Button } from "@/components/ui/button";
+import getPageQuery from "@/lib/services/GetPageQuery";
 
 export async function generateMetadata(
   {},
@@ -45,7 +44,12 @@ const Sponsors: React.FC = async () => {
       </h1>
       <section className="grid w-full max-w-7xl grid-cols-1 gap-8 px-4 pt-4 md:grid-cols-2 md:px-0 lg:grid-cols-3">
         {sponsor.sponsors.map((value) => (
-          <Link href={value.link ?? "/"} key={value.id}>
+          <Link
+            className="ph-autocapture"
+            href={value.link ?? "/"}
+            key={value.id}
+            data-ph-capture-attribute-sponsor-url={value.link ?? "/"}
+          >
             <Card
               key={value.id}
               className="flex h-full flex-col rounded-sm shadow"

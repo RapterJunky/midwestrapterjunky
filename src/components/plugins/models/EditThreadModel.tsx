@@ -1,15 +1,15 @@
+import type { RenderModalCtx } from "datocms-plugin-sdk";
 import {
-  Canvas,
-  TextField,
   Button,
+  Canvas,
+  FieldError,
+  Form,
   FormLabel,
   SwitchField,
-  Form,
-  FieldError,
+  TextField,
 } from "datocms-react-ui";
-import type { RenderModalCtx } from "datocms-plugin-sdk";
-import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
+import { Controller, useForm } from "react-hook-form";
 import TagInput from "@/components/TagInput";
 
 interface State {

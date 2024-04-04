@@ -1,9 +1,8 @@
 import type { Metadata, ResolvingMetadata } from "next";
-
 import ModuleContent from "@/components/layout/ModuleContent";
-import getPageQuery from "@/lib/services/GetPageQuery";
 import HomePageQuery, { type HomePageQueryResult } from "@/gql/queries/home";
 import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
 
 export async function generateMetadata(
   {},

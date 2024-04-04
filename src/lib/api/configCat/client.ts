@@ -1,7 +1,7 @@
 import type { ConfigFetcher } from "./configServiceBase";
 import type ConfigServiceBase from "./configServiceBase";
 import type LazyConfigService from "./lazyConfigService";
-import { type User, RolloutEvaluate } from "./rollout";
+import { RolloutEvaluate, type User } from "./rollout";
 
 export class ConfigCatClient<
   TService extends ConfigServiceBase & ConfigFetcher = LazyConfigService,

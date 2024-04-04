@@ -1,13 +1,18 @@
 "use client";
+
 import { usePathname, useSearchParams } from "next/navigation";
+import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
-import posthog from "posthog-js";
 import { host } from "@/lib/utils/host";
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: `${host}/ingest`,
+    autocapture: {
+      dom_event_allowlist: ["click"],
+      css_selector_allowlist: ["ph-autocapture"],
+    },
   });
 }
 

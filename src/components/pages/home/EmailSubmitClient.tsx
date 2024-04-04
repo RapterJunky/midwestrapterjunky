@@ -1,10 +1,11 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
+
 import { ChevronRight } from "lucide-react";
-import submitEmail from "@lib/actions/submit_email";
+import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Spinner from "@/components/ui/Spinner";
+import submitEmail from "@lib/actions/submit_email";
 
 const initialState = {
   error: null,

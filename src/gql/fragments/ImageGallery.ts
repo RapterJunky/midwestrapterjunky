@@ -1,4 +1,5 @@
 import ImageHelper from "./ImageHelper";
+
 const ImageGralleryFragment = `
 fragment IGFragment on ImageGalleryRecord {
     heading

@@ -1,12 +1,11 @@
 import type {
-  RenderModalCtx,
   RenderFieldExtensionCtx,
+  RenderModalCtx,
 } from "datocms-plugin-sdk";
-import { useRef, type ChangeEvent, useState } from "react";
 import { Button, Spinner } from "datocms-react-ui";
-
-import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
+import { useRef, useState, type ChangeEvent } from "react";
 import type { GoogleImage } from "@/lib/api/googleDrive";
+import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 
 const UploadAsset: React.FC<
   React.PropsWithChildren<{

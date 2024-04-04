@@ -1,26 +1,25 @@
-import { StructuredText } from "react-datocms/structured-text";
-import type { Metadata, ResolvingMetadata } from "next";
 import { ArrowLeft } from "lucide-react";
-import type { Event } from "schema-dts";
-import Script from "next/script";
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
+import Script from "next/script";
+import { StructuredText } from "react-datocms/structured-text";
+import type { Event } from "schema-dts";
+import ScrollToTop from "@/components/blog/ScrollToTop";
+import LeafMaps from "@/components/pages/events/LeafMaps";
+import StoreButtonLink from "@/components/pages/events/StoreButtonLink";
+import { Button } from "@/components/ui/button";
+import IconLink from "@/components/ui/IconLink";
+import { Separator } from "@/components/ui/separator";
+import EventPageQuery, { type EventPageQueryResult } from "@/gql/queries/event";
+import getSeoTags from "@/lib/helpers/getSeoTags";
+import getPageQuery from "@/lib/services/GetPageQuery";
 import {
   markRules,
   renderBlock,
   renderInlineRecord,
 } from "@/lib/structuredTextRules";
-import EventPageQuery, { type EventPageQueryResult } from "@/gql/queries/event";
-import StoreButtonLink from "@/components/pages/events/StoreButtonLink";
 import { getDescriptionTag } from "@/lib/utils/description";
-import LeafMaps from "@/components/pages/events/LeafMaps";
-import ScrollToTop from "@/components/blog/ScrollToTop";
-import getPageQuery from "@/lib/services/GetPageQuery";
-import { Separator } from "@/components/ui/separator";
-import getSeoTags from "@/lib/helpers/getSeoTags";
-import IconLink from "@/components/ui/IconLink";
-import { Button } from "@/components/ui/button";
 import { host } from "@/lib/utils/host";
 
 type PageParams = { params: { id: string } };

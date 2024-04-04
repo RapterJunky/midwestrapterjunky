@@ -1,16 +1,15 @@
-import onError from "@/lib/api/handleError";
 import createHttpError from "http-errors";
 import { z } from "zod";
-
-import pluginCaetgory from "@/lib/services/plugin/pluginCategory";
+import onError from "@/lib/api/handleError";
 import pluginAuthors from "@/lib/services/plugin/pluginAuthors";
-import pluginReports from "@lib/services/plugin/pluginReports";
-import pluginImages from "@/lib/services/plugin/pluginImages";
-import pluginSquare from "@lib/services/plugin/pluginSquare";
+import pluginCaetgory from "@/lib/services/plugin/pluginCategory";
 import pluginFlags from "@/lib/services/plugin/pluginFlags";
+import pluginImages from "@/lib/services/plugin/pluginImages";
 import pluginMail from "@/lib/services/plugin/pluginMail";
-import pluginUser from "@lib/services/plugin/pluginUser";
+import pluginReports from "@lib/services/plugin/pluginReports";
+import pluginSquare from "@lib/services/plugin/pluginSquare";
 import pluginTAC from "@lib/services/plugin/pluginTAC";
+import pluginUser from "@lib/services/plugin/pluginUser";
 
 type RequestParams = {
   params: {

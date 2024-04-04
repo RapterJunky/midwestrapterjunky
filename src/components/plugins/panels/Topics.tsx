@@ -1,3 +1,7 @@
+import DisplayDataStates from "./DisplayDataStates";
+import DatoCmsPagination from "./Pagination";
+import { Panel } from "./Panel";
+import type { RenderPageCtx } from "datocms-plugin-sdk";
 import {
   Button,
   Dropdown,
@@ -6,6 +10,10 @@ import {
   DropdownSeparator,
   TextInput,
 } from "datocms-react-ui";
+import update from "immutability-helper";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -13,19 +21,9 @@ import {
   FaSearch,
   FaThumbtack,
 } from "react-icons/fa";
-import type { RenderPageCtx } from "datocms-plugin-sdk";
-import update from "immutability-helper";
-import { useState } from "react";
 import useSWR, { type KeyedMutator } from "swr";
-
-import { Panel } from "./Panel";
 import { AuthFetch } from "@/lib/utils/plugin/auth_fetch";
 import type { Paginate } from "@type/page";
-import DisplayDataStates from "./DisplayDataStates";
-import DatoCmsPagination from "./Pagination";
-
-import Image from "next/image";
-import Link from "next/link";
 
 type Topic = {
   name: string;

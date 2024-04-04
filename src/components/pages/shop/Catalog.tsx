@@ -1,6 +1,6 @@
-import getCatalogSearch from "@/lib/services/shop/getCatalogSearch";
-import ShopCard from "@/components/pages/shop/ShopCard";
 import CatalogPagination from "./CatalogPagination";
+import ShopCard from "@/components/pages/shop/ShopCard";
+import getCatalogSearch from "@/lib/services/shop/getCatalogSearch";
 
 const Catalog: React.FC<{ query: URLSearchParams }> = async ({ query }) => {
   const cursor = query.get("cursor")?.toString();

@@ -1,12 +1,12 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { authConfig } from "@/lib/config/auth";
-import { getServerSession } from "next-auth";
 import createHttpError from "http-errors";
+import { getServerSession } from "next-auth";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-
-import ratelimit from "@/lib/api/rateLimit";
 import onError from "@/lib/api/handleError";
 import prisma from "@/lib/api/prisma";
+import ratelimit from "@/lib/api/rateLimit";
+import { authConfig } from "@/lib/config/auth";
+
 const HEADER_TYPE = "x-content-type";
 
 const schema = z.object({

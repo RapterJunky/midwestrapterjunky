@@ -1,6 +1,6 @@
+import Navbar from "../fragments/Navbar";
 import type { SeoOrFaviconTag } from "react-datocms/seo";
 import type { LinkWithIcon, ResponsiveImage } from "@/types/page";
-import Navbar from "../fragments/Navbar";
 
 export type GenericPageResult = {
   site: {

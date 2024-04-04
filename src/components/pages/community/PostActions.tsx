@@ -1,14 +1,15 @@
 "use client";
-import { Heart, Pencil, Flag, Trash2 } from "lucide-react";
-import useSWR, { type KeyedMutator } from "swr";
+
+import { Flag, Heart, Pencil, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import useSWR, { type KeyedMutator } from "swr";
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -16,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -25,9 +27,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { fetcher } from "@/lib/api/fetcher";
 
 type PostLikes = { likesCount: number; likedByMe: boolean };

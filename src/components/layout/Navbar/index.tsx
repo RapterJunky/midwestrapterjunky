@@ -1,15 +1,14 @@
+import AccountIcon from "./AccountIcon";
+import LinksDropdown from "./LinksDropdown";
+import ScrollRuntime from "./ScrollRuntime";
+import Sidenav from "./Sidenav";
 import { cva, type VariantProps } from "class-variance-authority";
 import Image from "next/image";
 import Link from "next/link";
-
 import Provider from "@/components/providers/SessionProvider";
-import getFullPageProps from "@lib/services/getFullPageProps";
-import IconLink from "@components/ui/IconLink";
-import LinksDropdown from "./LinksDropdown";
-import ScrollRuntime from "./ScrollRuntime";
-import AccountIcon from "./AccountIcon";
 import { cn } from "@/lib/utils";
-import Sidenav from "./Sidenav";
+import IconLink from "@components/ui/IconLink";
+import getFullPageProps from "@lib/services/getFullPageProps";
 
 const navbarVariants = cva(
   "group top-0 z-40 flex w-full content-center bg-white px-6 py-2",

@@ -1,5 +1,6 @@
+import ConfirmationMessage from "./ConfirmationMessage";
 import type { Metadata, ResolvingMetadata } from "next";
-import ConfirmationMessage from "@/components/pages/confirmation/ConfirmationMessage";
+import { Suspense } from "react";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 export async function generateMetadata(
@@ -21,7 +22,9 @@ const Confirmation: React.FC = () => {
   return (
     <div className="flex flex-1 items-center justify-center">
       <div className="prose text-center md:prose-lg">
-        <ConfirmationMessage />
+        <Suspense>
+          <ConfirmationMessage />
+        </Suspense>
       </div>
     </div>
   );

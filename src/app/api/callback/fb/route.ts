@@ -1,11 +1,11 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { createHmac, randomBytes } from "node:crypto";
 import createHttpError from "http-errors";
+import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-
-import { logger } from "@lib/logger";
 import onError from "@api/handleError";
 import prisma from "@api/prisma";
+import { logger } from "@lib/logger";
+import { host } from "@lib/utils/host";
 
 interface JSONWebToken {
   algorithm: string;
@@ -92,11 +92,18 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
+    await prisma.session.delete({
+      where: {
+        id: "",
+        userId: accountUser.userId,
+      },
+    });
+
+    const id = randomBytes(10).toString("hex");
+
     return NextResponse.json({
-      url: `${process.env.VERCEL_ENV === "development" ? "http" : "https"}://${
-        process.env.VERCEL_URL
-      }/api/callback/fb`,
-      confirmation_code: randomBytes(10).toString("hex"),
+      url: `${host}/${process.env.VERCEL_URL}/profile/fb-status?id=${id}`,
+      confirmation_code: id,
     });
   } catch (error) {
     return onError(error);

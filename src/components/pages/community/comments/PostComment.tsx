@@ -1,7 +1,10 @@
+import RichTextEditor from "../editor/dynamicRichTextEditor";
+import CommentReportDialog from "./CommentReportDialog";
 import { Heart, Pencil, Trash2, User2 } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
-
+import { useState } from "react";
+import HtmlArticle from "@/components/HtmlArticle";
+import type { TComment } from "@/components/providers/CommentProvider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,17 +13,13 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTrigger,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { TComment } from "@/components/providers/CommentProvider";
-import RichTextEditor from "../editor/dynamicRichTextEditor";
-import { formatLocalDate } from "@/lib/utils/timeFormat";
-import CommentReportDialog from "./CommentReportDialog";
-import useComments from "@/hooks/community/useComments";
-import HtmlArticle from "@/components/HtmlArticle";
 import { Button } from "@/components/ui/button";
+import useComments from "@/hooks/community/useComments";
+import { formatLocalDate } from "@/lib/utils/timeFormat";
 
 const PostComment: React.FC<{ data: TComment }> = ({ data }) => {
   const [edit, setEdit] = useState(false);

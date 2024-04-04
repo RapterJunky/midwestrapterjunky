@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
 import Image from "next/image";
-
-import { GOOGLE_DRIVE_IMAGE_ROOT } from "@/lib/utils/googleConsts";
+import { useEffect, useState } from "react";
 import type { GoogleImage } from "@/lib/api/googleDrive";
+import { GOOGLE_DRIVE_IMAGE_ROOT } from "@/lib/utils/googleConsts";
 
 const ModalImage: React.FC<{
   image: GoogleImage;

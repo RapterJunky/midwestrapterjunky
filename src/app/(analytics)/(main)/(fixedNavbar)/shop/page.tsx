@@ -1,12 +1,11 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from "react";
-
-import SearchSettingsList from "@/components/pages/shop/searchOptions/SearchSettingsList";
-import FallBackOptions from "@/components/pages/shop/searchOptions/OptionsFallback";
-import Categories from "@/components/pages/shop/searchOptions/Categories";
-import CatalogFallback from "@/components/pages/shop/CatalogFallback";
-import Vendors from "@/components/pages/shop/searchOptions/Vendors";
 import Catalog from "@/components/pages/shop/Catalog";
+import CatalogFallback from "@/components/pages/shop/CatalogFallback";
+import Categories from "@/components/pages/shop/searchOptions/Categories";
+import FallBackOptions from "@/components/pages/shop/searchOptions/OptionsFallback";
+import SearchSettingsList from "@/components/pages/shop/searchOptions/SearchSettingsList";
+import Vendors from "@/components/pages/shop/searchOptions/Vendors";
 import getSeoTags from "@/lib/helpers/getSeoTags";
 
 type PageParams = {

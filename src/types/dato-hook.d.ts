@@ -1,13 +1,13 @@
 import type {
   FullConnectParameters,
-  RenderFieldExtensionCtx,
-  RenderPageCtx,
-  RenderModalCtx,
-  RenderConfigScreenCtx,
-  RenderItemFormOutletCtx,
   RenderAssetSourceCtx,
+  RenderConfigScreenCtx,
+  RenderFieldExtensionCtx,
+  RenderItemFormOutletCtx,
   RenderItemFormSidebarPanelCtx,
   RenderManualFieldExtensionConfigScreenCtx,
+  RenderModalCtx,
+  RenderPageCtx,
 } from "datocms-plugin-sdk";
 
 export type Context =

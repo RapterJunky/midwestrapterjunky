@@ -1,9 +1,8 @@
-import { type ApiError, type ApiResponse, Client } from "square";
 import { cache } from "react";
+import { Client, type ApiError, type ApiResponse } from "square";
 import "server-only";
-
-import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 import { logger } from "@lib/logger";
+import { REVAILDATE_IN_2H } from "@lib/revaildateTimings";
 
 type Categories = {
   name: string;

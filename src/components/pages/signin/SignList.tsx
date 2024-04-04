@@ -1,8 +1,8 @@
 "use client";
-import { Facebook } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 
+import { Facebook } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Google } from "@/components/ui/icons";
 

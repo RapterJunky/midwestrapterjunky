@@ -1,8 +1,8 @@
+import ShoppingBagItemCount from "./ShoppingBagItemCount";
+import ShoppingCart from "./ShoppingCart";
+import ShopSearch from "./ShopSearch";
 import { ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import ShoppingBagItemCount from "./ShoppingBagItemCount";
-import ShopSearch from "./ShopSearch";
-import ShoppingCart from "./ShoppingCart";
 
 const ShopNavbar: React.FC = () => {
   return (

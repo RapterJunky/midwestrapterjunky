@@ -1,11 +1,12 @@
 "use client";
-import useSWR, { type KeyedMutator, type SWRResponse } from "swr";
-import { createContext, useState } from "react";
-import type { User, Comment } from "@prisma/client";
-import type { Paginate } from "@/types/page";
-import { fetcher } from "@/lib/api/fetcher";
-import { useSession } from "next-auth/react";
+
+import type { Comment, User } from "@prisma/client";
 import type { Session } from "next-auth";
+import { useSession } from "next-auth/react";
+import { createContext, useState } from "react";
+import useSWR, { type KeyedMutator, type SWRResponse } from "swr";
+import { fetcher } from "@/lib/api/fetcher";
+import type { Paginate } from "@/types/page";
 
 export type TComment = Omit<Comment, "ownerId" | "threadPostId"> & {
   owner: Pick<User, "image" | "id" | "name">;

@@ -1,12 +1,12 @@
 "use client";
-import { ShoppingBag, AlertTriangle } from "lucide-react";
-import { useMemo } from "react";
-import Link from "next/link";
 
-import ShoppingCartItemSkeleton from "../ShoppingCartItemSkeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import ShoppingCartItem from "../ShoppingCartItem";
+import ShoppingCartItemSkeleton from "../ShoppingCartItemSkeleton";
+import { AlertTriangle, ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useCart from "@/hooks/shop/useCart";
 
 const ShoppingCart: React.FC = () => {

@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { EyeOff } from "lucide-react";
 import { Button } from "./button";
+import { EyeOff } from "lucide-react";
+import Link from "next/link";
 
 export default function ExitPreview() {
   return (

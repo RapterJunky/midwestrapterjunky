@@ -1,11 +1,7 @@
-import type { InitialConfigType } from "@lexical/react/LexicalComposer";
-import { type LexicalEditor } from "lexical";
-import { useMemo, useRef } from "react";
-import RootEditor from "@/components/pages/community/editor/RootEditor";
 import { LinkNode } from "@lexical/link";
-import { ImageNode } from "@/components/pages/community/editor/nodes/ImageNode";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
+import type { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import {
   Button,
   Dropdown,
@@ -17,8 +13,12 @@ import {
   SwitchField,
   TextField,
 } from "datocms-react-ui";
-import TagInput from "@/components/pages/community/editor/TagInput";
+import { type LexicalEditor } from "lexical";
+import { useMemo, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { ImageNode } from "@/components/pages/community/editor/nodes/ImageNode";
+import RootEditor from "@/components/pages/community/editor/RootEditor";
+import TagInput from "@/components/pages/community/editor/TagInput";
 
 type FormState = {
   notifications: boolean;

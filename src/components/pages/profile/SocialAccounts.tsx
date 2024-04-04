@@ -1,8 +1,8 @@
-import { Facebook, Chrome, AlertCircle } from "lucide-react";
+import { AlertCircle, Chrome, Facebook } from "lucide-react";
 import useSWR from "swr";
 import { Skeleton } from "@/components/ui/skeleton";
-import { capitlize } from "@/lib/utils/capitlize";
 import { fetcher } from "@/lib/api/fetcher";
+import { capitlize } from "@/lib/utils/capitlize";
 
 type User = {
   id: string;

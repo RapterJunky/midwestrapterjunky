@@ -1,4 +1,5 @@
 "use client";
+
 import useCart from "@/hooks/shop/useCart";
 
 const ShoppingBagItemCount: React.FC = () => {

@@ -1,7 +1,6 @@
+import mail from "@sendgrid/mail";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import mail from "@sendgrid/mail";
-
 import { logger } from "@lib/logger";
 
 type Props = {

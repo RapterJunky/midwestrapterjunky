@@ -1,4 +1,5 @@
-import Spinner from "@/components/ui/Spinner";
+import { signOut } from "next-auth/react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,9 +12,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/Spinner";
 import { fetcher } from "@/lib/api/fetcher";
-import { signOut } from "next-auth/react";
-import { useState } from "react";
 
 const DeleteAccount: React.FC = () => {
   const [loading, setLoading] = useState(false);

@@ -1,10 +1,9 @@
 import type { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Canvas, ButtonLink, Button } from "datocms-react-ui";
+import { Button, ButtonLink, Canvas } from "datocms-react-ui";
 import { useMemo } from "react";
-
 import type { RevalidateSettings } from "@/app/api/revalidate/route";
-import { normalizeConfig } from "@/lib/utils/plugin/config";
 import { capitlize } from "@/lib/utils/capitlize";
+import { normalizeConfig } from "@/lib/utils/plugin/config";
 
 interface Props {
   ctx: RenderFieldExtensionCtx;
