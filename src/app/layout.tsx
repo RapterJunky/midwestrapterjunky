@@ -11,6 +11,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(host),
+  other: {
+    "fb:app_id": process.env.NEXT_PUBLIC_FACKBOOK_APP_ID
+  }
 };
 
 export const viewport: Viewport = {

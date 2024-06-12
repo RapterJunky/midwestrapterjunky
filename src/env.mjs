@@ -114,7 +114,7 @@ const client = z.object({
 
   NEXT_PUBLIC_VERCEL_ENV: z.enum(["development", "production", "preview"]),
   NEXT_PUBLIC_VERCEL_URL: z.string(),
-
+  NEXT_PUBLIC_FACKBOOK_APP_ID: z.string(),
   NEXT_PUBLIC_VERCEL_GIT_PROVIDER: z.enum(["github"]).optional(),
   NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG: z.string().optional(),
   NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER: z.string().optional(),
@@ -147,6 +147,8 @@ const processEnv = {
   GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
   CONFIG_CAT_CONFIG_ID: process.env.CONFIG_CAT_CONFIG_ID,
   CONFIG_CAT_ENV: process.env.CONFIG_CAT_ENV,
+
+  NEXT_PUBLIC_FACKBOOK_APP_ID: process.env.NEXT_PUBLIC_FACKBOOK_APP_ID,
 
   POST_EMAIL_NOTIFACTION_TEMPLTE: process.env.POST_EMAIL_NOTIFACTION_TEMPLTE,
 

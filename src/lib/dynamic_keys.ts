@@ -46,6 +46,8 @@ export const getKeys = async <T extends ReadonlyArray<string>>(
     },
   });
 
+  console.log(settings)
+
   return settings
     .map((setting) => ({ key: setting.key, value: decrypt(setting.value) }))
     .reduce(
