@@ -6,7 +6,7 @@ import getSeoTags from "@/lib/helpers/getSeoTags";
 import getCategories from "@/lib/services/community/getCategories";
 
 export async function generateMetadata(
-  {},
+  { },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return getSeoTags({
