@@ -9,26 +9,26 @@ dependencies:
     specifier: ^3.3.2
     version: 3.3.2
   '@lexical/html':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@lexical/link':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@lexical/list':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@lexical/react':
-    specifier: ^0.14.5
-    version: 0.14.5(react-dom@18.3.1)(react@18.3.1)(yjs@13.6.16)
+    specifier: ^0.16.0
+    version: 0.16.0(react-dom@18.3.1)(react@18.3.1)(yjs@13.6.16)
   '@lexical/rich-text':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@lexical/selection':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@lexical/utils':
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   '@next-auth/prisma-adapter':
     specifier: ^1.0.7
     version: 1.0.7(@prisma/client@5.15.0)(next-auth@4.24.7)
@@ -84,11 +84,11 @@ dependencies:
     specifier: 3.5.1
     version: 3.5.1(react-dom@18.3.1)(react@18.3.1)
   '@upstash/ratelimit':
-    specifier: ^1.2.0
-    version: 1.2.0
+    specifier: ^1.0.3
+    version: 1.0.3
   '@upstash/redis':
-    specifier: ^1.31.3
-    version: 1.31.3
+    specifier: ^1.30.0
+    version: 1.30.0
   '@zootools/email-spell-checker':
     specifier: ^1.12.0
     version: 1.12.0
@@ -105,11 +105,11 @@ dependencies:
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   datocms-structured-text-slate-utils:
-    specifier: ^3.0.0
-    version: 3.0.0(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^4.0.1
+    version: 4.0.1(react-dom@18.3.1)(react@18.3.1)
   datocms-structured-text-utils:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^4.0.1
+    version: 4.0.1
   encoding:
     specifier: ^0.1.13
     version: 0.1.13
@@ -117,8 +117,8 @@ dependencies:
     specifier: ^9.10.0
     version: 9.10.0(encoding@0.1.13)
   googleapis:
-    specifier: ^134.0.0
-    version: 134.0.0(encoding@0.1.13)
+    specifier: ^140.0.0
+    version: 140.0.0(encoding@0.1.13)
   html-react-parser:
     specifier: ^5.1.10
     version: 5.1.10(@types/react@18.3.3)(react@18.3.1)
@@ -129,8 +129,8 @@ dependencies:
     specifier: ^3.1.1
     version: 3.1.1
   lexical:
-    specifier: ^0.14.5
-    version: 0.14.5
+    specifier: ^0.16.0
+    version: 0.16.0
   lodash.get:
     specifier: ^4.4.2
     version: 4.4.2
@@ -162,8 +162,8 @@ dependencies:
     specifier: ^2.3.5
     version: 2.3.5(react-dom@18.3.1)(react@18.3.1)
   react-datocms:
-    specifier: ^5.0.3
-    version: 5.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^6.0.5
+    version: 6.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   react-dom:
     specifier: 18.3.1
     version: 18.3.1(react@18.3.1)
@@ -1240,147 +1240,147 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@lexical/clipboard@0.14.5:
-    resolution: {integrity: sha512-22xbagoQ8jiwImRtMcRl3+pojsiqF0cSfMXbjsHc5fPAq3ULf8OvAMkiSWEOxGQA6I6VIHX30+HtwZ7TgdPJ7A==}
+  /@lexical/clipboard@0.16.0:
+    resolution: {integrity: sha512-eYMJ6jCXpWBVC05Mu9HLMysrBbfi++xFfsm+Yo7A6kYGrqYUhpXqjJkYnw1xdZYL3bV73Oe4ByVJuq42GU+Mqw==}
     dependencies:
-      '@lexical/html': 0.14.5
-      '@lexical/list': 0.14.5
-      '@lexical/selection': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/html': 0.16.0
+      '@lexical/list': 0.16.0
+      '@lexical/selection': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/code@0.14.5:
-    resolution: {integrity: sha512-eBZ5GMx2VDg7tC085qCD2+hzwGm5b6M/b4LXiPW0In6/SmJIDnEOppSz7jmHezWkLIGL2xK43gw1oqTY9igwug==}
+  /@lexical/code@0.16.0:
+    resolution: {integrity: sha512-1EKCBSFV745UI2zn5v75sKcvVdmd+y2JtZhw8CItiQkRnBLv4l4d/RZYy+cKOuXJGsoBrKtxXn5sl7HebwQbPw==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
       prismjs: 1.29.0
     dev: false
 
-  /@lexical/devtools-core@0.14.5(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-4yTZ8Q9sDkvA5n96wEstru2NonAJ6T/zuSTcYizddwDJr56tzanSdJUFbEIG6G3ankqbKMRYNetupD/Ks3sXEg==}
+  /@lexical/devtools-core@0.16.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-Jt8p0J0UoMHf3UMh3VdyrXbLLwpEZuMqihTmbPRpwo+YQ6NGQU35QgwY2K0DpPAThpxL/Cm7uaFqGOy8Kjrhqw==}
     peerDependencies:
       react: '>=17.x'
       react-dom: '>=17.x'
     dependencies:
-      '@lexical/html': 0.14.5
-      '@lexical/link': 0.14.5
-      '@lexical/mark': 0.14.5
-      '@lexical/table': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/html': 0.16.0
+      '@lexical/link': 0.16.0
+      '@lexical/mark': 0.16.0
+      '@lexical/table': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@lexical/dragon@0.14.5:
-    resolution: {integrity: sha512-p+rybaKGcxC8SCerQaMxRf+GcD+0YEXiv8WHx4DaxrTnHdn+8gapFpwe9Sxjmga/6BqeLa3rF/fis3zN3oyMlg==}
+  /@lexical/dragon@0.16.0:
+    resolution: {integrity: sha512-Yr29SFZzOPs+S6UrEZaXnnso1fJGVfZOXVJQZbyzlspqJpSHXVH7InOXYHWN6JSWQ8Hs/vU3ksJXwqz+0TCp2g==}
     dependencies:
-      lexical: 0.14.5
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/hashtag@0.14.5:
-    resolution: {integrity: sha512-jfIFZRm99EIAOsztgFBodyR8Rn/6TI7ee5HonBH6xFY439DheQxTaWDP0Y1SeL7iiu8d3ak2+AXvne1kBziR2A==}
+  /@lexical/hashtag@0.16.0:
+    resolution: {integrity: sha512-2EdAvxYVYqb0nv6vgxCRgE8ip7yez5p0y0oeUyxmdbcfZdA+Jl90gYH3VdevmZ5Bk3wE0/fIqiLD+Bb5smqjCQ==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/history@0.14.5:
-    resolution: {integrity: sha512-Img2hPZ5QA0Sm2Y3HcHqK4qqluabhJrOm93vtOnk7eQU0JLTjFnprPIzRiKnNLpjbasJI6Be5z/3pI4LNIpIvw==}
+  /@lexical/history@0.16.0:
+    resolution: {integrity: sha512-xwFxgDZGviyGEqHmgt6A6gPhsyU/yzlKRk9TBUVByba3khuTknlJ1a80H5jb+OYcrpiElml7iVuGYt+oC7atCA==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/html@0.14.5:
-    resolution: {integrity: sha512-HITDaKld+039OGsEbNpZ16ykmuspptRuaN8UFGfy4Y/isVzF3V3DmgXtIuUe47S4jaXVSbCZG18o//om1ytkTw==}
+  /@lexical/html@0.16.0:
+    resolution: {integrity: sha512-okxn3q/1qkUpCZNEFRI39XeJj4YRjb6prm3WqZgP4d39DI1W24feeTZJjYRCW+dc3NInwFaolU3pNA2MGkjRtg==}
     dependencies:
-      '@lexical/selection': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/selection': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/link@0.14.5:
-    resolution: {integrity: sha512-NnMWRnMtigSBzM1zDSCzvwPPEOyelYy4Jlk9Iqq0KpRnzo248HAotMUTaYdMfWRgGIdPzflYZH5UhZJOAhH+qg==}
+  /@lexical/link@0.16.0:
+    resolution: {integrity: sha512-ppvJSh/XGqlzbeymOiwcXJcUcrqgQqTK2QXTBAZq7JThtb0WsJxYd2CSLSN+Ycu23prnwqOqILcU0+34+gAVFw==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/list@0.14.5:
-    resolution: {integrity: sha512-kVD7FCbtbT5noydQQ6+AcBjkQS2cLb071uoDiKX+EHzDko08b8xdD63r1rqnj2kOvYlsNLVtf5yy6Cv4xNxWDw==}
+  /@lexical/list@0.16.0:
+    resolution: {integrity: sha512-nBx/DMM7nCgnOzo1JyNnVaIrk/Xi5wIPNi8jixrEV6w9Om2K6dHutn/79Xzp2dQlNGSLHEDjky6N2RyFgmXh0g==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/mark@0.14.5:
-    resolution: {integrity: sha512-Z8YTHLrKpNHkCPATd3bzJhkbOnK0/gpZtjxphn+JvhgLOvmHIWCPS+HixQn10RJbcCAnja6QuhfsbgmP+c2eKA==}
+  /@lexical/mark@0.16.0:
+    resolution: {integrity: sha512-WMR4nqygSgIQ6Vdr5WAzohxBGjH+m44dBNTbWTGZGVlRvPzvBT6tieCoxFqpceIq/ko67HGTCNoFj2cMKVwgIA==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/markdown@0.14.5:
-    resolution: {integrity: sha512-lLVU2Vaj0cvh8lv8NBuxIhMLGuSroXf6Ls2CH81nN+eafL5X8yKGb2ae9EUdKxxppBKzZJxfe+phUlLgAqgVeg==}
+  /@lexical/markdown@0.16.0:
+    resolution: {integrity: sha512-7HQLFrBbpY68mcq4A6C1qIGmjgA+fAByditi2WRe7tD2eoIKb/B5baQAnDKis0J+m5kTaCBmdlT6csSzyOPzeQ==}
     dependencies:
-      '@lexical/code': 0.14.5
-      '@lexical/link': 0.14.5
-      '@lexical/list': 0.14.5
-      '@lexical/rich-text': 0.14.5
-      '@lexical/text': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/code': 0.16.0
+      '@lexical/link': 0.16.0
+      '@lexical/list': 0.16.0
+      '@lexical/rich-text': 0.16.0
+      '@lexical/text': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/offset@0.14.5:
-    resolution: {integrity: sha512-oUBr7SQhLHc0/SImyizgBXnfvmmh41i1nnaWJ1kflgXRXPpW1OxnFsuVB8EGKrc5nToxfrcwl6iryuDyJVrQ7g==}
+  /@lexical/offset@0.16.0:
+    resolution: {integrity: sha512-4TqPEC2qA7sgO8Tm65nOWnhJ8dkl22oeuGv9sUB+nhaiRZnw3R45mDelg23r56CWE8itZnvueE7TKvV+F3OXtQ==}
     dependencies:
-      lexical: 0.14.5
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/overflow@0.14.5:
-    resolution: {integrity: sha512-mZSQID6GTxSrnx+SeUqmyB8OZUTHolXqm0Ck2L27fRIIUQGZTXR9+CrV4+t2jNFK3brTo2POB95xwBq+O463hA==}
+  /@lexical/overflow@0.16.0:
+    resolution: {integrity: sha512-a7gtIRxleEuMN9dj2yO4CdezBBfIr9Mq+m7G5z62+xy7VL7cfMfF+xWjy3EmDYDXS4vOQgAXAUgO4oKz2AKGhQ==}
     dependencies:
-      lexical: 0.14.5
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/plain-text@0.14.5:
-    resolution: {integrity: sha512-i0NiJ1RZ/990nArZcKcQOG+0SxO8ErUDT+QDCGOoGGqG02pQf+UuiLVWW9GdD+5unA7eRQDUza10MMyzsV+MJA==}
+  /@lexical/plain-text@0.16.0:
+    resolution: {integrity: sha512-BK7/GSOZUHRJTbNPkpb9a/xN9z+FBCdunTsZhnOY8pQ7IKws3kuMO2Tk1zXfTd882ZNAxFdDKNdLYDSeufrKpw==}
     dependencies:
-      '@lexical/clipboard': 0.14.5
-      '@lexical/selection': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/clipboard': 0.16.0
+      '@lexical/selection': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/react@0.14.5(react-dom@18.3.1)(react@18.3.1)(yjs@13.6.16):
-    resolution: {integrity: sha512-dn7J07nxG6CZqm5jhLjhkQlJWMQrdm4BGTEF6/MYog5uUUwqDwBdVnZ3hwadibupAmNT7+Xia+4vrp0oJWM1lQ==}
+  /@lexical/react@0.16.0(react-dom@18.3.1)(react@18.3.1)(yjs@13.6.16):
+    resolution: {integrity: sha512-WKFQbI0/m1YkLjL5t90YLJwjGcl5QRe6mkfm3ljQuL7Ioj3F92ZN/J2gHFVJ9iC8/lJs6Zzw6oFjiP8hQxJf9Q==}
     peerDependencies:
       react: '>=17.x'
       react-dom: '>=17.x'
     dependencies:
-      '@lexical/clipboard': 0.14.5
-      '@lexical/code': 0.14.5
-      '@lexical/devtools-core': 0.14.5(react-dom@18.3.1)(react@18.3.1)
-      '@lexical/dragon': 0.14.5
-      '@lexical/hashtag': 0.14.5
-      '@lexical/history': 0.14.5
-      '@lexical/link': 0.14.5
-      '@lexical/list': 0.14.5
-      '@lexical/mark': 0.14.5
-      '@lexical/markdown': 0.14.5
-      '@lexical/overflow': 0.14.5
-      '@lexical/plain-text': 0.14.5
-      '@lexical/rich-text': 0.14.5
-      '@lexical/selection': 0.14.5
-      '@lexical/table': 0.14.5
-      '@lexical/text': 0.14.5
-      '@lexical/utils': 0.14.5
-      '@lexical/yjs': 0.14.5(yjs@13.6.16)
-      lexical: 0.14.5
+      '@lexical/clipboard': 0.16.0
+      '@lexical/code': 0.16.0
+      '@lexical/devtools-core': 0.16.0(react-dom@18.3.1)(react@18.3.1)
+      '@lexical/dragon': 0.16.0
+      '@lexical/hashtag': 0.16.0
+      '@lexical/history': 0.16.0
+      '@lexical/link': 0.16.0
+      '@lexical/list': 0.16.0
+      '@lexical/mark': 0.16.0
+      '@lexical/markdown': 0.16.0
+      '@lexical/overflow': 0.16.0
+      '@lexical/plain-text': 0.16.0
+      '@lexical/rich-text': 0.16.0
+      '@lexical/selection': 0.16.0
+      '@lexical/table': 0.16.0
+      '@lexical/text': 0.16.0
+      '@lexical/utils': 0.16.0
+      '@lexical/yjs': 0.16.0(yjs@13.6.16)
+      lexical: 0.16.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-error-boundary: 3.1.4(react@18.3.1)
@@ -1388,50 +1388,50 @@ packages:
       - yjs
     dev: false
 
-  /@lexical/rich-text@0.14.5:
-    resolution: {integrity: sha512-hLZ8oBrc4ZuYK3KbviV0pUW1R9CvsN8dLTOdYpW5hxvCMDI6UFrtRmaURQY96M7JSYQsDMrtyKyFuID3RwOR1w==}
+  /@lexical/rich-text@0.16.0:
+    resolution: {integrity: sha512-AGTD6yJZ+kj2TNah1r7/6vyufs6fZANeSvv9x5eG+WjV4uyUJYkd1qR8C5gFZHdkyr+bhAcsAXvS039VzAxRrQ==}
     dependencies:
-      '@lexical/clipboard': 0.14.5
-      '@lexical/selection': 0.14.5
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/clipboard': 0.16.0
+      '@lexical/selection': 0.16.0
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/selection@0.14.5:
-    resolution: {integrity: sha512-uK4X1wOSnlq2xvIIludnPb6i+grtV4IR7Y1Dg7ZGFJfk1q5FWuS9iA3iVjZbSiehgbZef5nDCPRez9WN/F5krA==}
+  /@lexical/selection@0.16.0:
+    resolution: {integrity: sha512-trT9gQVJ2j6AwAe7tHJ30SRuxCpV6yR9LFtggxphHsXSvJYnoHC0CXh1TF2jHl8Gd5OsdWseexGLBE4Y0V3gwQ==}
     dependencies:
-      lexical: 0.14.5
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/table@0.14.5:
-    resolution: {integrity: sha512-K+R1w6KL9jIf9gKcXP1x3gPQxaVf+u9rjidKAZptgZYH/O4aLnE7MR+nrLFUYYw0NPOOgYTFxJOk9OW500TtKA==}
+  /@lexical/table@0.16.0:
+    resolution: {integrity: sha512-A66K779kxdr0yH2RwT2itsMnkzyFLFNPXyiWGLobCH8ON4QPuBouZvjbRHBe8Pe64yJ0c1bRDxSbTqUi9Wt3Gg==}
     dependencies:
-      '@lexical/utils': 0.14.5
-      lexical: 0.14.5
+      '@lexical/utils': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/text@0.14.5:
-    resolution: {integrity: sha512-qcoORBgy3MD1xmmm5hE248HmL3BJLU/+qGvJz7Ei/9Fh5p2+PIYoL90KRcOP6Pp3pDs3ocydb+YcCxLg9L+OOQ==}
+  /@lexical/text@0.16.0:
+    resolution: {integrity: sha512-9ilaOhuNIIGHKC8g8j3K/mEvJ09af9B6RKbm3GNoRcf/WNHD4dEFWNTEvgo/3zCzAS8EUBI6UINmfQQWlMjdIQ==}
     dependencies:
-      lexical: 0.14.5
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/utils@0.14.5:
-    resolution: {integrity: sha512-KoO63Y5lsgMxcLLIUC/Gwiof4BoKODY5i0NGUhUez/zGq4vCdXp+1DVJF7gmmvg9/vx0J16IrTcr/SAoAnhSFg==}
+  /@lexical/utils@0.16.0:
+    resolution: {integrity: sha512-GWmFEmd7o3GHqJBaEwzuZQbfTNI3Gg8ReGuHMHABgrkhZ8j2NggoRBlxsQLG0f7BewfTMVwbye22yBPq78775w==}
     dependencies:
-      '@lexical/list': 0.14.5
-      '@lexical/selection': 0.14.5
-      '@lexical/table': 0.14.5
-      lexical: 0.14.5
+      '@lexical/list': 0.16.0
+      '@lexical/selection': 0.16.0
+      '@lexical/table': 0.16.0
+      lexical: 0.16.0
     dev: false
 
-  /@lexical/yjs@0.14.5(yjs@13.6.16):
-    resolution: {integrity: sha512-Y9dMA/B0tlkQLRUmwnfkPKOOaFQSFSp257pDoQr5Gnpx1OjZWGbbesPn4h2dFhGeLme41nznGZNwxR5nH6lGaw==}
+  /@lexical/yjs@0.16.0(yjs@13.6.16):
+    resolution: {integrity: sha512-YIJr87DfAXTwoVHDjR7cci//hr4r/a61Nn95eo2JNwbTqQo65Gp8rwJivqVxNfvKZmRdwHTKgvdEDoBmI/tGog==}
     peerDependencies:
       yjs: '>=13.5.22'
     dependencies:
-      '@lexical/offset': 0.14.5
-      lexical: 0.14.5
+      '@lexical/offset': 0.16.0
+      lexical: 0.16.0
       yjs: 13.6.16
     dev: false
 
@@ -2912,21 +2912,21 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@upstash/core-analytics@0.0.9:
-    resolution: {integrity: sha512-9NXXxZ5y1/A/zqKLlVT7NsAWSggJfOjB0hG6Ffx29b4jbzHOiQVWB55h5+j2clT9Ib+mNPXn0iB5zN3aWLkICw==}
+  /@upstash/core-analytics@0.0.7:
+    resolution: {integrity: sha512-lC2j5efqb1haX/fpTGaPUx1rue1WUkOZBVHDzCB7eMIVsRdFFp4xiHtyH/G9omiR1zj39fU5SCTWFiKJH3KOpw==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@upstash/redis': 1.31.3
+      '@upstash/redis': 1.30.0
     dev: false
 
-  /@upstash/ratelimit@1.2.0:
-    resolution: {integrity: sha512-03mNBUNz9EvIJCxhU0OtFWO3OSQE4gShFBlGph+hDPm9k7O75We1NYS/tCXSdmLVXtOvUGSmi5fyKQLBTEGWxw==}
+  /@upstash/ratelimit@1.0.3:
+    resolution: {integrity: sha512-uaws/6Ar28TICm61wfIbL4Ba91WYtIfl6HMj0PNJ0H/nm0SSXwVbCxPEiX9aXa41gMlVWujaJcOreqIuO8/mqg==}
     dependencies:
-      '@upstash/core-analytics': 0.0.9
+      '@upstash/core-analytics': 0.0.7
     dev: false
 
-  /@upstash/redis@1.31.3:
-    resolution: {integrity: sha512-KtVgWBUEx/LGbR8oRwYexwzHh3s5DNqYW0bjkD+gjFZVOnREJITvK+hC4PjSSD+8D4qJ+Xbkfmy8ANADZ9EUFg==}
+  /@upstash/redis@1.30.0:
+    resolution: {integrity: sha512-bkxl2n7qls27hONXNyItM6ccRT0NBJ8c6zl83wx+TlODpYXehgeiUJTkcTaXLp7hk+zy6Mqpzpeo3GX+wZSvBw==}
     dependencies:
       crypto-js: 4.2.0
     dev: false
@@ -3978,16 +3978,16 @@ packages:
       - supports-color
     dev: false
 
-  /datocms-structured-text-generic-html-renderer@2.1.12:
-    resolution: {integrity: sha512-1Vj/24iaKUcNm3xG9kD09EHz00rIVIQVD6RSGNBvi+BQPPJGdGfFUcPME9xQv3KZrcw/pyNkAkBXO2q4wqEslw==}
+  /datocms-structured-text-generic-html-renderer@4.0.1:
+    resolution: {integrity: sha512-umEWXyBHP3fo1YsOL7AhFxWrmb2LNxiRV26+C8NMkwoBZ/RbF9+dBaGIBv1D/NeasCjq560hBdm7jqChxxIi/A==}
     dependencies:
-      datocms-structured-text-utils: 2.1.12
+      datocms-structured-text-utils: 4.0.1
     dev: false
 
-  /datocms-structured-text-slate-utils@3.0.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-aXC6PV7/SHDqAtmeZjdybUlsIUBIE4wiJYhiM/Dt4sge6P866IU5Jkasu9X9EnEvwdhbOH70aru/vLThNBy5tg==}
+  /datocms-structured-text-slate-utils@4.0.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-X0F29EVyuL8+pu8GwuzbVvhnAPMEFJGz0ma0juquWZY6kxHcheex+W/NwDjANsa1rowa90lv1Wr11UDC5xzaYg==}
     dependencies:
-      datocms-structured-text-utils: 3.0.0
+      datocms-structured-text-utils: 4.0.1
       lodash-es: 4.17.21
       slate: 0.78.0
       slate-react: 0.78.1(react-dom@18.3.1)(react@18.3.1)(slate@0.78.0)
@@ -4002,8 +4002,8 @@ packages:
       array-flatten: 3.0.0
     dev: false
 
-  /datocms-structured-text-utils@3.0.0:
-    resolution: {integrity: sha512-1mo78UD4Sz+fhiwBMUqNls/jgm+33/MxZe5eHYjKuklSdQPE7KslIWqD3hWi6W641rpeU0rEW+RFwQlduqEvIQ==}
+  /datocms-structured-text-utils@4.0.1:
+    resolution: {integrity: sha512-2rK4bZfzKpdKw2AZhnnD043QkGOUaJDOUGPrQHo5w4hvU4jTBGGxoaTg4KIb3Q5Yo+XUFvreb+U0+86xdh7I+Q==}
     dependencies:
       array-flatten: 3.0.0
     dev: false
@@ -5171,8 +5171,8 @@ packages:
       - supports-color
     dev: false
 
-  /googleapis@134.0.0(encoding@0.1.13):
-    resolution: {integrity: sha512-o8LhD1754W6MHWtpwAPeP1WUHgNxuMxCnLMDFlMKAA5kCMTNqX9/eaTXnkkAIv6YRfoKMQ6D1vyR6/biXuhE9g==}
+  /googleapis@140.0.0(encoding@0.1.13):
+    resolution: {integrity: sha512-r8i++0lnexrvRA0/uogz3N3eJprddjxAcueTO5f09D/U5yxaOm5G+a892QkHsV+o15NP9whlLUiJr9zazb9ePg==}
     engines: {node: '>=14.0.0'}
     dependencies:
       google-auth-library: 9.10.0(encoding@0.1.13)
@@ -5898,8 +5898,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /lexical@0.14.5:
-    resolution: {integrity: sha512-ouV7Gyr9+3WT3WTrCgRAD3iZnlJWfs2/kBl2x3J2Q3X9uCWJn/zn21fQ8G1EUHlu0dvXPBmdk9hXb/FjTClt6Q==}
+  /lexical@0.16.0:
+    resolution: {integrity: sha512-Skn45Qhriazq4fpAtwnAB11U//GKc4vjzx54xsV3TkDLDvWpbL4Z9TNRwRoN3g7w8AkWnqjeOSODKkrjgfRSrg==}
     dev: false
 
   /lib0@0.2.94:
@@ -7287,20 +7287,19 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /react-datocms@5.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-NzX3jVNuXbrPYzoQVJkhHQ3ldl4fpWylPnC8k723Ncigb3WDKSO7DWEB3ifUp3JJceBe1agKf6HVFYolPZxOjA==}
+  /react-datocms@6.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-2yav0oUhOS6nSgtgAZXWwEEy21tYvFXFDI5BPswH6+QUx53eH54SO8p0LgyZG8TzXbBkX2Nx73Pp80zKbm0IgA==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
       react: '>= 16.12.0'
     dependencies:
       '@mux/mux-player-react': 2.7.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       datocms-listen: 0.1.15
-      datocms-structured-text-generic-html-renderer: 2.1.12
-      datocms-structured-text-utils: 2.1.12
+      datocms-structured-text-generic-html-renderer: 4.0.1
+      datocms-structured-text-utils: 4.0.1
       react: 18.3.1
       react-intersection-observer: 9.10.3(react-dom@18.3.1)(react@18.3.1)
       react-string-replace: 1.1.1
-      universal-base64: 2.1.0
       use-deep-compare-effect: 1.8.1(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -8498,10 +8497,6 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
-
-  /universal-base64@2.1.0:
-    resolution: {integrity: sha512-WeOkACVnIXJZr/qlv7++Rl1zuZOHN96v2yS5oleUuv8eJOs5j9M5U3xQEIoWqn1OzIuIcgw0fswxWnUVGDfW6g==}
-    dev: false
 
   /universalify@0.2.0:
     resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
