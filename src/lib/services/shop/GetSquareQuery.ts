@@ -12,7 +12,6 @@ const dedupedFetch = cache(async (requestData: string) => {
     query: string;
     variables?: Record<string, string>;
   };
-
   logger.debug(
     {
       query: getQueryName(parsedBody.query),
@@ -72,6 +71,5 @@ export default async function getSquareQuery<T>(
       next: opts?.revalidate,
     }),
   );
-
   return data as T;
 }

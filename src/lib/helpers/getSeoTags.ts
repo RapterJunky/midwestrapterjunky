@@ -40,6 +40,9 @@ const defaultSeo = ({
   const url = `${host}${slug}`;
 
   return {
+    other: {
+      "fb:app_id": process.env.FACEBOOK_CLIENT_ID
+    },
     twitter: {
       title: pageTitle,
       description,
@@ -78,10 +81,10 @@ const getSeoTags = async ({
 
   const canonical = slug
     ? ({
-        alternates: {
-          canonical: `${host}${slug}`,
-        },
-      } as Metadata)
+      alternates: {
+        canonical: `${host}${slug}`,
+      },
+    } as Metadata)
     : {};
 
   const data: Metadata = {
@@ -90,6 +93,7 @@ const getSeoTags = async ({
     ...customMetadata,
     ...genericSeo,
     ...canonical,
+
   };
 
   if ("themeColor" in data) {
