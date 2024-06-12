@@ -11,9 +11,6 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(host),
-  other: {
-    "fb:app_id": process.env.NEXT_PUBLIC_FACKBOOK_APP_ID
-  }
 };
 
 export const viewport: Viewport = {
@@ -24,6 +21,9 @@ export const viewport: Viewport = {
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <meta property="fb:app_id" content={process.env.NEXT_PUBLIC_FACKBOOK_APP_ID} />
+      </head>
       <body>{children}</body>
     </html>
   );
